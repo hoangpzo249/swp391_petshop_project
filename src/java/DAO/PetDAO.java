@@ -21,7 +21,7 @@ public class PetDAO {
     PreparedStatement ps;
     ResultSet rs;
 
-    public List<Pet> getSimilarPets(int breedId) {
+     public List<Pet> getSimilarPets(int breedId) {
         List<Pet> list = new ArrayList<>();
         try {
             conn = new DBContext().getConnection();
@@ -39,6 +39,7 @@ public class PetDAO {
         } 
         return list;
     }
+    
 
     public Pet getPetById(int id) {
         
@@ -61,6 +62,10 @@ public class PetDAO {
 
     public List<Pet> getAllPets() {
         List<Pet> list = new ArrayList<>();
+        
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
         try {
             conn = new DBContext().getConnection();
             String sql = "SELECT * FROM PetTB";
@@ -68,7 +73,7 @@ public class PetDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Pet pet = PetInfo(rs);
-                pet.setImages(getImagesByPetId(pet.getPetId()));
+              pet.setImages(getImagesByPetId(pet.getPetId()));
                 list.add(pet);
             }
         } catch (Exception ex) {
@@ -86,14 +91,20 @@ public class PetDAO {
             ps = conn.prepareStatement(sql);
             ps.setInt(1, petId);
             rs = ps.executeQuery();
+            
             while (rs.next()) {
                 images.add(rs.getBytes("imageData"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         } 
-        return images;
-    }
+        try { if (rs != null) rs.close(); } catch (Exception e) {}
+try { if (ps != null) ps.close(); } catch (Exception e) {}
+try { if (conn != null) conn.close(); } catch (Exception e) {}
+
+    return images;
+}
+        
 
    private Pet PetInfo(ResultSet rs) throws Exception {
     return new Pet(
@@ -224,7 +235,101 @@ public List<String> getAllVaccinationStatus() {
     return list;
 }
 
+ public List<Pet> filterPets(String breed, String species, String search, int num1, int num2, String sort,
+                                      String gender, String color, String origin, String ageRange, String vaccinationStatus) {
 
+        List<Pet> listPet = new ArrayList<>();
+        List<Pet> tempList = new ArrayList<>();
+       
+
+        if (breed == null || breed.isEmpty()) breed = "%";
+        if (species == null || species.isEmpty()) species = "%";
+        if (search == null || search.isEmpty()) search = "%";
+        else search = "%" + search + "%";
+
+        try {
+            conn = new DBContext().getConnection();
+            String sql = "SELECT p.*, b.breedName FROM PetTB p INNER JOIN BreedTB b ON p.breedId = b.breedId WHERE p.petAvailability = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?)";
+
+            if (!"%".equals(breed)) sql += " AND b.breedId = ?";
+if (!"%".equals(species)) sql += " AND b.breedSpecies = ?";
+
+            if (num1 != 0 || num2 != 0) sql += " AND p.petPrice BETWEEN ? AND ?";
+            if (gender != null && !gender.isEmpty()) sql += " AND p.petGender = ?";
+            if (color != null && !color.isEmpty()) sql += " AND p.petColor = ?";
+            if (origin != null && !origin.isEmpty()) sql += " AND p.petOrigin = ?";
+            if (vaccinationStatus != null && !vaccinationStatus.isEmpty()) sql += " AND p.petVaccination = ?";
+
+            if (sort != null && !sort.isEmpty()) {
+                switch (sort) {
+                    case "popular" -> sql += " ORDER BY p.petId DESC";
+                    case "new" -> sql += " ORDER BY p.petId DESC";
+                    case "az" -> sql += " ORDER BY p.petName ASC";
+                    case "za" -> sql += " ORDER BY p.petName DESC";
+                    case "price-asc" -> sql += " ORDER BY p.petPrice ASC";
+                    case "price-desc" -> sql += " ORDER BY p.petPrice DESC";
+                    default -> sql += " ORDER BY p.petName ASC";
+                }
+            }
+
+            ps = conn.prepareStatement(sql);
+            int i = 1;
+            ps.setString(i++, search);
+            ps.setString(i++, search);
+            if (!"%".equals(breed)) ps.setInt(i++, Integer.parseInt(breed));
+if (!"%".equals(species)) ps.setString(i++, species);
+
+            if (num1 != 0 || num2 != 0) {
+                ps.setInt(i++, Math.min(num1, num2));
+                ps.setInt(i++, Math.max(num1, num2));
+            }
+            if (gender != null && !gender.isEmpty()) ps.setString(i++, gender);
+            if (color != null && !color.isEmpty()) ps.setString(i++, color);
+            if (origin != null && !origin.isEmpty()) ps.setString(i++, origin);
+            if (vaccinationStatus != null && !vaccinationStatus.isEmpty()) {
+                ps.setInt(i++, vaccinationStatus.equals("Đã tiêm") ? 1 : 0);
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Pet pet = PetInfo(rs);
+                pet.setBreedName(rs.getString("breedName"));
+
+                
+                if (ageRange != null && !ageRange.isEmpty()) {
+                    Date dob = pet.getPetDob();
+                    if (dob != null) {
+                        int months = getAgeInMonths(dob);
+                        boolean match =
+            ("under30".equals(ageRange) && months < 30) ||
+            ("30-36".equals(ageRange) && months >= 30 && months <= 36) ||
+            ("37-44".equals(ageRange) && months >= 37 && months <= 44) ||
+            ("above44".equals(ageRange) && months >= 45);
+                        if (!match) continue;
+                    } else {
+                        continue;
+                    }
+                }
+
+                tempList.add(pet);
+            }
+
+            rs.close();
+            ps.close();
+            conn.close();
+
+            for (Pet pet : tempList) {
+                pet.setImages(getImagesByPetId(pet.getPetId()));
+                listPet.add(pet);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+
+        
+        return listPet;
+    }
     
 
 
