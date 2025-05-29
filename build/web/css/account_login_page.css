@@ -1,0 +1,109 @@
+/* === Login Form === */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 25px;
+    background: #ffffff;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.login-container h2 {
+    margin-bottom: 25px;
+    font-size: 26px;
+    color: #333333;
+    font-weight: bold;
+}
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+.input-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #555555;
+    display: block;
+}
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: orange;
+    outline: none;
+}
+
+.forgot-password {
+    text-align: right;
+    margin-bottom: 20px;
+}
+.forgot-password a {
+    color: orange;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    width: 100%;
+    padding: 14px 0;
+    border: none;
+    background: orange;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.btn:hover {
+    background: orangered;
+    transform: translateY(-2px);
+}
+
+.register-link {
+    margin-top: 10px;
+    font-size: 14px;
+}
+.register-link a {
+    color: orange;
+    text-decoration: none;
+    font-weight: bold;
+}
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+.successMess {
+    display: inline-block;
+    background-color: #e0ffe0;
+    color: green;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid green;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 10px auto;
+}
+
+.errMess {
+    display: inline-block;
+    background-color: #ffe0e0;
+    color: green;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ff0000;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 10px auto;
+}
+

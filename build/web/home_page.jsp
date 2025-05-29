@@ -3,7 +3,7 @@
     Created on : 19 May 2025, 11:13:48 pm
     Author     : HuyHoang
 --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -23,7 +23,7 @@
                         <img src="images/logo_banner/logo2.png" alt=""/>
                     </a>
                 </div>
-                <form action="listshoppet">
+                <form action="">
                     <div class="search">
                         <input type="text" name="search" value="" placeholder="Tìm kiếm thú cưng ..."/>
                         <button type="submit" class="search-button">
@@ -34,7 +34,7 @@
 
                 <div class="accountcard">
                     <div class="account">
-                        <a href="">
+                        <a href="login">
                             <img src="images/support button/account.png" width="800" height="800" alt="account"/>
                             <p class="logintext">Tài Khoản</p>
                         </a>

@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author HuyHoang
  */
-public class home_page extends HttpServlet {
+public class Homepage_Servlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -33,10 +33,10 @@ public class home_page extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet home_page</title>");  
+            out.println("<title>Servlet Homepage_Servlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet home_page at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet Homepage_Servlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
