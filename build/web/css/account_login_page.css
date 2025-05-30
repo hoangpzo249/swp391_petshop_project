@@ -115,7 +115,7 @@ body::before {
 }
 
 .register-container h2 {
-    margin-bottom: 1px;
+    margin-bottom: 10px;
     font-size: 26px;
     color: #333;
     font-weight: bold;

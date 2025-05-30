@@ -24,11 +24,12 @@
         <div class="register-container">
             <h2>Đăng nhập</h2>
             <form action="" method="post">
-                <c:if test="${not empty sessionScope.successMess}">
+                <c:if test="${not empty sessionScope.successMessRegister}">
                     <div class="successMess">
-                        <p>${sessionScope.successMess}</p>
+                        <p>${sessionScope.successMessRegister}</p>
                     </div>
                 </c:if>
+                
                 <div class="input-group">
                     <label for="username">Tên đăng nhập hoặc Email*</label>
                     <input type="text" id="username" name="username" required>

@@ -27,7 +27,7 @@
             <h2>Tạo tài khoản</h2>
             <form action="" method="post">
                 <div class="input-group">
-                    <label for="firstname">Tên *</label>
+                    <label>Tên *</label>
                     <input type="text" id="firstname" name="firstname" value="${firstname}" >
                 </div>
 

@@ -6,6 +6,7 @@ package Controller;
 
 import DAO.AccountDAO;
 import Model.Account;
+import Utils.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Random;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -126,7 +128,7 @@ public class Register_Account_Servlet extends HttpServlet {
                 request.setAttribute("firstname", fName);
                 request.setAttribute("lastname", lName);
                 request.setAttribute("phone", phone);
-                request.setAttribute("username", username);
+                request.setAttribute("email", email);
                 request.setAttribute("password", pass);
                 request.setAttribute("confirm_password", comfirmPass);
 
@@ -150,28 +152,43 @@ public class Register_Account_Servlet extends HttpServlet {
 
             String hashPass = BCrypt.hashpw(pass, BCrypt.gensalt());
 
-            Account acc = new Account();
-            acc.setAccFname(fName);
-            acc.setAccLname(lName);
-            acc.setAccEmail(email);
-            acc.setAccPhoneNumber(phone);
-            acc.setAccUsername(username);
-            acc.setAccPassword(hashPass);
+            Account tempAcc = new Account();
+            tempAcc.setAccFname(fName);
+            tempAcc.setAccLname(lName);
+            tempAcc.setAccEmail(email);
+            tempAcc.setAccPhoneNumber(phone);
+            tempAcc.setAccUsername(username);
+            tempAcc.setAccPassword(hashPass);
 
-            boolean success = daoAcc.registerAcc(acc);
-            
             HttpSession session = request.getSession();
+
+            session.setAttribute("tempAccount", tempAcc);
+                    
+            String otp = otp();
             
-            if (success) {
-                session.setAttribute("successMess", "Đăng kí thành công, vui lòng đăng nhập tài khoản.");
-                response.sendRedirect("login");
-            } else {
-                request.setAttribute("errMess", "Đăng kí thất bại!");
-                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
-            }
+            EmailSender.sendOTP(email, otp);
+            session.setAttribute("otp", otp);
+            
+//            session.setAttribute("infor", "Gửi mã OTP thành công");
+//            session.setAttribute("infor1", "Bạn cần nhập mã OTP để hoàn tất tạo tài khoản");
+            
+            session.setAttribute("email", email);
+            response.sendRedirect("verify-otp");
+            
+//            session.setAttribute("firstname", fName);
+//            session.setAttribute("lastname", lName);
+//            session.setAttribute("phone", phone);
+//            session.setAttribute("username", username);
+//            request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
 
         } catch (Exception e) {
         }
+    }
+
+    public String otp() {
+        Random random = new Random();
+        int otp = 100000 + random.nextInt(900000);
+        return String.valueOf(otp);
     }
 
     /**

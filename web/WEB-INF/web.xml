@@ -12,6 +12,10 @@
         <servlet-name>Register_Account_Servlet</servlet-name>
         <servlet-class>Controller.Register_Account_Servlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OTP_RegisterAcc_Servlet</servlet-name>
+        <servlet-class>Controller.OTP_RegisterAcc_Servlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login_Account_Servlet</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -23,5 +27,9 @@
     <servlet-mapping>
         <servlet-name>Register_Account_Servlet</servlet-name>
         <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OTP_RegisterAcc_Servlet</servlet-name>
+        <url-pattern>/verify-otp</url-pattern>
     </servlet-mapping>
 </web-app>
