@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class PetDAO {
 
@@ -21,7 +20,7 @@ public class PetDAO {
     PreparedStatement ps;
     ResultSet rs;
 
-     public List<Pet> getSimilarPets(int breedId) {
+    public List<Pet> getSimilarPets(int breedId) {
         List<Pet> list = new ArrayList<>();
         try {
             conn = new DBContext().getConnection();
@@ -35,11 +34,10 @@ public class PetDAO {
                 list.add(pet);
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+           
         } 
         return list;
     }
-    
 
     public Pet getPetById(int id) {
         
@@ -55,17 +53,13 @@ public class PetDAO {
                 pet.setImages(getImagesByPetId(pet.getPetId()));
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+           
         } 
         return pet;
     }
 
     public List<Pet> getAllPets() {
         List<Pet> list = new ArrayList<>();
-        
-    Connection conn = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
         try {
             conn = new DBContext().getConnection();
             String sql = "SELECT * FROM PetTB";
@@ -73,11 +67,11 @@ public class PetDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Pet pet = PetInfo(rs);
-              pet.setImages(getImagesByPetId(pet.getPetId()));
+                pet.setImages(getImagesByPetId(pet.getPetId()));
                 list.add(pet);
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+           
         } 
         return list;
     }
@@ -91,20 +85,14 @@ public class PetDAO {
             ps = conn.prepareStatement(sql);
             ps.setInt(1, petId);
             rs = ps.executeQuery();
-            
             while (rs.next()) {
                 images.add(rs.getBytes("imageData"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            
         } 
-        try { if (rs != null) rs.close(); } catch (Exception e) {}
-try { if (ps != null) ps.close(); } catch (Exception e) {}
-try { if (conn != null) conn.close(); } catch (Exception e) {}
-
-    return images;
-}
-        
+        return images;
+    }
 
    private Pet PetInfo(ResultSet rs) throws Exception {
     return new Pet(
@@ -133,7 +121,7 @@ public List<String> getAllOrigins() {
                 list.add(rs.getString("petOrigin"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            
         }
         return list;
     }
@@ -149,7 +137,7 @@ public List<String> getAllOrigins() {
                 list.add(rs.getString("petGender"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+           
         }
         return list;
     }
@@ -165,7 +153,7 @@ public List<String> getAllOrigins() {
                 list.add(rs.getString("petColor"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+           
         }
         return list;
     }
@@ -209,7 +197,7 @@ public List<String> getAllOrigins() {
 }
 
     } catch (Exception e) {
-        e.printStackTrace();
+       
     }
 
     return list;
@@ -229,13 +217,14 @@ public List<String> getAllVaccinationStatus() {
         }
 
     } catch (Exception e) {
-        e.printStackTrace();
+       
     }
 
     return list;
 }
 
- public List<Pet> filterPets(String breed, String species, String search, int num1, int num2, String sort,
+
+     public List<Pet> filterPets(String breed, String species, String search, int num1, int num2, String sort,
                                       String gender, String color, String origin, String ageRange, String vaccinationStatus) {
 
         List<Pet> listPet = new ArrayList<>();
@@ -324,13 +313,12 @@ if (!"%".equals(species)) ps.setString(i++, species);
             }
 
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+          
         } 
 
         
         return listPet;
     }
-    
 
 
 }
