@@ -29,7 +29,7 @@
                         <p>${sessionScope.successMessRegister}</p>
                     </div>
                 </c:if>
-                
+
                 <div class="input-group">
                     <label for="email">Tên đăng nhập hoặc Email*</label>
                     <input type="text" id="email" name="email" value="${email}">
@@ -39,7 +39,7 @@
                     <label for="password">Mật Khẩu *</label>
                     <input type="password" id="password" name="password" value="${password}">
                 </div>
-                
+
                 <p class="recover-link"><a href="recover">Bạn quên mật khẩu?</a></p>
 
                 <c:if test="${not empty errMess}">
@@ -49,6 +49,14 @@
                 </c:if>
 
                 <button type="submit" class="btn">Đăng nhập</button>
+
+                <div class="social-login">
+                    <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&access_type=online&response_type=code&redirect_uri=http://localhost:8080/swp391_petshop_project/login-google&client_id=406838536003-3dvgsajsk4p6a500vlmaokr7u5q3nsa5.apps.googleusercontent.com" class="custom-google-btn">
+                        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
+                        <span>Đăng nhập bằng Google</span>
+                    </a>
+                </div>
+
             </form>
             <p class="login-link">Bạn chưa có tài khoản? <a href="register">Tạo tài khoản</a></p>
         </div>
