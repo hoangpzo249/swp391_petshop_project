@@ -31,13 +31,13 @@
                 </c:if>
                 
                 <div class="input-group">
-                    <label for="username">Tên đăng nhập hoặc Email*</label>
-                    <input type="text" id="username" name="username" required>
+                    <label for="email">Tên đăng nhập hoặc Email*</label>
+                    <input type="text" id="email" name="email" value="${email}">
                 </div>
 
                 <div class="input-group">
                     <label for="password">Mật Khẩu *</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" value="${password}">
                 </div>
 
                 <c:if test="${not empty errMess}">

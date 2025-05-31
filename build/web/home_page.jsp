@@ -60,7 +60,13 @@
                 </nav>
             </div>
         </div>
-
+        
+        <c:if test="${not empty loginSuccess}">
+            <div class="login-success-alert">
+                ${loginSuccess}
+            </div>
+            <c:remove var="loginSuccess" scope="session" />
+        </c:if>
 
         <!-- about -->
         <div class="about-section">

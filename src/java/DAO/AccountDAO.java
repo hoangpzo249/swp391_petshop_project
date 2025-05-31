@@ -8,6 +8,7 @@ import Model.Account;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -73,5 +74,42 @@ public class AccountDAO extends DBContext {
         } catch (Exception e) {
         }
         return false;
+    }
+
+    public Account isLoginAcc(String email, String username, String pass) {
+        try {
+            con = db.getConnection();
+            String sql = "SELECT * FROM AccountTB WHERE accEmail = ? or accUsername = ?";
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, email);
+            ps.setString(2, username);
+            
+            rs = ps.executeQuery();
+            if(rs.next()) {
+                String hashPass = rs.getString("accPassword");
+                if(BCrypt.checkpw(pass, hashPass)){
+                    
+                    Account acc = new Account();
+                    acc.setAccId(rs.getInt("accId"));
+                    acc.setAccUsername(rs.getString("accUsername"));
+                    acc.setAccEmail(rs.getString("accEmail"));
+                    acc.setAccFname(rs.getString("accFname"));
+                    acc.setAccLname(rs.getString("accLname"));
+                    acc.setAccDob(rs.getDate("accDob"));
+                    acc.setAccAddress(rs.getString("accAddress"));
+                    acc.setAccPhoneNumber("accPhoneNumber");
+                    acc.setAccRole(rs.getString("accRole"));
+                    acc.setAccDescription(rs.getString("accDescription"));
+                    acc.setAccCreateDate(rs.getString("accCreateDate"));
+                    acc.setAccImage(rs.getString("accImage"));
+                    acc.setAccStatus(rs.getString("accStatus"));
+                    
+                    return acc;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return null;
     }
 }

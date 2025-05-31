@@ -83,7 +83,7 @@ public class OTP_RegisterAcc_Servlet extends HttpServlet {
 
     public String otp() {
         Random random = new Random();
-        int otp = 100000 + random.nextInt(900000);
+        int otp = 100000 + random.nextInt(1000000);
         return String.valueOf(otp);
     }
 
@@ -104,7 +104,7 @@ public class OTP_RegisterAcc_Servlet extends HttpServlet {
             String otp = (String) session.getAttribute("otp");
             String newotp = (String) session.getAttribute("newotp");
             
-            String email = (String) session.getAttribute("email");
+//            String email = (String) session.getAttribute("email");
             Account account = (Account) session.getAttribute("tempAccount");
             
 
@@ -124,7 +124,7 @@ public class OTP_RegisterAcc_Servlet extends HttpServlet {
 
             } else {
                 request.setAttribute("errMess", "Mã OTP không hợp lệ");
-                request.setAttribute("email", email);
+//                request.setAttribute("email", email);
                 request.getRequestDispatcher("otp_registeracc_page.jsp").forward(request, response);
             }
         } catch (Exception e) {

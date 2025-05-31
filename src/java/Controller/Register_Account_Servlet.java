@@ -187,7 +187,7 @@ public class Register_Account_Servlet extends HttpServlet {
 
     public String otp() {
         Random random = new Random();
-        int otp = 100000 + random.nextInt(900000);
+        int otp = 100000 + random.nextInt(1000000);
         return String.valueOf(otp);
     }
 

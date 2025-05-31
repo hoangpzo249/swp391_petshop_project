@@ -32,7 +32,7 @@
         <div class="register-container">
             <div class="otp-header">
                 <h2>Xác thực OTP</h2>
-                <p>Gửi mã OTP thành công</p>
+                <p>Gửi mã OTP thành công tới:</p>
                 <p class="email-display">${email}</p>
                 <p class="instruction">Bạn cần nhập mã OTP để hoàn tất tạo tài khoản</p>
             </div>
