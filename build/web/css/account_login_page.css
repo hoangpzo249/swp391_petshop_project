@@ -236,3 +236,20 @@ body::before {
         transform: translateX(5px);
     }
 }
+
+.recover-link {
+    margin: 15px 0;
+    text-align: start;
+    font-size: 14px;
+}
+
+.recover-link a {
+    color: orange;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.recover-link a:hover {
+    text-decoration: underline;
+    color: orangered;
+}

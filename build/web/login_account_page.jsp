@@ -23,7 +23,7 @@
 
         <div class="register-container">
             <h2>Đăng nhập</h2>
-            <form action="" method="post">
+            <form action="login" method="post">
                 <c:if test="${not empty sessionScope.successMessRegister}">
                     <div class="successMess">
                         <p>${sessionScope.successMessRegister}</p>
@@ -39,6 +39,8 @@
                     <label for="password">Mật Khẩu *</label>
                     <input type="password" id="password" name="password" value="${password}">
                 </div>
+                
+                <p class="recover-link"><a href="recover">Bạn quên mật khẩu?</a></p>
 
                 <c:if test="${not empty errMess}">
                     <div class="errMess">

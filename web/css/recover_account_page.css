@@ -237,19 +237,33 @@ body::before {
     }
 }
 
-.recover-link {
-    margin: 15px 0;
-    text-align: start;
-    font-size: 14px;
+.otp-header {
+    margin-bottom: 25px;
 }
 
-.recover-link a {
+.otp-header i {
+    font-size: 48px;
     color: orange;
-    text-decoration: none;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.otp-header h2 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #333;
     font-weight: bold;
 }
 
-.recover-link a:hover {
-    text-decoration: underline;
-    color: orangered;
+.otp-header p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.instruction {
+    color: #999 !important;
+    font-style: italic;
+    margin-top: 15px !important;
 }

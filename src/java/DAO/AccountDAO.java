@@ -112,4 +112,20 @@ public class AccountDAO extends DBContext {
         }
         return null;
     }
+    
+    public boolean updatePass(Account acc)  {
+        try {
+            String sql = "UPDATE AccountTB SET accPassword = ? WHERE accEmail = ?";
+            ps = con.prepareStatement(sql);
+            
+            ps.setString(1, acc.getAccPassword());
+            ps.setString(2, acc.getAccEmail());
+            
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (Exception e){
+            
+        }
+        return false;
+    }
 }

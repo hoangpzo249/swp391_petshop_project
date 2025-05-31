@@ -49,7 +49,7 @@
             </c:if>
                 
                 
-            <form action="" method="post">
+            <form action="verify-otp" method="post">
                 <div class="input-group">
                     <label for="otp">Mã OTP (6 số) *</label>
                     <input type="text" id="otp" name="inputotp" value="" maxlength="6" placeholder="Nhập mã OTP 6 số">
