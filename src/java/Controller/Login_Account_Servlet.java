@@ -9,6 +9,7 @@ import Model.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -77,6 +78,8 @@ public class Login_Account_Servlet extends HttpServlet {
             String username = request.getParameter("email");
             String password = request.getParameter("password");
 
+            String remember = request.getParameter("remember");
+
             if (email == null || email.trim().isEmpty()
                     || password == null || password.trim().isEmpty()) {
                 request.setAttribute("errMess", "Bạn cần điền đủ thông tin.");
@@ -102,6 +105,32 @@ public class Login_Account_Servlet extends HttpServlet {
                 session.setAttribute("userAccount", acc);
                 String role = acc.getAccRole();
 
+                if ("on".equals(remember)) {
+                    Cookie emailC = new Cookie("emailUser", email);
+//                    Cookie usernameC = new Cookie("email", username);
+                    Cookie passC = new Cookie("password", password);
+
+                    emailC.setMaxAge(60 * 60 * 24 * 7);
+//                    usernameC.setMaxAge(60 * 60 * 24 * 7);
+                    passC.setMaxAge(60 * 60 * 24 * 7);
+
+                    response.addCookie(emailC);
+//                    response.addCookie(usernameC);
+                    response.addCookie(passC);
+                } else {
+                    Cookie emailC = new Cookie("emailUser", email);
+//                    Cookie usernameC = new Cookie("email", username);
+                    Cookie passC = new Cookie("password", password);
+
+                    emailC.setMaxAge(0);
+//                    usernameC.setMaxAge(0);
+                    passC.setMaxAge(0);
+
+                    response.addCookie(emailC);
+//                    response.addCookie(usernameC);
+                    response.addCookie(passC);
+                }
+                
                 if ("Admin".equals(role)) {
                     session.setAttribute("loginSuccess", "Chào Admin!");
                     response.sendRedirect("homepage");
@@ -110,21 +139,22 @@ public class Login_Account_Servlet extends HttpServlet {
                     response.sendRedirect("homepage");
                 } else {
                     request.setAttribute("errMess", "Bạn cần có quyền truy cập");
-                    request.setAttribute("email", email);
-                    request.setAttribute("password", password);
+//                    request.setAttribute("email", email);
+//                    request.setAttribute("password", password);
                     request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
                 }
 
             } else {
                 request.setAttribute("errMess", "Email hoặc mật khẩu của bạn không đúng.");
 
-                request.setAttribute("email", email);
-                request.setAttribute("password", password);
+//                request.setAttribute("email", email);
+//                request.setAttribute("password", password);
 
                 request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

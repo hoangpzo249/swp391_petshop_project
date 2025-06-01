@@ -3,6 +3,25 @@
     Created on : 29 May 2025, 8:37:43 am
     Author     : HuyHoang
 --%>
+
+<%
+    String email = "";
+    String password = "";
+    
+    Cookie[] cook = request.getCookies();
+    if(cook != null) {
+    for(Cookie c : cook){
+        if("emailUser".equals(c.getName())) email = c.getValue();
+//        if("username".equals(c.getName())) email = c.getValue();
+        if("password".equals(c.getName())) password = c.getValue();
+    }
+    }
+    
+request.setAttribute("email", email);
+//request.setAttribute("email", email);
+request.setAttribute("password", password);
+
+%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

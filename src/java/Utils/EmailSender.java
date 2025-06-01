@@ -69,4 +69,39 @@ public class EmailSender {
 
         Transport.send(mess);
     }
+
+    public static void registerSuccess(String receiveEmail, String fullName) throws MessagingException {
+        final String senderEmail = "kaded429@gmail.com";
+        final String senderPassword = "kwfo nzqf nrmz cvlx";
+
+        Properties pro = new Properties();
+        pro.put("mail.smtp.auth", "true");
+        pro.put("mail.smtp.starttls.enable", "true");
+        pro.put("mail.smtp.host", "smtp.gmail.com");
+        pro.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(pro, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        MimeMessage mess = new MimeMessage(session);
+        mess.setFrom(new InternetAddress(senderEmail));
+        mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiveEmail));
+//        mess.setSubject("Mật khẩu mới của bạn - FPTPet Shop", "UTF-8");
+//        mess.setText("Xin chào,\n\nMật khẩu mới tài khoản của bạn là: " + newpass + "\nVui lòng không chia sẻ này cho người khác.\n\nCảm ơn bạn!\nFPTPet Shop", "UTF-8");
+
+        mess.setSubject("Chào mừng bạn đến với FPTPet Shop!", "UTF-8");
+
+        String messto = "Xin chào, " + fullName + "!"
+                + "\nBạn đã đăng ký tài khoản thành công tại FPTPet Shop.\n"
+                + "Chúc bạn có trải nghiệm mua sắm thú vị cùng chúng tôi!\n\n"
+                + "Nếu bạn không thực hiện đăng ký này, vui lòng liên hệ với chúng tôi để được hỗ trợ.\n\n"
+                + "Trân trọng,\n"
+                + "FPTPet Shop Team";
+        mess.setText(messto, "UTF-8");
+
+        Transport.send(mess);
+    }
 }

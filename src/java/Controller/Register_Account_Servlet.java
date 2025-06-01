@@ -88,6 +88,8 @@ public class Register_Account_Servlet extends HttpServlet {
             String pass = request.getParameter("password");
             String comfirmPass = request.getParameter("confirm_password");
 
+            String fullName = fName + " " + lName;
+            
             if (fName == null || lName == null || email == null || username == null || pass == null || comfirmPass == null
                     || fName.trim().isEmpty() || lName.trim().isEmpty() || email.trim().isEmpty() || username.trim().isEmpty() || pass.trim().isEmpty() || comfirmPass.trim().isEmpty()) {
                 request.setAttribute("errMess", "Bạn cần điền đủ thông tin!");
@@ -169,10 +171,13 @@ public class Register_Account_Servlet extends HttpServlet {
             EmailSender.sendOTP(email, otp);
             session.setAttribute("otp", otp);
             
+//            System.out.println(fullName);
+            
 //            System.out.println(tempAcc);
 //            session.setAttribute("infor", "Gửi mã OTP thành công");
 //            session.setAttribute("infor1", "Bạn cần nhập mã OTP để hoàn tất tạo tài khoản");
-            
+
+            session.setAttribute("fullName", fullName);
             session.setAttribute("email", email);
             response.sendRedirect("verify-otp");
             
