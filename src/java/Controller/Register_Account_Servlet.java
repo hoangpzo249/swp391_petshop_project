@@ -83,19 +83,19 @@ public class Register_Account_Servlet extends HttpServlet {
             String fName = request.getParameter("firstname");
             String lName = request.getParameter("lastname");
             String email = request.getParameter("email");
-            String phone = request.getParameter("phone");
+//            String phone = request.getParameter("phone");
             String username = request.getParameter("username");
             String pass = request.getParameter("password");
             String comfirmPass = request.getParameter("confirm_password");
 
-            if (fName == null || lName == null || email == null || phone == null || username == null || pass == null || comfirmPass == null
-                    || fName.trim().isEmpty() || lName.trim().isEmpty() || email.trim().isEmpty() || phone.trim().isEmpty() || username.trim().isEmpty() || pass.trim().isEmpty() || comfirmPass.trim().isEmpty()) {
+            if (fName == null || lName == null || email == null || username == null || pass == null || comfirmPass == null
+                    || fName.trim().isEmpty() || lName.trim().isEmpty() || email.trim().isEmpty() || username.trim().isEmpty() || pass.trim().isEmpty() || comfirmPass.trim().isEmpty()) {
                 request.setAttribute("errMess", "Bạn cần điền đủ thông tin!");
 
                 request.setAttribute("firstname", fName);
                 request.setAttribute("lastname", lName);
                 request.setAttribute("email", email);
-                request.setAttribute("phone", phone);
+//                request.setAttribute("phone", phone);
                 request.setAttribute("username", username);
                 request.setAttribute("password", pass);
                 request.setAttribute("confirm_password", comfirmPass);
@@ -112,7 +112,7 @@ public class Register_Account_Servlet extends HttpServlet {
 
                 request.setAttribute("firstname", fName);
                 request.setAttribute("lastname", lName);
-                request.setAttribute("phone", phone);
+//                request.setAttribute("phone", phone);
                 request.setAttribute("username", username);
                 request.setAttribute("password", pass);
                 request.setAttribute("confirm_password", comfirmPass);
@@ -127,7 +127,7 @@ public class Register_Account_Servlet extends HttpServlet {
 
                 request.setAttribute("firstname", fName);
                 request.setAttribute("lastname", lName);
-                request.setAttribute("phone", phone);
+//                request.setAttribute("phone", phone);
                 request.setAttribute("email", email);
                 request.setAttribute("password", pass);
                 request.setAttribute("confirm_password", comfirmPass);
@@ -142,7 +142,7 @@ public class Register_Account_Servlet extends HttpServlet {
                 request.setAttribute("firstname", fName);
                 request.setAttribute("lastname", lName);
                 request.setAttribute("email", email);
-                request.setAttribute("phone", phone);
+//                request.setAttribute("phone", phone);
                 request.setAttribute("username", username);
                 request.setAttribute("password", pass);
 
@@ -156,7 +156,7 @@ public class Register_Account_Servlet extends HttpServlet {
             tempAcc.setAccFname(fName);
             tempAcc.setAccLname(lName);
             tempAcc.setAccEmail(email);
-            tempAcc.setAccPhoneNumber(phone);
+            tempAcc.setAccPhoneNumber("Chưa cập nhật");
             tempAcc.setAccUsername(username);
             tempAcc.setAccPassword(hashPass);
 
@@ -169,6 +169,7 @@ public class Register_Account_Servlet extends HttpServlet {
             EmailSender.sendOTP(email, otp);
             session.setAttribute("otp", otp);
             
+//            System.out.println(tempAcc);
 //            session.setAttribute("infor", "Gửi mã OTP thành công");
 //            session.setAttribute("infor1", "Bạn cần nhập mã OTP để hoàn tất tạo tài khoản");
             

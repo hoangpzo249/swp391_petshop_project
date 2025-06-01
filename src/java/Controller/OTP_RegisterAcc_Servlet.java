@@ -69,7 +69,7 @@ public class OTP_RegisterAcc_Servlet extends HttpServlet {
             String email = (String) session.getAttribute("email");
             String newotp = otp();
             session.setAttribute("newotp", newotp);
-            
+
             try {
                 EmailSender.sendOTP(email, newotp);
                 request.setAttribute("successMess", "Mã OTP mới đã được gửi đến Email của bạn");
@@ -77,7 +77,7 @@ public class OTP_RegisterAcc_Servlet extends HttpServlet {
                 request.setAttribute("errMess", "Không thể gửi lại OTP");
             }
         }
-        
+
         request.getRequestDispatcher("otp_registeracc_page.jsp").forward(request, response);
     }
 
@@ -103,31 +103,39 @@ public class OTP_RegisterAcc_Servlet extends HttpServlet {
             HttpSession session = request.getSession();
             String otp = (String) session.getAttribute("otp");
             String newotp = (String) session.getAttribute("newotp");
-            
+
 //            String email = (String) session.getAttribute("email");
             Account account = (Account) session.getAttribute("tempAccount");
-            
 
             if (inputOTP != null && !inputOTP.trim().isEmpty()
-                    && (otp != null && otp.equals(inputOTP)) 
-                    || (newotp !=null && newotp.equals(inputOTP))) {
+                    && (otp != null && otp.equals(inputOTP))
+                    || (newotp != null && newotp.equals(inputOTP))) {
                 AccountDAO accDao = new AccountDAO();
-                boolean success = accDao.registerAcc(account);
-
-                if (success) {
+//                boolean success = accDao.registerAcc(account);
+                try {
+                    accDao.registerAcc(account);
                     session.setAttribute("successMessRegister", "Bạn đã tạo tài khoản thành công. Đăng nhập tài khoản để tiếp tục");
                     response.sendRedirect("login");
-                } else {
-                    session.setAttribute("successMess", "Tạo tài khoản không thành công");
-                    response.sendRedirect("errMess");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    session.setAttribute("errMess", "Tạo tài khoản không thành công");
+                    response.sendRedirect("verify-otp");
                 }
 
+//                if (success) {
+//                    session.setAttribute("successMessRegister", "Bạn đã tạo tài khoản thành công. Đăng nhập tài khoản để tiếp tục");
+//                    response.sendRedirect("login");
+//                } else {
+//                    session.setAttribute("successMess", "Tạo tài khoản không thành công");
+//                    response.sendRedirect("errMess");
+//                }
             } else {
                 request.setAttribute("errMess", "Mã OTP không hợp lệ");
 //                request.setAttribute("email", email);
                 request.getRequestDispatcher("otp_registeracc_page.jsp").forward(request, response);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

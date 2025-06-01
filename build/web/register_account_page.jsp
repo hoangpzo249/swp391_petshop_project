@@ -41,10 +41,10 @@
                     <input type="email" id="txtemail" name="email" value="${email}" >
                 </div>
 
-                <div class="input-group">
+<!--                <div class="input-group">
                     <label for="txtlogin">Số điện thoại *</label>
                     <input type="number" id="txtphone" name="phone" value="${phone}" >
-                </div>
+                </div>-->
 
                 <div class="input-group">
                     <label for="txtlogin">Tên đăng nhập *</label>
@@ -68,7 +68,14 @@
                 </c:if>
 
                 <button type="submit" class="btn">Tạo Tài Khoản</button>
-                <p></p>
+
+                <div class="social-login">
+                    <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&access_type=online&response_type=code&redirect_uri=http://localhost:8080/swp391_petshop_project/login-google&client_id=406838536003-3dvgsajsk4p6a500vlmaokr7u5q3nsa5.apps.googleusercontent.com" class="custom-google-btn">
+                        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
+                        <span>Đăng nhập bằng Google</span>
+                    </a>
+                </div>
+
             </form>
             <p class="login-link">Đã có tài khoản? <a href="login">Đăng nhập</a></p>
         </div>

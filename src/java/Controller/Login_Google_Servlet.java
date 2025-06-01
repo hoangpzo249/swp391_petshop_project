@@ -89,7 +89,7 @@ public class Login_Google_Servlet extends HttpServlet {
 
                 acc = accDao.ggByEmail(ggUser.getEmail());
                 session.setAttribute("userAccount", acc);
-                session.setAttribute("loginSuccess", "Đăng kí thành công với tài khoản Google");
+                session.setAttribute("loginSuccess", "Đăng nhập thành công với tài khoản Google");
                 response.sendRedirect("homepage");
             } catch (Exception e) {
                 request.setAttribute("errMess", "Có lỗi xảy ra với đăng nhập bằng tài khoản Google");

@@ -40,7 +40,15 @@
                     <input type="password" id="password" name="password" value="${password}">
                 </div>
 
-                <p class="recover-link"><a href="recover">Bạn quên mật khẩu?</a></p>
+                <div class="login-options">
+                    <div class="remember-password">
+                        <input type="checkbox" id="remember" name="remember" value="on">
+                        <label for="remember">Nhớ mật khẩu</label>
+                    </div>
+                    <a href="recover" class="forgot-password">Bạn quên mật khẩu?</a>
+                </div>
+
+                <!--<p class="recover-link"><a href="recover">Bạn quên mật khẩu?</a></p>-->
 
                 <c:if test="${not empty errMess}">
                     <div class="errMess">

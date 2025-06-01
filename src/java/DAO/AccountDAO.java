@@ -22,7 +22,7 @@ public class AccountDAO extends DBContext {
     Connection con;
     DBContext db = new DBContext();
 
-    public boolean registerAcc(Account account) {
+    public void registerAcc(Account account) {
         try {
             con = db.getConnection();
             String sql = "INSERT INTO AccountTB(accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRole, accDescription, accCreateDate, accImage, accStatus) \n"
@@ -40,11 +40,13 @@ public class AccountDAO extends DBContext {
             ps.setString(9, "Customer");
             ps.setString(10, "New account");
 
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
+//            int rowsAffected = ps.executeUpdate();
+            ps.executeUpdate();
+//            return rowsAffected > 0;
         } catch (Exception e) {
+            e.printStackTrace();
         }
-        return false;
+//        return false;
     }
 
     public boolean isEmailExist(String email) {
