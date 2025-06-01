@@ -15,16 +15,54 @@
 <html>
 <head>
     <title>PETFPT Shop</title>
-   </head>
-<body>
+    <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/png" href="images/logo_banner/logo1.png">
+    <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="css/main_type.css?v=4" />
 
+    <script src="js/scroll_chat.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="header">
+    <div class="header1">
+        <a href="listmainmenu">
+            <img src="images/logo.png" width="800" height="360" alt="logo"/>
+        </a>
+       
+       
+               
+            
+        </form>
+        <div class="accountcard">
+            <div class="account">
+                <a href="${not empty sessionScope.account ? 'account_profile_user.jsp' : 'account_login.jsp'}">
+                    <img src="images/account.png" width="800" height="800" alt="account"/>
+                    <p class="logintext">Tài Khoản</p>
+                </a>
+            </div>
+            <div class="card">
+                <a href=displaycart>
+                    <img src="images/card.png" width="1859" height="1573" alt="card"/>
+                    <p class="cardtext">
+                        Giỏ Hàng
+                        <span id="cart-count" class="cartcount">${sessionScope.cartcount}</span>
+                    </p>
+                </a>
+            </div>
+        </div>
+    </div>
     <nav>
         <ul class="menu">
             <li><a href="listmainmenu">Trang Chủ</a></li>
             <li><a href="listshoppet?species=Dog&sort=popular&giapet1=&giapet2=&breed=&search=">Chó Cưng</a></li>
             <li><a href="listshoppet?species=Cat&sort=popular&giapet1=&giapet2=&breed=&search=">Mèo Cưng</a></li>
             
-           
+            <li><a href="menu_about.jsp">Giới Thiệu</a></li>
+            <li><a href="menu_contact.jsp">Liên Hệ</a></li>
+            <c:if test="${not empty sessionScope.account and sessionScope.account.accRole eq 'Admin'}">
+                <li><a href="admin.jsp">Admin Panel</a></li>
+            </c:if>
         </ul>
     </nav>
 </div>
@@ -43,7 +81,7 @@
    <c:forEach items="${listDogBreed}" var="x">
     <li>
         <a href="listshoppet?species=Dog&breed=${x.getBreedId()}"
-           class="filter-category">
+           class="filter-category ${param.species eq 'Dog' and param.breed eq x.breedId ? 'selected' : ''}">
            ${x.getBreedName()}
         </a>
     </li>
@@ -54,7 +92,7 @@
     <c:forEach items="${listCatBreed}" var="x">
         <li>
             <a href="listshoppet?species=Cat&breed=${x.getBreedId()}"
-               class="filter-category ">
+               class="filter-category ${param.species eq 'Cat' and param.breed eq x.breedId ? 'selected' : ''}">
                ${x.getBreedName()}
             </a>
         </li>
@@ -67,7 +105,10 @@
 
     
         <form method="get" action="listshoppet" id="filterForm">
-           
+            <input type="hidden" name="sortpet" value="${param.sortpet}" />
+            <input type="hidden" name="species" value="${param.species}" />
+<input type="hidden" name="breed" value="${param.breed}" />
+
 
             <div class="form-group">
             <h3>Bộ lọc thú cưng</h3>
@@ -169,8 +210,24 @@
             </div>
  <div class="form-group">
             <div class="loc">
-                <button type="submit" >Lọc</button>
-             
+                <button type="submit" style="   
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    width: 65px;
+    height: 40px;
+    color: white;
+    background: orange;
+    border: none;">Lọc</button>
+             <a href="listshoppet?reset=true" class="reset-button" style="
+    margin-left: -66px;
+    margin-top: 75px;
+    box-sizing: border-box;
+    padding: 5px;
+    color: white;
+    background: orange;
+    text-decoration: none;
+    ">Reset bộ lọc</a>
             </div>
               
         </form>
@@ -192,8 +249,19 @@
                       <label for="sort">Sắp xếp theo:</label>
                     <div class="custom-select">
                       <form action="listshoppet" id="sortForm" method="get">
-                          
-                          <select>
+                          <input type="hidden" name="species" value="${param.species}" />
+<input type="hidden" name="breed" value="${param.breed}" />
+
+    <input type="hidden" name="search" value="${param.search}" />
+    <input type="hidden" name="gender" value="${param.gender}" />
+    <input type="hidden" name="color" value="${param.color}" />
+    <input type="hidden" name="origin" value="${param.origin}" />
+    <input type="hidden" name="priceRange" value="${param.priceRange}" />
+    <input type="hidden" name="age" value="${param.age}" />
+    <input type="hidden" name="vaccination" value="${param.vaccination}" />
+
+    <select name="sortpet" onchange="document.getElementById('sortForm').submit()">
+        
         <option value="az" ${param.sortpet == 'az' ? 'selected' : ''}>Tên thú cưng từ A-Z</option>
         <option value="za" ${param.sortpet == 'za' ? 'selected' : ''}>Tên thú cưng từ Z-A</option>
         <option value="price-asc" ${param.sortpet == 'price-asc' ? 'selected' : ''}>Giá thấp đến cao</option>
@@ -247,7 +315,68 @@
             </main>
         </div>
 
-       
+        <!--about-->
+        <div class="about-section">
+            <div class="about-column">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="listshoppet?species=Chó&sort=popular&giapet1=&giapet2=&breed=&search=">Dành Cho Chó</a></li>
+                    <li><a href="listshoppet?species=Mèo&sort=popular&giapet1=&giapet2=&breed=&search=">Dành Cho Mèo</a></li>
+                    <li><a href="listshop?category=%search=&gia1=&gia2=&sort=popular">Phụ kiện cho Chó & Mèo</a></li>
+                </ul>
+            </div>
+
+            <div class="about-column">
+                <h3>PETFPT Shop</h3>
+                <ul>
+                    <li><a href="menu_about.jsp">Giới Thiệu</a></li>
+                    <li><a href="footer_policy.jsp">Chính sách</a></li>
+                    <li><a href="footer_paymentmethod.jsp">Phương Thức Thanh Toán</a></li>
+                    <li><a href="footer_termofuse.jsp">Điều Khoản Sử Dụng</a></li>                    
+                </ul>
+            </div>
+
+            <div class="about-column">
+                <h3>Liên Hệ</h3>
+                <p class="contactpet">PETFPT Shop</p>
+                <p><i class="fas fa-phone"></i>0767676770</p>
+                <p><i class="fas fa-map-marker-alt"></i>Khu Công nghệ cao Hòa Lạc <br>
+                    Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
+                <p><i class="fas fa-envelope email"></i>
+                    <a href="mailto:hoangnhhe181051@fpt.edu.vn">hoangnhhe181051@fpt.edu.vn</a>
+                </p>
+
+                <div class="social-container">
+                    <a href="https://www.facebook.com/petfptshop" target="_blank" class="social-icon">
+                        <i class="fab fa-facebook fa-2x"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- scroll_chat -->
+        <div class="chat-scroll-container">
+            <button onclick="scroll()" id="scroll">
+                <i class="fas fa-chevron-up"></i>
+            </button>
+
+            <div class="chat-container">
+                <div id="chat-button" class="chat-button">
+                    <img src="images/chat.png" alt="chat"/>
+                </div>
+
+                <div id="zalo-button" class="zalo-button">
+                    <a href="https://zalo.me/your-zalo-link" target="_blank">
+                        <img src="images/zalo.jpg" alt="zalo"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <footer>
+            © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
+        </footer>
+        <script>
+
 
     </body>
     
