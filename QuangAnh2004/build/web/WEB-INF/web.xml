@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    <servlet>
+        <servlet-name>InvoiceServlet</servlet-name>
+        <servlet-class>controller.InvoiceServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewOrderServlet</servlet-name>
+        <servlet-class>controller.ViewOrderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReviewListServlet</servlet-name>
+        <servlet-class>controller.ReviewListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>NotificationServlet</servlet-name>
+        <servlet-class>controller.NotificationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>InvoiceServlet</servlet-name>
+        <url-pattern>/invoices</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewOrderServlet</servlet-name>
+        <url-pattern>/vieworder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReviewListServlet</servlet-name>
+        <url-pattern>/reviewlist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NotificationServlet</servlet-name>
+        <url-pattern>/notification</url-pattern>
+    </servlet-mapping>
+</web-app>
