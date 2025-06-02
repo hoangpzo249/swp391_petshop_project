@@ -1,12 +1,12 @@
 <%-- 
-    Document   : otp_registeracc_page
-    Created on : 30 May 2025, 11:33:29 pm
+    Document   : otp_recoveracc_page
+    Created on : 3 June 2025, 12:26:16 am
     Author     : HuyHoang
 --%>
 <%
     String otp = (String) session.getAttribute("otp");
     if (otp == null) {
-        response.sendRedirect("register");
+        response.sendRedirect("login");
         return;
     }
 %>
@@ -49,10 +49,10 @@
             </c:if>
                 
                 
-            <form action="verify-otp" method="post">
+            <form action="" method="post">
                 <div class="input-group">
                     <label for="otp">Mã OTP (6 số) *</label>
-                    <input type="text" id="otp" name="inputotp" value="" maxlength="6" placeholder="Nhập mã OTP 6 số">
+                    <input type="text" id="otp" name="inputotp" value="${otp}" maxlength="6" placeholder="Nhập mã OTP 6 số">
                 </div>
 
                 <button type="submit" class="btn">Xác thực</button>
@@ -62,7 +62,7 @@
             <div class="action-links">
                 <p class="resend-link">
                     Không nhận được mã? 
-                    <a href="verify-otp?action=resend-otp">Gửi lại OTP</a>
+                    <a href="verify-otp-recover?action=resend-otp">Gửi lại OTP</a>
                 </p>
                 <p class="login-link">
                     <a href="register"><i class="fas fa-arrow-left"></i> Quay lại đăng ký</a>
@@ -71,3 +71,4 @@
         </div>
     </body>
 </html>
+

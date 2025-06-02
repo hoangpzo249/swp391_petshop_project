@@ -106,7 +106,9 @@ public class OTP_RegisterAcc_Servlet extends HttpServlet {
 
             String email = (String) session.getAttribute("email");
             String fullName = (String) session.getAttribute("fullName");
-            
+//            String username = (String) session.getAttribute("username");
+            String pass = (String) session.getAttribute("pass");
+
             Account account = (Account) session.getAttribute("tempAccount");
 
             if (inputOTP != null && !inputOTP.trim().isEmpty()
@@ -116,11 +118,18 @@ public class OTP_RegisterAcc_Servlet extends HttpServlet {
 //                boolean success = accDao.registerAcc(account);
                 try {
                     accDao.registerAcc(account);
-                    
                     EmailSender.registerSuccess(email, fullName);
-                    
-                    session.setAttribute("successMessRegister", "Bạn đã tạo tài khoản thành công. Đăng nhập tài khoản để tiếp tục");
-                    response.sendRedirect("login");
+
+                    accDao.isLoginAcc(email, pass);
+                    try {
+                        session.setAttribute("loginSuccess", "Bạn đã tạo tài khoản thành công<br>Cập nhật địa chỉ và số điện thoại <a href='profile' style='color:#f26f21'>TẠI ĐÂY</a> để hoàn tất hồ sơ.");
+                        response.sendRedirect("homepage");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        session.setAttribute("errMess", "Đăng kí thất bại");
+                        response.sendRedirect("login");
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     session.setAttribute("errMess", "Tạo tài khoản không thành công");

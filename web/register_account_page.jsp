@@ -46,10 +46,10 @@
                     <input type="number" id="txtphone" name="phone" value="${phone}" >
                 </div>-->
 
-                <div class="input-group">
+<!--                <div class="input-group">
                     <label for="txtlogin">Tên đăng nhập *</label>
                     <input type="text" id="txtlogin" name="username" value="${username}" >
-                </div>
+                </div>-->
 
                 <div class="input-group">
                     <label for="password">Mật Khẩu *</label>
@@ -67,7 +67,7 @@
                     </div>
                 </c:if>
 
-                <button type="submit" class="btn">Tạo Tài Khoản</button>
+                <button type="submit" class="btn">Tạo tài khoản</button>
 
                 <div class="social-login">
                     <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&access_type=online&response_type=code&redirect_uri=http://localhost:8080/swp391_petshop_project/login-google&client_id=406838536003-3dvgsajsk4p6a500vlmaokr7u5q3nsa5.apps.googleusercontent.com" class="custom-google-btn">

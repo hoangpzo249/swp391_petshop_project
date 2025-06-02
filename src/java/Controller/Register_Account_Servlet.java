@@ -84,21 +84,21 @@ public class Register_Account_Servlet extends HttpServlet {
             String lName = request.getParameter("lastname");
             String email = request.getParameter("email");
 //            String phone = request.getParameter("phone");
-            String username = request.getParameter("username");
+//            String username = request.getParameter("username");
             String pass = request.getParameter("password");
             String comfirmPass = request.getParameter("confirm_password");
 
             String fullName = fName + " " + lName;
             
-            if (fName == null || lName == null || email == null || username == null || pass == null || comfirmPass == null
-                    || fName.trim().isEmpty() || lName.trim().isEmpty() || email.trim().isEmpty() || username.trim().isEmpty() || pass.trim().isEmpty() || comfirmPass.trim().isEmpty()) {
+            if (fName == null || lName == null || email == null || pass == null || comfirmPass == null
+                    || fName.trim().isEmpty() || lName.trim().isEmpty() || email.trim().isEmpty() || pass.trim().isEmpty() || comfirmPass.trim().isEmpty()) {
                 request.setAttribute("errMess", "Bạn cần điền đủ thông tin!");
 
                 request.setAttribute("firstname", fName);
                 request.setAttribute("lastname", lName);
                 request.setAttribute("email", email);
 //                request.setAttribute("phone", phone);
-                request.setAttribute("username", username);
+//                request.setAttribute("username", username);
                 request.setAttribute("password", pass);
                 request.setAttribute("confirm_password", comfirmPass);
 
@@ -115,7 +115,7 @@ public class Register_Account_Servlet extends HttpServlet {
                 request.setAttribute("firstname", fName);
                 request.setAttribute("lastname", lName);
 //                request.setAttribute("phone", phone);
-                request.setAttribute("username", username);
+//                request.setAttribute("username", username);
                 request.setAttribute("password", pass);
                 request.setAttribute("confirm_password", comfirmPass);
 
@@ -123,20 +123,20 @@ public class Register_Account_Servlet extends HttpServlet {
                 return;
             }
 
-            boolean checkUsername = daoAcc.isUsernameExist(username);
-            if (checkUsername) {
-                request.setAttribute("errMess", "Username đã tồn tại, bạn cần nhập username khác.");
-
-                request.setAttribute("firstname", fName);
-                request.setAttribute("lastname", lName);
-//                request.setAttribute("phone", phone);
-                request.setAttribute("email", email);
-                request.setAttribute("password", pass);
-                request.setAttribute("confirm_password", comfirmPass);
-
-                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
-                return;
-            }
+//            boolean checkUsername = daoAcc.isUsernameExist(username);
+//            if (checkUsername) {
+//                request.setAttribute("errMess", "Username đã tồn tại, bạn cần nhập username khác.");
+//
+//                request.setAttribute("firstname", fName);
+//                request.setAttribute("lastname", lName);
+////                request.setAttribute("phone", phone);
+//                request.setAttribute("email", email);
+//                request.setAttribute("password", pass);
+//                request.setAttribute("confirm_password", comfirmPass);
+//
+//                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+//                return;
+//            }
 
             if (!pass.equals(comfirmPass)) {
                 request.setAttribute("errMess", "Mật khẩu không khớp!");
@@ -145,13 +145,15 @@ public class Register_Account_Servlet extends HttpServlet {
                 request.setAttribute("lastname", lName);
                 request.setAttribute("email", email);
 //                request.setAttribute("phone", phone);
-                request.setAttribute("username", username);
+//                request.setAttribute("username", username);
                 request.setAttribute("password", pass);
 
                 request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
                 return;
             }
 
+            String username = genUsername(email);
+            
             String hashPass = BCrypt.hashpw(pass, BCrypt.gensalt());
 
             Account tempAcc = new Account();
@@ -170,7 +172,6 @@ public class Register_Account_Servlet extends HttpServlet {
             
             EmailSender.sendOTP(email, otp);
             session.setAttribute("otp", otp);
-            
 //            System.out.println(fullName);
             
 //            System.out.println(tempAcc);
@@ -178,6 +179,9 @@ public class Register_Account_Servlet extends HttpServlet {
 //            session.setAttribute("infor1", "Bạn cần nhập mã OTP để hoàn tất tạo tài khoản");
 
             session.setAttribute("fullName", fullName);
+//            session.setAttribute("username", username);
+            session.setAttribute("pass", pass);
+            
             session.setAttribute("email", email);
             response.sendRedirect("verify-otp");
             
@@ -195,6 +199,24 @@ public class Register_Account_Servlet extends HttpServlet {
         Random random = new Random();
         int otp = 100000 + random.nextInt(1000000);
         return String.valueOf(otp);
+    }
+    
+    public String genUsername(String email) {
+        String username = email.substring(0,email.indexOf("@"));
+        AccountDAO accdao = new AccountDAO();
+        String newUsername = "";
+        
+        boolean existUsername = true;
+        
+        while(existUsername){
+            Random random = new Random();
+            int randomNumber = 100000 + random.nextInt(1000000);
+            
+            newUsername = username + randomNumber;
+            
+            existUsername = accdao.isUsernameExist(newUsername);
+        }
+        return newUsername;
     }
 
     /**

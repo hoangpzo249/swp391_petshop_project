@@ -11,7 +11,7 @@
     Cookie[] cook = request.getCookies();
     if(cook != null) {
     for(Cookie c : cook){
-        if("emailUser".equals(c.getName())) email = c.getValue();
+        if("email".equals(c.getName())) email = c.getValue();
 //        if("username".equals(c.getName())) email = c.getValue();
         if("password".equals(c.getName())) password = c.getValue();
     }
@@ -43,14 +43,15 @@ request.setAttribute("password", password);
         <div class="register-container">
             <h2>Đăng nhập</h2>
             <form action="login" method="post">
-                <c:if test="${not empty sessionScope.successMessRegister}">
+
+                <c:if test="${not empty successMessRecover}">
                     <div class="successMess">
-                        <p>${sessionScope.successMessRegister}</p>
+                        <p>${successMessRecover}</p>
                     </div>
                 </c:if>
 
                 <div class="input-group">
-                    <label for="email">Tên đăng nhập hoặc Email*</label>
+                    <label for="email">Địa chỉ Email*</label>
                     <input type="text" id="email" name="email" value="${email}">
                 </div>
 

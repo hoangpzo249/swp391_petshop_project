@@ -1,5 +1,7 @@
 
+import DAO.AccountDAO;
 import java.util.Random;
+import org.mindrot.jbcrypt.BCrypt;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -12,7 +14,11 @@ import java.util.Random;
 public class test {
 
     public static void main(String[] args) {
-        genPass();
+//        String email = "filmmusic249@gmai.com";
+//        System.out.println(genUsername(email));
+
+genPass();
+        
     }
 
     public static String genPass() {
@@ -27,7 +33,28 @@ public class test {
             pass.append(all.charAt(random.nextInt(all.length())));
 
         }
-        System.out.println(pass);
-        return pass.toString();
+        
+        String hashPass = BCrypt.hashpw(pass.toString(), BCrypt.gensalt());
+        System.out.println(hashPass);
+        return hashPass;
     }
+
+    public static String genUsername(String email) {
+        String username = email.substring(0,email.indexOf("@"));
+        AccountDAO accdao = new AccountDAO();
+        String newUsername = "";
+        
+        boolean existUsername = true;
+        
+        while(existUsername){
+            Random random = new Random();
+            int randomNumber = 100000 + random.nextInt(1000000);
+            
+            newUsername = username + randomNumber;
+            
+            existUsername = accdao.isUsernameExist(newUsername);
+        }
+        return newUsername;
+    }
+
 }

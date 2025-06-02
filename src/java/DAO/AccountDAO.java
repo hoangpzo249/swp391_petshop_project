@@ -36,7 +36,7 @@ public class AccountDAO extends DBContext {
             ps.setString(5, account.getAccLname());
             ps.setString(6, "2000-01-01");
             ps.setString(7, "Chưa cập nhật");
-            ps.setString(8, account.getAccPhoneNumber());
+            ps.setString(8, "Chưa cập nhật");
             ps.setString(9, "Customer");
             ps.setString(10, "New account");
 
@@ -79,14 +79,14 @@ public class AccountDAO extends DBContext {
         return false;
     }
 
-    public Account isLoginAcc(String email, String username, String pass) {
+    public Account isLoginAcc(String email, String pass) {
         try {
             con = db.getConnection();
-            String sql = "SELECT * FROM AccountTB WHERE accEmail = ? or accUsername = ?";
+            String sql = "SELECT * FROM AccountTB WHERE accEmail = ?";
             ps = con.prepareStatement(sql);
 
             ps.setString(1, email);
-            ps.setString(2, username);
+//            ps.setString(2, username);
 
             rs = ps.executeQuery();
             if (rs.next()) {
@@ -168,14 +168,14 @@ public class AccountDAO extends DBContext {
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), Null, 'Active');";
             ps = con.prepareStatement(sql);
 
-            ps.setString(1, account.getAccEmail());
+            ps.setString(1, account.getAccUsername());
             ps.setString(2, account.getAccEmail());
             ps.setString(3, genPass());
             ps.setString(4, account.getAccFname());
             ps.setString(5, account.getAccLname());
             ps.setString(6, "2000-01-01");
             ps.setString(7, "Chưa cập nhật");
-            ps.setString(8, account.getAccPhoneNumber());
+            ps.setString(8, "Chưa cập nhật");
             ps.setString(9, "Customer");
             ps.setString(10, "New account");
 
@@ -187,11 +187,11 @@ public class AccountDAO extends DBContext {
 //        return false;
     }
 
-    public String genPass() {
+    public static String genPass() {
         String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lower = "abcdefghijklmnopqrstuvwxyz";
         String digits = "0123456789";
-        String special = "`~!@#$%^&*()_+";
+        String special = "!@#$%^&*()_+";
         String all = upper + lower + digits + special;
         Random random = new Random();
         StringBuilder pass = new StringBuilder();
@@ -199,7 +199,9 @@ public class AccountDAO extends DBContext {
             pass.append(all.charAt(random.nextInt(all.length())));
 
         }
-        System.out.println(pass);
-        return pass.toString();
+
+        String hashPass = BCrypt.hashpw(pass.toString(), BCrypt.gensalt());
+        System.out.println(hashPass);
+        return hashPass;
     }
 }

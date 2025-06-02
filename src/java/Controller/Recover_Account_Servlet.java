@@ -84,28 +84,35 @@ public class Recover_Account_Servlet extends HttpServlet {
                 return;
             }
 
+            String newOtp = otp();
+
+            HttpSession session = request.getSession();
+            session.setAttribute("otp", newOtp);
+
             AccountDAO accDao = new AccountDAO();
             boolean checkEmail = accDao.isEmailExist(inputEmail);
             if (checkEmail) {
-                String newPass = genPass();
-                EmailSender.recoverPass(inputEmail, newPass);
+//                String newPass = genPass();
+                EmailSender.sendOTP(inputEmail, newOtp);
+                session.setAttribute("email", inputEmail);
+                session.setAttribute("otp", newOtp);
+//                session.setAttribute("successMess", "Mã OTP đã được gửi đến Email của bạn");
+                response.sendRedirect("verify-otp-recover");
 
-                String hashPass = BCrypt.hashpw(newPass, BCrypt.gensalt());
-
-                Account acc = new Account();
-                acc.setAccEmail(inputEmail);
-                acc.setAccPassword(hashPass);
-                boolean success = accDao.updatePass(acc);
-                if (success) {
-                    HttpSession session = request.getSession();
-                    session.setAttribute("email", inputEmail);
-                    session.setAttribute("successMessRegister", "Mật khẩu mới đã được gửi về Email của bạn.");
-                    response.sendRedirect("login");
-                } else {
-                    request.setAttribute("errMess", "Lỗi.");
-                    request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
-                }
-
+//                String hashPass = BCrypt.hashpw(newPass, BCrypt.gensalt());
+//                Account acc = new Account();
+//                acc.setAccEmail(inputEmail);
+//                acc.setAccPassword(hashPass);
+//                boolean success = accDao.updatePass(acc);
+//                if (success) {
+//                    HttpSession session = request.getSession();
+//                    session.setAttribute("email", inputEmail);
+//                    session.setAttribute("successMessRegister", "Mật khẩu mới đã được gửi về Email của bạn.");
+//                    response.sendRedirect("login");
+//                } else {
+//                    request.setAttribute("errMess", "Lỗi.");
+//                    request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
+//                }
             } else {
                 request.setAttribute("errMess", "Email của bạn không tồn tại trong hệ thống.");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
@@ -116,22 +123,27 @@ public class Recover_Account_Servlet extends HttpServlet {
         }
     }
 
-    public String genPass() {
-        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String lower = "abcdefghijklmnopqrstuvwxyz";
-        String digits = "0123456789";
-        String special = "`~!@#$%^&*()_+";
-        String all = upper + lower + digits + special;
+    public String otp() {
         Random random = new Random();
-        StringBuilder pass = new StringBuilder();
-        for (int i = 0; i < 15; i++) {
-            pass.append(all.charAt(random.nextInt(all.length())));
-
-        }
-        System.out.println(pass);
-        return pass.toString();
+        int otp = 100000 + random.nextInt(1000000);
+        return String.valueOf(otp);
     }
 
+//    public String genPass() {
+//        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//        String lower = "abcdefghijklmnopqrstuvwxyz";
+//        String digits = "0123456789";
+//        String special = "`~!@#$%^&*()_+";
+//        String all = upper + lower + digits + special;
+//        Random random = new Random();
+//        StringBuilder pass = new StringBuilder();
+//        for (int i = 0; i < 15; i++) {
+//            pass.append(all.charAt(random.nextInt(all.length())));
+//
+//        }
+//        System.out.println(pass);
+//        return pass.toString();
+//    }
     /**
      * Returns a short description of the servlet.
      *

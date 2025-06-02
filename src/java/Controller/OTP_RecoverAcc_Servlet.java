@@ -6,8 +6,7 @@ package Controller;
 
 import DAO.AccountDAO;
 import Model.Account;
-import Utils.GoogleUser;
-import Utils.GoogleUtils;
+import Utils.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -21,7 +20,7 @@ import java.util.Random;
  *
  * @author HuyHoang
  */
-public class Login_Google_Servlet extends HttpServlet {
+public class OTP_RecoverAcc_Servlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +39,10 @@ public class Login_Google_Servlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Login_Google_Servlet</title>");
+            out.println("<title>Servlet OTP_RecoverAcc_Servlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Login_Google_Servlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet OTP_RecoverAcc_Servlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,70 +60,30 @@ public class Login_Google_Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String code = request.getParameter("code");
+        String action = request.getParameter("action");
 
-        if (code == null || code.trim().isEmpty()) {
-            request.setAttribute("errMess", "Đăng nhập bằng Google thất bại. Bạn hãy thử cách khác.");
-            request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
-            return;
-        }
         HttpSession session = request.getSession();
 
-        String accessToken = GoogleUtils.getToken(code);
-        GoogleUser ggUser = GoogleUtils.getUserInfo(accessToken);
-
-        AccountDAO accDao = new AccountDAO();
-        Account acc = accDao.ggByEmail(ggUser.getEmail());
-
-        String username = genUsername(ggUser.getEmail());
-//        System.out.println("Email tồn tại" + acc);
-        if (acc == null) {
-            Account newAcc = new Account();
-            newAcc.setAccUsername(username);
-            newAcc.setAccEmail(ggUser.getEmail());
-            newAcc.setAccFname(ggUser.getGiven_name());
-            newAcc.setAccLname(ggUser.getFamily_name());
-//            newAcc.setAccPhoneNumber("Chưa cập nhật");
-
-//            System.out.println("Email: " +ggUser.getEmail());
-            
+        if ("resend-otp".equals(action)) {
+            String email = (String) session.getAttribute("email");
+            String newotp = otp();
+            session.setAttribute("newotp", newotp);
             try {
-                accDao.registerAccByGG(newAcc);
-                
-                accDao.ggByEmail(ggUser.getEmail());
-                session.setAttribute("userAccount", acc);
-
-                session.setAttribute("loginSuccess", "Đăng nhập thành công với tài khoản Google");
-                response.sendRedirect("homepage");
+//                session.setAttribute("email", email);
+                EmailSender.sendOTP(email, newotp);
+                request.setAttribute("successMess", "Mã OTP mới đã được gửi đến Email của bạn");
             } catch (Exception e) {
-                request.setAttribute("errMess", "Có lỗi xảy ra với đăng nhập bằng tài khoản Google");
-                request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+                request.setAttribute("errMess", "Không thể gửi lại OTP");
             }
-
-        } else {
-            session.setAttribute("userAccount", acc);
-            session.setAttribute("loginSuccess", "Đăng nhập thành công với tài khoản Google");
-            response.sendRedirect("homepage");
         }
+
+        request.getRequestDispatcher("otp_recoveracc_page.jsp").forward(request, response);
     }
 
-    public String genUsername(String email) {
-        String username = email.substring(0, email.indexOf("@"));
-
-        AccountDAO accdao = new AccountDAO();
-        String newUsername = "";
-
-        boolean existUsername = true;
-
-        while (existUsername) {
-            Random random = new Random();
-            int randomNumber = 100000 + random.nextInt(1000000);
-
-            newUsername = username + randomNumber;
-
-            existUsername = accdao.isUsernameExist(newUsername);
-        }
-        return newUsername;
+    public String otp() {
+        Random random = new Random();
+        int otp = 100000 + random.nextInt(1000000);
+        return String.valueOf(otp);
     }
 
     /**
@@ -138,7 +97,26 @@ public class Login_Google_Servlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            String inputOTP = request.getParameter("inputotp");
+            HttpSession session = request.getSession();
+
+            String otp = (String) session.getAttribute("otp");
+            String newotp = (String) session.getAttribute("newotp");
+
+            if (inputOTP != null && !inputOTP.trim().isEmpty()
+                    && (otp != null && otp.equals(inputOTP))
+                    || (newotp != null && newotp.equals(inputOTP))) {
+                session.setAttribute("successMess", "Nhập mật khẩu mới của bạn");
+                response.sendRedirect("recover-password");
+
+            } else {
+                request.setAttribute("errMess", "Mã OTP không hợp lệ");
+                request.getRequestDispatcher("otp_recoveracc_page.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -34,7 +34,7 @@
                 <h2>Xác thực OTP</h2>
                 <p>Gửi mã OTP thành công tới:</p>
                 <p class="email-display">${email}</p>
-                <p class="instruction">Bạn cần nhập mã OTP để hoàn tất tạo tài khoản</p>
+                <p class="instruction">Bạn cần nhập mã OTP để hoàn tất tác vụ</p>
             </div>
             <c:if test="${not empty errMess}">
                 <div class="errMess">

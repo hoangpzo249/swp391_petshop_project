@@ -75,7 +75,7 @@ public class Login_Account_Servlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             String email = request.getParameter("email");
-            String username = request.getParameter("email");
+//            String username = request.getParameter("email");
             String password = request.getParameter("password");
 
             String remember = request.getParameter("remember");
@@ -92,7 +92,7 @@ public class Login_Account_Servlet extends HttpServlet {
             HttpSession session = request.getSession();
 
             AccountDAO accDao = new AccountDAO();
-            Account acc = accDao.isLoginAcc(email, username, password);
+            Account acc = accDao.isLoginAcc(email, password);
 
 //            session.setAttribute("userAccount", acc);
 //            if (!email.equals(acc.getAccEmail())) {
@@ -106,7 +106,7 @@ public class Login_Account_Servlet extends HttpServlet {
                 String role = acc.getAccRole();
 
                 if ("on".equals(remember)) {
-                    Cookie emailC = new Cookie("emailUser", email);
+                    Cookie emailC = new Cookie("email", email);
 //                    Cookie usernameC = new Cookie("email", username);
                     Cookie passC = new Cookie("password", password);
 
@@ -118,7 +118,7 @@ public class Login_Account_Servlet extends HttpServlet {
 //                    response.addCookie(usernameC);
                     response.addCookie(passC);
                 } else {
-                    Cookie emailC = new Cookie("emailUser", email);
+                    Cookie emailC = new Cookie("email", email);
 //                    Cookie usernameC = new Cookie("email", username);
                     Cookie passC = new Cookie("password", password);
 

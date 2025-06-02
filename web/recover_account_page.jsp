@@ -23,15 +23,10 @@
 
         <div class="register-container">
             <form action="" method="post">
-                <c:if test="${not empty sessionScope.successMessRecover}">
-                    <div class="successMess">
-                        <p>${sessionScope.successMessRecover}</p>
-                    </div>
-                </c:if>
 
                 <div class="otp-header">
                     <h2>Bạn quên mật khẩu?</h2>
-                    <p class="instruction">Nhập lại Email của bạn để lấy lại mật khẩu Email</p>
+                    <p class="instruction">Nhập lại Email của bạn để xác thực OTP và cập nhâp mật khẩu mới</p>
                 </div>
 
                 <div class="input-group">
