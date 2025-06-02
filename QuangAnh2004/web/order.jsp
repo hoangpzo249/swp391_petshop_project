@@ -1,53 +1,42 @@
-<%-- 
-    Document   : order
-    Created on : Jun 1, 2025, 1:09:33 PM
-    Author     : QuangAnh
---%>
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="java.util.List, model.Order" %>
+<%
+    List<Order> orders = (List<Order>) request.getAttribute("orders");
+%>
 <html>
-<head>
-    <title>Lịch sử đơn hàng</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-</head>
+<head><title>Order List</title></head>
 <body>
-<jsp:include page="header.jsp" />
-
-<h2>Lịch sử đơn hàng của bạn</h2>
-
-<c:if test="${not empty errorMessage}">
-    <p class="error">${errorMessage}</p>
-</c:if>
-
-<c:if test="${empty orders}">
-    <p>Bạn chưa có đơn hàng nào.</p>
-</c:if>
-
-<c:if test="${not empty orders}">
-    <table border="1" cellpadding="10" cellspacing="0">
+    <h2>Your Orders</h2>
+    <table border="1">
         <tr>
-            <th>Mã đơn</th>
-            <th>Ngày đặt</th>
-            <th>Trạng thái</th>
-            <th>Phương thức thanh toán</th>
-            <th>Trạng thái thanh toán</th>
-            <th>Xem chi tiết</th>
+            <th>Order ID</th><th>Status</th><th>Action</th>
         </tr>
-
-        <c:forEach var="order" items="${orders}">
-            <tr>
-                <td>${order.orderId}</td>
-                <td>${order.orderDate}</td>
-                <td>${order.orderStatus}</td>
-                <td>${order.paymentMethod}</td>
-                <td>${order.paymentStatus}</td>
-                <td><a href="order-detail.jsp?orderId=${order.orderId}">Chi tiết</a></td>
-            </tr>
+        <c:forEach var="o" items="${orders}">
+        <tr>
+            <td>${o.orderId}</td>
+            <td>${o.orderStatus}</td>
+            <td>
+                <c:choose>
+                    <c:when test="${o.orderStatus == 'Unconfirmed'}">
+                        <form action="CancelOrderServlet" method="get">
+                            <input type="hidden" name="orderId" value="${o.orderId}">
+                            <input type="submit" value="Cancel">
+                        </form>
+                    </c:when>
+                    <c:when test="${o.paymentStatus == 'Paid' && !o.cancellationRequested}">
+                        <form action="RequestCancelServlet" method="get">
+                            <input type="hidden" name="orderId" value="${o.orderId}">
+                            <input type="submit" value="Request Cancel">
+                        </form>
+                    </c:when>
+                    <c:otherwise>
+                        N/A
+                    </c:otherwise>
+                </c:choose>
+            </td>
+        </tr>
         </c:forEach>
     </table>
-</c:if>
-
-<jsp:include page="footer.jsp" />
 </body>
 </html>
+

@@ -44,6 +44,18 @@ public class OrderDAO extends DBContext{
         return list;
     }
     
+    public boolean requestCancelPaidOrder(int orderId) {
+        String sql = "UPDATE OrderTB SET cancellationRequested = 1 WHERE orderId = ? AND paymentStatus = 'Paid'";
+        try (PreparedStatement stm = c.prepareStatement(sql)) {
+            stm.setInt(1, orderId);
+            return stm.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    
     public boolean cancelUnconfirmeOrder(int orderId, int accId) {
         String checkSql = "SELECT orderStatus FROM OrderTB WHERE orderId = ? AND accId = ?";
         try (PreparedStatement stm = c.prepareStatement(checkSql)){

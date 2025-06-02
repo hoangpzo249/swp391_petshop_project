@@ -18,7 +18,7 @@ import java.net.URLEncoder;
  *
  * @author QuangAnh
  */
-public class CancelOrderServlet extends HttpServlet {
+public class RequestCancelServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +35,10 @@ public class CancelOrderServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CancelOrderServlet</title>");  
+            out.println("<title>Servlet RequestCancelServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CancelOrderServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet RequestCancelServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,11 +57,10 @@ public class CancelOrderServlet extends HttpServlet {
     throws ServletException, IOException {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         OrderDAO dao = new OrderDAO();
-        boolean success = dao.cancelUnconfirmeOrder(orderId, orderId);
+        boolean success = dao.requestCancelPaidOrder(orderId);
 
-        String msg = success ? "Order cancelled" : "Cancel failed";
+        String msg = success ? "Cancellation requested" : "Request failed";
         response.sendRedirect("ViewOrdersServlet?msg=" + URLEncoder.encode(msg, "UTF-8"));
-    }
     } 
 
     /** 

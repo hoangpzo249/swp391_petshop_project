@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" />
 </head>
 <body>
-<jsp:include page="header.jsp" />
+
 
 <h2>Đánh giá cửa hàng</h2>
 
@@ -39,7 +39,6 @@
     <button type="submit">Gửi đánh giá</button>
 </form>
 
-<jsp:include page="footer.jsp" />
 </body>
 </html>
 

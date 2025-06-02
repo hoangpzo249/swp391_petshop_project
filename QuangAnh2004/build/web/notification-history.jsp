@@ -7,6 +7,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Notification" %>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css" />
+</head>
+
 <%
     List<Notification> notifications = (List<Notification>) request.getAttribute("notifications");
     String selectedType = (String) request.getAttribute("selectedType");
