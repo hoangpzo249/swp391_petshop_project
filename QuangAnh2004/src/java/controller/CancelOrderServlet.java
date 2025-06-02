@@ -62,7 +62,7 @@ public class CancelOrderServlet extends HttpServlet {
         String msg = success ? "Order cancelled" : "Cancel failed";
         response.sendRedirect("ViewOrdersServlet?msg=" + URLEncoder.encode(msg, "UTF-8"));
     }
-    } 
+    
 
     /** 
      * Handles the HTTP <code>POST</code> method.
