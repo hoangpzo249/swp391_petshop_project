@@ -5,6 +5,16 @@
         <group>
             <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/web/main_typepet.jsp</file>
             <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/src/java/DAO/PetDAO.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/web/css/head_about.css</file>
+            <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/web/css/main_type.css</file>
+            <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/src/java/DAO/BreedDAO.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/src/java/DAO/DBContext.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/src/java/Models/Breed.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/src/java/Models/Pet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/test/BreedDAOTest.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/test/TestPetDAO.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/src/java/Controllers/ListShopPetServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/SWP_nop/web/WEB-INF/web.xml</file>
         </group>
     </open-files>
 </project-private>

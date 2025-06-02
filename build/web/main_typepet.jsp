@@ -1,8 +1,4 @@
-<%-- 
-    Document   : type
-    Created on : 4 Mar 2025, 10:37:20 pm
-    Author     : HuyHoang
---%>
+
 
 <%--<%@ page import="java.util.List" %>
 <%@ page import="Models.Pet" %>--%>
