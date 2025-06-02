@@ -47,10 +47,6 @@ public class Account {
         this.accStatus = accStatus;
     }
 
-    
-    
-    
-
     public Account(int accId, String accUsername, String accEmail, String accPassword, String accFname, String accLname, LocalDate accDob, String accAddress, String accPhoneNumber, String accRole, String accDescription, LocalDateTime accCreateDate, byte[] accImage, String accStatus) {
         this.accId = accId;
         this.accUsername = accUsername;
@@ -184,6 +180,5 @@ public class Account {
     public String toString() {
         return "Account{" + "accId=" + accId + ", accUsername=" + accUsername + ", accEmail=" + accEmail + ", accPassword=" + accPassword + ", accFname=" + accFname + ", accLname=" + accLname + ", accDob=" + accDob + ", accAddress=" + accAddress + ", accPhoneNumber=" + accPhoneNumber + ", accRole=" + accRole + ", accDescription=" + accDescription + ", accCreateDate=" + accCreateDate + ", accImage=" + accImage + ", accStatus=" + accStatus + '}';
     }
-
 
 }

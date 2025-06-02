@@ -4,8 +4,24 @@
         <servlet-name>DisplayOrderServlet</servlet-name>
         <servlet-class>Controllers.DisplayOrderServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TestLoginServlet</servlet-name>
+        <servlet-class>Controllers.TestLoginServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DisplayOrderDetail</servlet-name>
+        <servlet-class>Controllers.DisplayOrderDetail</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DisplayOrderServlet</servlet-name>
         <url-pattern>/displayorder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TestLoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DisplayOrderDetail</servlet-name>
+        <url-pattern>/orderdetail</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -63,4 +63,33 @@ public class AccountDAO {
         }
 
     }
+    
+    public Account getTestAccount() {
+        DBContext db=new DBContext();
+        Account account=new Account();
+        try {
+            conn=db.getConnection();
+            String sql="SELECT * FROM AccountTB WHERE accId=3";
+            ps=conn.prepareStatement(sql);
+            rs=ps.executeQuery();
+            while (rs.next()) {
+                account.setAccId(rs.getInt("accId"));
+                account.setAccUsername(rs.getString("accUsername"));
+                account.setAccEmail(rs.getString("accEmail"));
+                account.setAccFname(rs.getString("accFname"));
+                account.setAccLname(rs.getString("accLname"));
+                account.setAccDob(rs.getDate("accDob").toLocalDate());
+                account.setAccAddress(rs.getString("accAddress"));
+                account.setAccPhoneNumber(rs.getString("accPhoneNumber"));
+                account.setAccRole(rs.getString("accRole"));
+                account.setAccDescription(rs.getString("accDescription"));
+                account.setAccCreateDate(rs.getTimestamp("accCreateDate").toLocalDateTime());
+                account.setAccImage(rs.getBytes("accImage"));
+                account.setAccStatus(rs.getString("accStatus"));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return account;
+    }
 }

@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAO.OrderDAO;
+import DAO.PetDAO;
 import Models.Order;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,13 +13,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  *
  * @author Lenovo
  */
-public class DisplayOrderServlet extends HttpServlet {
+public class DisplayOrderDetail extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,10 +37,10 @@ public class DisplayOrderServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DisplayOrderServlet</title>");
+            out.println("<title>Servlet DisplayOrderDetail</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DisplayOrderServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DisplayOrderDetail at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,15 +58,10 @@ public class DisplayOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        OrderDAO _dao = new OrderDAO();
-
-        List<Order> list = _dao.getOrders();
-
-        request.setAttribute("orderList", list);
-
-        request.getRequestDispatcher("seller_order_view.jsp")
-                .forward(request, response);
-
+        String id = request.getParameter("id");
+        OrderDAO _daoorder = new OrderDAO();
+        PetDAO _daopet = new PetDAO();
+        Order order = _daoorder.getOrderById(id);
     }
 
     /**

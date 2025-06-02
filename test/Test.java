@@ -3,6 +3,7 @@ import DAO.AccountDAO;
 import DAO.OrderDAO;
 import Models.Account;
 import Models.Order;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -109,7 +110,10 @@ public class Test {
 //    }
     
     public static void main(String[] args) {
-        getOrders();
+        ArrayList<Integer> list=_orddao.getOrderContentById("1");
+        for (Integer i : list) {
+            System.out.println(i);
+        }
     }
 
     public static void createAccount(Account account) {

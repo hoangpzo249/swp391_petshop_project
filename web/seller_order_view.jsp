@@ -42,6 +42,7 @@
         <th>Shipper ID</th>
         <th>Payment Method</th>
         <th>Payment Status</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -58,6 +59,7 @@
           <td>${order.shipperId}</td>
           <td>${order.paymentMethod}</td>
           <td>${order.paymentStatus}</td>
+          <td><a href="orderdetail?id=${order.orderId}">View detail</a></td>
         </tr>
       </c:forEach>
       <c:if test="${empty orderList}">
