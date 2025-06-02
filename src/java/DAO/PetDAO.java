@@ -20,13 +20,33 @@ public class PetDAO {
     PreparedStatement ps;
     ResultSet rs;
 
-    public List<Pet> getSimilarPets(int breedId) {
+    private Pet PetInfo(ResultSet rs) throws Exception {
+    return new Pet(
+        rs.getInt("petId"),
+        rs.getString("petName"),
+        rs.getDate("petDob"),
+        rs.getString("petOrigin"),
+        rs.getString("petGender"),
+        rs.getInt("petAvailability"),
+        rs.getString("petColor"),
+        rs.getInt("petVaccination"),
+        rs.getString("petDescription"),
+        rs.getDouble("petPrice"),
+        rs.getInt("breedId"),
+        rs.getInt("createdBy")
+    );
+}
+    public List<Pet> getSimilarPets(int breedId,int excludedPetId) {
         List<Pet> list = new ArrayList<>();
+        Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
         try {
             conn = new DBContext().getConnection();
-            String sql = "SELECT * FROM PetTB WHERE petAvailability=1 AND breedId=?";
+            String sql = "SELECT * FROM PetTB WHERE petAvailability=1 AND breedId=? AND petId!=?";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, breedId);
+            ps.setInt(2, excludedPetId);
             rs = ps.executeQuery();
             while (rs.next()) {
                 Pet pet = PetInfo(rs);
@@ -94,22 +114,7 @@ public class PetDAO {
         return images;
     }
 
-   private Pet PetInfo(ResultSet rs) throws Exception {
-    return new Pet(
-        rs.getInt("petId"),
-        rs.getString("petName"),
-        rs.getDate("petDob"),
-        rs.getString("petOrigin"),
-        rs.getString("petGender"),
-        rs.getInt("petAvailability"),
-        rs.getString("petColor"),
-        rs.getInt("petVaccination"),
-        rs.getString("petDescription"),
-        rs.getDouble("petPrice"),
-        rs.getInt("breedId"),
-        rs.getInt("createdBy")
-    );
-}
+   
 
 public List<String> getAllOrigins() {
         List<String> list = new ArrayList<>();
