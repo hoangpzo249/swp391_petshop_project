@@ -11,7 +11,7 @@
 <%
     Integer accId = (Integer) session.getAttribute("accId");
     if(accId == null){
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("login_account_page.jsp");
         return;
     }
 %>
