@@ -40,16 +40,16 @@ request.setAttribute("password", password);
         <div class="floating-particle particle4"></div>
         <div class="floating-particle particle5"></div>
 
+        <c:if test="${not empty successMessRecover}">
+            <div class="login-success-alert">
+                ${successMessRecover}
+            </div>
+            <c:remove var="successMessRecover" scope="session" />
+        </c:if>
+
         <div class="register-container">
             <h2>Đăng nhập</h2>
             <form action="login" method="post">
-
-                <c:if test="${not empty successMessRecover}">
-                    <div class="successMess">
-                        <p>${successMessRecover}</p>
-                    </div>
-                </c:if>
-
                 <div class="input-group">
                     <label for="email">Địa chỉ Email*</label>
                     <input type="text" id="email" name="email" value="${email}">

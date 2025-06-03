@@ -116,20 +116,21 @@ public class AccountDAO extends DBContext {
         return null;
     }
 
-    public boolean updatePass(Account acc) {
+    public boolean updatePass(String email, String pass) {
         try {
+            con = db.getConnection();
             String sql = "UPDATE AccountTB SET accPassword = ? WHERE accEmail = ?";
             ps = con.prepareStatement(sql);
 
-            ps.setString(1, acc.getAccPassword());
-            ps.setString(2, acc.getAccEmail());
+            ps.setString(1, pass);
+            ps.setString(2, email);
 
-            int rows = ps.executeUpdate();
-            return rows > 0;
+            int row = ps.executeUpdate();
+            return row > 0;
         } catch (Exception e) {
-
+            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     public Account ggByEmail(String email) {

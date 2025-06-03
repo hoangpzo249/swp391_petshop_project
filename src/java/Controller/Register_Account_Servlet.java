@@ -61,10 +61,36 @@ public class Register_Account_Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
-        } catch (Exception e) {
 
+        String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+
+        if (action == null || action.trim().isEmpty()) {
+            request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+
+        } else if ("resend-otp".equals(action)) {
+            String email = (String) session.getAttribute("email");
+
+            if (email != null || !email.trim().isEmpty()) {
+                String otp = otp();
+                try {
+                    EmailSender.sendOTP(email, otp);
+
+                    session.setAttribute("otp", otp);
+                    request.setAttribute("successMess", "Gửi lại OTP thành công");
+                    request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+                } catch (Exception e) {
+                    request.setAttribute("errMess", "Bạn cần thực hiện lại");
+                    request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+                }
+            } else {
+                session.invalidate();
+                request.setAttribute("errMess", "Hết thời gian chờ, bạn cần thực hiện lại.");
+                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+            }
+
+        } else {
+            request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
         }
     }
 
@@ -79,17 +105,18 @@ public class Register_Account_Servlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
+        String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+
+        if (action == null || action.trim().isEmpty()) {
             String fName = request.getParameter("firstname");
             String lName = request.getParameter("lastname");
             String email = request.getParameter("email");
-//            String phone = request.getParameter("phone");
-//            String username = request.getParameter("username");
             String pass = request.getParameter("password");
             String comfirmPass = request.getParameter("confirm_password");
 
             String fullName = fName + " " + lName;
-            
+
             if (fName == null || lName == null || email == null || pass == null || comfirmPass == null
                     || fName.trim().isEmpty() || lName.trim().isEmpty() || email.trim().isEmpty() || pass.trim().isEmpty() || comfirmPass.trim().isEmpty()) {
                 request.setAttribute("errMess", "Bạn cần điền đủ thông tin!");
@@ -97,8 +124,6 @@ public class Register_Account_Servlet extends HttpServlet {
                 request.setAttribute("firstname", fName);
                 request.setAttribute("lastname", lName);
                 request.setAttribute("email", email);
-//                request.setAttribute("phone", phone);
-//                request.setAttribute("username", username);
                 request.setAttribute("password", pass);
                 request.setAttribute("confirm_password", comfirmPass);
 
@@ -114,8 +139,6 @@ public class Register_Account_Servlet extends HttpServlet {
 
                 request.setAttribute("firstname", fName);
                 request.setAttribute("lastname", lName);
-//                request.setAttribute("phone", phone);
-//                request.setAttribute("username", username);
                 request.setAttribute("password", pass);
                 request.setAttribute("confirm_password", comfirmPass);
 
@@ -123,29 +146,12 @@ public class Register_Account_Servlet extends HttpServlet {
                 return;
             }
 
-//            boolean checkUsername = daoAcc.isUsernameExist(username);
-//            if (checkUsername) {
-//                request.setAttribute("errMess", "Username đã tồn tại, bạn cần nhập username khác.");
-//
-//                request.setAttribute("firstname", fName);
-//                request.setAttribute("lastname", lName);
-////                request.setAttribute("phone", phone);
-//                request.setAttribute("email", email);
-//                request.setAttribute("password", pass);
-//                request.setAttribute("confirm_password", comfirmPass);
-//
-//                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
-//                return;
-//            }
-
             if (!pass.equals(comfirmPass)) {
                 request.setAttribute("errMess", "Mật khẩu không khớp!");
 
                 request.setAttribute("firstname", fName);
                 request.setAttribute("lastname", lName);
                 request.setAttribute("email", email);
-//                request.setAttribute("phone", phone);
-//                request.setAttribute("username", username);
                 request.setAttribute("password", pass);
 
                 request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
@@ -153,7 +159,7 @@ public class Register_Account_Servlet extends HttpServlet {
             }
 
             String username = genUsername(email);
-            
+
             String hashPass = BCrypt.hashpw(pass, BCrypt.gensalt());
 
             Account tempAcc = new Account();
@@ -164,35 +170,78 @@ public class Register_Account_Servlet extends HttpServlet {
             tempAcc.setAccUsername(username);
             tempAcc.setAccPassword(hashPass);
 
-            HttpSession session = request.getSession();
-
             session.setAttribute("tempAccount", tempAcc);
-                    
+
             String otp = otp();
-            
-            EmailSender.sendOTP(email, otp);
-            session.setAttribute("otp", otp);
-//            System.out.println(fullName);
-            
-//            System.out.println(tempAcc);
-//            session.setAttribute("infor", "Gửi mã OTP thành công");
-//            session.setAttribute("infor1", "Bạn cần nhập mã OTP để hoàn tất tạo tài khoản");
 
-            session.setAttribute("fullName", fullName);
-//            session.setAttribute("username", username);
-            session.setAttribute("pass", pass);
-            
-            session.setAttribute("email", email);
-            response.sendRedirect("verify-otp");
-            
-//            session.setAttribute("firstname", fName);
-//            session.setAttribute("lastname", lName);
-//            session.setAttribute("phone", phone);
-//            session.setAttribute("username", username);
-//            request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+            try {
+                EmailSender.sendOTP(email, otp);
 
-        } catch (Exception e) {
+                session.setAttribute("otp", otp);
+                session.setAttribute("fullName", fullName);
+                session.setAttribute("pass", pass);
+                session.setAttribute("email", email);
+                session.setAttribute("sendOtpSuccess", "true");
+
+                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+            } catch (Exception e) {
+                request.setAttribute("errMess", "Bạn cần thực hiện lại");
+                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+            }
+
+        } else if ("otp".equals(action)) {
+
+            String inputOTP = request.getParameter("inputotp");
+            String otp = (String) session.getAttribute("otp");
+
+            String email = (String) session.getAttribute("email");
+            String fullName = (String) session.getAttribute("fullName");
+
+            String pass = (String) session.getAttribute("pass");
+
+            Account account = (Account) session.getAttribute("tempAccount");
+
+            if (otp == null || otp.trim().isEmpty()
+                    || email == null || email.trim().isEmpty()
+                    || fullName == null || fullName.trim().isEmpty()
+                    || pass == null || pass.trim().isEmpty()
+                    || account == null) {
+                session.invalidate();
+                request.setAttribute("errMess", "Hết thời gian chờ, bạn cần thực hiện lại.");
+                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+            }
+
+            if (inputOTP != null && !inputOTP.trim().isEmpty()
+                    && otp != null && otp.equals(inputOTP)) {
+
+                AccountDAO accDao = new AccountDAO();
+                try {
+                    accDao.registerAcc(account);
+                    EmailSender.registerSuccess(email, fullName);
+
+                    Account acc = accDao.isLoginAcc(email, pass);
+                    try {
+                        session.setAttribute("userAccount", acc);
+                        session.setAttribute("loginSuccess", "Bạn đã tạo tài khoản thành công<br>Cập nhật địa chỉ và số điện thoại <a href='profile' style='color:#f26f21'>TẠI ĐÂY</a> để hoàn tất hồ sơ.");
+                        response.sendRedirect("homepage");
+                    } catch (Exception e) {
+                        session.setAttribute("errMess", "Đăng kí thất bại");
+                        request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+                    }
+
+                } catch (Exception e) {
+                    session.setAttribute("errMess", "Tạo tài khoản không thành công");
+                    request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+                }
+
+            } else {
+                request.setAttribute("errMess", "Mã OTP không hợp lệ");
+                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+            }
+        } else {
+            response.sendRedirect("register");
         }
+
     }
 
     public String otp() {
@@ -200,20 +249,20 @@ public class Register_Account_Servlet extends HttpServlet {
         int otp = 100000 + random.nextInt(1000000);
         return String.valueOf(otp);
     }
-    
+
     public String genUsername(String email) {
-        String username = email.substring(0,email.indexOf("@"));
+        String username = email.substring(0, email.indexOf("@"));
         AccountDAO accdao = new AccountDAO();
         String newUsername = "";
-        
+
         boolean existUsername = true;
-        
-        while(existUsername){
+
+        while (existUsername) {
             Random random = new Random();
             int randomNumber = 100000 + random.nextInt(1000000);
-            
+
             newUsername = username + randomNumber;
-            
+
             existUsername = accdao.isUsernameExist(newUsername);
         }
         return newUsername;
