@@ -67,7 +67,7 @@ public class InvoiceServlet extends HttpServlet {
         
         try{
             InvoiceDAO dao = new InvoiceDAO();
-            List<Invoice> invoices = dao.getInvoicesByCustomer(accId);
+            List<Invoice> invoices = dao.getInvoicesByAccId(accId);
             
             request.setAttribute("invoices", invoices);
             request.getRequestDispatcher("invoice_history,jsp").forward(request, response);

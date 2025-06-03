@@ -16,7 +16,7 @@ import model.Invoice;
  * @author QuangAnh
  */
 public class InvoiceDAO extends DBContext{
-    public List<Invoice> getInvoicesByCustomer(int accId) {
+    public List<Invoice> getInvoicesByAccId(int accId) {
         List<Invoice> list = new ArrayList<>();
         String sql = """
             SELECT i.invoiceId, i.orderId, i.issueDate, i.totalAmount, i.taxAmount, i.paymentMethod

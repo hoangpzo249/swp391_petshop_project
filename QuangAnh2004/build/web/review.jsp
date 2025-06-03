@@ -6,6 +6,13 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    Interger accId = (Integer) session.getAttribute("accId");
+    if(accId == null){
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 <html>
 <head>
     <title>Viết đánh giá</title>
@@ -17,13 +24,7 @@
 <h2>Đánh giá cửa hàng</h2>
 
 <c:if test="${param.msg == 'success'}">
-    <p class="success">Cảm ơn bạn đã gửi đánh giá!</p>
-</c:if>
-<c:if test="${param.msg == 'error'}">
-    <p class="error">Có lỗi xảy ra. Vui lòng thử lại.</p>
-</c:if>
-
-<form action="review" method="post">
+    <form action="review" method="post">
     <label for="rating">Chọn số sao (1-5):</label><br/>
     <select name="rating" id="rating" required>
         <option value="5">5 - Rất tốt</option>
@@ -38,6 +39,11 @@
 
     <button type="submit">Gửi đánh giá</button>
 </form>
+</c:if>
+<c:if test="${param.msg == 'error'}">
+    <p class="error">Có lỗi xảy ra. Vui lòng thử lại.</p>
+</c:if>
+
 
 </body>
 </html>

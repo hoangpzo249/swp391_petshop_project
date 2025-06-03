@@ -7,6 +7,13 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Notification" %>
+<%
+    Interger accId = (Integer) session.getAttribute("accId");
+    if(accId == null){
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css" />

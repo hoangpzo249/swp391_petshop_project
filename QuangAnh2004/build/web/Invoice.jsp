@@ -8,9 +8,15 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Invoice" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    Interger accId = (Integer) session.getAttribute("accId");
+    if(accId == null){
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 <html>
 <head>
-    <title>Lịch sử hóa đơn</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" />
 </head>
 <body>
