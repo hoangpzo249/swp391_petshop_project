@@ -7,12 +7,14 @@ package Controllers;
 import DAO.OrderDAO;
 import DAO.PetDAO;
 import Models.Order;
+import Models.Pet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 /**
  *
@@ -62,6 +64,11 @@ public class DisplayOrderDetail extends HttpServlet {
         OrderDAO _daoorder = new OrderDAO();
         PetDAO _daopet = new PetDAO();
         Order order = _daoorder.getOrderById(id);
+        ArrayList<Integer> list=_daoorder.getOrderContentById(id);
+        ArrayList<Pet> petlist=new ArrayList<>();
+        for (Integer i : list) {
+            
+        }
     }
 
     /**
