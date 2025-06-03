@@ -9,7 +9,7 @@
 <%@ page import="model.Invoice" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    Interger accId = (Integer) session.getAttribute("accId");
+    Integer accId = (Integer) session.getAttribute("accId");
     if(accId == null){
         response.sendRedirect("login.jsp");
         return;

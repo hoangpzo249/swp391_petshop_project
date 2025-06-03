@@ -8,7 +8,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Notification" %>
 <%
-    Interger accId = (Integer) session.getAttribute("accId");
+    Integer accId = (Integer) session.getAttribute("accId");
     if(accId == null){
         response.sendRedirect("login.jsp");
         return;
