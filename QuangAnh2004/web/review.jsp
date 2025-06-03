@@ -7,7 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    Interger accId = (Integer) session.getAttribute("accId");
+    Interger accId = (Interger) session.getAttribute("accId");
     if(accId == null){
         response.sendRedirect("login.jsp");
         return;
