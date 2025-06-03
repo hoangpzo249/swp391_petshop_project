@@ -8,6 +8,10 @@
         <servlet-name>DisplayPetServlet</servlet-name>
         <servlet-class>Controllers.DisplayPetServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddToCartServlet</servlet-name>
+        <servlet-class>Controllers.AddToCartServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -15,5 +19,9 @@
     <servlet-mapping>
         <servlet-name>DisplayPetServlet</servlet-name>
         <url-pattern>/displaypet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddToCartServlet</servlet-name>
+        <url-pattern>/addtocart</url-pattern>
     </servlet-mapping>
 </web-app>
