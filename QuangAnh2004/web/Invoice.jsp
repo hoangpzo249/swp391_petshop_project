@@ -8,16 +8,16 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Invoice" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%
+<!-- 
     Integer accId = (Integer) session.getAttribute("accId");
     if(accId == null){
         response.sendRedirect("login_account_page.jsp");
         return;
     }
-%>
+-->
 <html>
 <head>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" />
+    <link rel="stylesheet" type="text/CSS" href="CSS/Invoice.css">
 </head>
 <body>
 

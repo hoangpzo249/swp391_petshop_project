@@ -2,14 +2,14 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="java.util.List, model.Order" %>
 
-<%
+<!--
     List<Order> orders = (List<Order>) request.getAttribute("orders");
     Integer accId = (Integer) session.getAttribute("accId");
     if(accId == null){
         response.sendRedirect("login_account_page.jsp");
         return;
     }
-%>
+-->
 
 <html>
 <head>

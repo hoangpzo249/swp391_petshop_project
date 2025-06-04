@@ -7,16 +7,16 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Notification" %>
-<%
+<!--
     Integer accId = (Integer) session.getAttribute("accId");
     if(accId == null){
         response.sendRedirect("login_account_page.jsp");
         return;
     }
-%>
+-->
 
 <head>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css" />
+    <link rel="stylesheet" type="text/CSS" href="CSS/notification-history.css">
 </head>
 
 <%

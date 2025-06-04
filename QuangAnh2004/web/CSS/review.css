@@ -1,0 +1,122 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jun 4, 2025, 11:01:44 AM
+    Author     : QuangAnh
+*/
+
+/* Cài đặt tổng thể */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fffefc;
+    color: #333;
+    margin: 0;
+    padding: 40px;
+}
+
+/* Tiêu đề trang */
+h2 {
+    text-align: center;
+    color: #ff6f69;
+    margin-bottom: 30px;
+}
+
+/* Bảng chung */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+/* Header bảng */
+th {
+    background-color: #ffd3b6;
+    padding: 14px;
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Dòng bảng */
+td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+/* Dòng xen kẽ màu */
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Hover dòng */
+tr:hover {
+    background-color: #ffeaea;
+}
+
+/* Form và input */
+form {
+    margin: 20px 0;
+    text-align: center;
+}
+
+label {
+    font-weight: bold;
+    color: #555;
+}
+
+select, textarea, input[type="text"] {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 250px;
+    margin: 5px;
+    font-size: 14px;
+}
+
+textarea {
+    width: 90%;
+}
+
+/* Nút */
+button, input[type="submit"] {
+    background-color: #ff6f69;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #ff3d3d;
+}
+
+/* Thông báo lỗi */
+.error {
+    color: #d8000c;
+    background-color: #ffbaba;
+    padding: 10px;
+    margin-top: 15px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* Thông báo thành công */
+.message {
+    background-color: #dff0d8;
+    color: #3c763d;
+    padding: 10px;
+    margin-top: 15px;
+    text-align: center;
+    border-radius: 8px;
+}
