@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class Pet {
+
     private int petId;
     private String petName;
     private Date petDob;
@@ -23,8 +24,8 @@ public class Pet {
     private int createdBy;
 
     public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender,
-               int petAvailability, String petColor, int petVaccination, String petDescription,
-               double petPrice, int breedId, int createdBy) {
+            int petAvailability, String petColor, int petVaccination, String petDescription,
+            double petPrice, int breedId, int createdBy) {
         this.petId = petId;
         this.petName = petName;
         this.petDob = petDob;
@@ -38,8 +39,6 @@ public class Pet {
         this.breedId = breedId;
         this.createdBy = createdBy;
     }
-
-    
 
     public int getPetId() {
         return petId;
@@ -138,62 +137,45 @@ public class Pet {
     }
     private String breedName;
 
-public String getBreedName() {
-    return breedName;
-}
+    public String getBreedName() {
+        return breedName;
+    }
 
-public void setBreedName(String breedName) {
-    this.breedName = breedName;
-}
+    public void setBreedName(String breedName) {
+        this.breedName = breedName;
+    }
 
     @Override
-public String toString() {
-    return "Pet {" +
-            "ID=" + petId +
-            ", Name='" + petName + '\'' +
-            ", DOB=" + petDob +
-            ", Gender='" + petGender + '\'' +
-            ", Origin='" + petOrigin + '\'' +
-            ", Color='" + petColor + '\'' +
-            ", Vaccinated=" + (petVaccination == 1 ? "Yes" : "No") +
-            ", Price=" + petPrice +
-            ", BreedId=" + breedId +
-            ", Description='" + petDescription + '\'' +
-            ", CreatedBy=" + createdBy +
-            '}';
-}
-private List<byte[]> images;
-
-public List<byte[]> getImages() {
-    return images;
-}
-
-public void setImages(List<byte[]> images) {
-    this.images = images;
-}
-
-
-public String getPetImageBase64() {
-    if (images != null && !images.isEmpty()) {
-        return "data:image/png;base64," + Base64.getEncoder().encodeToString(images.get(0));
+    public String toString() {
+        return "Pet {"
+                + "ID=" + petId
+                + ", Name='" + petName + '\''
+                + ", DOB=" + petDob
+                + ", Gender='" + petGender + '\''
+                + ", Origin='" + petOrigin + '\''
+                + ", Color='" + petColor + '\''
+                + ", Vaccinated=" + (petVaccination == 1 ? "Yes" : "No")
+                + ", Price=" + petPrice
+                + ", BreedId=" + breedId
+                + ", Description='" + petDescription + '\''
+                + ", CreatedBy=" + createdBy
+                + '}';
     }
-    return "images/defaultcatdog.png"; 
-}
+    private List<byte[]> images;
 
-public int getPetAgeInMonths() {
-    if (petDob == null) return 0;
-    Calendar now = Calendar.getInstance();
-    Calendar birth = Calendar.getInstance();
-    birth.setTime(petDob);
-    int months = (now.get(Calendar.YEAR) - birth.get(Calendar.YEAR)) * 12 +
-                 now.get(Calendar.MONTH) - birth.get(Calendar.MONTH);
-    return months;
-}
+    public List<byte[]> getImages() {
+        return images;
+    }
 
+    public void setImages(List<byte[]> images) {
+        this.images = images;
+    }
 
+    public String getPetImageBase64() {
+        if (images != null && !images.isEmpty()) {
+            return "data:image/png;base64," + Base64.getEncoder().encodeToString(images.get(0));
+        }
+        return "images/defaultcatdog.png";
+    }
 
-    
-
-    
- 
 }

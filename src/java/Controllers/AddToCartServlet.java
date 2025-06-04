@@ -75,9 +75,22 @@ public class AddToCartServlet extends HttpServlet {
                 double unitPrice = Double.parseDouble(priceStr);
                 int petId = Integer.parseInt(idStr);
 
-               
+                Account acc = (Account) session.getAttribute("account");
 
-             
+                if (acc != null) {
+                    int accId = acc.getAccId();
+                    if (dao.petInCart(accId, petId)) {
+                        session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
+                    } else {
+
+                        dao.addToPetCart(accId, petId);
+                        session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
+
+                    }
+
+                    session.setAttribute("cartcount", dao.getTotalCartItems(accId));
+                } else {
+                    // Guest
                     List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
                     if (guestCart == null) {
                         guestCart = new ArrayList<>();
@@ -100,18 +113,18 @@ public class AddToCartServlet extends HttpServlet {
 
                     session.setAttribute("guestCart", guestCart);
                     session.setAttribute("cartcount", guestCart.size());
-                
+                }
 
                 Integer cartcount = (Integer) session.getAttribute("cartcount");
                 int count = (cartcount != null) ? cartcount : 0;
 
-                response.setContentType("text/plain");
+                response.setContentType("text/plain"); 
 
-                PrintWriter out = response.getWriter();
+                PrintWriter out = response.getWriter(); 
 
-                String message = (String) session.getAttribute("cartMessage");
+                String message = (String) session.getAttribute("cartMessage"); 
 
-                out.print(message + "|" + count);
+                out.print(message + "|" + count); 
 
             } catch (NumberFormatException e) {
 
