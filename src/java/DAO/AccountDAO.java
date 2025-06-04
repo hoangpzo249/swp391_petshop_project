@@ -8,6 +8,7 @@ import Model.Account;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Date;
 import java.util.Random;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -96,12 +97,13 @@ public class AccountDAO extends DBContext {
                     Account acc = new Account();
                     acc.setAccId(rs.getInt("accId"));
                     acc.setAccUsername(rs.getString("accUsername"));
+                    acc.setAccPassword(rs.getString("accPassword"));
                     acc.setAccEmail(rs.getString("accEmail"));
                     acc.setAccFname(rs.getString("accFname"));
                     acc.setAccLname(rs.getString("accLname"));
                     acc.setAccDob(rs.getDate("accDob"));
                     acc.setAccAddress(rs.getString("accAddress"));
-                    acc.setAccPhoneNumber("accPhoneNumber");
+                    acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
                     acc.setAccRole(rs.getString("accRole"));
                     acc.setAccDescription(rs.getString("accDescription"));
                     acc.setAccCreateDate(rs.getString("accCreateDate"));
@@ -133,6 +135,23 @@ public class AccountDAO extends DBContext {
         }
     }
 
+    public boolean updateEmail(String email, int accId) {
+        try {
+            con = db.getConnection();
+            String sql = "UPDATE AccountTB SET accEmail = ? WHERE accId = ?";
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, email);
+            ps.setInt(2, accId);
+
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public Account ggByEmail(String email) {
         try {
             String sql = "Select * from AccountTB where accEmail =?";
@@ -142,6 +161,7 @@ public class AccountDAO extends DBContext {
             rs = ps.executeQuery();
             if (rs.next()) {
                 Account acc = new Account();
+                
                 acc.setAccId(rs.getInt("accId"));
                 acc.setAccUsername(rs.getString("accUsername"));
                 acc.setAccEmail(rs.getString("accEmail"));
@@ -155,6 +175,7 @@ public class AccountDAO extends DBContext {
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
                 acc.setAccImage(rs.getString("accImage"));
                 acc.setAccStatus(rs.getString("accStatus"));
+                
                 return acc;
             }
         } catch (Exception e) {
@@ -181,11 +202,9 @@ public class AccountDAO extends DBContext {
             ps.setString(10, "New account");
 
             ps.executeUpdate();
-//            return rowsAffected > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        return false;
     }
 
     public static String genPass() {
@@ -198,11 +217,54 @@ public class AccountDAO extends DBContext {
         StringBuilder pass = new StringBuilder();
         for (int i = 0; i < 15; i++) {
             pass.append(all.charAt(random.nextInt(all.length())));
-
         }
 
         String hashPass = BCrypt.hashpw(pass.toString(), BCrypt.gensalt());
         System.out.println(hashPass);
         return hashPass;
     }
+
+//    public void updateProfile(String accUsername, String accFname, String accLname, String accPhoneNumber, String accAddress, String accDescription, int accId) {
+//        try {
+//            con = db.getConnection();
+//            String sql = "UPDATE AccountTB SET accUsername =?, accFname = ?, accLname= ?,accPhoneNumber = ?,accAddress = ?,accDescription  = ? where accId = ?";
+//
+//            ps = con.prepareStatement(sql);
+//
+//            ps.setString(1, accUsername);
+//            ps.setString(2, accFname);
+//            ps.setString(3, accLname);
+//            ps.setDate(4, new java.sql.Date(accDob.getTime()));
+//            ps.setString(4, accPhoneNumber);
+//            ps.setString(5, accAddress);
+//            ps.setString(6, accDescription);
+//            ps.setInt(7, accId);
+//
+//            ps.executeUpdate();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+    public void updateProfile(Account acc) {
+        try {
+            con = db.getConnection();
+            String sql = "UPDATE AccountTB SET accUsername =?, accFname = ?, accLname= ?, accDob =?, accPhoneNumber = ?,accAddress = ?,accDescription  = ? where accId = ?";
+
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, acc.getAccUsername());
+            ps.setString(2, acc.getAccFname());
+            ps.setString(3, acc.getAccLname());
+            ps.setDate(4, new java.sql.Date(acc.getAccDob().getTime()));
+            ps.setString(5, acc.getAccPhoneNumber());
+            ps.setString(6, acc.getAccAddress());
+            ps.setString(7, acc.getAccDescription());
+            ps.setInt(8, acc.getAccId());
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

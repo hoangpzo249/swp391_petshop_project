@@ -75,7 +75,6 @@ public class Login_Account_Servlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             String email = request.getParameter("email");
-//            String username = request.getParameter("email");
             String password = request.getParameter("password");
 
             String remember = request.getParameter("remember");
@@ -94,62 +93,49 @@ public class Login_Account_Servlet extends HttpServlet {
             AccountDAO accDao = new AccountDAO();
             Account acc = accDao.isLoginAcc(email, password);
 
-//            session.setAttribute("userAccount", acc);
-//            if (!email.equals(acc.getAccEmail())) {
-//                request.setAttribute("errMess", "Email của bạn chưa đăng kí tài khoản");
-//                request.setAttribute("password", password);
-//                request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
-//            }
             if (acc != null) {
 
                 session.setAttribute("userAccount", acc);
                 String role = acc.getAccRole();
-
+                
+                String fname = acc.getAccFname();
+                String lname = acc.getAccLname();
+                
+                String fullname = fname + lname;
+                
                 if ("on".equals(remember)) {
                     Cookie emailC = new Cookie("email", email);
-//                    Cookie usernameC = new Cookie("email", username);
                     Cookie passC = new Cookie("password", password);
 
                     emailC.setMaxAge(60 * 60 * 24 * 7);
-//                    usernameC.setMaxAge(60 * 60 * 24 * 7);
                     passC.setMaxAge(60 * 60 * 24 * 7);
 
                     response.addCookie(emailC);
-//                    response.addCookie(usernameC);
                     response.addCookie(passC);
                 } else {
                     Cookie emailC = new Cookie("email", email);
-//                    Cookie usernameC = new Cookie("email", username);
                     Cookie passC = new Cookie("password", password);
 
                     emailC.setMaxAge(0);
-//                    usernameC.setMaxAge(0);
                     passC.setMaxAge(0);
 
                     response.addCookie(emailC);
-//                    response.addCookie(usernameC);
                     response.addCookie(passC);
                 }
-                
+
                 if ("Admin".equals(role)) {
                     session.setAttribute("loginSuccess", "Chào Admin!");
                     response.sendRedirect("homepage");
                 } else if ("Customer".equals(role)) {
-                    session.setAttribute("loginSuccess", "Đăng nhập thành công");
+                    session.setAttribute("loginSuccess", "Chào mừng " + fullname + "!");
                     response.sendRedirect("homepage");
                 } else {
                     request.setAttribute("errMess", "Bạn cần có quyền truy cập");
-//                    request.setAttribute("email", email);
-//                    request.setAttribute("password", password);
                     request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
                 }
 
             } else {
                 request.setAttribute("errMess", "Email hoặc mật khẩu của bạn không đúng.");
-
-//                request.setAttribute("email", email);
-//                request.setAttribute("password", password);
-
                 request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
             }
 

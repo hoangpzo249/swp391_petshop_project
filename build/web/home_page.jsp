@@ -33,15 +33,78 @@
                 </form>
 
                 <div class="accountcard">
-                    <div class="account">
-                        <a href="login">
-                            <img src="images/support button/account.png" width="800" height="800" alt="account"/>
-                            <p class="logintext">Tài Khoản</p>
-                        </a>
-                    </div>
+                    <c:choose>
+                        <c:when test="${sessionScope.userAccount != null}">
+                            <div class="account-dropdown">
+                                <a href="#" class="account-trigger">
+                                    <!-- Cố định kích thước hình ảnh -->
+                                    <img src="images/support button/account.png" width="50" height="50" alt="account"/>
+                                    <p class="username">Tài khoản</p>
+                                </a>
+                                <div class="dropdown-content">
+                                    <c:choose>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Admin'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Admin</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Manager'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Manager</span>
+                                            </a>
+                                        </c:when>
+                                        
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Saler</span>
+                                            </a>
+                                        </c:when>
+                                        
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Shipper</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                    <a href="profile" class="dropdown-item">
+                                        <i class="fas fa-user"></i> 
+                                        <span>Thông tin cá nhân</span>
+                                    </a>
+                                    <a href="orders" class="dropdown-item">
+                                        <i class="fas fa-shopping-bag"></i> 
+                                        <span>Đơn hàng đã mua</span>
+                                    </a>
+                                    <a href="logout" class="dropdown-item logout">
+                                        <i class="fas fa-sign-out-alt"></i> 
+                                        <span>Đăng xuất</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </c:when>
+
+                        <c:otherwise>
+                            <div class="account">
+                                <a href="login">
+                                    <img src="images/support button/account.png" width="50" height="50" alt="account"/>
+                                    <p class="logintext">Đăng nhập</p>
+                                </a>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+
                     <div class="card">
                         <a href="">
-                            <img src="images/support button/card.png" width="1859" height="1573" alt="card"/>
+                            <img src="images/support button/card.png" width="50" height="50" alt="card"/>
                             <p class="cardtext">
                                 Giỏ Hàng
                             </p>
@@ -60,7 +123,7 @@
                 </nav>
             </div>
         </div>
-        
+
         <c:if test="${not empty loginSuccess}">
             <div class="login-success-alert">
                 ${loginSuccess}

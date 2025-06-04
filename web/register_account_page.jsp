@@ -87,7 +87,7 @@
 
                     <div class="input-group1">
                         <label for="otp">Mã OTP (6 số) *</label>
-                        <input type="text" id="otp" name="inputotp" value="" maxlength="6" placeholder="Nhập mã OTP 6 số">
+                        <input type="text" id="otp" name="inputotp" maxlength="6" placeholder="Nhập mã OTP 6 số">
                     </div>
 
                     <button type="submit" class="btnotp">Xác thực</button>
@@ -106,8 +106,6 @@
                     </div>
                 </form>
             </c:if>
-
-
 
             <p class="login-link">Đã có tài khoản? <a href="login">Đăng nhập</a></p>
         </div>

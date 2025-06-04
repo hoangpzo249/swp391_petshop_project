@@ -4,12 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/Github/swp391_petshop_project/src/java/Controller/Recover_Account_Servlet.java</file>
-            <file>file:/D:/Github/swp391_petshop_project/web/home_page.jsp</file>
-            <file>file:/D:/Github/swp391_petshop_project/web/recover_account_page.jsp</file>
-            <file>file:/D:/Github/swp391_petshop_project/web/login_account_page.jsp</file>
             <file>file:/D:/Github/swp391_petshop_project/src/java/DAO/AccountDAO.java</file>
-            <file>file:/D:/Github/swp391_petshop_project/web/css/header_footer.css</file>
-            <file>file:/D:/Github/swp391_petshop_project/web/css/account_login_page.css</file>
+            <file>file:/D:/Github/swp391_petshop_project/src/java/Controller/Register_Account_Servlet.java</file>
+            <file>file:/D:/Github/swp391_petshop_project/src/java/Controller/Profile_Account_Servlet.java</file>
+            <file>file:/D:/Github/swp391_petshop_project/web/profile_account_page.jsp</file>
         </group>
     </open-files>
 </project-private>

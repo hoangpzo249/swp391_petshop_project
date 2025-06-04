@@ -20,6 +20,14 @@
         <servlet-name>Login_Google_Servlet</servlet-name>
         <servlet-class>Controller.Login_Google_Servlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Profile_Account_Servlet</servlet-name>
+        <servlet-class>Controller.Profile_Account_Servlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Logout_Account_Servlet</servlet-name>
+        <servlet-class>Controller.Logout_Account_Servlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login_Account_Servlet</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -39,5 +47,13 @@
     <servlet-mapping>
         <servlet-name>Login_Google_Servlet</servlet-name>
         <url-pattern>/login-google</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Profile_Account_Servlet</servlet-name>
+        <url-pattern>/profile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Logout_Account_Servlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 </web-app>
