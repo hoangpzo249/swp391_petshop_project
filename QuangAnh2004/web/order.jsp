@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="java.util.List, model.Order" %>
+
 <%
     List<Order> orders = (List<Order>) request.getAttribute("orders");
     Integer accId = (Integer) session.getAttribute("accId");
@@ -9,13 +10,17 @@
         return;
     }
 %>
+
 <html>
-<head><title>Order List</title></head>
+<head>
+    <title>Order List</title>
+    <link rel="stylesheet" type="text/CSS" href="CSS/order.css">
+</head>
 <body>
     <h2>Your Orders</h2>
     <table border="1">
         <tr>
-            <th>Order ID</th><<th>Order Date</th><th>Status</th><th>Action</th>
+            <th>Order ID</th><th>Order Date</th><th>Status</th><th>Action</th>
         </tr>
         <c:forEach var="o" items="${orders}">
             <c:if test="${o.accId == accId}">
