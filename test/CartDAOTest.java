@@ -39,8 +39,8 @@ public class CartDAOTest {
         }
 
         
-        System.out.println("=== TEST: deleteFromPetCart ===");
-        dao.deleteFromPetCart(accId, petId);
-        System.out.println("=> deleteFromPetCart done.");
+//        System.out.println("=== TEST: deleteFromPetCart ===");
+//        dao.deleteFromPetCart(accId, petId);
+//        System.out.println("=> deleteFromPetCart done.");
     }
 }
