@@ -23,6 +23,40 @@ public class OrderDAO {
     PreparedStatement ps;
     ResultSet rs;
 
+    private Order orderInfo(ResultSet rs) throws Exception {
+        Order order = new Order();
+        order.setOrderId(rs.getInt("orderId"));
+        order.setAccId(rs.getInt("accId"));
+        order.setOrderDate(rs.getTimestamp("orderDate").toLocalDateTime());
+        order.setOrderStatus(rs.getString("orderStatus"));
+        order.setCustomerName(rs.getString("customerName"));
+        order.setCustomerEmail(rs.getString("customerEmail"));
+        order.setCustomerPhone(rs.getString("customerPhone"));
+        order.setCustomerAddress(rs.getString("customerAddress"));
+        order.setShipperId((Integer) rs.getObject("shipperId")); // Handles null automatically
+        order.setPaymentMethod(rs.getString("paymentMethod"));
+        order.setPaymentStatus(rs.getString("paymentStatus"));
+        return order;
+    }
+
+    public boolean updateOrderStatusById(String id, String status) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "UPDATE OrderTB\n"
+                    + "SET orderStatus = ?\n"
+                    + "WHERE orderId = ?;";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, status);
+            ps.setString(2, id);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public List<Order> getOrders() {
         DBContext db = new DBContext();
         List<Order> list = new ArrayList<>();
@@ -32,20 +66,7 @@ public class OrderDAO {
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
-                Order order = new Order();
-                order.setOrderId(rs.getInt("orderId"));
-                order.setAccId(rs.getInt("accId"));
-                order.setOrderDate(rs.getTimestamp("orderDate").toLocalDateTime());
-                order.setOrderStatus(rs.getString("orderStatus"));
-                order.setCustomerName(rs.getString("customerName"));
-                order.setCustomerEmail(rs.getString("customerEmail"));
-                order.setCustomerPhone(rs.getString("customerPhone"));
-                order.setCustomerAddress(rs.getString("customerAddress"));
-                order.setShipperId(rs.getObject("shipperId") != null ? rs.getInt("shipperId") : null);
-                order.setPaymentMethod(rs.getString("paymentMethod"));
-                order.setPaymentStatus(rs.getString("paymentStatus"));
-
-                list.add(order);
+                list.add(orderInfo(rs));
             }
             return list;
         } catch (Exception ex) {
@@ -56,7 +77,6 @@ public class OrderDAO {
 
     public Order getOrderById(String id) {
         DBContext db = new DBContext();
-        Order order = null;
         try {
             conn = db.getConnection();
             String sql = "SELECT * FROM OrderTB WHERE orderId = ?";
@@ -65,34 +85,24 @@ public class OrderDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                order = new Order();
-                order.setOrderId(rs.getInt("orderId"));
-                order.setAccId(rs.getInt("accId"));
-                order.setOrderDate(rs.getTimestamp("orderDate").toLocalDateTime());
-                order.setOrderStatus(rs.getString("orderStatus"));
-                order.setCustomerName(rs.getString("customerName"));
-                order.setCustomerEmail(rs.getString("customerEmail"));
-                order.setCustomerPhone(rs.getString("customerPhone"));
-                order.setCustomerAddress(rs.getString("customerAddress"));
-                order.setShipperId(rs.getInt("shipperId"));
-                order.setPaymentMethod(rs.getString("paymentMethod"));
-                order.setPaymentStatus(rs.getString("paymentStatus"));
+                return orderInfo(rs);
             }
         } catch (Exception ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return order;
+        return null;
     }
-    
+
     public ArrayList<Integer> getOrderContentById(String id) {
-        DBContext db=new DBContext();
-        ArrayList<Integer> list=new ArrayList<>();
+        // Existing implementation unchanged
+        DBContext db = new DBContext();
+        ArrayList<Integer> list = new ArrayList<>();
         try {
-            conn=db.getConnection();
-            String sql="SELECT * FROM OrderContentTB WHERE orderId=?";
-            ps=conn.prepareStatement(sql);
+            conn = db.getConnection();
+            String sql = "SELECT * FROM OrderContentTB WHERE orderId=?";
+            ps = conn.prepareStatement(sql);
             ps.setString(1, id);
-            rs=ps.executeQuery();
+            rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(rs.getInt("petId"));
             }

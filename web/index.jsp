@@ -24,6 +24,7 @@
 
             <a href="login">Login</a>
             <a href="chatAI">AI</a>
+            <a href="displayallpet">Pet List</a>
             <a href="displayorder">Order List</a>
         </div>
     </body>

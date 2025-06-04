@@ -12,6 +12,14 @@
         <servlet-name>DisplayOrderDetail</servlet-name>
         <servlet-class>Controllers.DisplayOrderDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateOrderStatusServlet</servlet-name>
+        <servlet-class>Controllers.UpdateOrderStatusServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DisplayAllPetServlet</servlet-name>
+        <servlet-class>Controllers.DisplayAllPetServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DisplayOrderServlet</servlet-name>
         <url-pattern>/displayorder</url-pattern>
@@ -23,5 +31,13 @@
     <servlet-mapping>
         <servlet-name>DisplayOrderDetail</servlet-name>
         <url-pattern>/orderdetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateOrderStatusServlet</servlet-name>
+        <url-pattern>/updateorderstatus</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DisplayAllPetServlet</servlet-name>
+        <url-pattern>/displayallpet</url-pattern>
     </servlet-mapping>
 </web-app>

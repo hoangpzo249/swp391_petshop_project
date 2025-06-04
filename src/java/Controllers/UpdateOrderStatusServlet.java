@@ -5,22 +5,18 @@
 package Controllers;
 
 import DAO.OrderDAO;
-import DAO.PetDAO;
-import Models.Order;
-import Models.Pet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 
 /**
  *
  * @author Lenovo
  */
-public class DisplayOrderDetail extends HttpServlet {
+public class UpdateOrderStatusServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +35,10 @@ public class DisplayOrderDetail extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DisplayOrderDetail</title>");
+            out.println("<title>Servlet UpdateOrderStatusServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DisplayOrderDetail at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet UpdateOrderStatusServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,20 +56,7 @@ public class DisplayOrderDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String id = request.getParameter("id");
-        OrderDAO _daoorder = new OrderDAO();
-        PetDAO _daopet = new PetDAO();
-        Order order = _daoorder.getOrderById(id);
-        ArrayList<Integer> list = _daoorder.getOrderContentById(id);
-        ArrayList<Pet> petlist = new ArrayList<>();
-        for (Integer i : list) {
-            petlist.add(_daopet.getPetById(i));
-        }
-        request.setAttribute("petlist", petlist);
-        request.setAttribute("order", order);
-
-        request.getRequestDispatcher("seller_order_detail.jsp")
-                .forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -85,9 +68,23 @@ public class DisplayOrderDetail extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        String orderId = request.getParameter("id");
+        String newStatus = request.getParameter("status");
+
+        OrderDAO orderDAO = new OrderDAO();
+        boolean success = orderDAO.updateOrderStatusById(orderId, newStatus);
+
+        if (success) {
+            request.setAttribute("message", "Order status updated successfully!");
+        } else {
+            request.setAttribute("error", "Failed to update order status");
+        }
+
+        response.sendRedirect("orderdetail?id=" + orderId);
     }
 
     /**

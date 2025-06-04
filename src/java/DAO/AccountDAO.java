@@ -22,6 +22,42 @@ public class AccountDAO {
     PreparedStatement ps;
     ResultSet rs;
 
+    private Account accountInfo(ResultSet rs) throws Exception {
+        Account account = new Account();
+        account.setAccId(rs.getInt("accId"));
+        account.setAccUsername(rs.getString("accUsername"));
+        account.setAccEmail(rs.getString("accEmail"));
+        account.setAccFname(rs.getString("accFname"));
+        account.setAccLname(rs.getString("accLname"));
+        account.setAccDob(rs.getDate("accDob").toLocalDate());
+        account.setAccAddress(rs.getString("accAddress"));
+        account.setAccPhoneNumber(rs.getString("accPhoneNumber"));
+        account.setAccRole(rs.getString("accRole"));
+        account.setAccDescription(rs.getString("accDescription"));
+        account.setAccCreateDate(rs.getTimestamp("accCreateDate").toLocalDateTime());
+        account.setAccImage(rs.getBytes("accImage"));
+        account.setAccStatus(rs.getString("accStatus"));
+        return account;
+    }
+
+    public Account getAccountById(String id) {
+        DBContext db = new DBContext();
+        Account account = new Account();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT * FROM AccountTB WHERE accId=?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                account = accountInfo(rs);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return account;
+    }
+
     public void createAccount(Account account) {
         DBContext db = new DBContext();
         try {
@@ -55,7 +91,7 @@ public class AccountDAO {
             ps.setString(10, account.getAccDescription());
             ps.setBytes(11, account.getAccImage());
             ps.setString(12, account.getAccStatus());
-            
+
             ps.executeUpdate();
             conn.close();
         } catch (Exception ex) {
@@ -63,29 +99,17 @@ public class AccountDAO {
         }
 
     }
-    
+
     public Account getTestAccount() {
-        DBContext db=new DBContext();
-        Account account=new Account();
+        DBContext db = new DBContext();
+        Account account = new Account();
         try {
-            conn=db.getConnection();
-            String sql="SELECT * FROM AccountTB WHERE accId=3";
-            ps=conn.prepareStatement(sql);
-            rs=ps.executeQuery();
+            conn = db.getConnection();
+            String sql = "SELECT * FROM AccountTB WHERE accId=3";
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
             while (rs.next()) {
-                account.setAccId(rs.getInt("accId"));
-                account.setAccUsername(rs.getString("accUsername"));
-                account.setAccEmail(rs.getString("accEmail"));
-                account.setAccFname(rs.getString("accFname"));
-                account.setAccLname(rs.getString("accLname"));
-                account.setAccDob(rs.getDate("accDob").toLocalDate());
-                account.setAccAddress(rs.getString("accAddress"));
-                account.setAccPhoneNumber(rs.getString("accPhoneNumber"));
-                account.setAccRole(rs.getString("accRole"));
-                account.setAccDescription(rs.getString("accDescription"));
-                account.setAccCreateDate(rs.getTimestamp("accCreateDate").toLocalDateTime());
-                account.setAccImage(rs.getBytes("accImage"));
-                account.setAccStatus(rs.getString("accStatus"));
+                account = accountInfo(rs);
             }
         } catch (Exception ex) {
             Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
