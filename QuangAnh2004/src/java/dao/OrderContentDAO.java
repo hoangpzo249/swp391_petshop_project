@@ -18,11 +18,7 @@ import model.OrderContent;
 public class OrderContentDAO extends DBContext{
     public List<OrderContent> getOrderContentsByCustomerId(int customerId){
     List<OrderContent> list = new ArrayList<>();
-    String sql = "SELECT oc.orderContentId, oc.orderId, oc.petId, p.name, p.image, o.status " +
-                 "FROM OrderContentTB oc " +
-                 "JOIN OrderTB o ON oc.orderId = o.orderId " +
-                 "JOIN PetTB p ON oc.petId = p.petId " +
-                 "WHERE o.customerId = ?";
+    String sql = "SELECT * FROM OrderContentTB WHERE orderId = ?";
     try (PreparedStatement ps = c.prepareStatement(sql)) {
         ps.setInt(1, customerId);
         ResultSet rs = ps.executeQuery();

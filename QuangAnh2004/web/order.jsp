@@ -20,16 +20,23 @@
     <h2>Your Orders</h2>
     <table border="1">
         <tr>
-            <th>Order ID</th><th>Order Date</th><th>Status</th><th>Action</th>
+            <th>Order ID</th>
+            <th>Pet Name</th>
+            <th>Color</th>
+            <th>Price</th>
+            <th>Gender</th>
+            <th>Status</th>
+            <th>Action</th>
         </tr>
         <c:forEach var="o" items="${orders}">
-            <c:if test="${o.accId == accId}">
-                        <tr>
-            <td>${o.orderId}</td>
-            <td>${o.orderDate}</td>
-            <td>${o.orderStatus}</td>
-            <td>${o.paymentMethod}</td>
-            <td>
+            <c:set var="pet" value="${orders}"/>
+        <tr>
+            <td>${order.orderId}</td>
+            <td>${pet.petName}</td>
+            <td>${pet.petColor}</td>
+            <td>${pet.petPrice}</td>
+            <td>${pet.petGender}</td>
+            <td>${order.orderStatus}</td>
                 <c:choose>
                     <c:when test="${o.orderStatus == 'PENDING'}">
                         <form action="cancelorderServlet" method="get">
@@ -49,7 +56,6 @@
                 </c:choose>
             </td>
         </tr>
-            </c:if>
         </c:forEach>
     </table>
 </body>
