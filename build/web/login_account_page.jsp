@@ -22,6 +22,7 @@ request.setAttribute("email", email);
 request.setAttribute("password", password);
 
 %>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -67,8 +68,6 @@ request.setAttribute("password", password);
                     </div>
                     <a href="recover" class="forgot-password">Bạn quên mật khẩu?</a>
                 </div>
-
-                <!--<p class="recover-link"><a href="recover">Bạn quên mật khẩu?</a></p>-->
 
                 <c:if test="${not empty errMess}">
                     <div class="errMess">

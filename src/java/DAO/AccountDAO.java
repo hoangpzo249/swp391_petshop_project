@@ -80,6 +80,24 @@ public class AccountDAO extends DBContext {
         return false;
     }
 
+    public boolean checkPass(String email, String password) {
+        try {
+            con = db.getConnection();
+            String sql = "SELECT accPassword FROM AccountTB WHERE accEmail = ?;";
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String hassPass = rs.getString("accPassword");
+                return BCrypt.checkpw(password, hassPass);
+            }
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
     public Account isLoginAcc(String email, String pass) {
         try {
             con = db.getConnection();
@@ -97,7 +115,7 @@ public class AccountDAO extends DBContext {
                     Account acc = new Account();
                     acc.setAccId(rs.getInt("accId"));
                     acc.setAccUsername(rs.getString("accUsername"));
-                    acc.setAccPassword(rs.getString("accPassword"));
+//                    acc.setAccPassword(rs.getString("accPassword"));
                     acc.setAccEmail(rs.getString("accEmail"));
                     acc.setAccFname(rs.getString("accFname"));
                     acc.setAccLname(rs.getString("accLname"));
@@ -161,7 +179,7 @@ public class AccountDAO extends DBContext {
             rs = ps.executeQuery();
             if (rs.next()) {
                 Account acc = new Account();
-                
+
                 acc.setAccId(rs.getInt("accId"));
                 acc.setAccUsername(rs.getString("accUsername"));
                 acc.setAccEmail(rs.getString("accEmail"));
@@ -169,13 +187,13 @@ public class AccountDAO extends DBContext {
                 acc.setAccLname(rs.getString("accLname"));
                 acc.setAccDob(rs.getDate("accDob"));
                 acc.setAccAddress(rs.getString("accAddress"));
-                acc.setAccPhoneNumber("accPhoneNumber");
+                acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
                 acc.setAccRole(rs.getString("accRole"));
                 acc.setAccDescription(rs.getString("accDescription"));
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
                 acc.setAccImage(rs.getString("accImage"));
                 acc.setAccStatus(rs.getString("accStatus"));
-                
+
                 return acc;
             }
         } catch (Exception e) {
@@ -197,7 +215,7 @@ public class AccountDAO extends DBContext {
             ps.setString(5, account.getAccLname());
             ps.setString(6, "2000-01-01");
             ps.setString(7, "Chưa cập nhật");
-            ps.setString(8, "Chưa cập nhật");
+            ps.setString(8, account.getAccPhoneNumber());
             ps.setString(9, "Customer");
             ps.setString(10, "New account");
 
@@ -266,5 +284,4 @@ public class AccountDAO extends DBContext {
             e.printStackTrace();
         }
     }
-
 }

@@ -69,43 +69,89 @@ public class Login_Google_Servlet extends HttpServlet {
             return;
         }
         HttpSession session = request.getSession();
-
         String accessToken = GoogleUtils.getToken(code);
+
+        if (accessToken == null || accessToken.isEmpty()) {
+            request.setAttribute("errMess", "Không có Token");
+            request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+            return;
+
+        }
         GoogleUser ggUser = GoogleUtils.getUserInfo(accessToken);
 
-        AccountDAO accDao = new AccountDAO();
-        Account acc = accDao.ggByEmail(ggUser.getEmail());
+        if (ggUser == null || ggUser.getEmail() == null) {
+            request.setAttribute("errMess", "Không có thông tin User");
+            request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+            return;
 
-        String username = genUsername(ggUser.getEmail());
-//        System.out.println("Email tồn tại" + acc);
-        if (acc == null) {
+        }
+
+        AccountDAO accDao = new AccountDAO();
+
+//            System.out.println(ggUser.getEmail());
+        String fullName = ggUser.getGiven_name();
+
+        boolean checkEmail = accDao.isEmailExist(ggUser.getEmail());
+        if (checkEmail) {
+            Account acc = accDao.ggByEmail(ggUser.getEmail());
+            session.setAttribute("userAccount", acc);
+            String role = acc.getAccRole();
+
+            if ("Admin".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào Admin!");
+                response.sendRedirect("homepage");
+            } else if ("Manager".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào Manager!");
+                response.sendRedirect("homepage");
+            } else if ("Saler".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào Saler!");
+                response.sendRedirect("homepage");
+            } else if ("Shipper".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào Shipper!");
+                response.sendRedirect("homepage");
+            } else if ("Customer".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào mừng " + fullName + "!");
+                response.sendRedirect("homepage");
+            } else {
+                request.setAttribute("errMess", "Bạn cần có quyền truy cập");
+                request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+            }
+        } else {
+            String username = genUsername(ggUser.getEmail());
             Account newAcc = new Account();
+
             newAcc.setAccUsername(username);
             newAcc.setAccEmail(ggUser.getEmail());
             newAcc.setAccFname(ggUser.getGiven_name());
             newAcc.setAccLname(ggUser.getFamily_name());
-//            newAcc.setAccPhoneNumber("Chưa cập nhật");
+            newAcc.setAccPhoneNumber("Chưa cập nhật");
+            accDao.registerAccByGG(newAcc);
 
-//            System.out.println("Email: " +ggUser.getEmail());
-            
-            try {
-                accDao.registerAccByGG(newAcc);
-                
-                accDao.ggByEmail(ggUser.getEmail());
-                session.setAttribute("userAccount", acc);
-
-                session.setAttribute("loginSuccess", "Đăng nhập thành công với tài khoản Google");
+            Account acc = accDao.ggByEmail(ggUser.getEmail());
+            session.setAttribute("userAccount", acc);
+            String role = acc.getAccRole();
+//            System.out.println(acc.getAccPhoneNumber());
+            if ("Admin".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào Admin!");
                 response.sendRedirect("homepage");
-            } catch (Exception e) {
-                request.setAttribute("errMess", "Có lỗi xảy ra với đăng nhập bằng tài khoản Google");
+            } else if ("Manager".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào Manager!");
+                response.sendRedirect("homepage");
+            } else if ("Saler".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào Saler!");
+                response.sendRedirect("homepage");
+            } else if ("Shipper".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào Shipper!");
+                response.sendRedirect("homepage");
+            } else if ("Customer".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào mừng " + fullName + "!");
+                response.sendRedirect("homepage");
+            } else {
+                request.setAttribute("errMess", "Bạn cần có quyền truy cập");
                 request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
             }
-
-        } else {
-            session.setAttribute("userAccount", acc);
-            session.setAttribute("loginSuccess", "Đăng nhập thành công với tài khoản Google");
-            response.sendRedirect("homepage");
         }
+
     }
 
     public String genUsername(String email) {

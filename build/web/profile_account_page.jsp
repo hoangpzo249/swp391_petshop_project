@@ -210,9 +210,9 @@
                             </div>
 
                             <div class="button-group">
-                                <a href="profile?action=change-email" class="account-btn password-btn">
+<!--                                <a href="profile?action=change-email" class="account-btn password-btn">
                                     <i class="fas fa-envelope"></i> Đổi Email
-                                </a>
+                                </a>-->
                                 <a href="profile?action=change-password" class="account-btn password-btn">
                                     <i class="fas fa-key"></i> Đổi mật khẩu
                                 </a>
@@ -262,7 +262,7 @@
                                 </form>
                             </div>
                         </c:when>
-
+<%-- 
                         <c:when test="${param.action eq 'change-email'}">
                             <!-- Change Email Form -->
                             <div class="form-container">
@@ -294,7 +294,7 @@
                                     </form>
                                 </c:if>
                                 
-                                <c:if test="${not empty sessionScope.sendOtpSuccess}">
+                                <c:if test="${not empty sendOtpSuccess}">
                                     <form action="profile?action=change-email&act=email-otp" method="post">
 
                                         <div class="otp-header1">
@@ -334,7 +334,7 @@
 
                             </div>
                         </c:when>
-
+--%>
                         <c:otherwise>
                             <!-- Update Profile Form -->
                             <div class="form-container">

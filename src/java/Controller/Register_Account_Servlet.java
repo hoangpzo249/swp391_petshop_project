@@ -71,12 +71,26 @@ public class Register_Account_Servlet extends HttpServlet {
         } else if ("resend-otp".equals(action)) {
             String email = (String) session.getAttribute("email");
 
-            if (email != null || !email.trim().isEmpty()) {
+            if (email != null) {
                 String otp = otp();
+                long curTime = System.currentTimeMillis();
+
+                long curTimeSendOtp = (long) session.getAttribute("curTime");
+                long nowTime = System.currentTimeMillis();
+
+                long resendOtp = 60 * 1000;
+
+                if (nowTime - curTimeSendOtp < resendOtp) {
+                    request.setAttribute("errMess", "Bạn cần chờ 60s để gửi lại OTP");
+                    request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+                    return;
+                }
                 try {
                     EmailSender.sendOTP(email, otp);
 
                     session.setAttribute("otp", otp);
+                    session.setAttribute("curTime", curTime);
+
                     request.setAttribute("successMess", "Gửi lại OTP thành công");
                     request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
                 } catch (Exception e) {
@@ -158,6 +172,19 @@ public class Register_Account_Servlet extends HttpServlet {
                 return;
             }
 
+            boolean checkPass = isValidPassword(pass);
+            if (!checkPass) {
+                request.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
+
+                request.setAttribute("firstname", fName);
+                request.setAttribute("lastname", lName);
+                request.setAttribute("email", email);
+//                request.setAttribute("password", pass);
+
+                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+                return;
+            }
+
             String username = genUsername(email);
 
             String hashPass = BCrypt.hashpw(pass, BCrypt.gensalt());
@@ -173,11 +200,14 @@ public class Register_Account_Servlet extends HttpServlet {
             session.setAttribute("tempAccount", tempAcc);
 
             String otp = otp();
+            long curTime = System.currentTimeMillis();
 
             try {
                 EmailSender.sendOTP(email, otp);
 
                 session.setAttribute("otp", otp);
+                session.setAttribute("curTime", curTime);
+
                 session.setAttribute("fullName", fullName);
                 session.setAttribute("pass", pass);
                 session.setAttribute("email", email);
@@ -192,7 +222,9 @@ public class Register_Account_Servlet extends HttpServlet {
         } else if ("otp".equals(action)) {
 
             String inputOTP = request.getParameter("inputotp");
+
             String otp = (String) session.getAttribute("otp");
+            long curTime = (long) session.getAttribute("curTime");
 
             String email = (String) session.getAttribute("email");
             String fullName = (String) session.getAttribute("fullName");
@@ -200,6 +232,15 @@ public class Register_Account_Servlet extends HttpServlet {
             String pass = (String) session.getAttribute("pass");
 
             Account account = (Account) session.getAttribute("tempAccount");
+
+            long nowTime = System.currentTimeMillis();
+            long time = 3 * 60 * 1000;
+
+            if (nowTime - curTime > time) {
+                request.setAttribute("errMess", "OTP hết hạn, bạn cần thực hiện lại.");
+                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+                return;
+            }
 
             if (otp == null || otp.trim().isEmpty()
                     || email == null || email.trim().isEmpty()
@@ -222,6 +263,12 @@ public class Register_Account_Servlet extends HttpServlet {
                     Account acc = accDao.isLoginAcc(email, pass);
                     try {
                         session.setAttribute("userAccount", acc);
+                        session.removeAttribute("otp");
+                        session.removeAttribute("curTime");
+                        session.removeAttribute("email");
+                        session.removeAttribute("fullName");
+                        session.removeAttribute("pass");
+
                         session.setAttribute("loginSuccess", "Bạn đã tạo tài khoản thành công<br>Cập nhật địa chỉ và số điện thoại <a href='profile' style='color:#f26f21'>TẠI ĐÂY</a> để hoàn tất hồ sơ.");
                         response.sendRedirect("homepage");
                     } catch (Exception e) {
@@ -242,6 +289,30 @@ public class Register_Account_Servlet extends HttpServlet {
             response.sendRedirect("register");
         }
 
+    }
+
+    public boolean isValidPassword(String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+
+        boolean hasUpper = false;
+        boolean hasLower = false;
+        boolean hasDigit = false;
+        boolean hasSpecial = false;
+
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                hasUpper = true;
+            } else if (Character.isLowerCase(c)) {
+                hasLower = true;
+            } else if (Character.isDigit(c)) {
+                hasDigit = true;
+            } else if ("!@#$%^&*()_+-=[]{}|;:'\",.<>?/`~".indexOf(c) >= 0) {
+                hasSpecial = true;
+            }
+        }
+        return hasUpper && hasLower && hasDigit && hasSpecial;
     }
 
     public String otp() {

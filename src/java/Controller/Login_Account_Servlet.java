@@ -83,7 +83,6 @@ public class Login_Account_Servlet extends HttpServlet {
                     || password == null || password.trim().isEmpty()) {
                 request.setAttribute("errMess", "Bạn cần điền đủ thông tin.");
                 request.setAttribute("email", email);
-                request.setAttribute("password", password);
                 request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
                 return;
             }
@@ -99,9 +98,9 @@ public class Login_Account_Servlet extends HttpServlet {
                 String role = acc.getAccRole();
                 
                 String fname = acc.getAccFname();
-                String lname = acc.getAccLname();
+//                String lname = acc.getAccLname();
                 
-                String fullname = fname + lname;
+//                String fullname = fname + lname;
                 
                 if ("on".equals(remember)) {
                     Cookie emailC = new Cookie("email", email);
@@ -127,7 +126,7 @@ public class Login_Account_Servlet extends HttpServlet {
                     session.setAttribute("loginSuccess", "Chào Admin!");
                     response.sendRedirect("homepage");
                 } else if ("Customer".equals(role)) {
-                    session.setAttribute("loginSuccess", "Chào mừng " + fullname + "!");
+                    session.setAttribute("loginSuccess", "Chào mừng " + fname + "!");
                     response.sendRedirect("homepage");
                 } else {
                     request.setAttribute("errMess", "Bạn cần có quyền truy cập");
@@ -136,6 +135,7 @@ public class Login_Account_Servlet extends HttpServlet {
 
             } else {
                 request.setAttribute("errMess", "Email hoặc mật khẩu của bạn không đúng.");
+                request.setAttribute("email", email);
                 request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
             }
 

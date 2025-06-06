@@ -71,10 +71,23 @@ public class Recover_Account_Servlet extends HttpServlet {
 
             if (email != null || !email.trim().isEmpty()) {
                 String otp = otp();
+                long curTime = System.currentTimeMillis();
+
+                long curTimeSendOtp = (long) session.getAttribute("curTime");
+                long nowTime = System.currentTimeMillis();
+                long resendOtp = 60 * 1000;
+
+                if (nowTime - curTimeSendOtp < resendOtp) {
+                    request.setAttribute("errMess", "Bạn cần chờ 60s để gửi lại OTP");
+                    request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
+                    return;
+                }
+
                 try {
                     EmailSender.sendOTPRecover(email, otp);
 
                     session.setAttribute("otp", otp);
+                    session.setAttribute("curTime", curTime);
                     request.setAttribute("successMess", "Gửi lại OTP thành công");
                     request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
                 } catch (Exception e) {
@@ -126,11 +139,15 @@ public class Recover_Account_Servlet extends HttpServlet {
             }
 
             String genOtp = otp();
+            long curTime = System.currentTimeMillis();
+
             try {
                 EmailSender.sendOTPRecover(email, genOtp);
 
                 session.setAttribute("email", email);
                 session.setAttribute("otp", genOtp);
+                session.setAttribute("curTime", curTime);
+
                 session.setAttribute("sendOtpSuccess", "true");
 
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
@@ -151,6 +168,15 @@ public class Recover_Account_Servlet extends HttpServlet {
             }
 
             String otp = (String) session.getAttribute("otp");
+            long curTime = (long) session.getAttribute("curTime");
+            long nowTime = System.currentTimeMillis();
+            long time = 3 * 60 * 1000;
+
+            if (nowTime - curTime > time) {
+                request.setAttribute("errMess", "OTP hết hạn, bạn cần thực hiện lại.");
+                request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
+                return;
+            }
 
             if (otp == null || otp.trim().isEmpty()) {
                 session.invalidate();
@@ -173,6 +199,14 @@ public class Recover_Account_Servlet extends HttpServlet {
             if (password == null || password.trim().isEmpty()
                     || comfirm_password == null || comfirm_password.trim().isEmpty()) {
                 request.setAttribute("errMess", "Bạn cần điền đủ thông tin");
+                request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
+                return;
+            }
+
+            boolean checkPass = isValidPassword(password);
+            if (!checkPass) {
+                request.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
+
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
                 return;
             }
@@ -209,6 +243,30 @@ public class Recover_Account_Servlet extends HttpServlet {
         } else {
             response.sendRedirect("login");
         }
+    }
+
+    public boolean isValidPassword(String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+
+        boolean hasUpper = false;
+        boolean hasLower = false;
+        boolean hasDigit = false;
+        boolean hasSpecial = false;
+
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                hasUpper = true;
+            } else if (Character.isLowerCase(c)) {
+                hasLower = true;
+            } else if (Character.isDigit(c)) {
+                hasDigit = true;
+            } else if ("!@#$%^&*()_+-=[]{}|;:'\",.<>?/`~".indexOf(c) >= 0) {
+                hasSpecial = true;
+            }
+        }
+        return hasUpper && hasLower && hasDigit && hasSpecial;
     }
 
     public String otp() {

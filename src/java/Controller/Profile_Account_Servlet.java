@@ -63,37 +63,37 @@ public class Profile_Account_Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String action = request.getParameter("action");
-        String taget = request.getParameter("taget");
-        String act = request.getParameter("act");
+//        String action = request.getParameter("action");
+//        String taget = request.getParameter("taget");
+//        String act = request.getParameter("act");
 
-        HttpSession session = request.getSession();
-        Account acc = (Account) session.getAttribute("userAccount");
+//        HttpSession session = request.getSession();
+//        Account acc = (Account) session.getAttribute("userAccount");
 
 //        if (acc == null) {
 //            session.invalidate();
 //            response.sendRedirect("login");
 //            return;
 //        }
-        if ("change-email".equals(action) && "=email-otp".equals(act) && "verify-otp".equals(taget)) {
-
-            String email = (String) session.getAttribute("newEmail");
-            if (email != null || !email.trim().isEmpty()) {
-                String otp = otp();
-                try {
-                    EmailSender.sendOTPChangeEmail(email, otp);
-                    session.setAttribute("otp", otp);
-                    request.setAttribute("successMess", "Gửi lại mã OTP thành công");
-                    request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-                } catch (Exception e) {
-                    request.setAttribute("errMess", "Lỗi");
-                    request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-                }
-            } else {
-                request.setAttribute("successMess", "Lỗi");
-                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-            }
-        }
+//        if ("change-email".equals(action) && "email-otp".equals(act) && "verify-otp".equals(taget)) {
+//
+//            String email = (String) session.getAttribute("newEmail");
+//            if (email != null || !email.trim().isEmpty()) {
+//                String otp = otp();
+//                try {
+//                    EmailSender.sendOTPChangeEmail(email, otp);
+//                    session.setAttribute("otp", otp);
+//                    request.setAttribute("successMess", "Gửi lại mã OTP thành công");
+//                    request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//                } catch (Exception e) {
+//                    request.setAttribute("errMess", "Lỗi");
+//                    request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//                }
+//            } else {
+//                request.setAttribute("successMess", "Lỗi");
+//                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//            }
+//        }
         request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
     }
 
@@ -110,8 +110,8 @@ public class Profile_Account_Servlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        String act = request.getParameter("act");
-        String taget = request.getParameter("taget");
+//        String act = request.getParameter("act");
+//        String taget = request.getParameter("taget");
         HttpSession session = request.getSession();
 
         Account acc = (Account) session.getAttribute("userAccount");
@@ -126,14 +126,15 @@ public class Profile_Account_Servlet extends HttpServlet {
             String fName = request.getParameter("firstname");
             String lName = request.getParameter("lastname");
             String dob = request.getParameter("dob");
+            Date date = Date.valueOf(dob);
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             String description = request.getParameter("description");
 
             int id = acc.getAccId();
 
-            System.out.println(id);
-            Date date;
+//            System.out.println(id);
+            
 
             if (username == null || username.trim().isEmpty()) {
                 username = acc.getAccUsername();
@@ -144,14 +145,22 @@ public class Profile_Account_Servlet extends HttpServlet {
             if (lName == null || lName.trim().isEmpty()) {
                 lName = acc.getAccLname();
             }
-            if (dob == null || dob.trim().isEmpty()) {
-                date = new java.sql.Date(acc.getAccDob().getTime());
-            } else {
-                date = Date.valueOf(dob);
+//            if (dob == null || dob.trim().isEmpty()) {
+//                date = new java.sql.Date(acc.getAccDob().getTime());
+//            } else {
+//                date = Date.valueOf(dob);
+//            }
+//            if (phone == null || phone.trim().isEmpty()) {
+//                phone = acc.getAccPhoneNumber();
+//            }
+
+            boolean checkPhone = isValidPhone(phone);
+            if (!checkPhone) {
+                request.setAttribute("errMess", "Số điện thoại không hợp lệ");
+                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+                return;
             }
-            if (phone == null || phone.trim().isEmpty()) {
-                phone = acc.getAccPhoneNumber();
-            }
+            
             if (address == null || address.trim().isEmpty()) {
                 address = acc.getAccAddress();
             }
@@ -178,12 +187,24 @@ public class Profile_Account_Servlet extends HttpServlet {
             String password = request.getParameter("password");
             String comfirm_password = request.getParameter("comfirm_password");
 
-            if (password == null || password.trim().isEmpty()
-                    || comfirm_password == null || comfirm_password.trim().isEmpty()) {
-                request.setAttribute("errMess", "Bạn cần điền đủ thông tin");
+            boolean checkValidPass = isValidPassword(password);
+            if (!checkValidPass) {
+                request.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
+//                request.setAttribute("firstname", fName);
+//                request.setAttribute("lastname", lName);
+//                request.setAttribute("email", email);
+//                request.setAttribute("password", pass);
+
                 request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
                 return;
             }
+
+//            if (password == null || password.trim().isEmpty()
+//                    || comfirm_password == null || comfirm_password.trim().isEmpty()) {
+//                request.setAttribute("errMess", "Bạn cần điền đủ thông tin");
+//                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//                return;
+//            }
 
             if (!password.equals(comfirm_password)) {
                 request.setAttribute("errMess", "Mật khẩu không khớp");
@@ -193,105 +214,144 @@ public class Profile_Account_Servlet extends HttpServlet {
 
             AccountDAO accDao = new AccountDAO();
             String email = acc.getAccEmail();
+            boolean checkPass = accDao.checkPass(email, password);
+            if (!checkPass) {
+                String hashPass = BCrypt.hashpw(password, BCrypt.gensalt());
 
-            String hashPass = BCrypt.hashpw(password, BCrypt.gensalt());
+                boolean success = accDao.updatePass(email, hashPass);
+                if (success) {
 
-            boolean success = accDao.updatePass(email, hashPass);
-            if (success) {
+                    acc.setAccPassword(hashPass);
+//                session.setAttribute("userAccount", acc);
 
-                acc.setAccPassword(hashPass);
-                session.setAttribute("userAccount", acc);
-
-                request.setAttribute("updateSucess", "Đổi mật khẩu thành công");
-                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-            } else {
-                request.setAttribute("errMess", "Đổi tài khoản Email thành công, bạn hãy thử lại sau");
-                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-            }
-        } else if ("change-email".equals(action) && act == null) {
-
-            String newEmail = request.getParameter("newEmail");
-
-            if (newEmail == null || newEmail.trim().isEmpty()) {
-                request.setAttribute("errMess", "Bạn cần điền đủ thông tin Email");
-                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-                return;
-            }
-
-            if (newEmail.equals((acc.getAccEmail()))) {
-                request.setAttribute("errMess", "Email khác với email hiện tại");
-                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-                return;
-            }
-
-            String otp = otp();
-            AccountDAO accDao = new AccountDAO();
-            boolean emailExist = accDao.isEmailExist(newEmail);
-            if (!emailExist) {
-                try {
-                    EmailSender.sendOTPChangeEmail(newEmail, otp);
-                    session.setAttribute("sendOtpSuccess", "true");
-
-                    session.setAttribute("otp", otp);
-                    session.setAttribute("newEmail", newEmail);
-
+                    request.setAttribute("updateSucess", "Đổi mật khẩu thành công");
                     request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-                } catch (Exception e) {
-                    request.setAttribute("errMess", "Lỗi không gửi được Email");
+                    System.out.println(acc.getAccPassword());
+                } else {
+                    request.setAttribute("errMess", "Đổi tài khoản Email thành công, bạn hãy thử lại sau");
                     request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
                 }
             } else {
-                request.setAttribute("errMess", "Email đã tồn tại trong hệ hống, bạn cần nhập Email khác");
+                request.setAttribute("errMess", "Mật khẩu không được trùng với mật khẩu cũ");
                 request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
             }
 
-        } else if ("change-email".equals(action) && "email-otp".equals(act) && taget == null) {
-            String inputotp = request.getParameter("inputotp");
-            String otp = (String) session.getAttribute("otp");
-            String email = (String) session.getAttribute("newEmail");
-
-            if (inputotp == null || inputotp.trim().isEmpty()) {
-                request.setAttribute("errMess", "Bạn cần điền đủ thông tin");
-                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-                return;
-            }
-
-            if (otp == null || email == null) {
-                request.setAttribute("errMess", "Phiên hết hạn, vui lòng thử lại");
-                session.removeAttribute("sendOtpSuccess");
-                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-                return;
-            }
-
-            if (!inputotp.equals(otp)) {
-                request.setAttribute("errMess", "OTP không hợp lệ");
-                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-                return;
-            }
-
-            AccountDAO accDao = new AccountDAO();
-
-            int id = acc.getAccId();
-            boolean success = accDao.updateEmail(email, id);
-            if (success) {
-                acc.setAccEmail(email);
-                session.setAttribute("userAccount", acc);
-
-                session.removeAttribute("otp");
+//        } else if ("change-email".equals(action) && act == null) {
+//
+//            String newEmail = request.getParameter("newEmail");
+//
+//            if (newEmail == null || newEmail.trim().isEmpty()) {
+//                request.setAttribute("errMess", "Bạn cần điền đủ thông tin Email");
+//                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//                return;
+//            }
+//
+//            if (newEmail.equals((acc.getAccEmail()))) {
+//                request.setAttribute("errMess", "Email khác với email hiện tại");
+//                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//                return;
+//            }
+//
+//            String otp = otp();
+//            AccountDAO accDao = new AccountDAO();
+//            boolean emailExist = accDao.isEmailExist(newEmail);
+//            if (!emailExist) {
+//                try {
+//                    EmailSender.sendOTPChangeEmail(newEmail, otp);
+//                    session.setAttribute("sendOtpSuccess", "true");
+//
+//                    session.setAttribute("otp", otp);
+//                    session.setAttribute("newEmail", newEmail);
+//
+//                    request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//                } catch (Exception e) {
+//                    request.setAttribute("errMess", "Lỗi không gửi được Email");
+//                    request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//                }
+//            } else {
+//                request.setAttribute("errMess", "Email đã tồn tại trong hệ hống, bạn cần nhập Email khác");
+//                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//            }
+//
+//        } else if ("change-email".equals(action) && "email-otp".equals(act)) {
+//            String inputotp = request.getParameter("inputotp");
+//            String otp = (String) session.getAttribute("otp");
+//            String email = (String) session.getAttribute("newEmail");
+//
+//            if (inputotp == null || inputotp.trim().isEmpty()) {
+//                request.setAttribute("errMess", "Bạn cần điền đủ thông tin");
+//                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//                return;
+//            }
+//
+//            if (otp == null || email == null) {
+//                request.setAttribute("errMess", "Phiên hết hạn, vui lòng thử lại");
+//                session.removeAttribute("sendOtpSuccess");
+//                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//                return;
+//            }
+//
+//            if (!inputotp.equals(otp)) {
+//                request.setAttribute("errMess", "OTP không hợp lệ");
+//                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//                return;
+//            }
+//
+//            AccountDAO accDao = new AccountDAO();
+//
+//            int id = acc.getAccId();
+//            boolean success = accDao.updateEmail(email, id);
+//            if (success) {
+//                acc.setAccEmail(email);
+//                session.setAttribute("userAccount", acc);
+//
+//                session.removeAttribute("otp");
 //                session.removeAttribute("email");
-                session.removeAttribute("sendOtpSuccess");
-
-                request.setAttribute("updateSucess", "Đổi tài khoản Email thành công");
-                request.getRequestDispatcher("profile?action=update").forward(request, response);
-            } else {
-                request.setAttribute("errMess", "Đổi tài khoản Email thành công, bạn hãy thử lại sau");
-                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-            }
-            request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//                session.removeAttribute("sendOtpSuccess");
+//
+//                request.setAttribute("updateSucess", "Đổi tài khoản Email thành công");
+//                request.getRequestDispatcher("profile?action=update").forward(request, response);
+//            } else {
+//                request.setAttribute("errMess", "Đổi tài khoản Email thành công, bạn hãy thử lại sau");
+//                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+//            }
+//            request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
         } else {
             request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
         }
 
+    }
+
+    public boolean isValidPhone(String phone) {
+        if (phone == null || phone.trim().isEmpty()) {
+            return false;
+        }
+
+        return phone.matches("^(03|05|07|08|09)\\d{8}$");
+    }
+
+    public boolean isValidPassword(String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+
+        boolean hasUpper = false;
+        boolean hasLower = false;
+        boolean hasDigit = false;
+        boolean hasSpecial = false;
+
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                hasUpper = true;
+            } else if (Character.isLowerCase(c)) {
+                hasLower = true;
+            } else if (Character.isDigit(c)) {
+                hasDigit = true;
+            } else if ("!@#$%^&*()_+-=[]{}|;:'\",.<>?/`~".indexOf(c) >= 0) {
+                hasSpecial = true;
+            }
+        }
+        return hasUpper && hasLower && hasDigit && hasSpecial;
     }
 
     public String otp() {
