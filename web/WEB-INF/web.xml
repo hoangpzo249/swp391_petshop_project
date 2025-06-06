@@ -16,6 +16,10 @@
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>Controllers.LoginServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DisplayCartServlet</servlet-name>
+        <servlet-class>Controllers.DisplayCartServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -31,5 +35,9 @@
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/loginuser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DisplayCartServlet</servlet-name>
+        <url-pattern>/displaycart</url-pattern>
     </servlet-mapping>
 </web-app>
