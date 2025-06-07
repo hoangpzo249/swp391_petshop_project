@@ -20,6 +20,10 @@
         <servlet-name>DisplayCartServlet</servlet-name>
         <servlet-class>Controllers.DisplayCartServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteFromCart</servlet-name>
+        <servlet-class>Controllers.DeleteFromCart</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -39,5 +43,9 @@
     <servlet-mapping>
         <servlet-name>DisplayCartServlet</servlet-name>
         <url-pattern>/displaycart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteFromCart</servlet-name>
+        <url-pattern>/deletefromcart</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -59,10 +59,7 @@ public class ListShopPetServlet extends HttpServlet {
             sort, gender, color, origin, age, vaccination
         );
 
-        for (Pet pet : petList) {
-            pet.setImages(petDAO.getImagesByPetId(pet.getPetId()));
-        }
-
+        
         request.setAttribute("listPet", petList);
         request.setAttribute("listDogBreed", breedDAO.displayDogBreeds());
         request.setAttribute("listCatBreed", breedDAO.displayCatBreeds());

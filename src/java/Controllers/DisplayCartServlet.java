@@ -40,35 +40,33 @@ public class DisplayCartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         CartDAO cartDao = new CartDAO();
         PetDAO petDao = new PetDAO();
         HttpSession session = request.getSession();
 
         List<Cart> petCart = new ArrayList<>();
+        List<Cart> updatedPetCart = new ArrayList<>();
         List<Pet> pets = new ArrayList<>();
         double totalPrice = 0;
 
         Account account = (Account) session.getAttribute("account");
-        if (account != null) {
-            int accId = account.getAccId();
-            List<Cart> carts = cartDao.getCart(accId);
-            if (carts != null && !carts.isEmpty()) {
-                petCart = carts;
-            } else {
-                request.setAttribute("cartMessage", "Giỏ hàng của bạn đang trống.");
-            }
-            request.setAttribute("name", account.getAccFname() + " " + account.getAccLname());
-            request.setAttribute("phone", account.getAccPhoneNumber());
-            request.setAttribute("address", account.getAccAddress());
 
+        if (account != null) {
+            petCart = cartDao.getCart(account.getAccId());
+            if (petCart == null || petCart.isEmpty()) {
+                request.setAttribute("cartMessage", "Giỏ hàng của bạn đang trống.");
+            } else {
+                request.setAttribute("name", account.getAccFname() + " " + account.getAccLname());
+                request.setAttribute("phone", account.getAccPhoneNumber());
+                request.setAttribute("address", account.getAccAddress());
+            }
         } else {
-            Object guestCart = session.getAttribute("guestCart");
-            if (guestCart != null) {
-                petCart = (List<Cart>) guestCart;
+            Object guestCartObj = session.getAttribute("guestCart");
+            if (guestCartObj != null) {
+                petCart = (List<Cart>) guestCartObj;
             }
         }
-
-        List<Cart> updatedPetCart = new ArrayList<>();
 
         for (Cart c : petCart) {
             if (c.getPetId() != null) {
@@ -83,10 +81,10 @@ public class DisplayCartServlet extends HttpServlet {
                     if (account != null) {
                         cartDao.deleteFromPetCart(account.getAccId(), c.getPetId());
                     }
+
                 }
             }
         }
-
 
         if (account != null) {
             session.setAttribute("cartcount", cartDao.getTotalCartItems(account.getAccId()));

@@ -8,7 +8,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Chi tiết thú cưng</title>
-         <script src="js/add_alert.js" type="text/javascript"></script>
+        <script src="js/add_alert.js" type="text/javascript"></script>
     </head>
     <body>
 
@@ -26,7 +26,7 @@
         <p>Mô tả: ${pet.petDescription}</p>
 
         <form action="addtocart" method="GET" class="cartForm" target="add_cart">
-          
+
             <input type="hidden" name="id" value="${pet.petId}" />
             <input type="hidden" name="price" value="${pet.petPrice}" />
             <input type="hidden" name="quantity" value="1" />

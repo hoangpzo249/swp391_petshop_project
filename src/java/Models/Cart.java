@@ -19,10 +19,10 @@ public class Cart {
     }
 
     
-    public Cart(int accountId, Integer petId, Integer productId, int quantity, double price) {
+    public Cart(int accountId, Integer petId, int quantity, double price) {
         this.accountId = accountId;
         this.petId = petId;
-        this.productId = productId;
+       
         this.quantity = quantity;
         this.price = price;
     }
@@ -44,14 +44,7 @@ public class Cart {
         this.petId = petId;
     }
 
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
-    }
-
+   
     public int getQuantity() {
         return quantity;
     }

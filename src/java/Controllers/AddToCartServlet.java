@@ -107,7 +107,7 @@ public class AddToCartServlet extends HttpServlet {
                     if (exists) {
                         session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
                     } else {
-                        guestCart.add(new Cart(-1, petId, null, quantity, unitPrice * quantity));
+                        guestCart.add(new Cart(-1, petId,quantity, unitPrice * quantity));
                         session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
                     }
 

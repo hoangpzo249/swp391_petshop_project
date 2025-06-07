@@ -67,14 +67,22 @@ public class CartDAO {
         DBContext db = new DBContext();
         try {
             conn = db.getConnection();
-            String sql = "SELECT 1 FROM CartTB c JOIN CartContentTB cc ON c.cartId = cc.cartId "
+            String sql = "SELECT COUNT(*) AS total\n"
+                    + "FROM CartTB c\n"
+                    + "JOIN CartContentTB cc ON c.cartId = cc.cartId\n"
                     + "WHERE c.accId = ? AND cc.petId = ?";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, accId);
             ps.setInt(2, petId);
             rs = ps.executeQuery();
-            return rs.next();
+            if (rs.next() && rs.getInt("total") > 0) {
+                  return true;
+}
+            
+
         } catch (Exception ex) {
+            
+            
 
         }
         try {
@@ -223,7 +231,7 @@ public class CartDAO {
             ps.setInt(1, accId);
             rs = ps.executeQuery();
             while (rs.next()) {
-                Cart cart = new Cart(accId, rs.getInt("petId"), null, 1, 0);
+                Cart cart = new Cart(accId, rs.getInt("petId"), 1, 0);
                 list.add(cart);
             }
         } catch (Exception ex) {
