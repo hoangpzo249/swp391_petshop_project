@@ -191,6 +191,7 @@ public class Recover_Account_Servlet extends HttpServlet {
                 request.setAttribute("errMess", "OTP không hợp lệ");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
             }
+            
         } else if ("recover-pass".equals(action)) {
             String password = request.getParameter("password");
             String comfirm_password = request.getParameter("comfirm_password");

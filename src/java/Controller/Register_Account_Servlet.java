@@ -145,6 +145,25 @@ public class Register_Account_Servlet extends HttpServlet {
                 return;
             }
 
+            String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
+            if (!fName.matches(checkName)) {
+                request.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt và số");
+                request.setAttribute("email", email);
+                request.setAttribute("password", pass);
+                request.setAttribute("confirm_password", comfirmPass);
+                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+                return;
+            }
+
+            if (!lName.matches(checkName)) {
+                request.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt");
+                request.setAttribute("email", email);
+                request.setAttribute("password", pass);
+                request.setAttribute("confirm_password", comfirmPass);
+                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+                return;
+            }
+
             AccountDAO daoAcc = new AccountDAO();
 
             boolean checkEmail = daoAcc.isEmailExist(email);

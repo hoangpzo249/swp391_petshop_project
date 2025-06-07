@@ -147,6 +147,9 @@
                             <div class="profile-avatar-container">
                                 <div class="default-avatar">
                                     <i class="fas fa-user"></i>
+                                    <c:if test="${not empty userAccount.accImage}">
+                                        <img src="${sessionScope.userAccount.accImage}" alt="Avatar" width="150" height="150" />
+                                    </c:if>
                                 </div>
                             </div>
 
@@ -157,7 +160,7 @@
                                 <span class="info-label">Email</span>
                                 <span class="info-value" id="current-username">${sessionScope.userAccount.accEmail}</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <i class="fas fa-user"></i>
                                 <span class="info-label">Tên đăng nhập</span>
@@ -194,11 +197,11 @@
                                 <span class="info-value" id="current-address">${sessionScope.userAccount.accAddress}</span>
                             </div>
 
-                            <div class="info-item">
+<!--                            <div class="info-item">
                                 <i class="fas fa-clock"></i>
                                 <span class="info-label">Ngày tạo tài khoản</span>
                                 <span class="info-value" id="current-created-date">${sessionScope.userAccount.accCreateDate}</span>
-                            </div>
+                            </div>-->
 
                             <div class="description-box">
                                 <div class="description-title">
@@ -210,9 +213,9 @@
                             </div>
 
                             <div class="button-group">
-<!--                                <a href="profile?action=change-email" class="account-btn password-btn">
-                                    <i class="fas fa-envelope"></i> Đổi Email
-                                </a>-->
+                                <!--                                <a href="profile?action=change-email" class="account-btn password-btn">
+                                                                    <i class="fas fa-envelope"></i> Đổi Email
+                                                                </a>-->
                                 <a href="profile?action=change-password" class="account-btn password-btn">
                                     <i class="fas fa-key"></i> Đổi mật khẩu
                                 </a>
@@ -262,11 +265,11 @@
                                 </form>
                             </div>
                         </c:when>
-<%-- 
-                        <c:when test="${param.action eq 'change-email'}">
-                            <!-- Change Email Form -->
-                            <div class="form-container">
-                                <h3 class="form-title">Cập nhật email mới</h3>
+                        <%-- 
+                                                <c:when test="${param.action eq 'change-email'}">
+                                                    <!-- Change Email Form -->
+                                                    <div class="form-container">
+                                                        <h3 class="form-title">Cập nhật email mới</h3>
 
                                 <c:if test="${empty sessionScope.sendOtpSuccess}">
                                     <form action="profile?action=change-email" id="profile-form" method="POST" style="width: 100%;">
@@ -334,30 +337,40 @@
 
                             </div>
                         </c:when>
---%>
+                        --%>
                         <c:otherwise>
                             <!-- Update Profile Form -->
                             <div class="form-container">
                                 <h3 class="form-title">Cập nhật thông tin cá nhân</h3>
 
-                                <div class="image-upload-container">
-                                    <label class="image-upload-label">Ảnh đại diện</label>
-                                    <label for="profile-image" class="image-upload-area">
-                                        <div class="image-upload-icon">
-                                            <i class="fas fa-cloud-upload-alt"></i>
+                                <form action="profile?action=upload-avatar" method="POST" enctype="multipart/form-data">
+                                    <div class="image-upload-container">
+                                        <label class="image-upload-label">Ảnh đại diện</label>
+                                        <label for="profile-image" class="image-upload-area">
+                                            <div class="image-upload-icon">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                            </div>
+                                            <div class="image-upload-text">Nhấp để tải ảnh lên</div>
+                                            <div class="image-upload-subtext">Hỗ trợ: JPG, PNG (tối đa 2MB)</div>
+                                        </label>
+                                        <input type="file" id="profile-image" name="profileImage" class="file-input" accept="image/*">
+                                        <c:if test="${not empty errMessAvatar}">
+                                            <div class="errMess">
+                                                <p>${errMessAvatar}</p>
+                                            </div>
+                                        </c:if>
+                                        <div class="save-btn-avatar1">
+                                            <button type="submit" class="save-btn-avatar" id="submitButton">Cập nhật ảnh đại diện</button>
                                         </div>
-                                        <div class="image-upload-text">Nhấp để tải ảnh lên</div>
-                                        <div class="image-upload-subtext">Hỗ trợ: JPG, PNG (tối đa 2MB)</div>
-                                    </label>
-                                    <input type="file" id="profile-image" name="profileImage" class="file-input" accept="image/*">
-                                </div>
+                                    </div>
+                                </form>
 
                                 <form action="profile?action=update" id="profile-form" method="POST" style="width: 100%;">
                                     <div class="form-group">
                                         <label for="username">Tên đăng nhập</label>
                                         <div class="input-with-icon">
                                             <input type="text" id="username" name="username" class="form-control" 
-                                                   placeholder="Nhập tên đăng nhập mới" value="${sessionScope.userAccount.accUsername}"/>
+                                                   placeholder="Nhập tên đăng nhập mới" value=""/>
 
                                             <i class="fas fa-user"></i>
                                         </div>

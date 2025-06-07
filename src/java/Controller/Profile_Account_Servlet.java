@@ -14,6 +14,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.util.Random;
 import org.mindrot.jbcrypt.BCrypt;
@@ -66,10 +69,8 @@ public class Profile_Account_Servlet extends HttpServlet {
 //        String action = request.getParameter("action");
 //        String taget = request.getParameter("taget");
 //        String act = request.getParameter("act");
-
 //        HttpSession session = request.getSession();
 //        Account acc = (Account) session.getAttribute("userAccount");
-
 //        if (acc == null) {
 //            session.invalidate();
 //            response.sendRedirect("login");
@@ -126,15 +127,22 @@ public class Profile_Account_Servlet extends HttpServlet {
             String fName = request.getParameter("firstname");
             String lName = request.getParameter("lastname");
             String dob = request.getParameter("dob");
-            Date date = Date.valueOf(dob);
+            Date date;
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             String description = request.getParameter("description");
 
-            int id = acc.getAccId();
+            String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
 
+//            int id = acc.getAccId();
 //            System.out.println(id);
-            
+            AccountDAO accDao = new AccountDAO();
+            boolean checkEmail = accDao.isUsernameExist(username);
+            if (checkEmail) {
+                request.setAttribute("errMess", "Tên đăng nhập đã tồn tại");
+                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+                return;
+            }
 
             if (username == null || username.trim().isEmpty()) {
                 username = acc.getAccUsername();
@@ -145,11 +153,23 @@ public class Profile_Account_Servlet extends HttpServlet {
             if (lName == null || lName.trim().isEmpty()) {
                 lName = acc.getAccLname();
             }
-//            if (dob == null || dob.trim().isEmpty()) {
-//                date = new java.sql.Date(acc.getAccDob().getTime());
-//            } else {
-//                date = Date.valueOf(dob);
-//            }
+
+            if (!fName.matches(checkName)) {
+                request.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt và số");
+                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+                return;
+            }
+
+            if (!lName.matches(checkName)) {
+                request.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt và số");
+                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+                return;
+            }
+            if (dob == null || dob.trim().isEmpty()) {
+                date = new java.sql.Date(acc.getAccDob().getTime());
+            } else {
+                date = Date.valueOf(dob);
+            }
 //            if (phone == null || phone.trim().isEmpty()) {
 //                phone = acc.getAccPhoneNumber();
 //            }
@@ -160,7 +180,7 @@ public class Profile_Account_Servlet extends HttpServlet {
                 request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
                 return;
             }
-            
+
             if (address == null || address.trim().isEmpty()) {
                 address = acc.getAccAddress();
             }
@@ -175,8 +195,7 @@ public class Profile_Account_Servlet extends HttpServlet {
             acc.setAccAddress(address);
             acc.setAccDescription(description);
 
-            AccountDAO accDao = new AccountDAO();
-
+//            AccountDAO accDao = new AccountDAO();
             accDao.updateProfile(acc);
 
             session.setAttribute("userAccount", acc);
@@ -205,7 +224,6 @@ public class Profile_Account_Servlet extends HttpServlet {
 //                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
 //                return;
 //            }
-
             if (!password.equals(comfirm_password)) {
                 request.setAttribute("errMess", "Mật khẩu không khớp");
                 request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
@@ -316,6 +334,10 @@ public class Profile_Account_Servlet extends HttpServlet {
 //                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
 //            }
 //            request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+        } else if ("upload-avatar".equals(action)) {
+
+            request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+
         } else {
             request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
         }
@@ -341,6 +363,9 @@ public class Profile_Account_Servlet extends HttpServlet {
         boolean hasSpecial = false;
 
         for (char c : password.toCharArray()) {
+            if (Character.isWhitespace(c)) {
+                return false;
+            }
             if (Character.isUpperCase(c)) {
                 hasUpper = true;
             } else if (Character.isLowerCase(c)) {

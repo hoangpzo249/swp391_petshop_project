@@ -45,7 +45,7 @@
                                     <c:choose>
 
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Admin'}">
-                                            <a href="profile" class="dropdown-item">
+                                            <a href="admin-panel" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Admin</span>
                                             </a>
