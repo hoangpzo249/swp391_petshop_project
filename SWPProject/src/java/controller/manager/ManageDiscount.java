@@ -68,6 +68,20 @@ public class ManageDiscount extends HttpServlet {
         } else {
             switch (userAcction) {
                 case "add":
+                    String discountCode = request.getParameter("discountCode");
+                    String discountType = request.getParameter("discountType");
+                    // this is the String value of discountvalue, need to be parse to int
+                    String discountValueString = request.getParameter("discountValue");
+                    String description = request.getParameter("description");
+                    // this is the String value of discountvalue, need to be parse to date
+                    String validFromString = request.getParameter("validFrom");
+                    String validToString = request.getParameter("validTo");
+                    // this is the String value of discountvalue, need to be parse to int
+                    String minOrderAmountString = request.getParameter("minOrderAmount");
+                    String maxUsageString = request.getParameter("maxUsage");
+//                    this must be convert to boolean/ enumType?
+                    String isActiveString = request.getParameter("isActive");
+                    
                     processRequest(request, response);
                     break;
             }

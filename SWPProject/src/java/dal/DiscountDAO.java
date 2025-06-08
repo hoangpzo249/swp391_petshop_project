@@ -20,7 +20,7 @@ import java.sql.SQLException;
  */
 public class DiscountDAO extends DBContext {
 
-//        R
+//        R-1
     public ArrayList<Discount> getAllDiscountFromDatabase() {
         ArrayList<Discount> discountList = new ArrayList<>();
 
@@ -70,7 +70,7 @@ public class DiscountDAO extends DBContext {
         return discountList;
     }
 
-//    U
+//   U: 2
     public boolean UpdateDiscountFromDatabase(Discount updated) {
         int rowAffected = 0;
         PreparedStatement preStatement = null;
@@ -98,6 +98,34 @@ public class DiscountDAO extends DBContext {
         return rowAffected == 1;
     }
 
+    // 5  
+    public boolean UpdateDiscountStatus(int updatedDiscountId, boolean status) {
+        int rowAffected = 0;
+        PreparedStatement prestatement = null;
+//        int bitValue = status==true?1:0; //this return value from boolean
+        try {
+            String sql = "Update DiscountTB Set isActive = ?  where discountId = ? ";
+            prestatement = connection.prepareStatement(sql);
+            prestatement.setBoolean(1, status);
+            prestatement.setInt(2, updatedDiscountId);
+            rowAffected = prestatement.executeUpdate();
+        } catch (Exception e) {
+            System.err.println("Đã có lỗi khi thực thi sql: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (prestatement != null) {
+                try {
+                    prestatement.close();
+                    System.out.println("đã đóng preparestatement");
+                } catch (Exception e) {
+                    System.err.println("Đã có lỗi khi đóng prepareStatement");
+                }
+            }
+        }
+        return rowAffected == 1;
+    }
+
+    // C: 3   
     public boolean createDiscountToDatabase(Discount added) {
         int rowAffected = 0;
         PreparedStatement preStatement = null;
@@ -135,6 +163,7 @@ public class DiscountDAO extends DBContext {
         return rowAffected == 1;
     }
 
+    // D: 4
     public boolean deleteDiscountInDataBase(int deletedDiscountId) {
         int rowAffected = 0;
         PreparedStatement preStatement = null;
@@ -169,6 +198,7 @@ public class DiscountDAO extends DBContext {
         for (Discount discount : discountList) {
             System.out.println(discount);
         }
+
         // 2. unit test for Update 
 //        Discount updated = discountList.get(0);
 //        updated.setDiscountCode("chay duoc roi");
@@ -202,7 +232,12 @@ public class DiscountDAO extends DBContext {
 //        } else {
 //            System.out.println("delete Failed");
 //        }
-        
+        // 5.Unit test for updateStatus       
+//        if (UnitTsstDao.UpdateDiscountStatus(1, false)) {
+//            System.out.println("update thành công");
+//        } else {
+//            System.out.println("upodate failed");
+//        }
         
         // 1. Unit test for getAll
         System.out.println("sau khi làm gì đó; ");

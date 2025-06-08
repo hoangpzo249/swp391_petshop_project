@@ -12,7 +12,7 @@
         <title>Add Discount</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Add Discount Page</h1>
         <!-- chỗ này để get trước để lấy param -->
         <form action="${pageContext.request.contextPath}/ManageDiscount" method="get">
             <table>
@@ -32,7 +32,7 @@
                     </tr>
                     <tr>
                         <td>discount value:</td>
-                        <td><input type="number" required name="disCountValue" min="0"></td>
+                        <td><input type="number" required name="discountValue" min="0"></td>
                     </tr>
                     <tr>
                         <td>discount description:</td>
@@ -55,7 +55,7 @@
                         <td><input type="number" required name="maxUsage"min="1" step="1"></td>
                     </tr>
                     <tr>
-                        <td>discount is active:</td>
+                        <td>discount status</td>
                         <td>            
                             <select name="isActive">
                                 <option value="Active">Active</option>

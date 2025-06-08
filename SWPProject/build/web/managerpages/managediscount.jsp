@@ -21,41 +21,44 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>discountId</th>
-                    <th>discountCode</th>
-                    <th>discountType</th>
-                    <th>disCountValue</th>
-                    <th>description</th>
-                    <th>validFrom</th>
-                    <th>validTo</th>
-                    <th>minOrderAmount</th>
-                    <th>maxUsage</th>
-                    <th>usageCount</th>
-                    <th>isActive</th>
+                    <th>Discount Id</th>
+                    <th>Discount Code</th>
+                    <th>Discount Type</th>
+                    <th>DisCount Value</th>
+                    <th>Description</th>
+                    <th>Valid From</th>
+                    <th>Vali dTo</th>
+                    <th>Min Order Amount</th>
+                    <th>Max Usage</th>
+                    <th>Usage Count</th>
+                    <th>Status</th>
                     <th>changeStatus</th>
                     <th>update</th>
+                    <th>delete</th>
+
                 </tr>
             </thead>
             <tbody>
                 <c:forEach var="discount" items="${requestScope.discountList}">
-                <tr>
-                    <td>${discount.discountId}</td>
-                    <td>${discount.discountCode}</td>
-                    <td>${discount.discountType}</td>
-                    <td>${discount.disCountValue}</td>
-                    <td>${discount.description}</td>
-                    <td>${discount.validFrom}</td>
-                    <td>${discount.validTo}</td>
-                    <td>${discount.minOrderAmount}</td>
-                    <td>${discount.maxUsage}</td>
-                    <td>${discount.usageCount}</td>
-                    <td>${discount.isActive}</td>
-                    <td><a href=""> change Status</a></td>
-                    <td><a href=""> update </a></td>
-                </tr>
-            </c:forEach>
-        </tbody>
-    </table>
+                    <tr>
+                        <td>${discount.discountId}</td>
+                        <td>${discount.discountCode}</td>
+                        <td>${discount.discountType}</td>
+                        <td>${discount.disCountValue}</td>
+                        <td>${discount.description}</td>
+                        <td>${discount.validFrom}</td>
+                        <td>${discount.validTo}</td>
+                        <td>${discount.minOrderAmount}</td>
+                        <td>${discount.maxUsage}</td>
+                        <td>${discount.usageCount}</td>
+                        <td>${discount.isActive eq 'true' ? 'Active' : 'Deactive'}</td>
+                        <td><a href=""> ${discount.isActive eq 'true' ? 'Deactive Discount' : 'Active Discount'}</a></td>
+                        <td><a href=""> update </a></td>
+                        <td><a href=""> delete </a></td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
 
-</body>
+    </body>
 </html>
