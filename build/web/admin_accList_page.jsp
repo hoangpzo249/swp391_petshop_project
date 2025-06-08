@@ -76,30 +76,13 @@
                         <a href="admin-panel?action=account&type=all" class="sidebar-link active">
                             <i class="fas fa-users"></i> Tất cả tài khoản
                         </a>
-                        <a href="admin-panel?action=accounts&type=manager" class="sidebar-link">
-                            <i class="fas fa-user-tie"></i> Quản lý (Manager)
-                        </a>
-                        <a href="admin-panel?action=accounts&type=saler" class="sidebar-link">
-                            <i class="fas fa-user-tag"></i> Nhân viên bán hàng
-                        </a>
-                        <a href="admin-panel?action=accounts&type=shipper" class="sidebar-link">
-                            <i class="fas fa-truck"></i> Nhân viên giao hàng
-                        </a>
-                        <a href="admin-panel?action=accounts&type=customer" class="sidebar-link">
-                            <i class="fas fa-user"></i> Khách hàng
-                        </a>
                     </div>
 
-                    <div class="menu-category">
-                        <h5 class="category-title">Phân quyền</h5>
-                        <a href="admin-panel?page=roles" class="sidebar-link">
-                            <i class="fas fa-user-shield"></i> Quản lý phân quyền
-                        </a>
-                    </div>
+
 
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
-                        <a href="admin-panel?page=create-account" class="sidebar-link">
+                        <a href="admin-panel?action=create-account&type=customer" class="sidebar-link">
                             <i class="fas fa-user-plus"></i> Tạo tài khoản mới
                         </a>
                         <a href="profile" class="sidebar-link">
@@ -136,7 +119,7 @@
                             <i class="fas fa-users"></i> Danh sách tài khoản
                         </h3>
                         <div class="card-tools">
-                            <button class="btn btn-primary" onclick="location.href = 'admin-panel?page=create-account'">
+                            <button class="btn btn-primary" onclick="location.href = 'admin-panel?action=create-account&type=customer'">
                                 <i class="fas fa-user-plus"></i> Tạo tài khoản mới
                             </button>
                             <button class="btn btn-outline">
@@ -146,10 +129,17 @@
                     </div>
                     <div class="card-body">
                         <div class="filter-controls">
-                            <div class="input-group">
-                                <i class="fas fa-search"></i>
-                                <input type="text" placeholder="Tìm kiếm người dùng..." id="searchUsers">
-                            </div>
+                            <form action="admin-panel">
+                                <input type="hidden" name="action" value="account">
+                                <input type="hidden" name="type" value="all">
+                                <div class="input-group">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" name="key" placeholder="Tìm kiếm người dùng..." value="${key}">
+                                    <button type="submit" style="display: none;"></button>
+                                </div>
+                            </form>
+
+
                             <div class="select-group">
                                 <select id="filterRole">
                                     <option value="">Tất cả loại tài khoản</option>
@@ -167,6 +157,7 @@
                                     <option value="blocked">Đã khóa</option>
                                 </select>
                             </div>
+                                    
                         </div>
                         <div class="table-container">
                             <table>
@@ -210,7 +201,7 @@
 
                                                 <div class="table-actions">
 
-                                                    <a class="action-btn view-btn" title="Xem chi tiết" href = 'admin-panel?action=account&type=all&id=${acc.getAccId()}'>
+                                                    <a class="action-btn view-btn" title="Xem chi tiết" href = 'admin-panel?action=account&type=${acc.accRole}&act=view&id=${acc.getAccId()}'>
                                                         <i class="fas fa-eye"></i>
                                                     </a>
 
@@ -221,47 +212,47 @@
                                                         </c:when>
 
                                                         <c:when test="${acc.getAccRole() eq 'Manager'}">
-                                                            <a class="action-btn edit-btn" title="Sửa" href = 'admin-panel?action=account&type=all&act=update-role&id=${acc.getAccId()}'>
+                                                            <a class="action-btn edit-btn" title="Sửa" href = 'admin-panel?action=account&type=${acc.accRole}&act=update-role&id=${acc.getAccId()}'>
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
-                                                            <a class="action-btn block-btn" title="Khóa" href = 'admin-panel?action=account&type=all&act=ban-acc&id=${acc.getAccId()}'>
+                                                            <a class="action-btn block-btn" title="Khóa" href = 'admin-panel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
                                                                 <i class="fas fa-lock"></i>
                                                             </a>
-                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'admin-panel?action=account&type=all&act=reset-pass&id=${acc.getAccId()}'>
+                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'admin-panel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
                                                                 <i class="fas fa-key"></i>
                                                             </a>
 
                                                         </c:when>
                                                         <c:when test="${acc.getAccRole() eq 'Saler'}">
-                                                            <a class="action-btn edit-btn" title="Sửa" href = 'admin-panel?action=account&type=all&act=update-role&id=${acc.getAccId()}'>
+                                                            <a class="action-btn edit-btn" title="Sửa" href = 'admin-panel?action=account&type=${acc.accRole}&act=update-role&id=${acc.getAccId()}'>
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
-                                                            <a class="action-btn block-btn" title="Khóa" href = 'admin-panel?action=account&type=all&act=ban-acc&id=${acc.getAccId()}'>
+                                                            <a class="action-btn block-btn" title="Khóa" href = 'admin-panel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
                                                                 <i class="fas fa-lock"></i>
                                                             </a>
-                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'admin-panel?action=account&type=all&act=reset-pass&id=${acc.getAccId()}'>
+                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'admin-panel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
                                                                 <i class="fas fa-key"></i>
                                                             </a>
 
                                                         </c:when>
                                                         <c:when test="${acc.getAccRole() eq 'Shipper'}">
-                                                            <a class="action-btn edit-btn" title="Sửa" href = 'admin-panel?action=account&type=all&act=update-role&id=${acc.getAccId()}'>
+<!--                                                            <a class="action-btn edit-btn" title="Sửa" href = 'admin-panel?action=account&type=all&act=update-role&id=${acc.getAccId()}'>
                                                                 <i class="fas fa-edit"></i>
-                                                            </a>
-                                                            <a class="action-btn block-btn" title="Khóa" href = 'admin-panel?action=account&type=all&act=ban-acc&id=${acc.getAccId()}'>
+                                                            </a>-->
+                                                            <a class="action-btn block-btn" title="Khóa" href = 'admin-panel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
                                                                 <i class="fas fa-lock"></i>
                                                             </a>
-                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'admin-panel?action=account&type=all&act=reset-pass&id=${acc.getAccId()}'>
+                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'admin-panel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
                                                                 <i class="fas fa-key"></i>
                                                             </a>
                                                         </c:when>
 
                                                         <c:otherwise>
 
-                                                            <a class="action-btn block-btn" title="Khóa" href = 'admin-panel?action=account&type=all&act=ban-acc&id=${acc.getAccId()}'>
+                                                            <a class="action-btn block-btn" title="Khóa" href = 'admin-panel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
                                                                 <i class="fas fa-lock"></i>
                                                             </a>
-                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'admin-panel?action=account&type=all&act=reset-pass&id=${acc.getAccId()}'>
+                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'admin-panel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
                                                                 <i class="fas fa-key"></i>
                                                             </a>
 
@@ -272,6 +263,7 @@
                                             </td>
                                         </tr>
                                     </c:forEach>
+
                                 </tbody>
                             </table>
                         </div>

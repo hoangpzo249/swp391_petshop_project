@@ -44,14 +44,14 @@
             <div class="alert-message">
                 ${successMess}
             </div>
-            <c:remove var="successMessage" scope="session" />
+            <c:remove var="successMess" scope="session" />
         </c:if>
 
         <c:if test="${not empty errMess}">
             <div class="alert-message error">
                 ${errMess}
             </div>
-            <c:remove var="errorMessage" scope="session" />
+            <c:remove var="errMess" scope="session" />
         </c:if>
 
         <div class="admin-container">
@@ -75,30 +75,13 @@
                         <a href="admin-panel?action=account&type=all" class="sidebar-link active">
                             <i class="fas fa-users"></i> Tất cả tài khoản
                         </a>
-                        <a href="admin-panel?action=accounts&type=manager" class="sidebar-link">
-                            <i class="fas fa-user-tie"></i> Quản lý (Manager)
-                        </a>
-                        <a href="admin-panel?action=accounts&type=saler" class="sidebar-link">
-                            <i class="fas fa-user-tag"></i> Nhân viên bán hàng
-                        </a>
-                        <a href="admin-panel?action=accounts&type=shipper" class="sidebar-link">
-                            <i class="fas fa-truck"></i> Nhân viên giao hàng
-                        </a>
-                        <a href="admin-panel?action=accounts&type=customer" class="sidebar-link">
-                            <i class="fas fa-user"></i> Khách hàng
-                        </a>
                     </div>
 
-                    <div class="menu-category">
-                        <h5 class="category-title">Phân quyền</h5>
-                        <a href="admin-panel?page=roles" class="sidebar-link">
-                            <i class="fas fa-user-shield"></i> Quản lý phân quyền
-                        </a>
-                    </div>
+
 
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
-                        <a href="admin-panel?page=create-account" class="sidebar-link">
+                        <a href="admin-panel?action=create-account&type=customer" class="sidebar-link">
                             <i class="fas fa-user-plus"></i> Tạo tài khoản mới
                         </a>
                         <a href="profile" class="sidebar-link">
@@ -130,9 +113,9 @@
                 </div>
 
                 <!-- Reset Password Card -->
-                <form action="admin-panel" method="post" id="resetPasswordForm">
-                    <input type="hidden" name="action" value="account">
-                    <input type="hidden" name="type" value="all">
+                <form action="admin-panel" method="post"
+                      <input type="hidden" name="action" value="account">
+                    <input type="hidden" name="type" value="${resetpass.accRole}">
                     <input type="hidden" name="act" value="reset-pass">
                     <input type="hidden" name="id" value="${resetpass.accId}">
                     <div class="card">
@@ -150,6 +133,33 @@
                                             <img src="images/support button/account.png" alt="User Avatar" class="account-avatar">
                                             <h2 class="account-name">${resetpass.accFname} ${resetpass.accLname}</h2>
                                             <p class="account-username">@${resetpass.accUsername}</p>
+                                            <c:choose>
+                                                <c:when test="${resetpass.accRole eq 'Admin'}">
+                                                    <div class="account-role-badge admin-role">
+                                                        ${resetpass.accRole}
+                                                    </div>
+                                                </c:when>
+                                                <c:when test="${resetpass.accRole eq 'Manager'}">
+                                                    <div class="account-role-badge manager-role">
+                                                        ${resetpass.accRole}
+                                                    </div>
+                                                </c:when>
+                                                <c:when test="${resetpass.accRole eq 'Saler'}">
+                                                    <div class="account-role-badge saler-role">
+                                                        ${resetpass.accRole}
+                                                    </div>
+                                                </c:when>
+                                                <c:when test="${resetpass.accRole eq 'Shipper'}">
+                                                    <div class="account-role-badge shipper-role">
+                                                        ${resetpass.accRole}
+                                                    </div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="account-role-badge customer-role">
+                                                        ${resetpass.accRole}
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
 
                                         <div class="account-details">

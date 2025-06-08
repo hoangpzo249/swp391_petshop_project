@@ -1,6 +1,6 @@
 <%-- 
-    Document   : admin_accResetPass_Page
-    Created on : 7 June 2025, 7:29:06 pm
+    Document   : admin_accRole_page
+    Created on : 8 June 2025, 10:51:54 am
     Author     : HuyHoang
 --%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -9,8 +9,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Đặt lại mật khẩu - PETFPT Shop</title>
-        <link href="css/admin_accResetPass_Page.css" rel="stylesheet" type="text/css"/>
+        <title>Cập nhật vai trò - PETFPT Shop</title>
+        <link href="css/admin_accRole_page.css" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     </head>
@@ -27,7 +27,7 @@
                 <img src="images/support button/account.png" alt="Admin Avatar"/>
                 <div class="admin-info">
                     <span class="admin-name">${sessionScope.userAccount.accFname} ${sessionScope.userAccount.accLname}</span>
-                    <span class="admin-role">Admin</span>
+                    <span class="admin-role1">Admin</span>
                 </div>
                 <div class="admin-actions">
                     <a href="profile" class="admin-action" title="Thông tin cá nhân">
@@ -102,131 +102,177 @@
                 <!-- Page Header -->
                 <div class="page-header">
                     <h1 class="page-title">
-                        <i class="fas fa-key"></i> Đặt lại mật khẩu
+                        <i class="fas fa-user-edit"></i> Cập nhật vai trò tài khoản
                     </h1>
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
                         <li><a href="admin-panel">Admin</a></li>
                         <li><a href="admin-panel?action=account&type=all">Quản lý tài khoản</a></li>
-                        <li>Đặt lại mật khẩu</li>
+                        <li>Cập nhật vai trò</li>
                     </ul>
                 </div>
-
-                <!-- Reset Password Card -->
-                <form action="admin-panel" method="post"
-                      <input type="hidden" name="action" value="account">
-                    <input type="hidden" name="type" value="${resetpass.accRole}">
-                    <input type="hidden" name="act" value="reset-pass">
-                    <input type="hidden" name="id" value="${resetpass.accId}">
+                <form action="admin-panel" method="post">
+                    <input type="hidden" name="action" value="account">
+                    <input type="hidden" name="type" value="${updateRole.accRole}">
+                    <input type="hidden" name="act" value="update-role">
+                    <input type="hidden" name="id" value="${updateRole.accId}">
+                    
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-lock"></i> Đặt lại mật khẩu tài khoản
+                                <i class="fas fa-user-shield"></i> Thay đổi vai trò và quyền hạn
                             </h3>
                         </div>
                         <div class="card-body">
-                            <div class="reset-password-container">
-
+                            <div class="update-role-container">
                                 <div class="account-info-section">
                                     <div class="account-info-card">
                                         <div class="account-profile">
                                             <img src="images/support button/account.png" alt="User Avatar" class="account-avatar">
-                                            <h2 class="account-name">${resetpass.accFname} ${resetpass.accLname}</h2>
-                                            <p class="account-username">@${resetpass.accUsername}</p>
+                                            <h2 class="account-name">${updateRole.accFname} ${updateRole.accLname}</h2>
+                                            <p class="account-username">@${updateRole.accUsername}</p>
                                             <c:choose>
-                                                <c:when test="${resetpass.accRole eq 'Admin'}">
+                                                <c:when test="${updateRole.accRole eq 'Admin'}">
                                                     <div class="account-role-badge admin-role">
-                                                        ${resetpass.accRole}
+                                                        ${updateRole.accRole}
                                                     </div>
                                                 </c:when>
-                                                <c:when test="${resetpass.accRole eq 'Manager'}">
+                                                <c:when test="${updateRole.accRole eq 'Manager'}">
                                                     <div class="account-role-badge manager-role">
-                                                        ${resetpass.accRole}
+                                                        ${updateRole.accRole}
                                                     </div>
                                                 </c:when>
-                                                <c:when test="${resetpass.accRole eq 'Saler'}">
+                                                <c:when test="${updateRole.accRole eq 'Saler'}">
                                                     <div class="account-role-badge saler-role">
-                                                        ${resetpass.accRole}
+                                                        ${updateRole.accRole}
                                                     </div>
                                                 </c:when>
-                                                <c:when test="${resetpass.accRole eq 'Shipper'}">
+                                                <c:when test="${updateRole.accRole eq 'Shipper'}">
                                                     <div class="account-role-badge shipper-role">
-                                                        ${resetpass.accRole}
+                                                        ${updateRole.accRole}
                                                     </div>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <div class="account-role-badge customer-role">
-                                                        ${resetpass.accRole}
+                                                        ${updateRole.accRole}
                                                     </div>
                                                 </c:otherwise>
                                             </c:choose>
+
+
                                         </div>
 
                                         <div class="account-details">
                                             <div class="detail-item">
                                                 <div class="detail-label">ID</div>
-                                                <div class="detail-value">${resetpass.accId}</div>
+                                                <div class="detail-value">${updateRole.accId}</div>
                                             </div>
                                             <div class="detail-item">
                                                 <div class="detail-label">Email</div>
-                                                <div class="detail-value">${resetpass.accEmail}</div>
+                                                <div class="detail-value">${updateRole.accEmail}</div>
+                                            </div>
+                                            <div class="detail-item">
+                                                <div class="detail-label">Ngày tạo</div>
+                                                <div class="detail-value">${updateRole.accCreateDate}</div>
                                             </div>
                                             <div class="detail-item">
                                                 <div class="detail-label">Trạng thái</div>
-                                                <c:choose>
-                                                    <c:when test="${resetpass.accStatus eq 'Active'}">
-                                                        <td><span class="status-badge status-active">${resetpass.accStatus}</span></td>
-                                                        </c:when>
-                                                        <c:when test="${resetpass.accStatus eq 'Inactive'}">
-                                                        <td><span class="status-badge status-blocked">${resetpass.accStatus}</span></td>
-                                                        </c:when>
-                                                    </c:choose>
+                                                <div class="detail-value">
+                                                    <span class="status-badge status-${updateRole.accStatus.toLowerCase()}">${updateRole.accStatus}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="security-notes">
-                                        <h3><i class="fas fa-shield-alt"></i> Lưu ý bảo mật</h3>
-                                        <ul>
-                                            <li>Mật khẩu mới phải có ít nhất 8 ký tự</li>
-                                            <li>Nên bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt</li>
-                                            <li>Không nên sử dụng mật khẩu đã dùng trước đó</li>
-                                            <li>Việc đặt lại mật khẩu sẽ khiến người dùng phải đăng nhập lại</li>
-                                        </ul>
+                                    <div class="role-info-card">
+                                        <h3><i class="fas fa-info-circle"></i> Thông tin vai trò</h3>
+
+                                        <div class="role-descriptions">
+                                            <div class="role-item">
+                                                <div class="role-badge admin-role"><i class="fas fa-user-shield"></i> Admin</div>
+                                                <div class="role-desc">Toàn quyền quản trị hệ thống, quản lý tài khoản</div>
+                                            </div>
+                                            <div class="role-item">
+                                                <div class="role-badge manager-role"><i class="fas fa-user-tie"></i> Manager</div>
+                                                <div class="role-desc">Quản lý cửa hàng, sản phẩm, đơn hàng</div>
+                                            </div>
+                                            <div class="role-item">
+                                                <div class="role-badge saler-role"><i class="fas fa-user-tag"></i> Saler</div>
+                                                <div class="role-desc">Quản lý đơn hàng, bán hàng và chăm sóc khách hàng</div>
+                                            </div>
+                                            <div class="role-item">
+                                                <div class="role-badge shipper-role"><i class="fas fa-truck"></i> Shipper</div>
+                                                <div class="role-desc">Quản lý giao hàng và cập nhật trạng thái đơn hàng</div>
+                                            </div>
+                                            <div class="role-item">
+                                                <div class="role-badge customer-role"><i class="fas fa-user"></i> Customer</div>
+                                                <div class="role-desc">Khách hàng mua sắm, không có quyền quản trị</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Reset Password Form Section -->
-                                <div class="reset-password-form-section">
-                                    <div class="reset-form-card">
-                                        <h3 class="form-title"><i class="fas fa-key"></i> Đặt mật khẩu mới</h3>
+                                <div class="update-role-form-section">
+                                    <div class="update-form-card">
+                                        <h3 class="form-title"><i class="fas fa-edit"></i> Thay đổi vai trò</h3>
 
 
 
                                         <div class="form-group">
-                                            <label for="newPassword">Mật khẩu mới</label>
-                                            <div class="password-input-group">
-                                                <input type="password" name="password" class="form-control" value="${password}">
-                                            </div>
+                                            <label for="currentRole">Vai trò hiện tại</label>
+                                            <input type="text" class="form-control" value="${updateRole.accRole}" readonly>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="confirmPassword">Xác nhận mật khẩu</label>
-                                            <div class="password-input-group">
-                                                <input type="password" name="confirm_Password" class="form-control" value="${confirm_Password}">
+                                            <label for="newRole">Vai trò mới</label>
+                                            <div class="select-group">
+                                                
+                                                <select name="newRole" class="form-control">
+                                                    <option value="">-- Chọn vai trò --</option>
+                                                    <c:choose>
+                                                        <c:when test="${updateRole.accRole eq 'Manager'}">
+                                                            <option value="Saler">Saler</option>
+                                                        </c:when>
+                                                        <c:when test="${updateRole.accRole eq 'Saler'}">
+
+                                                            <option value="Manager">Manager</option>
+                                                        </c:when>
+                                                    </c:choose>
+                                                </select>
+                                                
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="adminPassword">Mật khẩu Admin (Xác nhận hành động)</label>
                                             <div class="password-input-group">
-                                                <input type="password" name="adminPassword" class="form-control" >
+                                                <input type="password" name="adminPassword" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="confirmation-card">
+                                            <h3><i class="fas fa-exclamation-triangle"></i> Lưu ý quan trọng</h3>
+                                            <ul class="confirmation-notes">
+                                                <li>Để đảm bảo hệ thống vấn hành tốt, hiện tại bạn chỉ có thể cập nhật vai trò cho Manager và Saler</li>
+                                                <li>Việc thay đổi vai trò sẽ đến khả năng truy cập hệ thống của người dùng</li>
+                                                <li>Người dùng sẽ được thông báo về sự thay đổi vai trò này qua Email*</li>
+                                                <li>Đảm bảo bạn đã kiểm tra kỹ thông tin trước khi xác nhận thay đổi</li>
+                                            </ul>
+
+                                            <div class="form-check">
+                                                <input type="checkbox" name="confirmAction">
+                                                <label for="confirmAction">Tôi xác nhận thay đổi vai trò này</label>
+                                            </div>
+                                            <br>
+                                            <div class="form-check">
+                                                <input type="checkbox" name="sendEmail">
+                                                <label for="confirmAction">Gửi Email thông báo tới người dùng này.</label>
                                             </div>
                                         </div>
 
                                         <div class="form-buttons">
                                             <button type="button" class="btn btn-outline" onclick="location.href = 'admin-panel?action=account&type=all'">
-                                                <i class="fas fa-arrow-left"></i> Hủy
+                                                <i class="fas fa-times"></i> Hủy
                                             </button>
                                             <button type="submit" class="btn btn-primary">
                                                 <i class="fas fa-save"></i> Lưu thay đổi
@@ -237,9 +283,8 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                </form>
+                </form>                        
             </div>
         </div>
 

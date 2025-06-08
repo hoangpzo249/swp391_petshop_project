@@ -53,6 +53,61 @@ public class AccountDAO extends DBContext {
 //        return false;
     }
 
+    public void registerAccCusByAdmin(Account account) {
+        try {
+            con = db.getConnection();
+            String sql = "INSERT INTO AccountTB(accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRole, accDescription, accCreateDate, accImage, accStatus) \n"
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), Null, 'Active');";
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, account.getAccUsername());
+            ps.setString(2, account.getAccEmail());
+            ps.setString(3, account.getAccPassword());
+            ps.setString(4, account.getAccFname());
+            ps.setString(5, account.getAccLname());
+            ps.setDate(6, new java.sql.Date(account.getAccDob().getTime()));
+            ps.setString(7, account.getAccAddress());
+            ps.setString(8, account.getAccPhoneNumber());
+            ps.setString(9, "Customer");
+            ps.setString(10, "New account");
+
+//            int rowsAffected = ps.executeUpdate();
+            ps.executeUpdate();
+//            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        return false;
+    }
+
+    public void registerAccStaffByAdmin(Account account) {
+        try {
+            con = db.getConnection();
+            String sql = "INSERT INTO AccountTB(accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRole, accDescription, accCreateDate, accImage, accStatus) \n"
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), Null, ?);";
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, account.getAccUsername());
+            ps.setString(2, account.getAccEmail());
+            ps.setString(3, account.getAccPassword());
+            ps.setString(4, account.getAccFname());
+            ps.setString(5, account.getAccLname());
+            ps.setDate(6, new java.sql.Date(account.getAccDob().getTime()));
+            ps.setString(7, account.getAccAddress());
+            ps.setString(8, account.getAccPhoneNumber());
+            ps.setString(9, account.getAccRole());
+            ps.setString(10, "New account");
+            ps.setString(11, account.getAccStatus());
+
+//            int rowsAffected = ps.executeUpdate();
+            ps.executeUpdate();
+//            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        return false;
+    }
+
     public boolean isEmailExist(String email) {
         try {
             con = db.getConnection();
@@ -100,7 +155,7 @@ public class AccountDAO extends DBContext {
         }
         return false;
     }
-    
+
     public boolean checkPassAdmin(String password) {
         try {
             con = db.getConnection();
@@ -181,6 +236,55 @@ public class AccountDAO extends DBContext {
 
             ps.setString(1, email);
             ps.setInt(2, accId);
+
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateRole(String role, int accId) {
+        try {
+            con = db.getConnection();
+            String sql = "UPDATE AccountTB SET accRole = ? WHERE accId = ?";
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, role);
+            ps.setInt(2, accId);
+
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean banAcc(int accId) {
+        try {
+            con = db.getConnection();
+            String sql = "UPDATE AccountTB SET accStatus = 'Inactive' WHERE accId = ?";
+            ps = con.prepareStatement(sql);
+
+            ps.setInt(1, accId);
+
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean unBanAcc(int accId) {
+        try {
+            con = db.getConnection();
+            String sql = "UPDATE AccountTB SET accStatus = 'Active' WHERE accId = ?";
+            ps = con.prepareStatement(sql);
+
+            ps.setInt(1, accId);
 
             int row = ps.executeUpdate();
             return row > 0;
@@ -351,7 +455,7 @@ public class AccountDAO extends DBContext {
         }
         return accList;
     }
-    
+
     public List<Account> get10AccountNew() {
         List<Account> accList = new ArrayList<>();
         try {
@@ -390,13 +494,14 @@ public class AccountDAO extends DBContext {
 //        }
 //    }
 
-    public Account getAccId(int id) {
+    public Account getAccId(int id, String role) {
         try {
             con = db.getConnection();
-            String sql = "Select * from AccountTB where accId = ?";
+            String sql = "Select * from AccountTB where accId = ? and accRole = ?";
             ps = con.prepareStatement(sql);
             ps.setInt(1, id);
-            
+            ps.setString(2, role);
+
             rs = ps.executeQuery();
             if (rs.next()) {
                 Account acc = new Account();
@@ -420,5 +525,153 @@ public class AccountDAO extends DBContext {
         }
         return null;
     }
-    
+
+    public List<Account> getAccRole(String role) {
+        List<Account> accList = new ArrayList<>();
+        try {
+            con = db.getConnection();
+            String sql = "Select * from AccountTB where accRole = ?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, role);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int accId = rs.getInt("accId");
+                String accUsername = rs.getString("accUsername");
+                String accEmail = rs.getString("accEmail");
+                String accPassword = rs.getString("accPassword");
+                String accFname = rs.getString("accFname");
+                String accLname = rs.getString("accLname");
+                Date accDob = rs.getDate("accDob");
+                String accAddress = rs.getString("accAddress");
+                String accPhoneNumber = rs.getString("accPhoneNumber");
+                String accRole = rs.getString("accRole");
+                String accDescription = rs.getString("accDescription");
+                String accCreateDate = rs.getString("accCreateDate");
+                String accImage = rs.getString("accImage");
+                String accStatus = rs.getString("accStatus");
+                Account acc = new Account(accId, accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRole, accDescription, accCreateDate, accImage, accStatus);
+                accList.add(acc);
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public Account getAccIdStatus(int id, String role, String ban) {
+        try {
+            con = db.getConnection();
+            String sql = "Select * from AccountTB where accId = ? and accRole = ? and accStatus =?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+            ps.setString(2, role);
+            ps.setString(3, ban);
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                Account acc = new Account();
+                acc.setAccId(rs.getInt("accId"));
+                acc.setAccUsername(rs.getString("accUsername"));
+                acc.setAccPassword(rs.getString("accPassword"));
+                acc.setAccEmail(rs.getString("accEmail"));
+                acc.setAccFname(rs.getString("accFname"));
+                acc.setAccLname(rs.getString("accLname"));
+                acc.setAccDob(rs.getDate("accDob"));
+                acc.setAccAddress(rs.getString("accAddress"));
+                acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
+                acc.setAccRole(rs.getString("accRole"));
+                acc.setAccDescription(rs.getString("accDescription"));
+                acc.setAccCreateDate(rs.getString("accCreateDate"));
+                acc.setAccImage(rs.getString("accImage"));
+                acc.setAccStatus(rs.getString("accStatus"));
+                return acc;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public int countAllAcc() {
+        int count = 0;
+        try {
+            con = db.getConnection();
+            String sql = "SELECT COUNT(*) FROM AccountTB";
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+        }
+        return count;
+    }
+
+    public int countAllAccActive() {
+        int count = 0;
+        try {
+            con = db.getConnection();
+            String sql = "SELECT COUNT(*) FROM AccountTB WHERE accStatus='active';";
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+        }
+        return count;
+    }
+
+    public int countAllAccInactive() {
+        int count = 0;
+        try {
+            con = db.getConnection();
+            String sql = "SELECT COUNT(*) FROM AccountTB WHERE accStatus='Inactive';";
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+        }
+        return count;
+    }
+
+    public List<Account> searchAcc(String keyword) {
+        List<Account> list = new ArrayList<>();
+        try {
+            con = db.getConnection();
+            String sql = "SELECT * FROM AccountTB WHERE accFname LIKE ? OR accLname LIKE ? OR accEmail LIKE ?";
+            ps = con.prepareStatement(sql);
+            String likeKeyword = "%" + keyword + "%";
+            
+            ps.setString(1, likeKeyword);
+            ps.setString(2, likeKeyword);
+            ps.setString(3, likeKeyword);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Account acc = new Account();
+                acc.setAccId(rs.getInt("accId"));
+                acc.setAccUsername(rs.getString("accUsername"));
+                acc.setAccEmail(rs.getString("accEmail"));
+                acc.setAccFname(rs.getString("accFname"));
+                acc.setAccLname(rs.getString("accLname"));
+                acc.setAccRole(rs.getString("accRole"));
+                acc.setAccStatus(rs.getString("accStatus"));
+                acc.setAccDob(rs.getDate("accDob"));
+                acc.setAccAddress(rs.getString("accAddress"));
+                
+                acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
+                acc.setAccDescription(rs.getString("accDescription"));
+                acc.setAccCreateDate(rs.getString("accCreateDate"));
+                acc.setAccImage(rs.getString("accImage"));
+                list.add(acc);
+                
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

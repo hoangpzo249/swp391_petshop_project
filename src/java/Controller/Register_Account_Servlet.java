@@ -287,6 +287,7 @@ public class Register_Account_Servlet extends HttpServlet {
                         session.removeAttribute("email");
                         session.removeAttribute("fullName");
                         session.removeAttribute("pass");
+                        session.removeAttribute("errMess");
 
                         session.setAttribute("loginSuccess", "Bạn đã tạo tài khoản thành công<br>Cập nhật địa chỉ và số điện thoại <a href='profile' style='color:#f26f21'>TẠI ĐÂY</a> để hoàn tất hồ sơ.");
                         response.sendRedirect("homepage");

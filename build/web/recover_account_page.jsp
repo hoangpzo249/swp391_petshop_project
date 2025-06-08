@@ -42,6 +42,7 @@
                         <div class="errMess">
                             <p>${errMess}</p>
                         </div>
+                        <c:remove var="errMess" scope="session" />
                     </c:if>
                 </form>
             </c:if>
@@ -73,6 +74,7 @@
                         <div class="errMess">
                             <p>${errMess}</p>
                         </div>
+                        <c:remove var="errMess" scope="session" />
                     </c:if>
 
                     <div class="action-links">
@@ -103,6 +105,7 @@
                         <div class="errMess">
                             <p>${errMess}</p>
                         </div>
+                        <c:remove var="errMess" scope="session" />
                     </c:if>
 
                     <button type="submit" class="btn">Xác nhận</button>

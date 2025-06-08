@@ -75,30 +75,13 @@
                         <a href="admin-panel?action=account&type=all" class="sidebar-link active">
                             <i class="fas fa-users"></i> Tất cả tài khoản
                         </a>
-                        <a href="admin-panel?action=accounts&type=manager" class="sidebar-link">
-                            <i class="fas fa-user-tie"></i> Quản lý (Manager)
-                        </a>
-                        <a href="admin-panel?action=accounts&type=saler" class="sidebar-link">
-                            <i class="fas fa-user-tag"></i> Nhân viên bán hàng
-                        </a>
-                        <a href="admin-panel?action=accounts&type=shipper" class="sidebar-link">
-                            <i class="fas fa-truck"></i> Nhân viên giao hàng
-                        </a>
-                        <a href="admin-panel?action=accounts&type=customer" class="sidebar-link">
-                            <i class="fas fa-user"></i> Khách hàng
-                        </a>
                     </div>
 
-                    <div class="menu-category">
-                        <h5 class="category-title">Phân quyền</h5>
-                        <a href="admin-panel?page=roles" class="sidebar-link">
-                            <i class="fas fa-user-shield"></i> Quản lý phân quyền
-                        </a>
-                    </div>
+
 
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
-                        <a href="admin-panel?page=create-account" class="sidebar-link">
+                        <a href="admin-panel?action=create-account&type=customer" class="sidebar-link">
                             <i class="fas fa-user-plus"></i> Tạo tài khoản mới
                         </a>
                         <a href="profile" class="sidebar-link">
@@ -142,32 +125,43 @@
                                 </c:when>
 
                                 <c:when test="${accDetail.accRole eq 'Manager'}">
-                                    <button class="btn btn-outline" onclick="location.href = 'admin-panel?action=account&type=all&act=update-role&id=${accDetail.accId}'">
+                                    <button class="btn btn-outline" onclick="location.href = 'admin-panel?action=account&type=${accDetail.accRole}&act=update-role&id=${accDetail.accId}'">
                                         <i class="fas fa-edit"></i> Chỉnh sửa
+                                    </button>
+                                    <button class="btn btn-primary" onclick="location.href = 'admin-panel?action=account&type=${accDetail.accRole}&act=reset-pass&id=${accDetail.accId}'">
+                                        <i class="fas fa-key"></i> Đặt lại mật khẩu
                                     </button>
                                 </c:when>
 
                                 <c:when test="${accDetail.accRole eq 'Saler'}">
-                                    <button class="btn btn-outline" onclick="location.href = 'admin-panel?action=account&type=all&act=update-role&id=${accDetail.accId}'">
+                                    <button class="btn btn-outline" onclick="location.href = 'admin-panel?action=account&type=${accDetail.accRole}&act=update-role&id=${accDetail.accId}'">
                                         <i class="fas fa-edit"></i> Chỉnh sửa
+                                    </button>
+                                    <button class="btn btn-primary" onclick="location.href = 'admin-panel?action=account&type=${accDetail.accRole}&act=reset-pass&id=${accDetail.accId}'">
+                                        <i class="fas fa-key"></i> Đặt lại mật khẩu
                                     </button>
                                 </c:when>
 
                                 <c:when test="${accDetail.accRole eq 'Shipper'}">
-                                    <button class="btn btn-outline" onclick="location.href = 'admin-panel?action=account&type=all&act=update-role&id=${accDetail.accId}'">
-                                        <i class="fas fa-edit"></i> Chỉnh sửa
+
+                                    <button class="btn btn-primary" onclick="location.href = 'admin-panel?action=account&type=${accDetail.accRole}&act=reset-pass&id=${accDetail.accId}'">
+                                        <i class="fas fa-key"></i> Đặt lại mật khẩu
                                     </button>
                                 </c:when>
+                                <c:otherwise>
+                                    <button class="btn btn-primary" onclick="location.href = 'admin-panel?action=account&type=${accDetail.accRole}&act=reset-pass&id=${accDetail.accId}'">
+                                        <i class="fas fa-key"></i> Đặt lại mật khẩu
+                                    </button>
+                                </c:otherwise>
                             </c:choose>
-                            <button class="btn btn-primary" onclick="location.href = 'admin-panel?action=account&type=all&act=reset-pass&id=${accDetail.accId}'">
-                                <i class="fas fa-key"></i> Đặt lại mật khẩu
-                            </button>
+
                         </div>
                     </div>
                     <div class="card-body">
                         <form action="admin-panel" method="POST">
                             <input type="hidden" name="action" value="account" />
-                            <input type="hidden" name="type" value="all" />
+                            <input type="hidden" name="type" value="${accDetail.accRole}" />
+                            <input type="hidden" name="act" value="view" />
                             <input type="hidden" name="id" value="${accDetail.accId}" />
 
 
@@ -178,9 +172,33 @@
                                         <h2 class="account-name">${accDetail.accFname} ${accDetail.accLname}</h2>
                                         <p class="account-username">@${accDetail.accUsername}</p>
 
-                                        <div class="account-role-badge">
-                                            ${accDetail.accRole}
-                                        </div>
+                                        <c:choose>
+                                            <c:when test="${accDetail.accRole eq 'Admin'}">
+                                                <div class="account-role-badge admin-role">
+                                                    ${accDetail.accRole}
+                                                </div>
+                                            </c:when>
+                                            <c:when test="${accDetail.accRole eq 'Manager'}">
+                                                <div class="account-role-badge manager-role">
+                                                    ${accDetail.accRole}
+                                                </div>
+                                            </c:when>
+                                            <c:when test="${accDetail.accRole eq 'Saler'}">
+                                                <div class="account-role-badge saler-role">
+                                                    ${accDetail.accRole}
+                                                </div>
+                                            </c:when>
+                                            <c:when test="${accDetail.accRole eq 'Shipper'}">
+                                                <div class="account-role-badge shipper-role">
+                                                    ${accDetail.accRole}
+                                                </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="account-role-badge customer-role">
+                                                    ${accDetail.accRole}
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
 
                                         <c:choose>
                                             <c:when test="${accDetail.accStatus eq 'Active'}">

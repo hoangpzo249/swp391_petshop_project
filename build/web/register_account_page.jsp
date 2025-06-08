@@ -57,6 +57,7 @@
                         <div class="errMess">
                             <p>${errMess}</p>
                         </div>
+                        <c:remove var="errMess" scope="session" />
                     </c:if>
 
                     <button type="submit" class="btn">Tạo tài khoản</button>
@@ -96,6 +97,7 @@
                         <div class="errMess">
                             <p>${errMess}</p>
                         </div>
+                        <c:remove var="errMess" scope="session" />
                     </c:if>
 
                     <div class="action-links1">
