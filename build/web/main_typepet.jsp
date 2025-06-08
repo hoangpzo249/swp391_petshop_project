@@ -1,5 +1,7 @@
 
 
+
+
 <%--<%@ page import="java.util.List" %>
 <%@ page import="Models.Pet" %>--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -15,9 +17,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link rel="icon" type="image/png" href="images/logo_banner/logo1.png">
         <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="css/main_type.css?v=4" />
+        <link rel="stylesheet" href="css/main_type.css?v=8" />
 
-        <script src="js/scroll_chat.js" type="text/javascript"></script>
+        
     </head>
     <body>
         <div class="header">
@@ -100,7 +102,7 @@
 
 
 
-                    <form method="get" action="listshoppet" >
+                    <form method="get" action="listshoppet" id="filterForm">
                         <input type="hidden" name="sortpet" value="${param.sortpet}" />
                         <input type="hidden" name="species" value="${param.species}" />
                         <input type="hidden" name="breed" value="${param.breed}" />
@@ -110,23 +112,13 @@
                             <h3>Bộ lọc thú cưng</h3>
                             <label>Tên / giống</label>
                             <div class="search-container">
-                                <input type="text" name="search" value="${param.search}" placeholder="Tìm kiếm thú cưng ..." class="search-input" 
-                                       style="
-                                       width: 195px;
-                                       height: 35px;
-                                       ">
-                                <div class="search-button">
-                                    <button type="submit" class="search-icon-btn">
-
-                                    </button>
-                                </div>
+                                <input type="text" name="search" value="${param.search}" placeholder="Tìm kiếm thú cưng ..." class="search-input" >
+                                
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Giới tính</label>
-                            <select name="gender" style="
-                                    width: 130px;
-                                    ">
+                            <select name="gender" >
 
                                 <option value="">Tất cả</option>
                                 <option value="Male" ${param.gender == 'Male' ? 'selected' : ''}>Đực</option>
@@ -135,10 +127,7 @@
                         </div>
                         <div class="form-group">
                             <label>Màu</label>
-                            <select name="color" style="
-                                    margin-left: 29px;
-                                    width: 130px;
-                                    ">
+                            <select name="color" >
 
                                 <option value="">Tất cả</option>
                                 <c:forEach var="c" items="${listColor}">
@@ -148,10 +137,7 @@
                         </div>
                         <div class="form-group">
                             <label>Xuất xứ</label>
-                            <select name="origin" style="
-                                    margin-left: 6px;
-                                    width: 130px;
-                                    ">
+                            <select name="origin" >
 
                                 <option value="">Tất cả</option>
                                 <c:forEach var="o" items="${listOrigin}">
@@ -161,12 +147,7 @@
                         </div>
                         <div class="form-group">
                             <label>Khoảng giá</label>
-                            <select name="priceRange" style="
-                                    width: 103px;
-                                    display: flex;
-                                    margin-top: -15px;
-                                    margin-left: 90px;
-                                    ">
+                            <select name="priceRange">
 
                                 <option value="">Tất cả</option>
                                 <option value="0-1000000" ${param.priceRange == '0-1000000' ? 'selected' : ''}>Dưới 1 triệu</option>
@@ -179,10 +160,7 @@
                         </div>
                         <div class="form-group">
                             <label>Tuổi</label>
-                            <select name="age" style="
-                                    margin-left: 57px;
-                                    width: 103px;
-                                    ">
+                            <select name="age" >
 
                                 <option value="">Tất cả</option>
                                 <option value="under30" ${param.age == 'under30' ? 'selected' : ''}>Dưới 2.5 tuổi</option>
@@ -194,9 +172,7 @@
                         </div>
                         <div class="form-group">
                             <label>Tiêm vắc xin</label>
-                            <select name="vaccination" style="
-                                    width: 102px;
-                                    ">
+                            <select name="vaccination" >
 
                                 <option value="">Tất cả</option>
                                 <c:forEach var="v" items="${listVaccine}">
@@ -206,24 +182,8 @@
                         </div>
                         <div class="form-group">
                             <div class="loc">
-                                <button type="submit" style="
-                                        box-sizing: border-box;
-                                        margin-bottom: 15px;
-                                        margin-top: 15px;
-                                        width: 65px;
-                                        height: 40px;
-                                        color: white;
-                                        background: orange;
-                                        border: none;">Lọc</button>
-                                <a href="listshoppet?reset=true" class="reset-button" style="
-                                   margin-left: -66px;
-                                   margin-top: 75px;
-                                   box-sizing: border-box;
-                                   padding: 5px;
-                                   color: white;
-                                   background: orange;
-                                   text-decoration: none;
-                                   ">Reset bộ lọc</a>
+                                <button type="submit" >Lọc</button>
+                                <a href="listshoppet?reset=true" class="reset-button">Reset bộ lọc</a>
                             </div>
 
                     </form>
@@ -306,7 +266,19 @@
                         </div>
                     </c:forEach>
 
+                   
+
+
+
                 </div>
+                     <div class="pagination">
+    <c:forEach begin="1" end="${totalPages}" var="i">
+        <a href="listshoppet?page=${i}&breed=${param.breed}&species=${param.species}&search=${param.search}&priceRange=${param.priceRange}&sortpet=${param.sortpet}&gender=${param.gender}&color=${param.color}&origin=${param.origin}&age=${param.age}&vaccination=${param.vaccination}"
+           class="${i == currentPage ? 'active' : ''}">
+            ${i}
+        </a>
+    </c:forEach>
+</div>
 
             </main>
         </div>

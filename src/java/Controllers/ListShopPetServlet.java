@@ -6,13 +6,13 @@ package Controllers;
 
 import DAO.BreedDAO;
 import DAO.PetDAO;
-import Models.Breed;
 import Models.Pet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListShopPetServlet extends HttpServlet {
@@ -28,6 +28,8 @@ public class ListShopPetServlet extends HttpServlet {
 
         PetDAO petDAO = new PetDAO();
         BreedDAO breedDAO = new BreedDAO();
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int pageSize = 12;
 
         String breed = request.getParameter("breed");
         String species = request.getParameter("species");
@@ -55,11 +57,21 @@ public class ListShopPetServlet extends HttpServlet {
         }
 
         List<Pet> petList = petDAO.filterPets(
-            breed, species, search, giapet1, giapet2,
-            sort, gender, color, origin, age, vaccination
+                breed, species, search, giapet1, giapet2,
+                sort, gender, color, origin, age, vaccination
         );
+        int start = (page - 1) * pageSize;
+        int end = Math.min(start + pageSize, petList.size());
+        int totalPages = (int) Math.ceil((double) petList.size() / pageSize);
+        petList = (start >= petList.size()) ? new ArrayList<>() : petList.subList(start, end);
 
-        
+        for (Pet pet : petList) {
+            pet.setImages(petDAO.getImagesByPetId(pet.getPetId()));
+        }
+        request.setAttribute("listPet", petList);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+
         request.setAttribute("listPet", petList);
         request.setAttribute("listDogBreed", breedDAO.displayDogBreeds());
         request.setAttribute("listCatBreed", breedDAO.displayCatBreeds());
@@ -86,3 +98,4 @@ public class ListShopPetServlet extends HttpServlet {
         return "Pet Shop List Servlet";
     }
 }
+
