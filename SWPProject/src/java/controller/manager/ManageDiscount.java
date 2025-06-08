@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.ArrayList;
+import java.util.Date;
 import model.Discount;
 
 /**
@@ -71,17 +72,21 @@ public class ManageDiscount extends HttpServlet {
                     String discountCode = request.getParameter("discountCode");
                     String discountType = request.getParameter("discountType");
                     // this is the String value of discountvalue, need to be parse to int
+                    // tự hỏi ko biết cần để disoountValue Strng ở dây không nhỉ? hay nhét vô try catch là xong cũng được.                    
                     String discountValueString = request.getParameter("discountValue");
+                    int discountValue = 0;
                     String description = request.getParameter("description");
                     // this is the String value of discountvalue, need to be parse to date
                     String validFromString = request.getParameter("validFrom");
                     String validToString = request.getParameter("validTo");
+                    Date validFrom;
+                    Date validTo;
                     // this is the String value of discountvalue, need to be parse to int
                     String minOrderAmountString = request.getParameter("minOrderAmount");
                     String maxUsageString = request.getParameter("maxUsage");
-//                    this must be convert to boolean/ enumType?
+//                    this must be convert to boolean
                     String isActiveString = request.getParameter("isActive");
-                    
+
                     processRequest(request, response);
                     break;
             }
