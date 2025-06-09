@@ -9,65 +9,270 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>Order List</title>
-        <style>
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            th, td {
-                padding: 8px;
-                border: 1px solid #ccc;
-                text-align: left;
-            }
-            th {
-                background-color: #f4f4f4;
-            }
-        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Quản Lý Tài khoản - PETFPT Shop</title>
+        <link href="css/admin_accList_page.css" rel="stylesheet" type="text/css"/>
+        <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     </head>
     <body>
-        <h1>All Orders</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Account ID</th>
-                    <th>Order Date</th>
-                    <th>Status</th>
-                    <th>Customer Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Address</th>
-                    <th>Shipper ID</th>
-                    <th>Payment Method</th>
-                    <th>Payment Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="order" items="${orderList}">
-                    <tr>
-                        <td>${order.orderId}</td>
-                        <td>${order.accId}</td>
-                        <td>${order.orderDate}</td>
-                        <td>${order.orderStatus}</td>
-                        <td>${order.customerName}</td>
-                        <td>${order.customerEmail}</td>
-                        <td>${order.customerPhone}</td>
-                        <td>${order.customerAddress}</td>
-                        <td>${order.shipperId}</td>
-                        <td>${order.paymentMethod}</td>
-                        <td>${order.paymentStatus}</td>
-                        <td><a href="orderdetail?id=${order.orderId}">View detail</a></td>
-                    </tr>
-                </c:forEach>
-                <c:if test="${empty orderList}">
-                    <tr>
-                        <td colspan="11" style="text-align:center;">No orders found.</td>
-                    </tr>
-                </c:if>
-            </tbody>
-        </table>
-    </body>
+        <div class="admin-header">
+            <div class="logo-container">
+                <a href="homepage">
+                    <img src="images/logo_banner/logo2.png" alt="PETFPT Shop Logo"/>
+                </a>
+                <h1 class="admin-title">Quản trị hệ thống</h1>
+            </div>
+
+            <div class="admin-profile">
+                <img src="images/support button/account.png" alt="Admin Avatar"/>
+                <div class="admin-info">
+                    <span class="admin-name">${sessionScope.userAccount.accFname} ${sessionScope.userAccount.accLname}</span>
+                    <span class="admin-role">Admin</span>
+                </div>
+                <div class="admin-actions">
+                    <a href="profile" class="admin-action" title="Thông tin cá nhân">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <a href="logout" class="admin-action" title="Đăng xuất">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <c:if test="${not empty successMessage}">
+            <div class="alert-message">
+                ${successMessage}
+            </div>
+            <c:remove var="successMessage" scope="session" />
+        </c:if>
+
+        <c:if test="${not empty errorMessage}">
+            <div class="alert-message error">
+                ${errorMessage}
+            </div>
+            <c:remove var="errorMessage" scope="session" />
+        </c:if>
+
+
+        <div class="admin-container">
+            <!-- Sidebar -->
+            <div class="admin-sidebar">
+                <div class="sidebar-header">
+                    <h2 class="sidebar-title">SELLER PANEL</h2>
+                    <p class="sidebar-subtitle">Quản lý hệ thống PETFPT Shop</p>
+                </div>
+
+                <div class="sidebar-menu">
+                    <div class="menu-category">
+                        <h5 class="category-title">Điều hướng</h5>
+                        <a href="sellerpanel" class="sidebar-link">
+                            <i class="fas fa-tachometer-alt"></i> Tổng quan
+                        </a>
+                    </div>
+
+                    <div class="menu-category">
+                        <h5 class="category-title">Quản lý đơn hàng</h5>
+                        <a href="sellerpanel?action=account&type=all" class="sidebar-link active">
+                            <i class="fas fa-bag-shopping"></i> Tất cả đơn hàng
+                        </a>
+                    </div>
+
+                    <div class="menu-category">
+                        <h5 class="category-title">Quản lý thú cưng</h5>
+                        <a href="sellerpanel?action=account&type=all" class="sidebar-link">
+                            <i class="fas fa-dog"></i> Tất cả đơn hàng
+                        </a>
+                    </div>
+
+
+
+                    <div class="menu-category">
+                        <h5 class="category-title">Thao tác</h5>
+                        <a href="sellerpanel?action=create-account&type=customer" class="sidebar-link">
+                            <i class="fas fa-paw"></i> Tạo thú cưng mới
+                        </a>
+                        <a href="profile" class="sidebar-link">
+                            <i class="fas fa-user-circle"></i> Tài khoản của tôi
+                        </a>
+                        <a href="sellerpanel?action=change-password" class="sidebar-link">
+                            <i class="fas fa-key"></i> Đổi mật khẩu
+                        </a>
+                        <a href="logout" class="sidebar-link">
+                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="admin-content">
+                <!-- Accounts List Header -->
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-bag-shopping"></i> Quản lý đơn hàng
+                    </h1>
+                    <ul class="breadcrumb">
+                        <li><a href="homepage">Trang chủ</a></li>
+                        <li><a href="sellerpanel">Seller</a></li>
+                        <li>Quản lý đơn hàng</li>
+                    </ul>
+                </div>
+
+                <!-- Accounts Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-bag-shopping"></i> Danh sách đơn hàng
+                        </h3>
+                        <div class="card-tools">
+                            <!--                            <button class="btn btn-primary" onclick="location.href = 'sellerpanel?action=create-account&type=customer'">
+                                                            <i class="fas fa-user-plus"></i> Tạo tài khoản mới
+                                                        </button>-->
+                            <button class="btn btn-outline">
+                                <i class="fas fa-file-export"></i> Xuất dữ liệu
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="filter-controls">
+                            <form action="sellerpanel">
+                                <input type="hidden" name="action" value="order">
+                                <input type="hidden" name="type" value="all">
+                                <div class="input-group">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" name="key" placeholder="Tìm kiếm người dùng..." value="${key}">
+                                    <button type="submit" style="display: none;"></button>
+                                </div>
+                            </form>
+
+                            <div class="select-group">
+                                <select id="filterStatus">
+                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="pending">Chờ xử lý</option>
+                                    <option value="confirmed">Đã xác nhận</option>
+                                    <option value="cancelled">Đã hủy</option>
+                                    <option value="rejected">Bị từ chối</option>
+                                    <option value="shipping">Đang giao hàng</option>
+                                    <option value="delivered">Đã giao hàng</option>
+                                </select>
+                            </div>
+
+
+                    </div>
+
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tài khoản</th>
+                                    <th>Loại tài khoản</th>
+                                    <th>Email</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <c:forEach items="${accList}" var="acc">
+                                    <tr>
+                                        <td>${acc.getAccId()}</td>
+                                        <td>
+                                            <div class="user-info">
+                                                <img src="images/support button/account.png" class="table-avatar" alt="User">
+                                                <div>
+                                                    <div class="user-name">${acc.getAccUsername()}</div>
+                                                    <div class="user-email">${acc.getAccEmail()}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>${acc.getAccRole()}</td>
+                                        <td>${acc.getAccEmail()}</td>
+                                        <td>${acc.getAccCreateDate()}</td>
+                                        <c:choose>
+                                            <c:when test="${acc.getAccStatus() eq 'Active'}">
+                                                <td><span class="status-badge status-active">${acc.getAccStatus()}</span></td>
+                                                </c:when>
+                                                <c:when test="${acc.getAccStatus() eq 'Inactive'}">
+                                                <td><span class="status-badge status-blocked">${acc.getAccStatus()}</span></td>
+                                                </c:when>
+                                            </c:choose>
+                                        <td>
+
+                                            <div class="table-actions">
+
+                                                <a class="action-btn view-btn" title="Xem chi tiết" href = 'sellerpanel?action=account&type=${acc.accRole}&act=view&id=${acc.getAccId()}'>
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+
+
+                                                <c:choose>
+
+                                                    <c:when test="${acc.getAccRole() eq 'Admin'}">
+                                                    </c:when>
+
+                                                    <c:when test="${acc.getAccRole() eq 'Manager'}">
+                                                        <a class="action-btn edit-btn" title="Sửa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=update-role&id=${acc.getAccId()}'>
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
+                                                            <i class="fas fa-lock"></i>
+                                                        </a>
+                                                        <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
+                                                            <i class="fas fa-key"></i>
+                                                        </a>
+
+                                                    </c:when>
+                                                    <c:when test="${acc.getAccRole() eq 'Saler'}">
+                                                        <a class="action-btn edit-btn" title="Sửa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=update-role&id=${acc.getAccId()}'>
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
+                                                            <i class="fas fa-lock"></i>
+                                                        </a>
+                                                        <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
+                                                            <i class="fas fa-key"></i>
+                                                        </a>
+
+                                                    </c:when>
+                                                    <c:when test="${acc.getAccRole() eq 'Shipper'}">
+                                                        <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
+                                                            <i class="fas fa-lock"></i>
+                                                        </a>
+                                                        <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
+                                                            <i class="fas fa-key"></i>
+                                                        </a>
+                                                    </c:when>
+
+                                                    <c:otherwise>
+
+                                                        <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
+                                                            <i class="fas fa-lock"></i>
+                                                        </a>
+                                                        <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
+                                                            <i class="fas fa-key"></i>
+                                                        </a>
+
+                                                    </c:otherwise>
+
+                                                </c:choose>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="admin-footer">
+        © 2025 PETFPT Shop - Hệ thống quản lý
+    </div>
+</body>
 </html>
