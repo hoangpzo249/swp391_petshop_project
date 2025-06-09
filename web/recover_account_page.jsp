@@ -94,13 +94,23 @@
                     <h2>Cập nhật mật khẩu của bạn</h2><br>
 
                     <div class="input-group">
-                        <label for="email">Mật khẩu mới*</label>
-                        <input type="password" id="password" name="password" value="${password}">
+                        <label for="password">Mật Khẩu *</label>
+                        <div style="position: relative;">
+                            <input type="password" id="password" name="password" value="${password}">
+                            <i class="fa-solid fa-eye" 
+                               style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
+                               onclick="document.getElementById('password').type = document.getElementById('password').type === 'password' ? 'text' : 'password'; this.classList.toggle('fa-eye'); this.classList.toggle('fa-eye-slash');"></i>
+                        </div>
                     </div>
 
                     <div class="input-group">
-                        <label for="comfirm_password">Xác nhận mật khẩu *</label>
-                        <input type="password" id="comfirm_password" name="comfirm_password" value="${comfirm_password}">
+                        <label for="password">Xác nhận mật khẩu *</label>
+                        <div style="position: relative;">
+                            <input type="password" id="comfirm_password" name="confirm_password" value="${comfirm_password}">
+                            <i class="fa-solid fa-eye" 
+                               style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
+                               onclick="document.getElementById('password').type = document.getElementById('password').type === 'password' ? 'text' : 'password'; this.classList.toggle('fa-eye'); this.classList.toggle('fa-eye-slash');"></i>
+                        </div>
                     </div>
 
                     <c:if test="${not empty errMess}">

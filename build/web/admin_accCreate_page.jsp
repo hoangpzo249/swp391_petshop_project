@@ -111,10 +111,10 @@
 
                 <!-- Tab Selection -->
                 <div class="account-type-tabs">
-                    <a href="admin-panel?action=create-account&type=customer" class="account-tab">
+                    <a href="admin-panel?action=create-account&type=customer" class="account-tab ${param.type == 'customer' ? 'active':''}">
                         <i class="fas fa-user"></i> Tài khoản khách hàng
                     </a>
-                    <a href="admin-panel?action=create-account&type=staff" class="account-tab">
+                    <a href="admin-panel?action=create-account&type=staff" class="account-tab ${param.type == 'staff' ? 'active':'' }">
                         <i class="fas fa-briefcase"></i> Tài khoản nhân viên
                     </a>
 

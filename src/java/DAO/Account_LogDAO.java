@@ -23,14 +23,13 @@ public class Account_LogDAO extends DBContext {
     public void banAcc(Account_Log log) {
         try {
             con = db.getConnection();
-            String sql = "INSERT INTO AccountDeactivationLogTB(accId,deactivatedBy,deactivationReason,deactivationDate,reactivationDate) \n" +
-"VALUES (?,?,?, GETDATE(), ?)";
+            String sql = "INSERT INTO AccountDeactivationLogTB(accId,deactivatedBy,deactivationReason,deactivationDate,reactivationDate) \n"
+                    + "VALUES (?,?,?, GETDATE(), NULL)";
             ps = con.prepareStatement(sql);
 
             ps.setInt(1, log.getAccId());
             ps.setInt(2, log.getDeactivatedBy());
             ps.setString(3, log.getDeactivationReason());
-            ps.setString(4, "Chưa Cập nhật");
 
 //            int rowsAffected = ps.executeUpdate();
             ps.executeUpdate();

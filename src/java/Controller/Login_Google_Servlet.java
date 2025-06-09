@@ -94,6 +94,13 @@ public class Login_Google_Servlet extends HttpServlet {
         boolean checkEmail = accDao.isEmailExist(ggUser.getEmail());
         if (checkEmail) {
             Account acc = accDao.ggByEmail(ggUser.getEmail());
+            String status = acc.getAccStatus();
+            if ("Inactive".equals(status)) {
+                request.setAttribute("errMess", "Tài khoản của bạn đã bị vô hiệu hóa.");
+                request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+                return;
+            }
+
             session.setAttribute("userAccount", acc);
             String role = acc.getAccRole();
 
@@ -130,13 +137,7 @@ public class Login_Google_Servlet extends HttpServlet {
             Account acc = accDao.ggByEmail(ggUser.getEmail());
             session.setAttribute("userAccount", acc);
             String role = acc.getAccRole();
-            String status = acc.getAccStatus();
 
-            if ("Inactive".equals(status)) {
-                request.setAttribute("errMess", "Tài khoản của bạn đã bị vô hiệu hóa.");
-                request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
-                return;
-            }
 //            System.out.println(acc.getAccPhoneNumber());
             if ("Admin".equals(role)) {
                 session.setAttribute("loginSuccess", "Chào Admin!");

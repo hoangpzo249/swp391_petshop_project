@@ -134,6 +134,14 @@
             <c:remove var="updateSucess" scope="session" />
         </c:if>
 
+        <c:if test="${not empty errMess}">
+            <div class="errMess">
+                <p>${errMess}</p>
+            </div>
+            <c:remove var="errMess" scope="session" />
+        </c:if>
+
+
         <div class="profile-container">
             <div class="profile-card">
                 <div class="profile-header">
@@ -265,11 +273,8 @@
                                         </div>
                                     </div>
 
-                                    <c:if test="${not empty errMess}">
-                                        <div class="errMess">
-                                            <p>${errMess}</p>
-                                        </div>
-                                    </c:if>
+
+
 
                                     <div class="form-actions">
                                         <p class="login-link"><a href="profile">Quay lại</a></p>
@@ -437,11 +442,7 @@
                                                   placeholder="Giới thiệu về bản thân...">${sessionScope.userAccount.accDescription}</textarea>
                                     </div>
 
-                                    <c:if test="${not empty errMess}">
-                                        <div class="errMess">
-                                            <p>${errMess}</p>
-                                        </div>
-                                    </c:if>
+
                                     <div class="form-actions">
                                         <button type="submit" class="save-btn">
                                             Lưu thay đổi

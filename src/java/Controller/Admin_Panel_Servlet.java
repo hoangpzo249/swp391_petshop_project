@@ -374,6 +374,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 }
                 String email = acc.getAccEmail();
                 String fullName = acc.getAccFname() + acc.getAccLname();
+                
                 boolean banAcc = accDao.banAcc(accId);
                 if (banAcc) {
                     acc.setAccStatus("Inactive");
@@ -383,7 +384,9 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     log.setAccId(accId);
                     log.setDeactivatedBy(accAdmin.getAccId());
                     log.setDeactivationReason(banReason);
+                    
                     Account_LogDAO logDao = new Account_LogDAO();
+                    
                     try {
                         logDao.banAcc(log);
                         if ("on".equals(sendEmail)) {

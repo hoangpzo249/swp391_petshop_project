@@ -45,12 +45,22 @@
 
                     <div class="input-group">
                         <label for="password">Mật Khẩu *</label>
-                        <input type="password" id="password" name="password" value="${password}" >
+                        <div style="position: relative;">
+                            <input type="password" id="password" name="password" value="${password}">
+                            <i class="fa-solid fa-eye" 
+                               style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
+                               onclick="document.getElementById('password').type = document.getElementById('password').type === 'password' ? 'text' : 'password'; this.classList.toggle('fa-eye'); this.classList.toggle('fa-eye-slash');"></i>
+                        </div>
                     </div>
-
+                            
                     <div class="input-group">
-                        <label for="password">Xác nhận mật Khẩu *</label>
-                        <input type="password" id="confirm_password" name="confirm_password" value="${confirm_password}" >
+                        <label for="password">Xác nhận mật khẩu *</label>
+                        <div style="position: relative;">
+                            <input type="password" id="confirm_password" name="confirm_password" value="${confirm_password}">
+                            <i class="fa-solid fa-eye" 
+                               style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
+                               onclick="document.getElementById('password').type = document.getElementById('password').type === 'password' ? 'text' : 'password'; this.classList.toggle('fa-eye'); this.classList.toggle('fa-eye-slash');"></i>
+                        </div>
                     </div>
 
                     <c:if test="${not empty errMess}">
