@@ -2,8 +2,7 @@
 
 
 
-<%--<%@ page import="java.util.List" %>
-<%@ page import="Models.Pet" %>--%>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
@@ -17,7 +16,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link rel="icon" type="image/png" href="images/logo_banner/logo1.png">
         <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="css/main_type.css?v=8" />
+        <link rel="stylesheet" href="css/main_type.css?v=9" />
 
         
     </head>
@@ -74,6 +73,8 @@
 
 
             <aside class="sidebar">
+                <h3><a href="listshoppet" style="text-decoration: none; color: black">Tất cả thú cưng</a></h3>
+
                 <h3><a href="listshoppet?species=Dog" style="text-decoration: none; color: black">Tất cả giống chó</a></h3>
                 <ul>
                     <c:forEach items="${listDogBreed}" var="x">
@@ -102,8 +103,8 @@
 
 
 
-                    <form method="get" action="listshoppet" id="filterForm">
-                        <input type="hidden" name="sortpet" value="${param.sortpet}" />
+                    <form method="get" action="listshoppet">
+                       
                         <input type="hidden" name="species" value="${param.species}" />
                         <input type="hidden" name="breed" value="${param.breed}" />
 
@@ -204,7 +205,7 @@
                 <div class="sort-container">
                     <label for="sort">Sắp xếp theo:</label>
                     <div class="custom-select">
-                        <form action="listshoppet" id="sortForm" method="get">
+                        <form action="listshoppet" method="get">
                             <input type="hidden" name="species" value="${param.species}" />
                             <input type="hidden" name="breed" value="${param.breed}" />
 
@@ -216,7 +217,7 @@
                             <input type="hidden" name="age" value="${param.age}" />
                             <input type="hidden" name="vaccination" value="${param.vaccination}" />
 
-                            <select name="sortpet" onchange="document.getElementById('sortForm').submit()">
+                            <select name="sortpet" onchange="this.form.submit()">
 
                                 <option value="az" ${param.sortpet == 'az' ? 'selected' : ''}>Tên thú cưng từ A-Z</option>
                                 <option value="za" ${param.sortpet == 'za' ? 'selected' : ''}>Tên thú cưng từ Z-A</option>

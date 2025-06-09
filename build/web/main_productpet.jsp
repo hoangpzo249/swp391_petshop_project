@@ -1,63 +1,266 @@
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>Chi tiết thú cưng</title>
-        <script src="js/add_alert.js" type="text/javascript"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>PETFPT Shop</title>
+        <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
+        <script src="js/scroll_chat.js" type="text/javascript"></script>
+        <!--<script src="js/favoriteittem.js" type="text/javascript"></script>-->
+        <link href="css/main_product.css?v=4" rel="stylesheet" type="text/css"/>
+        <script src="js/readmore_product.js" type="text/javascript"></script>
+        <script src="js/add_alert.js?v=2" type="text/javascript"></script>
     </head>
+
     <body>
+        <!-- header -->
+        <div class="header">
+            <div class="header1">
+                <div>
+                    <a href="listmainmenu">
+                        <img src="images/logo_banner/logo.png" alt=""/>
+                    </a>
+                </div>
+
+                <form action="listshoppet">
+                    <div class="search">
+                        <input type="text" name="search" value="${sessionScope.search}" placeholder="Tìm kiếm thú cưng ..."/>
+                        <button type="submit" class="search-button">
+                            <img src="images/search.png" width="512" height="512" alt="search" />
+                        </button>
+                    </div>
+                </form>
 
 
+                <div class="accountcard">
+                    <div class="account">
+                        <a href="${not empty sessionScope.account ? 'account_profile_user.jsp' : 'account_login.jsp'}">
+                            <img src="images/account.png" width="800" height="800" alt="account"/>
+                            <p class="logintext">Tài Khoản</p>
+                        </a>
+                    </div>
+                    <div class="card">
+                        <a href=displaycart>
+                            <img src="images/card.png" width="1859" height="1573" alt="card"/>
+                            <p class="cardtext">
+                                Giỏ Hàng
+                                <span id="cart-count" class="cartcount">${sessionScope.cartcount}</span>
+                            </p>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            <div>
+                <nav>
+                    <ul class="menu">
+                        <li><a href="listmainmenu">Trang Chủ</a></li>
+                        <li><a href="listshoppet?species=Dog&sort=popular&giapet1=&giapet2=&breed=&search=">Chó Cưng</a></li>
+                        <li><a href="listshoppet?species=Cat&sort=popular&giapet1=&giapet2=&breed=&search=">Mèo Cưng</a></li>
+
+                        <li><a href="menu_about.jsp">Giới Thiệu</a></li>
+                        <li><a href="menu_contact.jsp">Liên Hệ</a></li>
+                            <c:choose>
+                                <c:when test="${not empty sessionScope.account and sessionScope.account.accRole eq 'Admin'}">
+                                <li><a href="admin.jsp">Admin Panel</a></li>
+                                </c:when>
+                                <c:otherwise>
+                                </c:otherwise>
+                            </c:choose>
+
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
         <c:set var="pet" value="${pet}" />
+        <div class="container">
+            <div class="product-wrapper">
+                <!-- Left Column -->
+                <div class="left-column">
+                    <div class="main-image-container">
+                        <div class="image-box">
+                            <img src="${pet.getPetImageBase64()}" alt="${pet.petName}" class="main-image" />
+                        </div>
+                    </div>
 
-        <h1>${pet.petName}</h1>
+                    <div class="thumbnails-container">
+                        <button class="thumbnail-nav"><i class="fas fa-chevron-left"></i></button>
 
-        <img src="${pet.getPetImageBase64()}" alt="${pet.petName}" width="300" />
+                        <div class="thumbnails">
+                            <div class="thumbnail-box">
+                                <img src="${pet.getPetImageBase64()}" alt="Thumbnail 1" class="thumbnail-img" />
+                            </div>
+                            <div class="thumbnail-box">
+                                <img src="${pet.getPetImageBase64()}" alt="Thumbnail 2" class="thumbnail-img" />
+                            </div>
+                            <div class="thumbnail-box">
+                                <img src="${pet.getPetImageBase64()}" alt="Thumbnail 3" class="thumbnail-img" />
+                            </div>
+                        </div>
 
-        <p>Giá: 
-            <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" />
-        </p>
-
-        <p>Mô tả: ${pet.petDescription}</p>
-
-        <form action="addtocart" method="GET" class="cartForm" target="add_cart">
-
-            <input type="hidden" name="id" value="${pet.petId}" />
-            <input type="hidden" name="price" value="${pet.petPrice}" />
-            <input type="hidden" name="quantity" value="1" />
-
-
-            <button type="submit" class="add-to-cart">Thêm vào giỏ hàng</button>
-
-
-
-        </form>
-        <h2 class="text-favo-item">Thú Cưng Tương Tự</h2>
-
-
-        <c:forEach items="${similarPets}" var="x">
-
-
-            <a href="displaypet?id=${x.getPetId()}">
+                        <button class="thumbnail-nav"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
 
 
-                <img src="${x.getPetImageBase64()}" width="800" height="800" alt="${x.petName}"/>
+                <!-- Right Column -->
+                <div class="right-column">
+                    <h1 class="product-title">${pet.petName}</h1>
+                    <div class="price-section">
+                        <span class="price">
+                            <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                        </span>
 
-                <p class="item-favo-name">${x.petName}</p>
-            </a>
-
-            <fmt:formatNumber value="${x.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                    </div>
 
 
-        </c:forEach>
+                    <form action="addtocart" method="GET" class="cartForm" target="cart-response-frame">
 
-        <span>Đã có <strong id="cart-count">${sessionScope.cartcount}</strong> sản phẩm trong giỏ hàng.</span>
+                        <div class="quantity-section">
+                            <label for="quantity">Số Lượng:</label>
+                            <div class="quantity-control">
 
-        <iframe id="add_cart" name="add_cart" style="display:none;"></iframe>
+                                <input type="text" id="quantity" name="quantity" value="1" class="qty-input" readonly="readonly" />
+
+                            </div>
+                        </div>
+
+                        <div class="total-price">
+                            <span>Tổng số tiền:</span>
+                            <span class="price">
+                                <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                            </span>
+
+                            <input type="hidden" name="price" value="${pet.petPrice}">
+                        </div>
+                        <div class="action-buttons">
+                            <input type="hidden" name="id" value="${pet.petId}">
+
+                            <button type="submit" class="add-to-cart">Thêm vào giỏ hàng</button>
+
+
+                        </div>
+                    </form>
+
+                    <div class="status">
+                        <span>Tình trạng: Còn hàng</span>
+                    </div>
+
+
+                    <div class="shipping-info">
+                        <i class="fas fa-truck"></i>
+                        <span>Miễn Phí Vận Chuyển</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="description-section">
+                <h2>Thông Tin Thú Cưng</h2>
+                <div class="description-content collapsed" id="description-content">
+                    <p>
+
+                        ${pet.petDescription} 
+
+                    </p>
+                </div>
+                <button class="toggle-description-btn" id="toggle-description-btn">Đọc thêm</button>
+            </div>
+
+
+            <h2 class="text-favo-item">Thú Cưng Tương Tự</h2>
+
+            <div class="detail-favo-item-product">
+                <c:forEach items="${similarPets}" var="x">
+
+                    <div class="detail-favo-item">
+                        <a href="displaypet?id=${x.getPetId()}">
+                            <div class="image-favo-container">
+                                <span class="sale-badge">Sale</span>
+                                <img src="${x.getPetImageBase64()}" width="800" height="800" alt="${x.petName}"/>
+                            </div>
+                            <p class="item-favo-name">${x.petName}</p>
+                        </a>
+                        <div class="tym-item">
+                            <fmt:formatNumber value="${x.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                        </div>
+                    </div>
+                </c:forEach>
+
+            </div>
+             <iframe id="cart-response-frame" name="cart-response-frame" style="display:none;"></iframe>
+
+
+
+
+
+            <!--about-->
+            <div class="about-section">
+                <div class="about-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="listshoppet?species=Chó&sort=popular&giapet1=&giapet2=&breed=&search=">Dành Cho Chó</a></li>
+                        <li><a href="listshoppet?species=Mèo&sort=popular&giapet1=&giapet2=&breed=&search=">Dành Cho Mèo</a></li>
+                        <li><a href="listshop?category=%search=&gia1=&gia2=&sort=popular">Phụ kiện cho Chó & Mèo</a></li>
+                    </ul>
+                </div>
+
+                <div class="about-column">
+                    <h3>PETFPT Shop</h3>
+                    <ul>
+                        <li><a href="menu_about.jsp">Giới Thiệu</a></li>
+                        <li><a href="footer_policy.jsp">Chính sách</a></li>
+                        <li><a href="footer_paymentmethod.jsp">Phương Thức Thanh Toán</a></li>
+                        <li><a href="footer_termofuse.jsp">Điều Khoản Sử Dụng</a></li>
+                    </ul>
+                </div>
+
+                <div class="about-column">
+                    <h3>Liên Hệ</h3>
+                    <p class="contactpet">PETFPT Shop</p>
+                    <p><i class="fas fa-phone"></i>0767676770</p>
+                    <p><i class="fas fa-map-marker-alt"></i>Khu Công nghệ cao Hòa Lạc <br>
+                        Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
+                    <p><i class="fas fa-envelope email"></i>
+                        <a href="mailto:hoangnhhe181051@fpt.edu.vn">hoangnhhe181051@fpt.edu.vn</a>
+                    </p>
+
+                    <div class="social-container">
+                        <a href="https://www.facebook.com/petfptshop" target="_blank" class="social-icon">
+                            <i class="fab fa-facebook fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- scroll_chat -->
+            <div class="chat-scroll-container">
+                <button onclick="scroll()" id="scroll">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+
+                <div class="chat-container">
+                    <div id="chat-button" class="chat-button">
+                        <img src="images/scroll_chat/chat.png" alt=""/>
+                    </div>
+
+                    <div id="zalo-button" class="zalo-button">
+                        <a href="https://zalo.me/your-zalo-link" target="_blank">
+                            <img src="images/scroll_chat/zalo.jpg" alt=""/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <footer>
+                © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
+            </footer>
+            <script src="js/scroll_chat.js"></script>
+           
+
     </body>
 </html>

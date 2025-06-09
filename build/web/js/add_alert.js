@@ -6,7 +6,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     
-    var iframe = document.getElementById('add_cart');
+    var iframe = document.getElementById('cart-response-frame');
 
     function showCartMessage() {
       

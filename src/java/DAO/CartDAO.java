@@ -22,11 +22,12 @@ import java.util.List;
 public class CartDAO {
 
     Connection conn;
-    PreparedStatement ps;
-    ResultSet rs;
+    
 
     public int getTotalCartItems(int accountId) {
-        DBContext db = new DBContext();
+       DBContext db = new DBContext();
+        ResultSet rs = null;
+        PreparedStatement ps = null;
         try {
             conn = db.getConnection();
             String sql = "SELECT COUNT(*) AS totalItems "
@@ -64,7 +65,9 @@ public class CartDAO {
     }
 
     public boolean petInCart(int accId, int petId) {
-        DBContext db = new DBContext();
+       DBContext db = new DBContext();
+        ResultSet rs = null;
+        PreparedStatement ps = null;
         try {
             conn = db.getConnection();
             String sql = "SELECT COUNT(*) AS total\n"
@@ -76,13 +79,10 @@ public class CartDAO {
             ps.setInt(2, petId);
             rs = ps.executeQuery();
             if (rs.next() && rs.getInt("total") > 0) {
-                  return true;
-}
-            
+                return true;
+            }
 
         } catch (Exception ex) {
-            
-            
 
         }
         try {
@@ -108,47 +108,47 @@ public class CartDAO {
 
     public void addToPetCart(int accId, int petId) {
 
-        Connection conn = null;
-        PreparedStatement ps = null;
+        DBContext db = new DBContext();
         ResultSet rs = null;
-
+        PreparedStatement ps = null;
         try {
-            conn = new DBContext().getConnection();
+            conn = db.getConnection();
 
-            String getCartIdSql = "SELECT cartId FROM CartTB WHERE accId = ?";
-            ps = conn.prepareStatement(getCartIdSql);
+            int cartId = -1;
+            String getCartSql = "SELECT cartId FROM CartTB WHERE accId = ?";
+            ps = conn.prepareStatement(getCartSql);
             ps.setInt(1, accId);
             rs = ps.executeQuery();
 
-            int cartId = -1;
             if (rs.next()) {
                 cartId = rs.getInt("cartId");
-            } else {
+            }
+            rs.close();
+            ps.close();
 
-                rs.close();
+            if (cartId == -1) {
+                String insertSql = "INSERT INTO CartTB (accId) VALUES (?)";
+                ps = conn.prepareStatement(insertSql);
+                ps.setInt(1, accId);
+                ps.executeUpdate();
                 ps.close();
-                String getNextIdSql = "SELECT ISNULL(MAX(cartId), 0) + 1 AS nextId FROM CartTB";
-                ps = conn.prepareStatement(getNextIdSql);
+
+                ps = conn.prepareStatement(getCartSql);
+                ps.setInt(1, accId);
                 rs = ps.executeQuery();
                 if (rs.next()) {
-                    cartId = rs.getInt("nextId");
+                    cartId = rs.getInt("cartId");
                 }
                 rs.close();
                 ps.close();
-
-                String createCartSql = "INSERT INTO CartTB (cartId, accId) VALUES (?, ?)";
-                ps = conn.prepareStatement(createCartSql);
-                ps.setInt(1, cartId);
-                ps.setInt(2, accId);
-                ps.executeUpdate();
-                ps.close();
             }
 
-            String insertSql = "INSERT INTO CartContentTB (cartId, petId, addedAt) VALUES (?, ?, GETDATE())";
-            ps = conn.prepareStatement(insertSql);
+            String insertContentSql = "INSERT INTO CartContentTB (cartId, petId, addedAt) VALUES (?, ?, GETDATE())";
+            ps = conn.prepareStatement(insertContentSql);
             ps.setInt(1, cartId);
             ps.setInt(2, petId);
             ps.executeUpdate();
+            
 
         } catch (Exception ex) {
 
@@ -157,20 +157,16 @@ public class CartDAO {
             if (rs != null) {
                 rs.close();
             }
-        } catch (Exception e) {
-        }
-        try {
             if (ps != null) {
                 ps.close();
             }
-        } catch (Exception e) {
-        }
-        try {
             if (conn != null) {
                 conn.close();
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public void deleteFromPetCart(int accId, int petId) {
@@ -221,6 +217,8 @@ public class CartDAO {
     public List<Cart> getCart(int accId) {
         List<Cart> list = new ArrayList<>();
         DBContext db = new DBContext();
+        ResultSet rs = null;
+        PreparedStatement ps = null;
         try {
             conn = db.getConnection();
             String sql = "SELECT cc.petId, cc.addedAt "

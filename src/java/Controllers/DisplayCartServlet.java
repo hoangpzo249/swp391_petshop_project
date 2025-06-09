@@ -93,7 +93,7 @@ public class DisplayCartServlet extends HttpServlet {
             session.setAttribute("cartcount", updatedPetCart.size());
         }
 
-        request.setAttribute("petList", updatedPetCart);
+       
         request.setAttribute("pets", pets);
         request.setAttribute("totalPrice", totalPrice);
 

@@ -65,13 +65,12 @@ public class AddToCartServlet extends HttpServlet {
         CartDAO dao = new CartDAO();
         HttpSession session = request.getSession();
 
-        String quantityStr = request.getParameter("quantity");
         String priceStr = request.getParameter("price");
         String idStr = request.getParameter("id");
 
-        if (quantityStr != null && priceStr != null && idStr != null && session != null) {
+        if (priceStr != null && idStr != null && session != null) {
             try {
-                int quantity = Integer.parseInt(quantityStr);
+
                 double unitPrice = Double.parseDouble(priceStr);
                 int petId = Integer.parseInt(idStr);
 
@@ -107,7 +106,7 @@ public class AddToCartServlet extends HttpServlet {
                     if (exists) {
                         session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
                     } else {
-                        guestCart.add(new Cart(-1, petId,quantity, unitPrice * quantity));
+                        guestCart.add(new Cart(-1, petId, 1, unitPrice));
                         session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
                     }
 
@@ -118,13 +117,13 @@ public class AddToCartServlet extends HttpServlet {
                 Integer cartcount = (Integer) session.getAttribute("cartcount");
                 int count = (cartcount != null) ? cartcount : 0;
 
-                response.setContentType("text/plain"); 
+                response.setContentType("text/plain");
 
-                PrintWriter out = response.getWriter(); 
+                PrintWriter out = response.getWriter();
 
-                String message = (String) session.getAttribute("cartMessage"); 
+                String message = (String) session.getAttribute("cartMessage");
 
-                out.print(message + "|" + count); 
+                out.print(message + "|" + count);
 
             } catch (NumberFormatException e) {
 

@@ -25,11 +25,6 @@ public class DeleteFromCart extends HttpServlet {
         CartDAO cartDAO = new CartDAO();
         String idParam = request.getParameter("id");
 
-        if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect("displaycart");
-            return;
-        }
-
         int petId = Integer.parseInt(idParam);
         Account account = (Account) session.getAttribute("account");
 
@@ -52,11 +47,12 @@ public class DeleteFromCart extends HttpServlet {
                     Cart cart = guestCart.get(i);
                     if (cart.getPetId() == petId) {
                         guestCart.remove(i);
-                        break; 
+                        break;
                     }
                 }
                 session.setAttribute("guestCart", guestCart);
                 session.setAttribute("cartcount", guestCart.size());
+              
             }
         }
 

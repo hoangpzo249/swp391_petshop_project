@@ -82,22 +82,21 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         if (_dao.LoginUser(username, password)) {
             HttpSession session = request.getSession(false);
-             Account account = _dao.FindUserInfo(username);
+            Account account = _dao.FindUserInfo(username);
             session.setAttribute("account", account);
- List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
-        if (guestCart != null && !guestCart.isEmpty()) {
-            CartDAO cartDAO = new CartDAO();
+            List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
+            if (guestCart != null && !guestCart.isEmpty()) {
+                CartDAO cartDAO = new CartDAO();
 
-            for (Cart c : guestCart) {
-                if (!cartDAO.petInCart(account.getAccId(), c.getPetId())) {
-                    cartDAO.addToPetCart(account.getAccId(), c.getPetId());
+                for (Cart c : guestCart) {
+                    if (!cartDAO.petInCart(account.getAccId(), c.getPetId())) {
+                        cartDAO.addToPetCart(account.getAccId(), c.getPetId());
+                    }
                 }
-            }
 
-            
-            session.removeAttribute("guestCart");
-            session.setAttribute("cartcount", cartDAO.getTotalCartItems(account.getAccId()));
-        }
+                session.removeAttribute("guestCart");
+                session.setAttribute("cartcount", cartDAO.getTotalCartItems(account.getAccId()));
+            }
 
             response.sendRedirect("listshoppet");
         } else {

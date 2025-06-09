@@ -34,6 +34,8 @@ public class ListShopPetServlet extends HttpServlet {
         String breed = request.getParameter("breed");
         String species = request.getParameter("species");
         String search = request.getParameter("search");
+        search = (search != null) ? search.trim() : "";
+
         String sort = request.getParameter("sortpet");
         String priceRange = request.getParameter("priceRange");
         String gender = request.getParameter("gender");
@@ -63,7 +65,7 @@ public class ListShopPetServlet extends HttpServlet {
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, petList.size());
         int totalPages = (int) Math.ceil((double) petList.size() / pageSize);
-        petList = (start >= petList.size()) ? new ArrayList<>() : petList.subList(start, end);
+        petList = petList.subList(start, end);
 
         for (Pet pet : petList) {
             pet.setImages(petDAO.getImagesByPetId(pet.getPetId()));
@@ -82,7 +84,7 @@ public class ListShopPetServlet extends HttpServlet {
         request.setAttribute("listAge", petDAO.getAllAgeRanges());
         request.setAttribute("listVaccine", petDAO.getAllVaccinationStatus());
         request.setAttribute("priceRange", priceRange);
-        request.setAttribute("sortpet", sort);
+       
 
         request.getRequestDispatcher("main_typepet.jsp").forward(request, response);
     }
@@ -98,4 +100,3 @@ public class ListShopPetServlet extends HttpServlet {
         return "Pet Shop List Servlet";
     }
 }
-

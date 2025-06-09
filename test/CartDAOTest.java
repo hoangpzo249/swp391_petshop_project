@@ -25,7 +25,7 @@ public class CartDAOTest {
         System.out.println("=> petInCart: " + exists);
 
        
-       
+        
         
         System.out.println("=== TEST: getTotalCartItems ===");
         int totalItems = dao.getTotalCartItems(accId);
