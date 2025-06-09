@@ -113,7 +113,7 @@
                 </div>
 
                 <!-- Reset Password Card -->
-                <form action="admin-panel" method="post"
+                <form action="admin-panel" method="post">
                       <input type="hidden" name="action" value="account">
                     <input type="hidden" name="type" value="${resetpass.accRole}">
                     <input type="hidden" name="act" value="reset-pass">

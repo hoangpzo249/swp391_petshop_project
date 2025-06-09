@@ -23,13 +23,13 @@ public class Account {
     private String accRole;
     private String accDescription;
     private String accCreateDate;
-    private String accImage;
+    private byte[] accImage;
     private String accStatus;
 
     public Account() {
     }
 
-    public Account(int accId, String accUsername, String accEmail, String accPassword, String accFname, String accLname, Date accDob, String accAddress, String accPhoneNumber, String accRole, String accDescription, String accCreateDate, String accImage, String accStatus) {
+    public Account(int accId, String accUsername, String accEmail, String accPassword, String accFname, String accLname, Date accDob, String accAddress, String accPhoneNumber, String accRole, String accDescription, String accCreateDate, byte[] accImage, String accStatus) {
         this.accId = accId;
         this.accUsername = accUsername;
         this.accEmail = accEmail;
@@ -142,11 +142,11 @@ public class Account {
         this.accCreateDate = accCreateDate;
     }
 
-    public String getAccImage() {
+    public byte[] getAccImage() {
         return accImage;
     }
 
-    public void setAccImage(String accImage) {
+    public void setAccImage(byte[] accImage) {
         this.accImage = accImage;
     }
 
@@ -160,6 +160,23 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" + "accId=" + accId + ", accUsername=" + accUsername + ", accEmail=" + accEmail + ", accPassword=" + accPassword + ", accFname=" + accFname + ", accLname=" + accLname + ", accDob=" + accDob + ", accAddress=" + accAddress + ", accPhoneNumber=" + accPhoneNumber + ", accRole=" + accRole + ", accDescription=" + accDescription + ", accCreateDate=" + accCreateDate + ", accImage=" + accImage + ", accStatus=" + accStatus + '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("Account{");
+        sb.append("accId=").append(accId);
+        sb.append(", accUsername=").append(accUsername);
+        sb.append(", accEmail=").append(accEmail);
+        sb.append(", accPassword=").append(accPassword);
+        sb.append(", accFname=").append(accFname);
+        sb.append(", accLname=").append(accLname);
+        sb.append(", accDob=").append(accDob);
+        sb.append(", accAddress=").append(accAddress);
+        sb.append(", accPhoneNumber=").append(accPhoneNumber);
+        sb.append(", accRole=").append(accRole);
+        sb.append(", accDescription=").append(accDescription);
+        sb.append(", accCreateDate=").append(accCreateDate);
+        sb.append(", accImage=").append(accImage);
+        sb.append(", accStatus=").append(accStatus);
+        sb.append('}');
+        return sb.toString();
     }
 }

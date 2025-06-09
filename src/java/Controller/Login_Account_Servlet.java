@@ -96,11 +96,17 @@ public class Login_Account_Servlet extends HttpServlet {
 
                 session.setAttribute("userAccount", acc);
                 String role = acc.getAccRole();
-                
+                String status = acc.getAccStatus();
+
                 String fname = acc.getAccFname();
 //                String lname = acc.getAccLname();
-                
+
 //                String fullname = fname + lname;
+                if ("Inactive".equals(status)) {
+                    request.setAttribute("errMess", "Tài khoản của bạn đã bị vô hiệu hóa.");
+                    request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+                    return;
+                }
                 
                 if ("on".equals(remember)) {
                     Cookie emailC = new Cookie("email", email);
@@ -125,8 +131,17 @@ public class Login_Account_Servlet extends HttpServlet {
                 if ("Admin".equals(role)) {
                     session.setAttribute("loginSuccess", "Chào Admin!");
                     response.sendRedirect("homepage");
+                } else if ("Manager".equals(role)) {
+                    session.setAttribute("loginSuccess", "Chào Manager!");
+                    response.sendRedirect("homepage");
+                } else if ("Saler".equals(role)) {
+                    session.setAttribute("loginSuccess", "Chào Saler!");
+                    response.sendRedirect("homepage");
+                } else if ("Shipper".equals(role)) {
+                    session.setAttribute("loginSuccess", "Chào Shipper!");
+                    response.sendRedirect("homepage");
                 } else if ("Customer".equals(role)) {
-                    session.setAttribute("loginSuccess", "Chào mừng " + fname + "!");
+                    session.setAttribute("loginSuccess", "Chào mừng !");
                     response.sendRedirect("homepage");
                 } else {
                     request.setAttribute("errMess", "Bạn cần có quyền truy cập");

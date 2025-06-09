@@ -16,8 +16,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Random;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -168,7 +171,23 @@ public class Profile_Account_Servlet extends HttpServlet {
             if (dob == null || dob.trim().isEmpty()) {
                 date = new java.sql.Date(acc.getAccDob().getTime());
             } else {
-                date = Date.valueOf(dob);
+                try {
+                    LocalDate dateCheck = LocalDate.parse(dob);
+                    LocalDate now = LocalDate.now();
+
+                    if (dateCheck.isAfter(now) || Period.between(dateCheck, now).getYears() < 10) {
+                        request.setAttribute("errMess", "Ngày sinh không hợp lệ");
+                        request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+                        return;
+                    }
+                    date = java.sql.Date.valueOf(dateCheck);
+
+                } catch (Exception e) {
+                    request.setAttribute("errMess", "Ngày sinh sai định dạng.");
+                    request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+                    return;
+                }
+
             }
 //            if (phone == null || phone.trim().isEmpty()) {
 //                phone = acc.getAccPhoneNumber();
@@ -335,8 +354,6 @@ public class Profile_Account_Servlet extends HttpServlet {
 //            }
 //            request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
         } else if ("upload-avatar".equals(action)) {
-
-            request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
 
         } else {
             request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);

@@ -54,6 +54,7 @@
                         <c:if test="${not empty email}">
                             <p>Gửi mã OTP thành công tới:</p>
                             <p class="email-display">${email}</p>
+                            <c:remove var="email" scope="session" />
                         </c:if>
 
                     </div>
@@ -61,6 +62,7 @@
                         <div class="successMess">
                             <p>${successMess}</p>
                         </div>
+                        <c:remove var="successMess" scope="session" />
                     </c:if>
 
                     <div class="input-group">

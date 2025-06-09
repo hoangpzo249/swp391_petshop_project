@@ -146,10 +146,16 @@
                         <div class="current-info-card">
                             <div class="profile-avatar-container">
                                 <div class="default-avatar">
-                                    <i class="fas fa-user"></i>
-                                    <c:if test="${not empty userAccount.accImage}">
-                                        <img src="${sessionScope.userAccount.accImage}" alt="Avatar" width="150" height="150" />
-                                    </c:if>
+
+                                    <c:choose>
+                                        <c:when test="${not empty sessionScope.userAccount.accImage}">
+                                            <img src="avatar?id=${sessionScope.userAccount.accId}" alt="Avatar" width="150" height="150"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <i class="fas fa-user"></i>
+                                        </c:otherwise>
+                                    </c:choose>
+
                                 </div>
                             </div>
 
@@ -197,11 +203,11 @@
                                 <span class="info-value" id="current-address">${sessionScope.userAccount.accAddress}</span>
                             </div>
 
-<!--                            <div class="info-item">
-                                <i class="fas fa-clock"></i>
-                                <span class="info-label">Ngày tạo tài khoản</span>
-                                <span class="info-value" id="current-created-date">${sessionScope.userAccount.accCreateDate}</span>
-                            </div>-->
+                            <!--                            <div class="info-item">
+                                                            <i class="fas fa-clock"></i>
+                                                            <span class="info-label">Ngày tạo tài khoản</span>
+                                                            <span class="info-value" id="current-created-date">${sessionScope.userAccount.accCreateDate}</span>
+                                                        </div>-->
 
                             <div class="description-box">
                                 <div class="description-title">
@@ -216,9 +222,18 @@
                                 <!--                                <a href="profile?action=change-email" class="account-btn password-btn">
                                                                     <i class="fas fa-envelope"></i> Đổi Email
                                                                 </a>-->
-                                <a href="profile?action=change-password" class="account-btn password-btn">
-                                    <i class="fas fa-key"></i> Đổi mật khẩu
-                                </a>
+                                <c:choose>
+                                    <c:when test="${sessionScope.userAccount.accRole eq 'Admin'}">
+                                        <a href="admin-panel?action=change-password" class="account-btn password-btn">
+                                            <i class="fas fa-key"></i> Đổi mật khẩu
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="profile?action=change-password" class="account-btn password-btn">
+                                            <i class="fas fa-key"></i> Đổi mật khẩu
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
                                 <a href="logout" class="account-btn logout-btn">
                                     <i class="fas fa-sign-out-alt"></i> Đăng xuất
                                 </a>
@@ -351,14 +366,8 @@
                                                 <i class="fas fa-cloud-upload-alt"></i>
                                             </div>
                                             <div class="image-upload-text">Nhấp để tải ảnh lên</div>
-                                            <div class="image-upload-subtext">Hỗ trợ: JPG, PNG (tối đa 2MB)</div>
                                         </label>
-                                        <input type="file" id="profile-image" name="profileImage" class="file-input" accept="image/*">
-                                        <c:if test="${not empty errMessAvatar}">
-                                            <div class="errMess">
-                                                <p>${errMessAvatar}</p>
-                                            </div>
-                                        </c:if>
+                                        <input type="file" id="profile-image" name="avatar" class="file-input" accept="image/*">
                                         <div class="save-btn-avatar1">
                                             <button type="submit" class="save-btn-avatar" id="submitButton">Cập nhật ảnh đại diện</button>
                                         </div>

@@ -16,6 +16,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
@@ -127,7 +129,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
             List<Account> accList;
 
             if (key != null && !key.trim().isEmpty()) {
-                accList= accDao.searchAcc(key.trim());
+                accList = accDao.searchAcc(key.trim());
                 request.setAttribute("key", key);
             } else {
                 accList = accDao.getAllAccount();
@@ -185,7 +187,9 @@ public class Admin_Panel_Servlet extends HttpServlet {
             if (password == null || password.trim().isEmpty()
                     || confirm_Password == null || confirm_Password.trim().isEmpty()
                     || adminPass == null || adminPass.trim().isEmpty()) {
+                
                 request.setAttribute("resetpass", acc);
+                
                 session.setAttribute("errMess", "Bạn cần điền đủ thông tin");
                 String url = "admin-panel?action=account&type=" + acc.getAccRole() + "&act=reset-pass&id=" + acc.getAccId();
                 response.sendRedirect(url);
@@ -472,7 +476,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 String lName = request.getParameter("lastName");
                 String phone = request.getParameter("phone");
                 String dob = request.getParameter("dob");
-                Date date = java.sql.Date.valueOf(dob);
+
                 String address = request.getParameter("address");
 
                 String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
@@ -495,6 +499,60 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 if (!lName.matches(checkName)) {
                     session.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt");
 
+                    session.setAttribute("username", username);
+                    session.setAttribute("email", email);
+                    session.setAttribute("pass", pass);
+                    session.setAttribute("comfirmPass", comfirmPass);
+                    session.setAttribute("fName", fName);
+                    session.setAttribute("lName", lName);
+                    session.setAttribute("phone", phone);
+                    session.setAttribute("dob", dob);
+
+                    String url = "admin-panel?action=create-account&type=customer";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                Date date = null;
+                try {
+                    if (dob != null && !dob.trim().isEmpty()) {
+                        LocalDate dateCheck = LocalDate.parse(dob);
+                        LocalDate now = LocalDate.now();
+
+                        if (dateCheck.isAfter(now) || Period.between(dateCheck, now).getYears() < 10) {
+                            session.setAttribute("errMess", "Ngày sinh không hợp lệ.");
+                            session.setAttribute("username", username);
+                            session.setAttribute("email", email);
+                            session.setAttribute("pass", pass);
+                            session.setAttribute("comfirmPass", comfirmPass);
+                            session.setAttribute("fName", fName);
+                            session.setAttribute("lName", lName);
+                            session.setAttribute("phone", phone);
+                            session.setAttribute("dob", dob);
+
+                            String url = "admin-panel?action=create-account&type=customer";
+                            response.sendRedirect(url);
+                            return;
+                        }
+
+                        date = java.sql.Date.valueOf(dateCheck);
+                    } else {
+                        session.setAttribute("errMess", "Vui lòng nhập ngày sinh.");
+                        session.setAttribute("username", username);
+                        session.setAttribute("email", email);
+                        session.setAttribute("pass", pass);
+                        session.setAttribute("comfirmPass", comfirmPass);
+                        session.setAttribute("fName", fName);
+                        session.setAttribute("lName", lName);
+                        session.setAttribute("phone", phone);
+                        session.setAttribute("dob", dob);
+
+                        String url = "admin-panel?action=create-account&type=customer";
+                        response.sendRedirect(url);
+                        return;
+                    }
+                } catch (Exception e) {
+                    session.setAttribute("errMess", "Định dạng ngày sinh không hợp lệ.");
                     session.setAttribute("username", username);
                     session.setAttribute("email", email);
                     session.setAttribute("pass", pass);
@@ -667,7 +725,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 String lName = request.getParameter("lastName");
                 String phone = request.getParameter("phone");
                 String dob = request.getParameter("dob");
-                Date date = java.sql.Date.valueOf(dob);
+
                 String address = request.getParameter("address");
 
                 String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
@@ -690,6 +748,60 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 if (!lName.matches(checkName)) {
                     session.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt");
 
+                    session.setAttribute("username", username);
+                    session.setAttribute("email", email);
+                    session.setAttribute("pass", pass);
+                    session.setAttribute("comfirmPass", comfirmPass);
+                    session.setAttribute("fName", fName);
+                    session.setAttribute("lName", lName);
+                    session.setAttribute("phone", phone);
+                    session.setAttribute("dob", dob);
+
+                    String url = "admin-panel?action=create-account&type=staff";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                Date date = null;
+                try {
+                    if (dob != null && !dob.trim().isEmpty()) {
+                        LocalDate dateCheck = LocalDate.parse(dob);
+                        LocalDate now = LocalDate.now();
+
+                        if (dateCheck.isAfter(now) || Period.between(dateCheck, now).getYears() < 20) {
+                            session.setAttribute("errMess", "Ngày sinh không hợp lệ");
+                            session.setAttribute("username", username);
+                            session.setAttribute("email", email);
+                            session.setAttribute("pass", pass);
+                            session.setAttribute("comfirmPass", comfirmPass);
+                            session.setAttribute("fName", fName);
+                            session.setAttribute("lName", lName);
+                            session.setAttribute("phone", phone);
+                            session.setAttribute("dob", dob);
+
+                            String url = "admin-panel?action=create-account&type=staff";
+                            response.sendRedirect(url);
+                            return;
+                        }
+
+                        date = java.sql.Date.valueOf(dateCheck);
+                    } else {
+                        session.setAttribute("errMess", "Vui lòng nhập ngày sinh.");
+                        session.setAttribute("username", username);
+                        session.setAttribute("email", email);
+                        session.setAttribute("pass", pass);
+                        session.setAttribute("comfirmPass", comfirmPass);
+                        session.setAttribute("fName", fName);
+                        session.setAttribute("lName", lName);
+                        session.setAttribute("phone", phone);
+                        session.setAttribute("dob", dob);
+
+                        String url = "admin-panel?action=create-account&type=staff";
+                        response.sendRedirect(url);
+                        return;
+                    }
+                } catch (Exception e) {
+                    session.setAttribute("errMess", "Định dạng ngày sinh không hợp lệ.");
                     session.setAttribute("username", username);
                     session.setAttribute("email", email);
                     session.setAttribute("pass", pass);
