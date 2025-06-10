@@ -911,3 +911,33 @@ textarea.form-control {
     
 }
 
+/* Add this to your CSS file */
+.date-range-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f5f7fa;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    transition: all 0.3s;
+}
+
+.date-range-group:focus-within {
+    border-color: #f26f21;
+    box-shadow: 0 0 0 3px rgba(242, 111, 33, 0.1);
+}
+
+.date-range-group input[type="date"] {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    flex: 1;
+}
+
+.date-range-group span {
+    color: #777;
+    font-size: 14px;
+}

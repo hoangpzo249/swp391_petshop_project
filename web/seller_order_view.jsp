@@ -159,120 +159,127 @@
                                 </select>
                             </div>
 
+                            <!-- Add this inside the filter-controls div, after the existing select-group -->
+                            <div class="date-range-group">
+                                <input type="date" id="startDate" name="startDate" placeholder="Từ ngày">
+                                <span>đến</span>
+                                <input type="date" id="endDate" name="endDate" placeholder="Đến ngày">
+                            </div>
 
-                    </div>
+
+                        </div>
 
 
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Tài khoản</th>
-                                    <th>Loại tài khoản</th>
-                                    <th>Email</th>
-                                    <th>Ngày tạo</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thao tác</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <c:forEach items="${accList}" var="acc">
+                        <div class="table-container">
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td>${acc.getAccId()}</td>
-                                        <td>
-                                            <div class="user-info">
-                                                <img src="images/support button/account.png" class="table-avatar" alt="User">
-                                                <div>
-                                                    <div class="user-name">${acc.getAccUsername()}</div>
-                                                    <div class="user-email">${acc.getAccEmail()}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>${acc.getAccRole()}</td>
-                                        <td>${acc.getAccEmail()}</td>
-                                        <td>${acc.getAccCreateDate()}</td>
-                                        <c:choose>
-                                            <c:when test="${acc.getAccStatus() eq 'Active'}">
-                                                <td><span class="status-badge status-active">${acc.getAccStatus()}</span></td>
-                                                </c:when>
-                                                <c:when test="${acc.getAccStatus() eq 'Inactive'}">
-                                                <td><span class="status-badge status-blocked">${acc.getAccStatus()}</span></td>
-                                                </c:when>
-                                            </c:choose>
-                                        <td>
-
-                                            <div class="table-actions">
-
-                                                <a class="action-btn view-btn" title="Xem chi tiết" href = 'sellerpanel?action=account&type=${acc.accRole}&act=view&id=${acc.getAccId()}'>
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-
-
-                                                <c:choose>
-
-                                                    <c:when test="${acc.getAccRole() eq 'Admin'}">
-                                                    </c:when>
-
-                                                    <c:when test="${acc.getAccRole() eq 'Manager'}">
-                                                        <a class="action-btn edit-btn" title="Sửa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=update-role&id=${acc.getAccId()}'>
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
-                                                            <i class="fas fa-lock"></i>
-                                                        </a>
-                                                        <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
-                                                            <i class="fas fa-key"></i>
-                                                        </a>
-
-                                                    </c:when>
-                                                    <c:when test="${acc.getAccRole() eq 'Saler'}">
-                                                        <a class="action-btn edit-btn" title="Sửa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=update-role&id=${acc.getAccId()}'>
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
-                                                            <i class="fas fa-lock"></i>
-                                                        </a>
-                                                        <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
-                                                            <i class="fas fa-key"></i>
-                                                        </a>
-
-                                                    </c:when>
-                                                    <c:when test="${acc.getAccRole() eq 'Shipper'}">
-                                                        <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
-                                                            <i class="fas fa-lock"></i>
-                                                        </a>
-                                                        <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
-                                                            <i class="fas fa-key"></i>
-                                                        </a>
-                                                    </c:when>
-
-                                                    <c:otherwise>
-
-                                                        <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
-                                                            <i class="fas fa-lock"></i>
-                                                        </a>
-                                                        <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
-                                                            <i class="fas fa-key"></i>
-                                                        </a>
-
-                                                    </c:otherwise>
-
-                                                </c:choose>
-                                            </div>
-                                        </td>
+                                        <th>ID</th>
+                                        <th>Tài khoản</th>
+                                        <th>Loại tài khoản</th>
+                                        <th>Email</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
                                     </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
+                                </thead>
+
+                                <tbody>
+                                    <c:forEach items="${accList}" var="acc">
+                                        <tr>
+                                            <td>${acc.getAccId()}</td>
+                                            <td>
+                                                <div class="user-info">
+                                                    <img src="images/support button/account.png" class="table-avatar" alt="User">
+                                                    <div>
+                                                        <div class="user-name">${acc.getAccUsername()}</div>
+                                                        <div class="user-email">${acc.getAccEmail()}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>${acc.getAccRole()}</td>
+                                            <td>${acc.getAccEmail()}</td>
+                                            <td>${acc.getAccCreateDate()}</td>
+                                            <c:choose>
+                                                <c:when test="${acc.getAccStatus() eq 'Active'}">
+                                                    <td><span class="status-badge status-active">${acc.getAccStatus()}</span></td>
+                                                    </c:when>
+                                                    <c:when test="${acc.getAccStatus() eq 'Inactive'}">
+                                                    <td><span class="status-badge status-blocked">${acc.getAccStatus()}</span></td>
+                                                    </c:when>
+                                                </c:choose>
+                                            <td>
+
+                                                <div class="table-actions">
+
+                                                    <a class="action-btn view-btn" title="Xem chi tiết" href = 'sellerpanel?action=account&type=${acc.accRole}&act=view&id=${acc.getAccId()}'>
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+
+
+                                                    <c:choose>
+
+                                                        <c:when test="${acc.getAccRole() eq 'Admin'}">
+                                                        </c:when>
+
+                                                        <c:when test="${acc.getAccRole() eq 'Manager'}">
+                                                            <a class="action-btn edit-btn" title="Sửa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=update-role&id=${acc.getAccId()}'>
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                            <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
+                                                                <i class="fas fa-lock"></i>
+                                                            </a>
+                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
+                                                                <i class="fas fa-key"></i>
+                                                            </a>
+
+                                                        </c:when>
+                                                        <c:when test="${acc.getAccRole() eq 'Saler'}">
+                                                            <a class="action-btn edit-btn" title="Sửa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=update-role&id=${acc.getAccId()}'>
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                            <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
+                                                                <i class="fas fa-lock"></i>
+                                                            </a>
+                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
+                                                                <i class="fas fa-key"></i>
+                                                            </a>
+
+                                                        </c:when>
+                                                        <c:when test="${acc.getAccRole() eq 'Shipper'}">
+                                                            <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
+                                                                <i class="fas fa-lock"></i>
+                                                            </a>
+                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
+                                                                <i class="fas fa-key"></i>
+                                                            </a>
+                                                        </c:when>
+
+                                                        <c:otherwise>
+
+                                                            <a class="action-btn block-btn" title="Khóa" href = 'sellerpanel?action=account&type=${acc.accRole}&act=ban-acc&id=${acc.getAccId()}&check=${acc.getAccStatus()}'>
+                                                                <i class="fas fa-lock"></i>
+                                                            </a>
+                                                            <a class="action-btn reset-btn" title="Đặt lại mật khẩu" href = 'sellerpanel?action=account&type=${acc.accRole}&act=reset-pass&id=${acc.getAccId()}'>
+                                                                <i class="fas fa-key"></i>
+                                                            </a>
+
+                                                        </c:otherwise>
+
+                                                    </c:choose>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="admin-footer">
-        © 2025 PETFPT Shop - Hệ thống quản lý
-    </div>
-</body>
+        <div class="admin-footer">
+            © 2025 PETFPT Shop - Hệ thống quản lý
+        </div>
+    </body>
 </html>
