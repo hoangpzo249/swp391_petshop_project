@@ -88,9 +88,26 @@ public class OrderDAO {
 
     public Order getOrderById(String id) {
         DBContext db = new DBContext();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
             conn = db.getConnection();
-            String sql = "SELECT * FROM OrderTB WHERE orderId = ?";
+            String sql = "SELECT \n"
+                    + "    o.*, \n"
+                    + "    SUM(oc.priceAtOrder) AS totalPrice \n"
+                    + "FROM \n"
+                    + "    OrderTB o \n"
+                    + "LEFT JOIN \n"
+                    + "    OrderContentTB oc ON o.orderId = oc.orderId \n"
+                    + "WHERE \n"
+                    + "    o.orderId = ? \n"
+                    + "GROUP BY \n"
+                    + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
+                    + "    o.customerName, o.customerEmail, o.customerPhone, \n"
+                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus;";
+
             ps = conn.prepareStatement(sql);
             ps.setString(1, id);
             rs = ps.executeQuery();
@@ -100,6 +117,20 @@ public class OrderDAO {
             }
         } catch (Exception ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return null;
     }

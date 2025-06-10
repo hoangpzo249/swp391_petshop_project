@@ -907,8 +907,8 @@ textarea.form-control {
         width: 100%;
         margin-bottom: 5px;
     }
-    
-    
+
+
 }
 
 .date-range-group {
@@ -974,7 +974,7 @@ textarea.form-control {
 }
 .status-badge.status-payment-unpaid,
 .status-badge.status-payment-pending {
-     background-color: rgba(231, 76, 60, 0.15); /* Red */
+    background-color: rgba(231, 76, 60, 0.15); /* Red */
     color: #e74c3c;
 }
 
@@ -998,4 +998,69 @@ textarea.form-control {
 .price-value {
     font-weight: 600;
     color: #f26f21;
+}
+
+.order-details-container {
+    display: flex;
+    gap: 30px;
+}
+.customer-info-section, .order-meta-section {
+    flex: 1;
+}
+.details-section {
+    margin-bottom: 25px;
+}
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+.section-title i {
+    margin-right: 10px;
+    color: #f26f21;
+}
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 12px;
+}
+.detail-label {
+    font-weight: 600;
+    color: #555;
+}
+.detail-value {
+    color: #333;
+}
+.pet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+.pet-item-card {
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.pet-item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+}
+.pet-item-header {
+    background: #f5f7fa;
+    padding: 10px 15px;
+    font-weight: 600;
+}
+.pet-item-body {
+    padding: 15px;
+}
+.pet-item-body p {
+    margin-bottom: 5px;
+    font-size: 14px;
 }

@@ -4,143 +4,242 @@
     Author     : Lenovo
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> <%-- Add this for formatting numbers/dates --%>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Order Management</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-            .status-badge {
-                font-size: 1.1rem;
-                padding: 0.5em 0.8em;
-            }
-            .pet-card {
-                transition: transform 0.2s;
-            }
-            .pet-card:hover {
-                transform: translateY(-5px);
-            }
-        </style>
+        <title>Quản Lý Đơn Hàng - PETFPT Shop</title>
+        <link href="css/seller_panel_page.css" rel="stylesheet" type="text/css"/>
+        <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     </head>
-    <body class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Order #${order.orderId}</h1>
-            <span class="badge
-                  <c:choose>
-                      <c:when test="${order.orderStatus == 'Pending'}">bg-warning</c:when>
-                      <c:when test="${order.orderStatus == 'Confirmed'}">bg-primary</c:when>
-                      <c:when test="${order.orderStatus == 'Rejected'}">bg-danger</c:when>
-                      <c:when test="${order.orderStatus == 'HandedOver'}">bg-success</c:when>
-                      <c:otherwise>bg-secondary</c:otherwise>
-                  </c:choose>
-                  status-badge">
-                ${order.orderStatus}
-            </span>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="card mb-4 border-primary">
-            <div class="card-header bg-primary text-white">
-                <h2 class="h5 mb-0">Order Actions</h2>
+    <body>
+        <div class="seller-header">
+            <div class="logo-container">
+                <a href="homepage">
+                    <img src="images/logo_banner/logo2.png" alt="PETFPT Shop Logo"/>
+                </a>
+                <h1 class="seller-title">Quản trị hệ thống</h1>
             </div>
-            <div class="card-body">
-                <form action="updateorderstatus" method="POST" class="d-flex flex-wrap gap-2">
-                    <input type="hidden" name="id" value="${order.orderId}">
 
-                    <c:if test="${order.orderStatus == 'Pending'}">
-                        <button type="submit" name="status" value="Confirmed" 
-                                class="btn btn-success btn-lg px-4">
-                            Confirm Order
-                        </button>
-                        <button type="submit" name="status" value="Rejected" 
-                                class="btn btn-danger btn-lg px-4">
-                            Reject Order
-                        </button>
-                    </c:if>
-
-                    <c:if test="${order.orderStatus == 'Confirmed'}">
-                        <button type="submit" name="status" value="HandedOver" 
-                                class="btn btn-primary btn-lg px-4">
-                            Hand Over to Delivery
-                        </button>
-                    </c:if>
-
-                    <a href="seller_order_view.jsp" class="btn btn-outline-secondary btn-lg px-4 ms-auto">
-                        Back to Orders
+            <div class="seller-profile">
+                <%-- Assuming user's image is available, otherwise use placeholder --%>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.userAccount.accImage}">
+                        <img src="data:image/jpeg;base64,${sessionScope.userAccount.getBase64Image()}" alt="Seller Avatar"/>
+                    </c:when>
+                    <c:otherwise>
+                        <img src="images/support button/account.png" alt="Seller Avatar"/>
+                    </c:otherwise>
+                </c:choose>
+                <div class="seller-info">
+                    <span class="seller-name">${sessionScope.userAccount.accFname} ${sessionScope.userAccount.accLname}</span>
+                    <span class="seller-role">Seller</span>
+                </div>
+                <div class="seller-actions">
+                    <a href="profile" class="seller-action" title="Thông tin cá nhân">
+                        <i class="fas fa-user-circle"></i>
                     </a>
-                </form>
-            </div>
-        </div>
-
-        <!-- Order Information -->
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <div class="card-header bg-light">
-                        <h2 class="h5 mb-0">Customer Information</h2>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Name:</strong> ${order.customerName}</p>
-                        <p><strong>Email:</strong> ${order.customerEmail}</p>
-                        <p><strong>Phone:</strong> ${order.customerPhone}</p>
-                        <p><strong>Address:</strong> ${order.customerAddress}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <div class="card-header bg-light">
-                        <h2 class="h5 mb-0">Order Details</h2>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Order Date:</strong> ${order.orderDate}</p>
-                        <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
-                        <p><strong>Payment Status:</strong> 
-                            <span class="badge ${order.paymentStatus == 'Paid' ? 'bg-success' : 'bg-warning'}">
-                                ${order.paymentStatus}
-                            </span>
-                        </p>
-                        <p><strong>Shipper ID:</strong> 
-                            <c:out value="${empty order.shipperId ? 'Not assigned' : order.shipperId}"/>
-                        </p>
-                    </div>
+                    <a href="logout" class="seller-action" title="Đăng xuất">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Pets in Order -->
-        <div class="card mb-4">
-            <div class="card-header bg-light">
-                <h2 class="h5 mb-0">Pets in this Order</h2>
+        <c:if test="${not empty successMessage}">
+            <div class="alert-message">
+                ${successMessage}
             </div>
-            <div class="card-body">
-                <div class="row row-cols-1 row-cols-md-3 g-4">
-                    <c:forEach items="${petlist}" var="pet">
-                        <div class="col">
-                            <div class="card h-100 pet-card">
-                                <div class="card-header bg-info text-white">
-                                    <h5 class="card-title mb-0">${pet.petName}</h5>
+            <c:remove var="successMessage" scope="session" />
+        </c:if>
+
+        <c:if test="${not empty errorMessage}">
+            <div class="alert-message error">
+                ${errorMessage}
+            </div>
+            <c:remove var="errorMessage" scope="session" />
+        </c:if>
+
+
+        <div class="seller-container">
+            <!-- Sidebar -->
+            <div class="seller-sidebar">
+                <div class="sidebar-header">
+                    <h2 class="sidebar-title">SELLER PANEL</h2>
+                    <p class="sidebar-subtitle">Quản lý hệ thống PETFPT Shop</p>
+                </div>
+
+                <div class="sidebar-menu">
+                    <div class="menu-category">
+                        <h5 class="category-title">Điều hướng</h5>
+                        <a href="sellerpanel" class="sidebar-link">
+                            <i class="fas fa-tachometer-alt"></i> Tổng quan
+                        </a>
+                    </div>
+
+                    <div class="menu-category">
+                        <h5 class="category-title">Quản lý</h5>
+                        <a href="seller-order-management" class="sidebar-link active"> <%-- Correct Link --%>
+                            <i class="fas fa-bag-shopping"></i> Quản lý đơn hàng
+                        </a>
+                        <a href="seller-pet-management" class="sidebar-link"> <%-- Correct Link --%>
+                            <i class="fas fa-dog"></i> Quản lý thú cưng
+                        </a>
+                    </div>
+
+                    <div class="menu-category">
+                        <h5 class="category-title">Thao tác</h5>
+                        <a href="seller-create-pet" class="sidebar-link"> <%-- Correct Link --%>
+                            <i class="fas fa-paw"></i> Đăng bán thú cưng
+                        </a>
+                        <a href="profile" class="sidebar-link">
+                            <i class="fas fa-user-circle"></i> Tài khoản của tôi
+                        </a>
+                        <a href="change-password" class="sidebar-link"> <%-- Correct Link --%>
+                            <i class="fas fa-key"></i> Đổi mật khẩu
+                        </a>
+                        <a href="logout" class="sidebar-link">
+                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================= START OF MAIN CONTENT (EDITED SECTION) ======================= -->
+            <div class="seller-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-file-invoice-dollar"></i> Chi tiết đơn hàng #${order.orderId}
+                    </h1>
+                    <ul class="breadcrumb">
+                        <li><a href="homepage">Trang chủ</a></li>
+                        <li><a href="sellerpanel">Seller</a></li>
+                        <li><a href="seller-order-management">Quản lý đơn hàng</a></li>
+                        <li>Chi tiết đơn hàng</li>
+                    </ul>
+                </div>
+
+                <!-- Order Details Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle"></i> Thông tin chi tiết
+                        </h3>
+                        <div class="card-tools">
+                            <!-- Action Buttons -->
+                            <form action="updateorderstatus" method="POST" class="d-flex flex-wrap gap-2">
+                                <input type="hidden" name="id" value="${order.orderId}">
+                                <c:if test="${order.orderStatus == 'Pending'}">
+                                    <button type="submit" name="status" value="Confirmed" class="btn btn-success"><i class="fas fa-check"></i> Xác nhận</button>
+                                    <button type="submit" name="status" value="Rejected" class="btn btn-danger"><i class="fas fa-times"></i> Từ chối</button>
+                                </c:if>
+                                <c:if test="${order.orderStatus == 'Confirmed'}">
+                                    <button type="submit" name="status" value="Shipping" class="btn btn-primary"><i class="fas fa-truck"></i> Giao hàng</button>
+                                </c:if>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="order-details-container">
+                            <!-- Customer Information Section -->
+                            <div class="customer-info-section">
+                                <div class="details-section">
+                                    <h3 class="section-title"><i class="fas fa-user-circle"></i> Thông tin khách hàng</h3>
+                                    <div class="details-grid">
+                                        <div class="detail-label">Tên khách hàng</div>
+                                        <div class="detail-value">${order.customerName}</div>
+                                        <div class="detail-label">Email</div>
+                                        <div class="detail-value">${order.customerEmail}</div>
+                                        <div class="detail-label">Số điện thoại</div>
+                                        <div class="detail-value">${order.customerPhone}</div>
+                                        <div class="detail-label">Địa chỉ giao hàng</div>
+                                        <div class="detail-value">${order.customerAddress}</div>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <p class="card-text">
-                                        <strong>ID:</strong> ${pet.petId}<br>
-                                        <strong>Breed:</strong> ${pet.breedId}<br>
-                                        <strong>Color:</strong> ${pet.petColor}<br>
-                                        <strong>Gender:</strong> ${pet.petGender}<br>
-                                        <strong>Price:</strong> $${pet.petPrice}
-                                    </p>
+                            </div>
+                            <!-- Order Metadata Section -->
+                            <div class="order-meta-section">
+                                <div class="details-section">
+                                    <h3 class="section-title"><i class="fas fa-receipt"></i> Thông tin đơn hàng</h3>
+                                    <div class="details-grid">
+                                        <div class="detail-label">Ngày đặt hàng</div>
+                                        <div class="detail-value"><fmt:formatDate value="${order.orderDate}" pattern="HH:mm, dd-MM-yyyy"/></div>
+
+                                        <div class="detail-label">Phương thức TT</div>
+                                        <div class="detail-value">${order.paymentMethod}</div>
+
+                                        <div class="detail-label">Trạng thái TT</div>
+                                        <div class="detail-value">
+                                            <span class="status-badge status-payment-${order.paymentStatus.toLowerCase()}">${order.paymentStatus}</span>
+                                        </div>
+
+                                        <div class="detail-label">Trạng thái ĐH</div>
+                                        <div class="detail-value">
+                                            <span class="status-badge status-${order.orderStatus.toLowerCase()}">${order.orderStatus}</span>
+                                        </div>
+
+                                        <div class="detail-label">Shipper ID</div>
+                                        <div class="detail-value">
+                                            <c:out value="${empty order.shipperId or order.shipperId == 0 ? 'Chưa chỉ định' : order.shipperId}"/>
+                                        </div>
+
+                                        <div class="detail-label">Tổng giá trị</div>
+                                        <div class="detail-value" style="font-weight: bold; color: #f26f21; font-size: 1.1rem;">
+                                            <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </c:forEach>
+                    </div>
+                </div>
+
+                <!-- Pets in Order Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-paw"></i> Thú cưng trong đơn hàng</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="pet-grid">
+                            <c:forEach items="${petList}" var="pet">
+                                <div class="pet-item-card">
+                                    <div class="pet-item-header">${pet.petName}</div>
+                                    <div class="pet-item-body">
+                                        <p><strong>ID:</strong> ${pet.petId}</p>
+                                        <p><strong>Giống:</strong> ${pet.breed.breedName}</p> <%-- Assuming you have a Breed object inside Pet --%>
+                                        <p><strong>Màu sắc:</strong> ${pet.petColor}</p>
+                                        <p><strong>Giới tính:</strong> ${pet.petGender}</p>
+                                        <p><strong>Giá tại thời điểm đặt:</strong> 
+                                            <span style="font-weight: bold; color: #f26f21;">
+                                                <fmt:formatNumber value="${pet.priceAtOrder}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                            <c:if test="${empty petList}">
+                                <p>Không có thông tin thú cưng cho đơn hàng này.</p>
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 20px;">
+                    <button class="btn btn-outline" onclick="location.href = 'seller-order-management'">
+                        <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                    </button>
                 </div>
             </div>
         </div>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+        <!-- ======================== END OF MAIN CONTENT (EDITED SECTION) ======================== -->
+    <div class="seller-footer">
+        © 2025 PETFPT Shop - Hệ thống quản lý
+    </div>
+</body>
 </html>

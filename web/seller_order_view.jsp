@@ -207,7 +207,7 @@
                                             </td>
                                             <td>
                                                 <div class="table-actions">
-                                                    <a class="action-btn view-btn" title="Xem chi tiết" href="seller-order-detail?orderId=${order.orderId}">
+                                                    <a class="action-btn view-btn" title="Xem chi tiết" href="displayorderdetail?orderId=${order.orderId}">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
 
