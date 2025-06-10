@@ -5,8 +5,10 @@
 package Controllers;
 
 import DAO.CartDAO;
+import DAO.PetDAO;
 import Models.Account;
 import Models.Cart;
+import Models.Pet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -65,13 +67,11 @@ public class AddToCartServlet extends HttpServlet {
         CartDAO dao = new CartDAO();
         HttpSession session = request.getSession();
 
-        String priceStr = request.getParameter("price");
         String idStr = request.getParameter("id");
 
-        if (priceStr != null && idStr != null && session != null) {
+        if (idStr != null && session != null) {
             try {
 
-                double unitPrice = Double.parseDouble(priceStr);
                 int petId = Integer.parseInt(idStr);
 
                 Account acc = (Account) session.getAttribute("account");
@@ -106,7 +106,8 @@ public class AddToCartServlet extends HttpServlet {
                     if (exists) {
                         session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
                     } else {
-                        guestCart.add(new Cart(-1, petId, 1, unitPrice));
+                        PetDAO p = new PetDAO();
+                        guestCart.add(new Cart(-1, petId, 1, p.getPetById(petId).getPetPrice()));
                         session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
                     }
 

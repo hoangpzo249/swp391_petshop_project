@@ -54,17 +54,16 @@ public class DisplayCartServlet extends HttpServlet {
 
         if (account != null) {
             petCart = cartDao.getCart(account.getAccId());
-            if (petCart == null || petCart.isEmpty()) {
-                request.setAttribute("cartMessage", "Giỏ hàng của bạn đang trống.");
-            } else {
-                request.setAttribute("name", account.getAccFname() + " " + account.getAccLname());
-                request.setAttribute("phone", account.getAccPhoneNumber());
-                request.setAttribute("address", account.getAccAddress());
-            }
+
+            request.setAttribute("name", account.getAccFname() + " " + account.getAccLname());
+            request.setAttribute("phone", account.getAccPhoneNumber());
+            request.setAttribute("address", account.getAccAddress());
+
         } else {
-            Object guestCartObj = session.getAttribute("guestCart");
-            if (guestCartObj != null) {
-                petCart = (List<Cart>) guestCartObj;
+            List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
+
+            if (guestCart != null) {
+                petCart = guestCart;
             }
         }
 
@@ -93,7 +92,6 @@ public class DisplayCartServlet extends HttpServlet {
             session.setAttribute("cartcount", updatedPetCart.size());
         }
 
-       
         request.setAttribute("pets", pets);
         request.setAttribute("totalPrice", totalPrice);
 

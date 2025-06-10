@@ -81,7 +81,7 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         if (_dao.LoginUser(username, password)) {
-            HttpSession session = request.getSession(false);
+            HttpSession session = request.getSession();
             Account account = _dao.FindUserInfo(username);
             session.setAttribute("account", account);
             List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
@@ -95,7 +95,7 @@ public class LoginServlet extends HttpServlet {
                 }
 
                 session.removeAttribute("guestCart");
-                session.setAttribute("cartcount", cartDAO.getTotalCartItems(account.getAccId()));
+               
             }
 
             response.sendRedirect("listshoppet");

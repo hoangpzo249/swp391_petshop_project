@@ -122,14 +122,7 @@
 
                     <form action="addtocart" method="GET" class="cartForm" target="cart-response-frame">
 
-                        <div class="quantity-section">
-                            <label for="quantity">Số Lượng:</label>
-                            <div class="quantity-control">
 
-                                <input type="text" id="quantity" name="quantity" value="1" class="qty-input" readonly="readonly" />
-
-                            </div>
-                        </div>
 
                         <div class="total-price">
                             <span>Tổng số tiền:</span>
@@ -137,7 +130,7 @@
                                 <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
                             </span>
 
-                            <input type="hidden" name="price" value="${pet.petPrice}">
+
                         </div>
                         <div class="action-buttons">
                             <input type="hidden" name="id" value="${pet.petId}">
@@ -193,7 +186,7 @@
                 </c:forEach>
 
             </div>
-             <iframe id="cart-response-frame" name="cart-response-frame" style="display:none;"></iframe>
+            <iframe id="cart-response-frame" name="cart-response-frame" style="display:none;"></iframe>
 
 
 
@@ -260,7 +253,7 @@
                 © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
             </footer>
             <script src="js/scroll_chat.js"></script>
-           
+
 
     </body>
 </html>
