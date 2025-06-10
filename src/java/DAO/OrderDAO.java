@@ -27,15 +27,16 @@ public class OrderDAO {
         Order order = new Order();
         order.setOrderId(rs.getInt("orderId"));
         order.setAccId(rs.getInt("accId"));
-        order.setOrderDate(rs.getTimestamp("orderDate").toLocalDateTime());
+        order.setOrderDate(rs.getTimestamp("orderDate"));
         order.setOrderStatus(rs.getString("orderStatus"));
         order.setCustomerName(rs.getString("customerName"));
         order.setCustomerEmail(rs.getString("customerEmail"));
         order.setCustomerPhone(rs.getString("customerPhone"));
         order.setCustomerAddress(rs.getString("customerAddress"));
-        order.setShipperId((Integer) rs.getObject("shipperId")); // Handles null automatically
+        order.setShipperId((Integer) rs.getObject("shipperId"));
         order.setPaymentMethod(rs.getString("paymentMethod"));
         order.setPaymentStatus(rs.getString("paymentStatus"));
+        order.setTotalPrice(rs.getDouble("totalPrice"));
         return order;
     }
 
@@ -62,7 +63,17 @@ public class OrderDAO {
         List<Order> list = new ArrayList<>();
         try {
             conn = db.getConnection();
-            String sql = "SELECT * FROM OrderTB";
+            String sql = "SELECT \n"
+                    + "    o.*,\n"
+                    + "    SUM(oc.priceAtOrder) AS totalPrice\n"
+                    + "FROM \n"
+                    + "    OrderTB o\n"
+                    + "LEFT JOIN \n"
+                    + "    OrderContentTB oc ON o.orderId = oc.orderId\n"
+                    + "GROUP BY \n"
+                    + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
+                    + "    o.customerName, o.customerEmail, o.customerPhone, \n"
+                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus;";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {

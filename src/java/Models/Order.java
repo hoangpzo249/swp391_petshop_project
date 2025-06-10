@@ -4,7 +4,7 @@
  */
 package Models;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp; 
 
 /**
  *
@@ -14,7 +14,7 @@ public class Order {
 
     private int orderId;
     private Integer accId;
-    private LocalDateTime orderDate;
+    private Timestamp orderDate;
     private String orderStatus;
     private String customerName;
     private String customerEmail;
@@ -23,15 +23,15 @@ public class Order {
     private Integer shipperId;
     private String paymentMethod;
     private String paymentStatus;
+    private double totalPrice;
 
     public Order() {
     }
-    
-    
 
-    public Order(int orderId, Integer accId, String orderStatus, String customerName, String customerEmail, String customerPhone, String customerAddress, Integer shipperId, String paymentMethod, String paymentStatus) {
+    public Order(int orderId, Integer accId, Timestamp orderDate, String orderStatus, String customerName, String customerEmail, String customerPhone, String customerAddress, Integer shipperId, String paymentMethod, String paymentStatus, double totalPrice) {
         this.orderId = orderId;
         this.accId = accId;
+        this.orderDate = orderDate;
         this.orderStatus = orderStatus;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
@@ -40,6 +40,7 @@ public class Order {
         this.shipperId = shipperId;
         this.paymentMethod = paymentMethod;
         this.paymentStatus = paymentStatus;
+        this.totalPrice = totalPrice;
     }
 
     public int getOrderId() {
@@ -58,11 +59,11 @@ public class Order {
         this.accId = accId;
     }
 
-    public LocalDateTime getOrderDate() {
+    public Timestamp getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(LocalDateTime orderDate) {
+    public void setOrderDate(Timestamp orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -130,10 +131,17 @@ public class Order {
         this.paymentStatus = paymentStatus;
     }
 
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     @Override
     public String toString() {
-        return "Order{" + "orderId=" + orderId + ", accId=" + accId + ", orderDate=" + orderDate + ", orderStatus=" + orderStatus + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", customerPhone=" + customerPhone + ", customerAddress=" + customerAddress + ", shipperId=" + shipperId + ", paymentMethod=" + paymentMethod + ", paymentStatus=" + paymentStatus + '}';
+        return "Order{" + "orderId=" + orderId + ", accId=" + accId + ", orderDate=" + orderDate + ", orderStatus=" + orderStatus + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", customerPhone=" + customerPhone + ", customerAddress=" + customerAddress + ", shipperId=" + shipperId + ", paymentMethod=" + paymentMethod + ", paymentStatus=" + paymentStatus + ", totalPrice=" + totalPrice + '}';
     }
-    
-    
+
 }
