@@ -22,14 +22,14 @@ public class Order {
     private String customerAddress;
     private int shipperId;
     private String paymentMethod;
-    private String paymantStatus;
+    private String paymentStatus;
     
     // Getters và setters
 
     public Order() {
     }
 
-    public Order(int orderId, int accId, Date orderDate, String orderStatus, String customerName, String customerEmail, String customerPhone, String customerAddress, int shipperId, String paymentMethod, String paymantStatus) {
+    public Order(int orderId, int accId, Date orderDate, String orderStatus, String customerName, String customerEmail, String customerPhone, String customerAddress, int shipperId, String paymentMethod, String paymentStatus) {
         this.orderId = orderId;
         this.accId = accId;
         this.orderDate = orderDate;
@@ -40,7 +40,7 @@ public class Order {
         this.customerAddress = customerAddress;
         this.shipperId = shipperId;
         this.paymentMethod = paymentMethod;
-        this.paymantStatus = paymantStatus;
+        this.paymentStatus = paymentStatus;
     }
 
     public int getOrderId() {
@@ -123,24 +123,17 @@ public class Order {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getPaymantStatus() {
-        return paymantStatus;
+    public String getPaymentStatus() {
+        return paymentStatus;
     }
 
-    public void setPaymantStatus(String paymantStatus) {
-        this.paymantStatus = paymantStatus;
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 
     @Override
     public String toString() {
-        return "Order{" + "orderId=" + orderId + ", accId=" + accId + ", orderDate=" + orderDate + ", orderStatus=" + orderStatus + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", customerPhone=" + customerPhone + ", customerAddress=" + customerAddress + ", shipperId=" + shipperId + ", paymentMethod=" + paymentMethod + ", paymantStatus=" + paymantStatus + '}';
+        return "Order{" + "orderId=" + orderId + ", accId=" + accId + ", orderDate=" + orderDate + ", orderStatus=" + orderStatus + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", customerPhone=" + customerPhone + ", customerAddress=" + customerAddress + ", shipperId=" + shipperId + ", paymentMethod=" + paymentMethod + ", paymentStatus=" + paymentStatus + '}';
     }
 
-    
-
-    
-
-    
-    
 }
-

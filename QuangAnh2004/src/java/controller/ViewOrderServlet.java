@@ -4,8 +4,6 @@
  */
 
 package controller;
-
-import dao.OrderContentDAO;
 import dao.OrderDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Order;
-import model.OrderContent;
+
 
 /**
  *
@@ -68,9 +66,9 @@ public class ViewOrderServlet extends HttpServlet {
         int accId = (int) session.getAttribute("accId");
         
         try{
-            OrderContentDAO dao = new OrderContentDAO();
-            List<OrderContent> orders = dao.getOrderContentsByCustomerId(accId);
-            request.setAttribute("orders", orders);
+            OrderDAO dao = new OrderDAO();
+            List<Order> orders = dao.getOrderAccId(accId);
+            request.setAttribute("orderList", orders);
             request.getRequestDispatcher("order-history.jsp").forward(request, response);
         } catch (Exception e){
              e.printStackTrace();

@@ -35,30 +35,19 @@
 <c:if test="${not empty invoices}">
     <table>
         <thead>
-            <tr>
-                <th>Mã đơn</th>
-                <th>Ngày đặt</th>
-                <th>Trạng thái</th>
-                <th>Người nhận</th>
-                <th>Email</th>
-                <th>SĐT</th>
-                <th>Địa chỉ</th>
-                <th>Thanh toán</th>
-            </tr>
+        <tr><th>Mã hóa đơn</th><th>Mã đơn</th><th>Ngày</th><th>Thuế</th><th>Tổng</th><th>Thanh toán</th></tr>
         </thead>
         <tbody>
-            <c:forEach var="inv" items="${invoices}">
-                <tr>
-                    <td>${inv.orderId}</td>
-                    <td>${inv.orderDate}</td>
-                    <td>${inv.orderStatus}</td>
-                    <td>${inv.customerName}</td>
-                    <td>${inv.customerEmail}</td>
-                    <td>${inv.customerPhone}</td>
-                    <td>${inv.customerAddress}</td>
-                    <td>${inv.paymentMethod} (${inv.paymentStatus})</td>
-                </tr>
-            </c:forEach>
+<c:forEach var="inv" items="${invoices}">
+        <tr>
+            <td>${inv.invoiceId}</td>
+            <td>${inv.orderId}</td>
+            <td>${inv.issueDate}</td>
+            <td>${inv.taxAmount}</td>
+            <td>${inv.totalAmount}</td>
+            <td>${inv.paymentMethod}</td>
+        </tr>
+    </c:forEach>
         </tbody>
     </table>
 </c:if>

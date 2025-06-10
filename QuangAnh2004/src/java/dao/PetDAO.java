@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.Order;
 import model.Pet;
 
 /**
@@ -18,9 +19,9 @@ import model.Pet;
 public class PetDAO extends DBContext{
         public List<Pet> getPetId(int petId){
         List<Pet> list = new ArrayList<>();
-        String sql = "SELECT * FROM PetTB WHERE petId = ?";
+        String sql = "SELECT * FROM PetTB";
         try (PreparedStatement ps = c.prepareStatement(sql)){
-            ps.setInt(1, petId);
+//            ps.setInt(1, petId);
             ResultSet rs = ps.executeQuery(); 
 
             while (rs.next()) {
@@ -40,9 +41,17 @@ public class PetDAO extends DBContext{
                 list.add(pet);
             }
         }catch (Exception e){
-            
+             e.printStackTrace();
         }
 
         return list;
+    }
+        
+        public static void main(String[] args){
+        PetDAO  p = new PetDAO();
+        var list = p.getPetId(1);
+        for (Pet pet : list){
+            System.out.println(pet.toString());
+        }
     }
 }

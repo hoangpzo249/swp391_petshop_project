@@ -17,7 +17,7 @@ public class DBContext {
 
     public DBContext() {
         try {
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=PetShopFPT_DB;encrypt=true;trustServerCertificate=true";
+            String url = "jdbc:sqlserver://localhost:14330;databaseName=FPTPet;encrypt=true;trustServerCertificate=true";
             String username = "sa";
             String pass = "123";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");

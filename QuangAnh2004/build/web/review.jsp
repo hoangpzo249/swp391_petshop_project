@@ -23,28 +23,31 @@
 
 <h2>Đánh giá cửa hàng</h2>
 
-<c:if test="${param.msg == 'success'}">
-    <form action="review" method="post">
-    <label for="rating">Chọn số sao (1-5):</label><br/>
-    <select name="rating" id="rating" required>
-        <option value="5">5 - Rất tốt</option>
-        <option value="4">4 - Tốt</option>
-        <option value="3">3 - Bình thường</option>
-        <option value="2">2 - Kém</option>
-        <option value="1">1 - Rất tệ</option>
-    </select><br/><br/>
+<table>
+    <tr>
+        <th>Review ID</th>
+        <th>Account ID</th>
+        <th>Rating</th>
+        <th>Review Text</th>
+        <th>Review Date</th>
+    </tr>
 
-    <label for="reviewText">Viết đánh giá:</label><br/>
-    <textarea name="reviewText" id="reviewText" rows="5" cols="50" placeholder="Nhập nội dung đánh giá tại đây..." required></textarea><br/><br/>
-
-    <button type="submit">Gửi đánh giá</button>
-</form>
-</c:if>
-<c:if test="${param.msg == 'error'}">
-    <p class="error">Có lỗi xảy ra. Vui lòng thử lại.</p>
-</c:if>
-
-
+<%
+    ShopReviewDAO dao = new ShopReviewDAO();
+    List<ShopReview> list = dao.getAllReviews();
+    for (ShopReview r : list) {
+%>
+    <tr>
+        <td><%= r.getReviewId() %></td>
+        <td><%= r.getAccId() %></td>
+        <td><%= r.getRating() %></td>
+        <td><%= r.getReviewText() %></td>
+        <td><%= r.getReviewDate() %></td>
+    </tr>
+<%
+    }
+%>
+</table>
 </body>
 </html>
 

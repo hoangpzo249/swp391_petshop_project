@@ -55,12 +55,7 @@ public class CancelOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        int orderId = Integer.parseInt(request.getParameter("orderId"));
-        OrderDAO dao = new OrderDAO();
-        boolean success = dao.cancelUnconfirmeOrder(orderId, orderId);
-
-        String msg = success ? "Order cancelled" : "Cancel failed";
-        response.sendRedirect("ViewOrdersServlet?msg=" + URLEncoder.encode(msg, "UTF-8"));
+        
     }
     
 
@@ -74,7 +69,12 @@ public class CancelOrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        OrderDAO dao = new OrderDAO();
+        boolean success = dao.cancelPendingOrderByCustomer(orderId, orderId);
+
+        String msg = success ? "Order cancelled" : "Cancel failed";
+        response.sendRedirect("ViewOrdersServlet?msg=" + URLEncoder.encode(msg, "UTF-8"));
     }
 
     /** 

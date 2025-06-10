@@ -20,44 +20,60 @@
     <h2>Your Orders</h2>
     <table border="1">
         <tr>
-            <th>Order ID</th>
-            <th>Pet Name</th>
-            <th>Color</th>
-            <th>Price</th>
-            <th>Gender</th>
-            <th>Status</th>
-            <th>Action</th>
+        <tr>
+        <th>Mã đơn</th>
+        <th>Ngày đặt</th>
+        <th>Trạng thái</th>
+        <th>Phương thức thanh toán</th>
+        <th>Trạng thái thanh toán</th>
+        <th>Khách hàng</th>
+        <th>SĐT</th>
+        <th>Email</th>
+        <th>Địa chỉ</th>
+        <th>Thao tác</th>
+    </tr>
         </tr>
-        <c:forEach var="o" items="${orders}">
-            <c:set var="pet" value="${orders}"/>
+        <c:forEach var="order" items="${requestScope.orderList}">
         <tr>
             <td>${order.orderId}</td>
-            <td>${pet.petName}</td>
-            <td>${pet.petColor}</td>
-            <td>${pet.petPrice}</td>
-            <td>${pet.petGender}</td>
+            <td>${order.orderDate}</td>
             <td>${order.orderStatus}</td>
-                <c:choose>
-                    <c:when test="${o.orderStatus == 'PENDING'}">
-                        <form action="cancelorderServlet" method="get">
-                            <input type="hidden" name="orderId" value="${o.orderId}">
-                            <input type="submit" value="Cancel">
+            <td>${order.paymentMethod}</td>
+            <td>${order.paymentStatus}</td>
+            <td>${order.customerName}</td>
+            <td>${order.customerPhone}</td>
+            <td>${order.customerEmail}</td>
+            <td>${order.customerAddress}</td>
+            <td>
+
+              <c:choose>
+                    <c:when test="${order.status == 'Pending'}">
+                        <form action="CancelOrderServlet" method="post">
+                            <input type="hidden" name="orderId" value="${order.id}" />
+                            <button type="submit">Cancel</button>
                         </form>
                     </c:when>
-                    <c:when test="${o.paymentStatus == 'PAID' && o.orderStatus == 'DELIVERED'}">
-                        <form action="requestCancelServlet" method="get">
-                            <input type="hidden" name="orderId" value="${o.orderId}">
-                            <input type="submit" value="Request Cancel">
+                    <c:when test="${order.status == 'Paid'}">
+                        <form action="RequestCancelServlet" method="post">
+                            <input type="hidden" name="orderId" value="${order.id}" />
+                            <button type="submit">Request Cancel</button>
                         </form>
                     </c:when>
-                    <c:otherwise>
-                        CANNOT DELETE ORDER
-                    </c:otherwise>
+                    <c:when test="${order.status == 'Delivered'}">
+                        <form action="ReviewServlet" method="get">
+                            <input type="hidden" name="petId" value="${order.petId}" />
+                            <button type="submit">Review</button>
+                        </form>
+                        <form action="InvoiceServlet" method="get">
+                            <input type="hidden" name="orderId" value="${order.id}" />
+                            <button type="submit">View Invoice</button>
+                        </form>
+                    </c:when>
                 </c:choose>
             </td>
         </tr>
-        </c:forEach>
-    </table>
+    </c:forEach>
+</table>
 </body>
 </html>
 

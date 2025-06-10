@@ -57,7 +57,7 @@ public class RequestCancelServlet extends HttpServlet {
     throws ServletException, IOException {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         OrderDAO dao = new OrderDAO();
-        boolean success = dao.requestCancelPaidOrder(orderId);
+        boolean success = dao.requestCancellationForPaidOrder(orderId);
 
         String msg = success ? "Cancellation requested" : "Request failed";
         response.sendRedirect("ViewOrdersServlet?msg=" + URLEncoder.encode(msg, "UTF-8"));
