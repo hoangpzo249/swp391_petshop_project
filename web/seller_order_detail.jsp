@@ -109,8 +109,8 @@
                     </div>
                 </div>
             </div>
+            <!-- Main Body -->
 
-            <!-- ======================= START OF MAIN CONTENT (EDITED SECTION) ======================= -->
             <div class="seller-content">
                 <!-- Page Header -->
                 <div class="page-header">
@@ -133,15 +133,30 @@
                         </h3>
                         <div class="card-tools">
                             <!-- Action Buttons -->
-                            <form action="updateorderstatus" method="POST" class="d-flex flex-wrap gap-2">
-                                <input type="hidden" name="id" value="${order.orderId}">
+                            <form method="post" action="your-servlet-url" id="updateStatusForm">
+                                <input type="hidden" name="orderId" value="${order.orderId}">
+
+                                <input type="hidden" name="status" id="statusInput">
+
                                 <c:if test="${order.orderStatus == 'Pending'}">
-                                    <button type="submit" name="status" value="Confirmed" class="btn btn-success"><i class="fas fa-check"></i> Xác nhận</button>
-                                    <button type="submit" name="status" value="Rejected" class="btn btn-danger"><i class="fas fa-times"></i> Từ chối</button>
+                                    <button type="button" class="btn btn-success" 
+                                            onclick="showConfirmationModal('xác nhận đơn hàng này', 'Confirmed', 'btn-success')">
+                                        <i class="fas fa-check"></i> Xác nhận
+                                    </button>
+                                    <button type="button" class="btn btn-danger" 
+                                            onclick="showConfirmationModal('từ chối đơn hàng này', 'Rejected', 'btn-danger')">
+                                        <i class="fas fa-times"></i> Từ chối
+                                    </button>
                                 </c:if>
+
                                 <c:if test="${order.orderStatus == 'Confirmed'}">
-                                    <button type="submit" name="status" value="Shipping" class="btn btn-primary"><i class="fas fa-truck"></i> Giao hàng</button>
+                                    <button type="button" class="btn btn-primary" 
+                                            onclick="showConfirmationModal('giao hàng cho đơn này', 'Shipping', 'btn-primary')">
+                                        <i class="fas fa-truck"></i> Giao hàng
+                                    </button>
                                 </c:if>
+
+
                             </form>
                         </div>
                     </div>
@@ -212,7 +227,7 @@
                                     <div class="pet-item-header">${pet.petName}</div>
                                     <div class="pet-item-body">
                                         <p><strong>ID:</strong> ${pet.petId}</p>
-                                        <p><strong>Giống:</strong> ${pet.breed.breedName}</p> <%-- Assuming you have a Breed object inside Pet --%>
+                                        <p><strong>Giống:</strong> ${pet.breed.breedName}</p>
                                         <p><strong>Màu sắc:</strong> ${pet.petColor}</p>
                                         <p><strong>Giới tính:</strong> ${pet.petGender}</p>
                                         <p><strong>Giá tại thời điểm đặt:</strong> 
@@ -238,8 +253,66 @@
             </div>
         </div>
         <!-- ======================== END OF MAIN CONTENT (EDITED SECTION) ======================== -->
-    <div class="seller-footer">
-        © 2025 PETFPT Shop - Hệ thống quản lý
-    </div>
-</body>
+        <div class="seller-footer">
+            © 2025 PETFPT Shop - Hệ thống quản lý
+        </div>
+        <div class="modal-backdrop" id="confirmationModal">
+            <div class="modal-dialog">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalTitle">Xác nhận hành động</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalText">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeModal()">Hủy bỏ</button>
+                    <button id="modalConfirmButton" class="btn">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            const modal = document.getElementById('confirmationModal');
+            const modalText = document.getElementById('modalText');
+            const modalConfirmButton = document.getElementById('modalConfirmButton');
+
+            const updateForm = document.getElementById('updateStatusForm');
+            const statusInput = document.getElementById('statusInput');
+
+            let statusToSubmit = '';
+
+            function showConfirmationModal(actionText, statusValue, buttonClass) {
+                if (event) {
+                    event.preventDefault();
+                }
+
+                statusToSubmit = statusValue;
+
+                modalText.innerText = `Bạn có chắc chắn muốn ${actionText}?`;
+
+                modalConfirmButton.className = 'btn'; // Reset classes
+                modalConfirmButton.classList.add(buttonClass); // Add the specific class
+
+                modal.classList.add('show');
+            }
+
+            function closeModal() {
+                modal.classList.remove('show');
+            }
+
+            modalConfirmButton.addEventListener('click', function () {
+                statusInput.value = statusToSubmit;
+
+                updateForm.submit();
+
+                closeModal();
+            });
+
+            window.onclick = function (event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+        </script>
+    </body>
 </html>

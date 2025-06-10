@@ -14,7 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -60,16 +60,21 @@ public class DisplayOrderDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String id = request.getParameter("orderId");
+        if (id == null || id.isEmpty()) {
+            response.sendRedirect("seller-order-management");
+            return;
+        }
+
         OrderDAO _daoorder = new OrderDAO();
         PetDAO _daopet = new PetDAO();
+
         Order order = _daoorder.getOrderById(id);
-        ArrayList<Integer> list = _daoorder.getOrderContentById(id);
-        ArrayList<Pet> petlist = new ArrayList<>();
-        for (Integer i : list) {
-            petlist.add(_daopet.getPetById(i));
-        }
-        request.setAttribute("petlist", petlist);
+
+        List<Pet> petList = _daopet.getPetForOrderDetail(Integer.parseInt(id));
+        request.setAttribute("petList", petList);
+
         request.setAttribute("order", order);
 
         request.getRequestDispatcher("seller_order_detail.jsp")

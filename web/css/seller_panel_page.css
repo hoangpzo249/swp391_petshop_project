@@ -1064,3 +1064,18 @@ textarea.form-control {
     margin-bottom: 5px;
     font-size: 14px;
 }
+
+
+.action-btn.shipping-btn {
+    background: linear-gradient(45deg, #f26f21, #ff8c42);
+    
+    box-shadow: 0 4px 10px rgba(242, 111, 33, 0.3);
+    
+    transition: all 0.3s ease;
+}
+
+.action-btn.shipping-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(242, 111, 33, 0.4);
+    
+}

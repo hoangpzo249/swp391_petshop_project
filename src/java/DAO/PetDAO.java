@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import Models.Breed;
 import Models.Pet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PetDAO {
 
@@ -34,6 +37,49 @@ public class PetDAO {
                 rs.getInt("breedId"),
                 rs.getInt("createdBy")
         );
+    }
+    
+    public List<Pet> getPetForOrderDetail(int orderId) {
+        DBContext db = new DBContext();
+        List<Pet> list = new ArrayList<>();
+        String sql = "SELECT p.*, b.breedName, oc.priceAtOrder " +
+                     "FROM PetTB p " +
+                     "JOIN OrderContentTB oc ON p.petId = oc.petId " +
+                     "JOIN BreedTB b ON p.breedId = b.breedId " +
+                     "WHERE oc.orderId = ?";
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Pet pet = PetInfo(rs);
+
+                Breed breed = new Breed();
+                breed.setBreedId(rs.getInt("breedId"));
+                breed.setBreedName(rs.getString("breedName"));
+                
+                pet.setBreed(breed);
+                pet.setPriceAtOrder(rs.getDouble("priceAtOrder"));
+
+                list.add(pet);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        
+        return list;
     }
 
     public List<Pet> getSimilarPets(int breedId, int excludedPetId) {

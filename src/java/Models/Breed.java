@@ -18,6 +18,11 @@ public class Breed {
     private double breedStatus;
     private byte[] breedImage;
 
+    public Breed() {
+    }
+    
+    
+
     public Breed(int breedId, String breedName, String breedSpecies, double breedStatus, byte[] breedImage) {
         this.breedId = breedId;
         this.breedName = breedName;

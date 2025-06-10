@@ -110,7 +110,8 @@
                 </div>
             </div>
 
-            <!-- ======================= START OF MAIN CONTENT (EDITED SECTION) ======================= -->
+            <%-- Main Body --%>
+
             <div class="seller-content">
                 <div class="page-header">
                     <h1 class="page-title">
@@ -135,7 +136,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <!-- Filter Form -->
                         <form action="seller-order-management" method="get" id="filterForm">
                             <div class="filter-controls">
                                 <div class="input-group">
@@ -212,11 +212,23 @@
                                                     </a>
 
                                                     <c:if test="${order.orderStatus == 'Pending'}">
-                                                        <a class="action-btn confirm-btn" title="Xác nhận đơn hàng" href="seller-order-management?action=confirm&orderId=${order.orderId}">
+                                                        <%-- Changed to call a JavaScript function instead of a direct href --%>
+                                                        <a class="action-btn confirm-btn" title="Xác nhận đơn hàng" 
+                                                           href="#" 
+                                                           onclick="showConfirmationModal('xác nhận đơn hàng này', 'seller-order-management?action=confirm&orderId=${order.orderId}', 'btn-success')">
                                                             <i class="fas fa-check"></i>
                                                         </a>
-                                                        <a class="action-btn reject-btn" title="Từ chối đơn hàng" href="seller-order-management?action=reject&orderId=${order.orderId}">
+                                                        <a class="action-btn reject-btn" title="Từ chối đơn hàng" 
+                                                           href="#" 
+                                                           onclick="showConfirmationModal('từ chối đơn hàng này', 'seller-order-management?action=reject&orderId=${order.orderId}', 'btn-danger')">
                                                             <i class="fas fa-times"></i>
+                                                        </a>
+                                                    </c:if>
+                                                    <c:if test="${order.orderStatus == 'Confirmed'}">
+                                                        <a class="action-btn shipping-btn" title="Giao hàng"
+                                                           href="#"
+                                                           onclick="showConfirmationModal('giao hàng cho đơn này', 'seller-order-management?action=shipping&orderId=${order.orderId}', 'btn-primary')">
+                                                            <i class="fas fa-truck"></i>
                                                         </a>
                                                     </c:if>
                                                 </div>
@@ -233,14 +245,68 @@
                                 </tbody>
                             </table>
                         </div>
-                        <%-- Add Pagination here if needed --%>
                     </div>
                 </div>
             </div>
-            <!-- ======================== END OF MAIN CONTENT (EDITED SECTION) ======================== -->
         </div>
         <div class="seller-footer">
             © 2025 PETFPT Shop - Hệ thống quản lý
         </div>
+        <div class="modal-backdrop" id="confirmationModal">
+            <div class="modal-dialog">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalTitle">Xác nhận hành động</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalText">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeModal()">Hủy bỏ</button>
+                    <button id="modalConfirmButton" class="btn">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            const modal = document.getElementById('confirmationModal');
+            const modalText = document.getElementById('modalText');
+            const modalConfirmButton = document.getElementById('modalConfirmButton');
+
+            let urlToRedirect = '';
+
+            function showConfirmationModal(actionText, url, buttonClass) {
+                if (event) {
+                    event.preventDefault();
+                }
+
+                modalText.innerText = `Bạn có chắc chắn muốn ${actionText}?`;
+
+                urlToRedirect = url;
+
+                modalConfirmButton.className = 'btn'; // Reset classes
+                modalConfirmButton.classList.add(buttonClass); // Add the specific class
+
+                modal.classList.add('show');
+            }
+
+            function confirmAction() {
+                if (urlToRedirect) {
+                    window.location.href = urlToRedirect;
+                }
+            }
+
+            modalConfirmButton.addEventListener('click', confirmAction);
+
+            function closeModal() {
+                modal.classList.remove('show');
+                urlToRedirect = '';
+            }
+
+            window.onclick = function (event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+        </script>
     </body>
 </html>

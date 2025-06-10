@@ -27,6 +27,8 @@ public class Pet {
     private double petPrice;
     private int breedId;
     private int createdBy;
+    private Breed breed;
+    private double priceAtOrder;
 
     public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender,
             int petAvailability, String petColor, int petVaccination, String petDescription,
@@ -44,6 +46,44 @@ public class Pet {
         this.breedId = breedId;
         this.createdBy = createdBy;
     }
+
+    public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender, int petAvailability, String petColor, int petVaccination, String petDescription, double petPrice, int breedId, int createdBy, Breed breed, double priceAtOrder, String breedName, List<byte[]> images) {
+        this.petId = petId;
+        this.petName = petName;
+        this.petDob = petDob;
+        this.petOrigin = petOrigin;
+        this.petGender = petGender;
+        this.petAvailability = petAvailability;
+        this.petColor = petColor;
+        this.petVaccination = petVaccination;
+        this.petDescription = petDescription;
+        this.petPrice = petPrice;
+        this.breedId = breedId;
+        this.createdBy = createdBy;
+        this.breed = breed;
+        this.priceAtOrder = priceAtOrder;
+        this.breedName = breedName;
+        this.images = images;
+    }
+
+    public double getPriceAtOrder() {
+        return priceAtOrder;
+    }
+
+    public void setPriceAtOrder(double priceAtOrder) {
+        this.priceAtOrder = priceAtOrder;
+    }
+
+
+    public Breed getBreed() {
+        return breed;
+    }
+
+    public void setBreed(Breed breed) {
+        this.breed = breed;
+    }
+    
+    
 
     public int getPetId() {
         return petId;
