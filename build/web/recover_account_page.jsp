@@ -33,16 +33,16 @@
 
                     <div class="input-group">
                         <label for="email">Email của bạn*</label>
-                        <input type="email" id="email" name="email" value="${email}">
+                        <input type="email" name="emailRecover" value="${emailRecover}" required>
                     </div>
 
                     <button type="submit" class="btn">Gửi mã OTP</button>
 
-                    <c:if test="${not empty errMess}">
+                    <c:if test="${not empty errMessRecover}">
                         <div class="errMess">
-                            <p>${errMess}</p>
+                            <p>${errMessRecover}</p>
                         </div>
-                        <c:remove var="errMess" scope="session" />
+                        <c:remove var="errMessRecover" scope="session" />
                     </c:if>
                 </form>
             </c:if>
@@ -51,32 +51,32 @@
                 <form action="recover?action=otp" method="post">
 
                     <div class="otp-header">
-                        <c:if test="${not empty email}">
+                        <c:if test="${not empty emailRecoverSendOtp}">
                             <p>Gửi mã OTP thành công tới:</p>
-                            <p class="email-display">${email}</p>
-                            <c:remove var="email" scope="session" />
+                            <p class="email-display">${emailRecoverSendOtp}</p>
+                            <c:remove var="emailRecoverSendOtp" scope="session" />
                         </c:if>
 
                     </div>
-                    <c:if test="${not empty successMess}">
+                    <c:if test="${not empty successMessResend}">
                         <div class="successMess">
-                            <p>${successMess}</p>
+                            <p>${successMessResend}</p>
                         </div>
-                        <c:remove var="successMess" scope="session" />
+                        <c:remove var="successMessResend" scope="session" />
                     </c:if>
 
                     <div class="input-group">
                         <label for="otp">Mã OTP (6 số) *</label>
-                        <input type="text" id="otp" name="inputotp" maxlength="6" placeholder="Nhập mã OTP 6 số">
+                        <input type="text" name="inputotpRecover" maxlength="6" placeholder="Nhập mã OTP 6 số" required>
                     </div>
 
                     <button type="submit" class="btn">Xác thực</button>
 
-                    <c:if test="${not empty errMess}">
+                    <c:if test="${not empty errMessOtpRecover}">
                         <div class="errMess">
-                            <p>${errMess}</p>
+                            <p>${errMessOtpRecover}</p>
                         </div>
-                        <c:remove var="errMess" scope="session" />
+                        <c:remove var="errMessOtpRecover" scope="session" />
                     </c:if>
 
                     <div class="action-links">
@@ -94,30 +94,20 @@
                     <h2>Cập nhật mật khẩu của bạn</h2><br>
 
                     <div class="input-group">
-                        <label for="password">Mật Khẩu *</label>
-                        <div style="position: relative;">
-                            <input type="password" id="password" name="password" value="${password}">
-                            <i class="fa-solid fa-eye" 
-                               style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
-                               onclick="document.getElementById('password').type = document.getElementById('password').type === 'password' ? 'text' : 'password'; this.classList.toggle('fa-eye'); this.classList.toggle('fa-eye-slash');"></i>
-                        </div>
+                        <label for="email">Mật khẩu mới*</label>
+                        <input type="password" name="passwordRecover" value="${passwordRecover}" required>
                     </div>
 
                     <div class="input-group">
-                        <label for="password">Xác nhận mật khẩu *</label>
-                        <div style="position: relative;">
-                            <input type="password" id="comfirm_password" name="confirm_password" value="${comfirm_password}">
-                            <i class="fa-solid fa-eye" 
-                               style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
-                               onclick="document.getElementById('password').type = document.getElementById('password').type === 'password' ? 'text' : 'password'; this.classList.toggle('fa-eye'); this.classList.toggle('fa-eye-slash');"></i>
-                        </div>
+                        <label for="comfirm_password">Xác nhận mật khẩu *</label>
+                        <input type="password" name="comfirm_passwordRecover" value="${comfirm_passwordRecover}" required>
                     </div>
 
-                    <c:if test="${not empty errMess}">
+                    <c:if test="${not empty errMessPassRecover}">
                         <div class="errMess">
-                            <p>${errMess}</p>
+                            <p>${errMessPassRecover}</p>
                         </div>
-                        <c:remove var="errMess" scope="session" />
+                        <c:remove var="errMessPassRecover" scope="session" />
                     </c:if>
 
                     <button type="submit" class="btn">Xác nhận</button>

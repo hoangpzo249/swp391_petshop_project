@@ -398,8 +398,8 @@ public class Profile_Account_Servlet extends HttpServlet {
 
     public String otp() {
         Random random = new Random();
-        int otp = 100000 + random.nextInt(1000000);
-        return String.valueOf(otp);
+        int otp = random.nextInt(1000000);
+        return String.format("%06d", otp);
     }
 
     /**

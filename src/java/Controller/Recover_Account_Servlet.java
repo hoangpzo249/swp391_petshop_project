@@ -67,10 +67,10 @@ public class Recover_Account_Servlet extends HttpServlet {
             request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
 
         } else if ("resend-otp".equals(action)) {
-            String email = (String) session.getAttribute("email");
+            String emailRecover = (String) session.getAttribute("emailRecover");
 
-            if (email != null || !email.trim().isEmpty()) {
-                String otp = otp();
+            if (emailRecover != null || !emailRecover.trim().isEmpty()) {
+                String otpResendRecover = otp();
                 long curTime = System.currentTimeMillis();
 
                 long curTimeSendOtp = (long) session.getAttribute("curTime");
@@ -78,25 +78,26 @@ public class Recover_Account_Servlet extends HttpServlet {
                 long resendOtp = 60 * 1000;
 
                 if (nowTime - curTimeSendOtp < resendOtp) {
-                    request.setAttribute("errMess", "Bạn cần chờ 60s để gửi lại OTP");
+                    request.setAttribute("errMessOtpRecover", "Bạn cần chờ 60s để gửi lại OTP");
                     request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
                     return;
                 }
 
                 try {
-                    EmailSender.sendOTPRecover(email, otp);
+                    EmailSender.sendOTPRecover(emailRecover, otpResendRecover);
 
-                    session.setAttribute("otp", otp);
+                    session.setAttribute("otpRecover", otpResendRecover);
                     session.setAttribute("curTime", curTime);
-                    request.setAttribute("successMess", "Gửi lại OTP thành công");
+                    request.setAttribute("successMessResend", "Gửi lại OTP thành công");
                     request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
+                    
                 } catch (Exception e) {
-                    request.setAttribute("errMess", "Bạn cần thực hiện lại");
+                    request.setAttribute("errMessOtpRecover", "Bạn cần thực hiện lại");
                     request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
                 }
             } else {
                 session.invalidate();
-                request.setAttribute("errMess", "Hết thời gian chờ, bạn cần thực hiện lại.");
+                request.setAttribute("errMessOtpRecover", "Hết thời gian chờ, bạn cần thực hiện lại.");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
             }
 
@@ -121,19 +122,14 @@ public class Recover_Account_Servlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         if (action == null || action.trim().isEmpty()) {
-            String email = request.getParameter("email");
-            if (email == null || email.trim().isEmpty()) {
-                request.setAttribute("errMess", "Bạn cần điền đủ thông tin");
-                request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
-                return;
-            }
+            String emailRecover = request.getParameter("emailRecover");
 
             AccountDAO accDao = new AccountDAO();
-            boolean success = accDao.isEmailExist(email);
+            boolean success = accDao.isEmailExist(emailRecover);
 
             if (!success) {
-                request.setAttribute("email", email);
-                request.setAttribute("errMess", "Email của bạn không tồn tại trong hệ thống");
+                request.setAttribute("emailRecoverSendOtp", emailRecover);
+                request.setAttribute("errMessRecover", "Email của bạn không tồn tại trong hệ thống");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
                 return;
             }
@@ -142,101 +138,88 @@ public class Recover_Account_Servlet extends HttpServlet {
             long curTime = System.currentTimeMillis();
 
             try {
-                EmailSender.sendOTPRecover(email, genOtp);
+                EmailSender.sendOTPRecover(emailRecover, genOtp);
 
-                session.setAttribute("email", email);
-                session.setAttribute("otp", genOtp);
+                session.setAttribute("emailRecover", emailRecover);
+                session.setAttribute("otpRecover", genOtp);
                 session.setAttribute("curTime", curTime);
 
                 session.setAttribute("sendOtpSuccess", "true");
 
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
             } catch (Exception e) {
-                request.setAttribute("email", email);
-                request.setAttribute("errMess", "Lỗi");
+                request.setAttribute("errMessRecover", "Lỗi");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
             }
 
         } else if ("otp".equals(action)) {
 
-            String inputotp = request.getParameter("inputotp");
+            String inputotpRecover = request.getParameter("inputotpRecover");
 
-            if (inputotp == null || inputotp.trim().isEmpty()) {
-                request.setAttribute("errMess", "Bạn cần điền đủ thông tin");
-                request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
-                return;
-            }
-
-            String otp = (String) session.getAttribute("otp");
+            String otpRecover = (String) session.getAttribute("otpRecover");
             long curTime = (long) session.getAttribute("curTime");
             long nowTime = System.currentTimeMillis();
             long time = 3 * 60 * 1000;
 
             if (nowTime - curTime > time) {
-                request.setAttribute("errMess", "OTP hết hạn, bạn cần thực hiện lại.");
+                request.setAttribute("errMessOtpRecover", "OTP hết hạn, bạn cần thực hiện lại.");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
                 return;
             }
 
-            if (otp == null || otp.trim().isEmpty()) {
+            if (otpRecover == null || otpRecover.trim().isEmpty()) {
                 session.invalidate();
-                request.setAttribute("errMess", "Hết thời gian chờ, bạn cần thực hiện lại.");
+                request.setAttribute("errMessOtpRecover", "Hết thời gian chờ, bạn cần thực hiện lại.");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
             }
 
-            if (inputotp.equals(otp)) {
+            if (inputotpRecover.equals(otpRecover)) {
                 session.setAttribute("verifyOtpSuccess", "true");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
             } else {
-                request.setAttribute("errMess", "OTP không hợp lệ");
+                request.setAttribute("errMessOtpRecover", "OTP không hợp lệ");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
             }
             
         } else if ("recover-pass".equals(action)) {
-            String password = request.getParameter("password");
-            String comfirm_password = request.getParameter("comfirm_password");
-            String email = (String) session.getAttribute("email");
+            String passwordRecover = request.getParameter("password");
+            String comfirm_passwordRecover = request.getParameter("comfirm_password");
+            String emailRecoverSuccess = (String) session.getAttribute("emailRecover");
 
-            if (password == null || password.trim().isEmpty()
-                    || comfirm_password == null || comfirm_password.trim().isEmpty()) {
-                request.setAttribute("errMess", "Bạn cần điền đủ thông tin");
-                request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
-                return;
-            }
-
-            boolean checkPass = isValidPassword(password);
+            boolean checkPass = isValidPassword(passwordRecover);
             if (!checkPass) {
-                request.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
-
+                request.setAttribute("errMessPassRecover", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
                 return;
             }
 
-            if (!password.equals(comfirm_password)) {
-                request.setAttribute("errMess", "Mật khẩu không khớp");
+            if (!passwordRecover.equals(comfirm_passwordRecover)) {
+                request.setAttribute("errMessPassRecover", "Mật khẩu không khớp");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
                 return;
             }
 
-            if (email == null || email.trim().isEmpty()) {
+            if (emailRecoverSuccess == null || emailRecoverSuccess.trim().isEmpty()) {
                 session.invalidate();
-                request.setAttribute("errMess", "Hết thời gian chờ, bạn cần thực hiện lại.");
+                request.setAttribute("errMessPassRecover", "Hết thời gian chờ, bạn cần thực hiện lại.");
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
             }
 
             try {
-                String hashPass = BCrypt.hashpw(password, BCrypt.gensalt());
+                String hashPass = BCrypt.hashpw(passwordRecover, BCrypt.gensalt());
 
                 AccountDAO accDao = new AccountDAO();
-                boolean success = accDao.updatePass(email, hashPass);
+                boolean success = accDao.updatePass(emailRecoverSuccess, hashPass);
 
                 if (success) {
                     session.invalidate();
+                    
                     HttpSession sessionMess = request.getSession();
                     sessionMess.setAttribute("successMessRecover", "Cập nhật mật khẩu thành công");
                     response.sendRedirect("login");
+                    
                 } else {
-                    request.setAttribute("errMess", "Lỗi cập nhật mật khẩu");
+                    request.setAttribute("errMessPassRecover", "Lỗi cập nhật mật khẩu");
                     request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
                 }
             } catch (Exception e) {
@@ -272,8 +255,8 @@ public class Recover_Account_Servlet extends HttpServlet {
 
     public String otp() {
         Random random = new Random();
-        int otp = 100000 + random.nextInt(1000000);
-        return String.valueOf(otp);
+        int otp = random.nextInt(1000000);
+        return String.format("%06d", otp);
     }
 
     /**

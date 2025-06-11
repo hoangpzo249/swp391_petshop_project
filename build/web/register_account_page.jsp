@@ -30,44 +30,38 @@
                 <form action="register" method="post">
                     <div class="input-group">
                         <label>Tên *</label>
-                        <input type="text" id="firstname" name="firstname" value="${firstname}" >
+                        <input type="text" id="fNameRegister" name="fNameRegister" value="${fNameRegister}" required>
                     </div>
 
                     <div class="input-group">
                         <label for="lastname">Họ *</label>
-                        <input type="text" id="lastname" name="lastname" value="${lastname}" >
+                        <input type="text" id="lNameRegister" name="lNameRegister" value="${lNameRegister}" required>
                     </div>
 
                     <div class="input-group">
                         <label for="txtlogin">Địa chỉ Email *</label>
-                        <input type="email" id="txtemail" name="email" value="${email}" >
+                        <input type="email" id="emailRegister" name="emailRegister" value="${emailRegister}" required>
                     </div>
 
                     <div class="input-group">
                         <label for="password">Mật Khẩu *</label>
                         <div style="position: relative;">
-                            <input type="password" id="password" name="password" value="${password}">
-                            <i class="fa-solid fa-eye" 
-                               style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
-                               onclick="document.getElementById('password').type = document.getElementById('password').type === 'password' ? 'text' : 'password'; this.classList.toggle('fa-eye'); this.classList.toggle('fa-eye-slash');"></i>
+                            <input type="password" id="passRegister" name="passRegister" value="${passRegister}" required>
                         </div>
                     </div>
                             
                     <div class="input-group">
                         <label for="password">Xác nhận mật khẩu *</label>
                         <div style="position: relative;">
-                            <input type="password" id="confirm_password" name="confirm_password" value="${confirm_password}">
-                            <i class="fa-solid fa-eye" 
-                               style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
-                               onclick="document.getElementById('password').type = document.getElementById('password').type === 'password' ? 'text' : 'password'; this.classList.toggle('fa-eye'); this.classList.toggle('fa-eye-slash');"></i>
+                            <input type="password" id="confirm_passwordRegister" name="confirm_passwordRegister" value="${confirm_passwordRegister}" required>
                         </div>
                     </div>
 
-                    <c:if test="${not empty errMess}">
+                    <c:if test="${not empty errMessRegister}">
                         <div class="errMess">
-                            <p>${errMess}</p>
+                            <p>${errMessRegister}</p>
                         </div>
-                        <c:remove var="errMess" scope="session" />
+                        <c:remove var="errMessRegister" scope="session" />
                     </c:if>
 
                     <button type="submit" class="btn">Tạo tài khoản</button>
@@ -84,30 +78,30 @@
                 <form action="register?action=otp" method="post">
 
                     <div class="otp-header1">
-                        <c:if test="${not empty email}">
+                        <c:if test="${not empty emailRegister}">
                             <p>Gửi mã OTP thành công tới:</p>
-                            <p class="email-display1">${email}</p>
+                            <p class="email-display1">${emailRegister}</p>
                         </c:if>
 
                     </div>
-                    <c:if test="${not empty successMess}">
+                    <c:if test="${not empty successMessRegis}">
                         <div class="successMess">
-                            <p>${successMess}</p>
+                            <p>${successMessRegis}</p>
                         </div>
                     </c:if>
 
                     <div class="input-group1">
                         <label for="otp">Mã OTP (6 số) *</label>
-                        <input type="text" id="otp" name="inputotp" maxlength="6" placeholder="Nhập mã OTP 6 số">
+                        <input type="text" id="inputotpRegis" name="inputotpRegis" maxlength="6" placeholder="Nhập mã OTP 6 số">
                     </div>
 
                     <button type="submit" class="btnotp">Xác thực</button>
 
-                    <c:if test="${not empty errMess}">
+                    <c:if test="${not empty errMessRegisOtp}">
                         <div class="errMess">
-                            <p>${errMess}</p>
+                            <p>${errMessRegisOtp}</p>
                         </div>
-                        <c:remove var="errMess" scope="session" />
+                        <c:remove var="errMessRegisOtp" scope="session" />
                     </c:if>
 
                     <div class="action-links1">

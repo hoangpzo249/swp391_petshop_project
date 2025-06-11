@@ -129,8 +129,11 @@ public class Admin_Panel_Servlet extends HttpServlet {
             List<Account> accList;
 
             if (key != null && !key.trim().isEmpty()) {
+
                 accList = accDao.searchAcc(key.trim());
+
                 request.setAttribute("key", key);
+
             } else {
                 accList = accDao.getAllAccount();
             }
@@ -187,9 +190,9 @@ public class Admin_Panel_Servlet extends HttpServlet {
             if (password == null || password.trim().isEmpty()
                     || confirm_Password == null || confirm_Password.trim().isEmpty()
                     || adminPass == null || adminPass.trim().isEmpty()) {
-                
+
                 request.setAttribute("resetpass", acc);
-                
+
                 session.setAttribute("errMess", "Bạn cần điền đủ thông tin");
                 String url = "admin-panel?action=account&type=" + acc.getAccRole() + "&act=reset-pass&id=" + acc.getAccId();
                 response.sendRedirect(url);
@@ -374,7 +377,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 }
                 String email = acc.getAccEmail();
                 String fullName = acc.getAccFname() + acc.getAccLname();
-                
+
                 boolean banAcc = accDao.banAcc(accId);
                 if (banAcc) {
                     acc.setAccStatus("Inactive");
@@ -384,9 +387,9 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     log.setAccId(accId);
                     log.setDeactivatedBy(accAdmin.getAccId());
                     log.setDeactivationReason(banReason);
-                    
+
                     Account_LogDAO logDao = new Account_LogDAO();
-                    
+
                     try {
                         logDao.banAcc(log);
                         if ("on".equals(sendEmail)) {
@@ -471,84 +474,166 @@ public class Admin_Panel_Servlet extends HttpServlet {
             }
         } else if ("create-account".equals(action) && type != null) {
             if ("customer".equals(type)) {
-                String username = request.getParameter("username");
-                String email = request.getParameter("email");
-                String pass = request.getParameter("password");
-                String comfirmPass = request.getParameter("confirmPassword");
-                String fName = request.getParameter("firstName");
-                String lName = request.getParameter("lastName");
-                String phone = request.getParameter("phone");
-                String dob = request.getParameter("dob");
+                String usernameCus = request.getParameter("usernameCus");
+                String emailCus = request.getParameter("emailCus");
+                String passCus = request.getParameter("passCus");
+                String comfirmPassCus = request.getParameter("comfirmPassCus");
+                String fNameCus = request.getParameter("fNameCus");
+                String lNameCus = request.getParameter("lNameCus");
+                String phoneCus = request.getParameter("phoneCus");
+                String dobCus = request.getParameter("dobCus");
 
-                String address = request.getParameter("address");
+                String addressCus = request.getParameter("addressCus");
+
+                boolean checkUsernameCus = accDao.isUsernameExist(usernameCus);
+                if (checkUsernameCus) {
+                    session.setAttribute("errMess", "Tên tài khoản đã tồn tại.");
+
+                    session.setAttribute("usernameCus", usernameCus);
+                    session.setAttribute("emailCus", emailCus);
+                    session.setAttribute("passCus", passCus);
+                    session.setAttribute("comfirmPassCus", comfirmPassCus);
+                    session.setAttribute("fNameCus", fNameCus);
+                    session.setAttribute("lNameCus", lNameCus);
+                    session.setAttribute("phoneCus", phoneCus);
+                    session.setAttribute("dobCus", dobCus);
+                    session.setAttribute("addressCus", addressCus);
+
+                    String url = "admin-panel?action=create-account&type=customer";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                boolean checkEmailCus = accDao.isEmailExist(emailCus);
+                if (checkEmailCus) {
+                    session.setAttribute("errMess", "Email đã tồn tại, bạn cần nhập email khác.");
+
+                    session.setAttribute("usernameCus", usernameCus);
+                    session.setAttribute("emailCus", emailCus);
+                    session.setAttribute("passCus", passCus);
+                    session.setAttribute("comfirmPassCus", comfirmPassCus);
+                    session.setAttribute("fNameCus", fNameCus);
+                    session.setAttribute("lNameCus", lNameCus);
+                    session.setAttribute("phoneCus", phoneCus);
+                    session.setAttribute("dobCus", dobCus);
+                    session.setAttribute("addressCus", addressCus);
+
+                    String url = "admin-panel?action=create-account&type=customer";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                boolean checkPassCus = isValidPassword(passCus);
+                if (!checkPassCus) {
+                    session.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
+
+                    session.setAttribute("usernameCus", usernameCus);
+                    session.setAttribute("emailCus", emailCus);
+                    session.setAttribute("passCus", passCus);
+                    session.setAttribute("comfirmPassCus", comfirmPassCus);
+                    session.setAttribute("fNameCus", fNameCus);
+                    session.setAttribute("lNameCus", lNameCus);
+                    session.setAttribute("phoneCus", phoneCus);
+                    session.setAttribute("dobCus", dobCus);
+                    session.setAttribute("addressCus", addressCus);
+
+                    String url = "admin-panel?action=create-account&type=customer";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                if (!passCus.equals(comfirmPassCus)) {
+                    session.setAttribute("errMess", "Mật khẩu không khớp!");
+
+                    session.setAttribute("usernameCus", usernameCus);
+                    session.setAttribute("emailCus", emailCus);
+                    session.setAttribute("passCus", passCus);
+                    session.setAttribute("comfirmPassCus", comfirmPassCus);
+                    session.setAttribute("fNameCus", fNameCus);
+                    session.setAttribute("lNameCus", lNameCus);
+                    session.setAttribute("phoneCus", phoneCus);
+                    session.setAttribute("dobCus", dobCus);
+                    session.setAttribute("addressCus", addressCus);
+
+                    String url = "admin-panel?action=create-account&type=customer";
+                    response.sendRedirect(url);
+                    return;
+                }
 
                 String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
-                if (!fName.matches(checkName)) {
+                if (!fNameCus.matches(checkName) || !lNameCus.matches(checkName)) {
 
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
+                    session.setAttribute("usernameCus", usernameCus);
+                    session.setAttribute("emailCus", emailCus);
+                    session.setAttribute("passCus", passCus);
+                    session.setAttribute("comfirmPassCus", comfirmPassCus);
+                    session.setAttribute("fNameCus", fNameCus);
+                    session.setAttribute("lNameCus", lNameCus);
+                    session.setAttribute("phoneCus", phoneCus);
+                    session.setAttribute("dobCus", dobCus);
+                    session.setAttribute("addressCus", addressCus);
 
-                    session.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt và số");
-                    String url = "admin-panel?action=create-account&type=customer";
-                    response.sendRedirect(url);
-                    return;
-                }
-                if (!lName.matches(checkName)) {
-                    session.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
+                    session.setAttribute("errMess", "Họ và Tên của bạn không được chứa kí tự đặc biệt và số");
                     String url = "admin-panel?action=create-account&type=customer";
                     response.sendRedirect(url);
                     return;
                 }
 
-                Date date = null;
+                boolean checkPhoneCus = isValidPhone(phoneCus);
+                if (!checkPhoneCus) {
+                    session.setAttribute("errMess", "Số điện thoại không hợp lệ");
+
+                    session.setAttribute("usernameCus", usernameCus);
+                    session.setAttribute("emailCus", emailCus);
+                    session.setAttribute("passCus", passCus);
+                    session.setAttribute("comfirmPassCus", comfirmPassCus);
+                    session.setAttribute("fNameCus", fNameCus);
+                    session.setAttribute("lNameCus", lNameCus);
+                    session.setAttribute("phoneCus", phoneCus);
+                    session.setAttribute("dobCus", dobCus);
+                    session.setAttribute("addressCus", addressCus);
+
+                    String url = "admin-panel?action=create-account&type=customer";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                Date dateCus = null;
                 try {
-                    if (dob != null && !dob.trim().isEmpty()) {
-                        LocalDate dateCheck = LocalDate.parse(dob);
+                    if (dobCus != null && !dobCus.trim().isEmpty()) {
+                        LocalDate dateCheck = LocalDate.parse(dobCus);
                         LocalDate now = LocalDate.now();
 
-                        if (dateCheck.isAfter(now) || Period.between(dateCheck, now).getYears() < 10) {
+                        if (dateCheck.isAfter(now) || Period.between(dateCheck, now).getYears() < 10 || Period.between(dateCheck, now).getYears() > 90) {
                             session.setAttribute("errMess", "Ngày sinh không hợp lệ.");
-                            session.setAttribute("username", username);
-                            session.setAttribute("email", email);
-                            session.setAttribute("pass", pass);
-                            session.setAttribute("comfirmPass", comfirmPass);
-                            session.setAttribute("fName", fName);
-                            session.setAttribute("lName", lName);
-                            session.setAttribute("phone", phone);
-                            session.setAttribute("dob", dob);
+
+                            session.setAttribute("usernameCus", usernameCus);
+                            session.setAttribute("emailCus", emailCus);
+                            session.setAttribute("passCus", passCus);
+                            session.setAttribute("comfirmPassCus", comfirmPassCus);
+                            session.setAttribute("fNameCus", fNameCus);
+                            session.setAttribute("lNameCus", lNameCus);
+                            session.setAttribute("phoneCus", phoneCus);
+                            session.setAttribute("dobCus", dobCus);
+                            session.setAttribute("addressCus", addressCus);
 
                             String url = "admin-panel?action=create-account&type=customer";
                             response.sendRedirect(url);
                             return;
                         }
 
-                        date = java.sql.Date.valueOf(dateCheck);
+                        dateCus = java.sql.Date.valueOf(dateCheck);
                     } else {
                         session.setAttribute("errMess", "Vui lòng nhập ngày sinh.");
-                        session.setAttribute("username", username);
-                        session.setAttribute("email", email);
-                        session.setAttribute("pass", pass);
-                        session.setAttribute("comfirmPass", comfirmPass);
-                        session.setAttribute("fName", fName);
-                        session.setAttribute("lName", lName);
-                        session.setAttribute("phone", phone);
-                        session.setAttribute("dob", dob);
+                        session.setAttribute("usernameCus", usernameCus);
+                        session.setAttribute("emailCus", emailCus);
+                        session.setAttribute("passCus", passCus);
+                        session.setAttribute("comfirmPassCus", comfirmPassCus);
+                        session.setAttribute("fNameCus", fNameCus);
+                        session.setAttribute("lNameCus", lNameCus);
+                        session.setAttribute("phoneCus", phoneCus);
+                        session.setAttribute("dobCus", dobCus);
+                        session.setAttribute("addressCus", addressCus);
 
                         String url = "admin-panel?action=create-account&type=customer";
                         response.sendRedirect(url);
@@ -556,248 +641,232 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     }
                 } catch (Exception e) {
                     session.setAttribute("errMess", "Định dạng ngày sinh không hợp lệ.");
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
+
+                    session.setAttribute("usernameCus", usernameCus);
+                    session.setAttribute("emailCus", emailCus);
+                    session.setAttribute("passCus", passCus);
+                    session.setAttribute("comfirmPassCus", comfirmPassCus);
+                    session.setAttribute("fNameCus", fNameCus);
+                    session.setAttribute("lNameCus", lNameCus);
+                    session.setAttribute("phoneCus", phoneCus);
+                    session.setAttribute("dobCus", dobCus);
+                    session.setAttribute("addressCus", addressCus);
 
                     String url = "admin-panel?action=create-account&type=customer";
                     response.sendRedirect(url);
                     return;
                 }
 
-                boolean checkEmail = accDao.isEmailExist(email);
-                if (checkEmail) {
-                    session.setAttribute("errMess", "Email đã tồn tại, bạn cần nhập email khác.");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=customer";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                if (!pass.equals(comfirmPass)) {
-                    session.setAttribute("errMess", "Mật khẩu không khớp!");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=customer";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                boolean checkPass = isValidPassword(pass);
-                if (!checkPass) {
-                    session.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=customer";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                if (address == null || address.trim().isEmpty()) {
-                    session.setAttribute("errMess", "Địa chỉ không được để trống");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=customer";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                boolean checkUsername = accDao.isUsernameExist(username);
-                if (checkUsername) {
-                    session.setAttribute("errMess", "Tên tài khoản đã tồn tại.");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=customer";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                boolean checkPhone = isValidPhone(phone);
-                if (!checkPhone) {
-                    session.setAttribute("errMess", "Số điện thoại không hợp lệ");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=customer";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                String hashPass = BCrypt.hashpw(pass, BCrypt.gensalt());
+                String hashPassCus = BCrypt.hashpw(passCus, BCrypt.gensalt());
 
                 Account acc = new Account();
-                acc.setAccUsername(username);
-                acc.setAccEmail(email);
-                acc.setAccPassword(hashPass);
-                acc.setAccFname(fName);
-                acc.setAccLname(lName);
-                acc.setAccPhoneNumber(phone);
-                acc.setAccDob(date);
-                acc.setAccAddress(address);
+                acc.setAccUsername(usernameCus);
+                acc.setAccEmail(emailCus);
+                acc.setAccPassword(hashPassCus);
+                acc.setAccFname(fNameCus);
+                acc.setAccLname(lNameCus);
+                acc.setAccPhoneNumber(phoneCus);
+                acc.setAccDob(dateCus);
+                acc.setAccAddress(addressCus);
+
                 accDao.registerAccCusByAdmin(acc);
                 try {
                     session.setAttribute("successMess", "Tạo tài khoản cho khách hàng thành công");
 
-                    session.removeAttribute("username");
-                    session.removeAttribute("email");
-                    session.removeAttribute("pass");
-                    session.removeAttribute("comfirmPass");
-                    session.removeAttribute("fName");
-                    session.removeAttribute("lName");
-                    session.removeAttribute("phone");
-                    session.removeAttribute("dob");
+                    session.removeAttribute("usernameCus");
+                    session.removeAttribute("emailCus");
+                    session.removeAttribute("passCus");
+                    session.removeAttribute("comfirmPassCus");
+                    session.removeAttribute("fNameCus");
+                    session.removeAttribute("lNameCus");
+                    session.removeAttribute("phoneCus");
+                    session.removeAttribute("dobCus");
+                    session.removeAttribute("addressCus");
+
+                    session.removeAttribute("errMess");
 
                 } catch (Exception e) {
                     session.setAttribute("errMess", "Tạo tài khoản cho khách hàng không thành công");
 
-                    session.removeAttribute("username");
-                    session.removeAttribute("email");
-                    session.removeAttribute("pass");
-                    session.removeAttribute("comfirmPass");
-                    session.removeAttribute("fName");
-                    session.removeAttribute("lName");
-                    session.removeAttribute("phone");
-                    session.removeAttribute("dob");
+                    session.removeAttribute("usernameCus");
+                    session.removeAttribute("emailCus");
+                    session.removeAttribute("passCus");
+                    session.removeAttribute("comfirmPassCus");
+                    session.removeAttribute("fNameCus");
+                    session.removeAttribute("lNameCus");
+                    session.removeAttribute("phoneCus");
+                    session.removeAttribute("dobCus");
+                    session.removeAttribute("addressCus");
 
                 }
                 String url = "admin-panel?action=create-account&type=customer";
                 response.sendRedirect(url);
 
             } else if ("staff".equals(type)) {
-                String username = request.getParameter("username");
-                String email = request.getParameter("email");
-                String pass = request.getParameter("password");
-                String comfirmPass = request.getParameter("confirmPassword");
-                String role = request.getParameter("role");
-                String status = request.getParameter("status");
+                String usernameStaff = request.getParameter("usernameStaff");
+                String emailStaff = request.getParameter("emailStaff");
+                String passStaff = request.getParameter("passStaff");
+                String comfirmPassStaff = request.getParameter("comfirmPassStaff");
+                String roleStaff = request.getParameter("roleStaff");
+                String statusStaff = request.getParameter("statusStaff");
 
-                String fName = request.getParameter("firstName");
-                String lName = request.getParameter("lastName");
-                String phone = request.getParameter("phone");
-                String dob = request.getParameter("dob");
+                String fNameStaff = request.getParameter("fNameStaff");
+                String lNameStaff = request.getParameter("lNameStaff");
+                String phoneStaff = request.getParameter("phoneStaff");
+                String dobStaff = request.getParameter("dobStaff");
 
-                String address = request.getParameter("address");
+                String addressStaff = request.getParameter("addressStaff");
+
+                boolean checkUsernameStaff = accDao.isUsernameExist(usernameStaff);
+                if (checkUsernameStaff) {
+                    session.setAttribute("errMess", "Tên tài khoản đã tồn tại.");
+
+                    session.setAttribute("usernameStaff", usernameStaff);
+                    session.setAttribute("emailStaff", emailStaff);
+                    session.setAttribute("passStaff", passStaff);
+                    session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                    session.setAttribute("fNameStaff", fNameStaff);
+                    session.setAttribute("lNameStaff", lNameStaff);
+                    session.setAttribute("phoneStaff", phoneStaff);
+                    session.setAttribute("dobStaff", dobStaff);
+                    session.setAttribute("addressStaff", addressStaff);
+
+                    String url = "admin-panel?action=create-account&type=staff";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                boolean checkEmailStaff = accDao.isEmailExist(emailStaff);
+                if (checkEmailStaff) {
+                    session.setAttribute("errMess", "Email đã tồn tại, bạn cần nhập email khác.");
+
+                    session.setAttribute("usernameStaff", usernameStaff);
+                    session.setAttribute("emailStaff", emailStaff);
+                    session.setAttribute("passStaff", passStaff);
+                    session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                    session.setAttribute("fNameStaff", fNameStaff);
+                    session.setAttribute("lNameStaff", lNameStaff);
+                    session.setAttribute("phoneStaff", phoneStaff);
+                    session.setAttribute("dobStaff", dobStaff);
+                    session.setAttribute("addressStaff", addressStaff);
+
+                    String url = "admin-panel?action=create-account&type=staff";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                boolean checkPassStaff = isValidPassword(passStaff);
+                if (!checkPassStaff) {
+                    session.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
+
+                    session.setAttribute("usernameStaff", usernameStaff);
+                    session.setAttribute("emailStaff", emailStaff);
+                    session.setAttribute("passStaff", passStaff);
+                    session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                    session.setAttribute("fNameStaff", fNameStaff);
+                    session.setAttribute("lNameStaff", lNameStaff);
+                    session.setAttribute("phoneStaff", phoneStaff);
+                    session.setAttribute("dobStaff", dobStaff);
+                    session.setAttribute("addressStaff", addressStaff);
+
+                    String url = "admin-panel?action=create-account&type=staff";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                if (!passStaff.equals(comfirmPassStaff)) {
+                    session.setAttribute("errMess", "Mật khẩu không khớp!");
+
+                    session.setAttribute("usernameStaff", usernameStaff);
+                    session.setAttribute("emailStaff", emailStaff);
+                    session.setAttribute("passStaff", passStaff);
+                    session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                    session.setAttribute("fNameStaff", fNameStaff);
+                    session.setAttribute("lNameStaff", lNameStaff);
+                    session.setAttribute("phoneStaff", phoneStaff);
+                    session.setAttribute("dobStaff", dobStaff);
+                    session.setAttribute("addressStaff", addressStaff);
+
+                    String url = "admin-panel?action=create-account&type=staff";
+                    response.sendRedirect(url);
+                    return;
+                }
 
                 String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
-                if (!fName.matches(checkName)) {
-                    session.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt và số");
+                if (!fNameStaff.matches(checkName) || !lNameStaff.matches(checkName)) {
 
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=staff";
-                    response.sendRedirect(url);
-                    return;
-                }
-                if (!lName.matches(checkName)) {
-                    session.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
+                    session.setAttribute("errMess", "Họ và Tên của bạn không được chứa kí tự đặc biệt và số");
+                    session.setAttribute("usernameStaff", usernameStaff);
+                    session.setAttribute("emailStaff", emailStaff);
+                    session.setAttribute("passStaff", passStaff);
+                    session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                    session.setAttribute("fNameStaff", fNameStaff);
+                    session.setAttribute("lNameStaff", lNameStaff);
+                    session.setAttribute("phoneStaff", phoneStaff);
+                    session.setAttribute("dobStaff", dobStaff);
+                    session.setAttribute("addressStaff", addressStaff);
 
                     String url = "admin-panel?action=create-account&type=staff";
                     response.sendRedirect(url);
                     return;
                 }
 
-                Date date = null;
+                boolean checkPhoneStaff = isValidPhone(phoneStaff);
+                if (!checkPhoneStaff) {
+                    session.setAttribute("errMess", "Số điện thoại không hợp lệ");
+
+                    session.setAttribute("usernameStaff", usernameStaff);
+                    session.setAttribute("emailStaff", emailStaff);
+                    session.setAttribute("passStaff", passStaff);
+                    session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                    session.setAttribute("fNameStaff", fNameStaff);
+                    session.setAttribute("lNameStaff", lNameStaff);
+                    session.setAttribute("phoneStaff", phoneStaff);
+                    session.setAttribute("dobStaff", dobStaff);
+                    session.setAttribute("addressStaff", addressStaff);
+
+                    String url = "admin-panel?action=create-account&type=staff";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                Date dateStaff = null;
                 try {
-                    if (dob != null && !dob.trim().isEmpty()) {
-                        LocalDate dateCheck = LocalDate.parse(dob);
+                    if (dobStaff != null && !dobStaff.trim().isEmpty()) {
+                        LocalDate dateCheck = LocalDate.parse(dobStaff);
                         LocalDate now = LocalDate.now();
 
-                        if (dateCheck.isAfter(now) || Period.between(dateCheck, now).getYears() < 20) {
+                        if (dateCheck.isAfter(now) || Period.between(dateCheck, now).getYears() < 20 || Period.between(dateCheck, now).getYears() > 65) {
                             session.setAttribute("errMess", "Ngày sinh không hợp lệ");
-                            session.setAttribute("username", username);
-                            session.setAttribute("email", email);
-                            session.setAttribute("pass", pass);
-                            session.setAttribute("comfirmPass", comfirmPass);
-                            session.setAttribute("fName", fName);
-                            session.setAttribute("lName", lName);
-                            session.setAttribute("phone", phone);
-                            session.setAttribute("dob", dob);
+
+                            session.setAttribute("usernameStaff", usernameStaff);
+                            session.setAttribute("emailStaff", emailStaff);
+                            session.setAttribute("passStaff", passStaff);
+                            session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                            session.setAttribute("fNameStaff", fNameStaff);
+                            session.setAttribute("lNameStaff", lNameStaff);
+                            session.setAttribute("phoneStaff", phoneStaff);
+                            session.setAttribute("dobStaff", dobStaff);
+                            session.setAttribute("addressStaff", addressStaff);
 
                             String url = "admin-panel?action=create-account&type=staff";
                             response.sendRedirect(url);
                             return;
                         }
 
-                        date = java.sql.Date.valueOf(dateCheck);
+                        dateStaff = java.sql.Date.valueOf(dateCheck);
                     } else {
                         session.setAttribute("errMess", "Vui lòng nhập ngày sinh.");
-                        session.setAttribute("username", username);
-                        session.setAttribute("email", email);
-                        session.setAttribute("pass", pass);
-                        session.setAttribute("comfirmPass", comfirmPass);
-                        session.setAttribute("fName", fName);
-                        session.setAttribute("lName", lName);
-                        session.setAttribute("phone", phone);
-                        session.setAttribute("dob", dob);
+
+                        session.setAttribute("usernameStaff", usernameStaff);
+                        session.setAttribute("emailStaff", emailStaff);
+                        session.setAttribute("passStaff", passStaff);
+                        session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                        session.setAttribute("fNameStaff", fNameStaff);
+                        session.setAttribute("lNameStaff", lNameStaff);
+                        session.setAttribute("phoneStaff", phoneStaff);
+                        session.setAttribute("dobStaff", dobStaff);
+                        session.setAttribute("addressStaff", addressStaff);
 
                         String url = "admin-panel?action=create-account&type=staff";
                         response.sendRedirect(url);
@@ -805,180 +874,62 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     }
                 } catch (Exception e) {
                     session.setAttribute("errMess", "Định dạng ngày sinh không hợp lệ.");
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
+
+                    session.setAttribute("usernameStaff", usernameStaff);
+                    session.setAttribute("emailStaff", emailStaff);
+                    session.setAttribute("passStaff", passStaff);
+                    session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                    session.setAttribute("fNameStaff", fNameStaff);
+                    session.setAttribute("lNameStaff", lNameStaff);
+                    session.setAttribute("phoneStaff", phoneStaff);
+                    session.setAttribute("dobStaff", dobStaff);
+                    session.setAttribute("addressStaff", addressStaff);
 
                     String url = "admin-panel?action=create-account&type=staff";
                     response.sendRedirect(url);
                     return;
                 }
 
-                boolean checkEmail = accDao.isEmailExist(email);
-                if (checkEmail) {
-                    session.setAttribute("errMess", "Email đã tồn tại, bạn cần nhập email khác.");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=staff";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                if (role == null || role.trim().isEmpty() || status == null || status.trim().isEmpty()) {
-                    session.setAttribute("errMess", "Bạn cần chọn đầy đủ thông tin");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=staff";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                if (!pass.equals(comfirmPass)) {
-                    session.setAttribute("errMess", "Mật khẩu không khớp!");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=staff";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                if (address == null || address.trim().isEmpty()) {
-                    session.setAttribute("errMess", "Địa chỉ không được để trống");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=customer";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                boolean checkPass = isValidPassword(pass);
-                if (!checkPass) {
-                    session.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=staff";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                boolean checkUsername = accDao.isUsernameExist(username);
-                if (checkUsername) {
-                    session.setAttribute("errMess", "Tên tài khoản đã tồn tại.");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=staff";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                boolean checkPhone = isValidPhone(phone);
-                if (!checkPhone) {
-                    session.setAttribute("errMess", "Số điện thoại không hợp lệ");
-
-                    session.setAttribute("username", username);
-                    session.setAttribute("email", email);
-                    session.setAttribute("pass", pass);
-                    session.setAttribute("comfirmPass", comfirmPass);
-                    session.setAttribute("fName", fName);
-                    session.setAttribute("lName", lName);
-                    session.setAttribute("phone", phone);
-                    session.setAttribute("dob", dob);
-
-                    String url = "admin-panel?action=create-account&type=staff";
-                    response.sendRedirect(url);
-                    return;
-                }
-
-                String hashPass = BCrypt.hashpw(pass, BCrypt.gensalt());
+                String hashPassStaff = BCrypt.hashpw(passStaff, BCrypt.gensalt());
 
                 Account acc = new Account();
-                acc.setAccUsername(username);
-                acc.setAccEmail(email);
-                acc.setAccPassword(hashPass);
-                acc.setAccRole(role);
-                acc.setAccStatus(status);
+                acc.setAccUsername(usernameStaff);
+                acc.setAccEmail(emailStaff);
+                acc.setAccPassword(hashPassStaff);
+                acc.setAccRole(roleStaff);
+                acc.setAccStatus(statusStaff);
 
-                acc.setAccFname(fName);
-                acc.setAccLname(lName);
-                acc.setAccPhoneNumber(phone);
-                acc.setAccDob(date);
-                acc.setAccAddress(address);
+                acc.setAccFname(fNameStaff);
+                acc.setAccLname(lNameStaff);
+                acc.setAccPhoneNumber(phoneStaff);
+                acc.setAccDob(dateStaff);
+                acc.setAccAddress(addressStaff);
+                
                 accDao.registerAccStaffByAdmin(acc);
                 try {
                     session.setAttribute("successMess", "Tạo tài khoản cho nhân viên thành công");
 
-                    session.removeAttribute("username");
-                    session.removeAttribute("email");
-                    session.removeAttribute("pass");
-                    session.removeAttribute("comfirmPass");
-                    session.removeAttribute("fName");
-                    session.removeAttribute("lName");
-                    session.removeAttribute("phone");
-                    session.removeAttribute("dob");
+                    session.removeAttribute("usernameStaff");
+                    session.removeAttribute("emailStaff");
+                    session.removeAttribute("passStaff");
+                    session.removeAttribute("comfirmPassStaff");
+                    session.removeAttribute("fNameStaff");
+                    session.removeAttribute("lNameStaff");
+                    session.removeAttribute("phoneStaff");
+                    session.removeAttribute("dobStaff");
+                    session.removeAttribute("addressStaff");
 
                 } catch (Exception e) {
 
-                    session.removeAttribute("username");
-                    session.removeAttribute("email");
-                    session.removeAttribute("pass");
-                    session.removeAttribute("comfirmPass");
-                    session.removeAttribute("fName");
-                    session.removeAttribute("lName");
-                    session.removeAttribute("phone");
-                    session.removeAttribute("dob");
+                    session.removeAttribute("usernameStaff");
+                    session.removeAttribute("emailStaff");
+                    session.removeAttribute("passStaff");
+                    session.removeAttribute("comfirmPassStaff");
+                    session.removeAttribute("fNameStaff");
+                    session.removeAttribute("lNameStaff");
+                    session.removeAttribute("phoneStaff");
+                    session.removeAttribute("dobStaff");
+                    session.removeAttribute("addressStaff");
 
                     session.setAttribute("errMess", "Tạo tài khoản cho nhân viên không thành công");
                 }

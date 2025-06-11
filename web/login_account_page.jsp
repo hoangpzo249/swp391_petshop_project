@@ -53,16 +53,13 @@ request.setAttribute("password", password);
             <form action="login" method="post">
                 <div class="input-group">
                     <label for="email">Địa chỉ Email*</label>
-                    <input type="text" id="email" name="email" value="${email}">
+                    <input type="text" id="emailLogin" name="emailLogin" value="${emailLogin}" required>
                 </div>
 
                 <div class="input-group">
                     <label for="password">Mật Khẩu *</label>
                     <div style="position: relative;">
-                        <input type="password" id="password" name="password" value="${password}">
-                        <i class="fa-solid fa-eye" 
-                           style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
-                           onclick="document.getElementById('password').type = document.getElementById('password').type === 'password' ? 'text' : 'password'; this.classList.toggle('fa-eye'); this.classList.toggle('fa-eye-slash');"></i>
+                        <input type="password" id="passwordLogin" name="passwordLogin" value="${passwordLogin}" required>
                     </div>
                 </div>
 
@@ -74,9 +71,9 @@ request.setAttribute("password", password);
                     <a href="recover" class="forgot-password">Bạn quên mật khẩu?</a>
                 </div>
 
-                <c:if test="${not empty errMess}">
+                <c:if test="${not empty errMessLogin}">
                     <div class="errMess">
-                        <p>${errMess}</p>
+                        <p>${errMessLogin}</p>
                     </div>
                 </c:if>
 

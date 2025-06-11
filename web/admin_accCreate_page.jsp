@@ -144,14 +144,14 @@
                                                 <label for="username">Tên đăng nhập <span class="required">*</span></label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-user"></i></span>
-                                                    <input type="text" id="username" name="username" class="form-control" required value="${username}">
+                                                    <input type="text" name="usernameCus" class="form-control" required value="${usernameCus}">
                                                 </div>
                                             </div>
                                             <div class="form-group col-half">
                                                 <label for="email">Email <span class="required">*</span></label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-envelope"></i></span>
-                                                    <input type="email" id="email" name="email" class="form-control" required value="${email}">
+                                                    <input type="email" name="emailCus" class="form-control" required value="${emailCus}">
                                                 </div>
                                             </div>
                                         </div>
@@ -161,14 +161,14 @@
                                                 <label for="password">Mật khẩu <span class="required">*</span></label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-lock"></i></span>
-                                                    <input type="password" id="password" name="password" class="form-control" required value="${password}">
+                                                    <input type="password" name="passCus" class="form-control" required value="${passCus}">
                                                 </div>
                                             </div>
                                             <div class="form-group col-half">
                                                 <label for="confirmPassword">Nhập lại mật khẩu <span class="required">*</span></label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-lock"></i></span>
-                                                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required value="${confirmPassword}">
+                                                    <input type="password" name="comfirmPassCus" class="form-control" required value="${comfirmPassCus}">
                                                 </div>
                                             </div>
                                         </div>
@@ -181,11 +181,11 @@
                                         <div class="form-row">
                                             <div class="form-group col-half">
                                                 <label for="firstName">Họ <span class="required">*</span></label>
-                                                <input type="text" id="firstName" name="firstName" class="form-control" required value="${fName}">
+                                                <input type="text" name="fNameCus" class="form-control" required value="${fNameCus}">
                                             </div>
                                             <div class="form-group col-half">
                                                 <label for="lastName">Tên <span class="required">*</span></label>
-                                                <input type="text" id="lastName" name="lastName" class="form-control" required value="${lName}">
+                                                <input type="text" name="lNameCus" class="form-control" required value="${lNameCus}">
                                             </div>
                                         </div>
 
@@ -194,22 +194,22 @@
                                                 <label for="phone">Số điện thoại <span class="required">*</span></label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-phone"></i></span>
-                                                    <input type="tel" id="phone" name="phone" class="form-control" required value="${phone}">
+                                                    <input type="tel" name="phoneCus" class="form-control" required value="${phoneCus}">
                                                 </div>
                                             </div>
                                             <div class="form-group col-half">
                                                 <label for="birthday">Ngày sinh</label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-calendar"></i></span>
-                                                    <input type="date" id="dob" name="dob" class="form-control" value="${dob}">
+                                                    <input type="date" name="dobCus" class="form-control" value="${dobCus}" required>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="form-row">
                                             <div class="form-group col-full">
-                                                <label for="address">Địa chỉ</label>
-                                                <textarea id="address" name="address" class="form-control" rows="3"></textarea>
+                                                <label for="address">Địa chỉ <span class="required">*</span></label>
+                                                <input type="text" name="addressCus" class="form-control" value="${addressCus}" required/>
                                             </div>
                                         </div>
                                     </div>
@@ -246,14 +246,14 @@
                                                 <label for="username">Tên đăng nhập <span class="required">*</span></label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-user"></i></span>
-                                                    <input type="text" id="username" name="username" class="form-control" required value="${username}">
+                                                    <input type="text" name="usernameStaff" class="form-control" required value="${usernameStaff}">
                                                 </div>
                                             </div>
                                             <div class="form-group col-half">
                                                 <label for="email">Email <span class="required">*</span></label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-envelope"></i></span>
-                                                    <input type="email" id="email" name="email" class="form-control" required value="${email}">
+                                                    <input type="email" name="emailStaff" class="form-control" required value="${emailStaff}">
                                                 </div>
                                             </div>
                                         </div>
@@ -263,14 +263,14 @@
                                                 <label for="password">Mật khẩu <span class="required">*</span></label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-lock"></i></span>
-                                                    <input type="password" id="password" name="password" class="form-control" required value="${password}">
+                                                    <input type="password" name="passStaff" class="form-control" required value="${passStaff}">
                                                 </div>
                                             </div>
                                             <div class="form-group col-half">
                                                 <label for="confirmPassword">Nhập lại mật khẩu <span class="required">*</span></label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-lock"></i></span>
-                                                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required value="${confirmPassword}">
+                                                    <input type="password" name="comfirmPassStaff" class="form-control" required value="${comfirmPassStaff}">
                                                 </div>
                                             </div>
                                         </div>
@@ -279,7 +279,7 @@
                                             <div class="form-group col-half">
                                                 <label for="role">Vai trò <span class="required">*</span></label>
                                                 <div class="select-group">
-                                                    <select id="role" name="role" class="form-control" required>
+                                                    <select name="roleStaff" class="form-control" required>
                                                         <option value="">-- Chọn vai trò --</option>
                                                         <option value="Manager">Manager</option>
                                                         <option value="Saler">Saler</option>
@@ -291,7 +291,7 @@
                                             <div class="form-group col-half">
                                                 <label for="status">Trạng thái</label>
                                                 <div class="select-group">
-                                                    <select id="status" name="status" class="form-control">
+                                                    <select name="statusStaff" class="form-control" required>
                                                         <option value="Active">Hoạt động</option>
                                                         <option value="Inactive">Không hoạt động</option>
                                                     </select>
@@ -308,11 +308,11 @@
                                         <div class="form-row">
                                             <div class="form-group col-half">
                                                 <label for="firstName">Họ <span class="required">*</span></label>
-                                                <input type="text" id="firstName" name="firstName" class="form-control" required value="${fName}">
+                                                <input type="text" name="fNameStaff" class="form-control" required value="${fNameStaff}">
                                             </div>
                                             <div class="form-group col-half">
                                                 <label for="lastName">Tên <span class="required">*</span></label>
-                                                <input type="text" id="lastName" name="lastName" class="form-control" required value="${lName}">
+                                                <input type="text" name="lNameStaff" class="form-control" required value="${lNameStaff}">
                                             </div>
                                         </div>
 
@@ -321,22 +321,22 @@
                                                 <label for="phone">Số điện thoại <span class="required">*</span></label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-phone"></i></span>
-                                                    <input type="tel" id="phone" name="phone" class="form-control" required value="${phone}">
+                                                    <input type="tel" name="phoneStaff" class="form-control" required value="${phoneStaff}">
                                                 </div>
                                             </div>
                                             <div class="form-group col-half">
                                                 <label for="birthday">Ngày sinh</label>
                                                 <div class="input-group">
                                                     <span class="input-icon"><i class="fas fa-calendar"></i></span>
-                                                    <input type="date" id="dob" name="dob" class="form-control" value="${dob}">
+                                                    <input type="date" name="dobStaff" class="form-control" value="${dobStaff}" required>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="form-row">
                                             <div class="form-group col-full">
-                                                <label for="address">Địa chỉ</label>
-                                                <textarea id="address" name="address" class="form-control" rows="3"></textarea>
+                                                <label for="address">Địa chỉ <span class="required">*</span> </label>
+                                                <input type="text" name="addressStaff" class="form-control" value="${addressStaff}" required/>
                                             </div>
                                         </div>
 
