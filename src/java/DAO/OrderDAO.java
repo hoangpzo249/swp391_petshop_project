@@ -37,10 +37,11 @@ public class OrderDAO {
         order.setPaymentMethod(rs.getString("paymentMethod"));
         order.setPaymentStatus(rs.getString("paymentStatus"));
         order.setTotalPrice(rs.getDouble("totalPrice"));
+        order.setRejectionReason(rs.getString("rejectionReason"));
         return order;
     }
 
-    public boolean updateOrderStatusById(String id, String status) {
+    public boolean updateOrderStatusById(int id, String status) {
         DBContext db = new DBContext();
         try {
             conn = db.getConnection();
@@ -49,7 +50,7 @@ public class OrderDAO {
                     + "WHERE orderId = ?;";
             ps = conn.prepareStatement(sql);
             ps.setString(1, status);
-            ps.setString(2, id);
+            ps.setInt(2, id);
             ps.executeUpdate();
             return true;
         } catch (Exception ex) {
@@ -73,7 +74,8 @@ public class OrderDAO {
                     + "GROUP BY \n"
                     + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
-                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus;";
+                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus, \n"
+                    + "    o.rejectionReason;";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -106,7 +108,7 @@ public class OrderDAO {
                     + "GROUP BY \n"
                     + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
-                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus;";
+                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus,  o.rejectionReason;";
 
             ps = conn.prepareStatement(sql);
             ps.setString(1, id);
@@ -136,7 +138,6 @@ public class OrderDAO {
     }
 
     public ArrayList<Integer> getOrderContentById(String id) {
-        // Existing implementation unchanged
         DBContext db = new DBContext();
         ArrayList<Integer> list = new ArrayList<>();
         try {

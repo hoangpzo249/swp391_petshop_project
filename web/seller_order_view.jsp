@@ -27,7 +27,6 @@
             </div>
 
             <div class="seller-profile">
-                <%-- Assuming user's image is available, otherwise use placeholder --%>
                 <c:choose>
                     <c:when test="${not empty sessionScope.userAccount.accImage}">
                         <img src="data:image/jpeg;base64,${sessionScope.userAccount.getBase64Image()}" alt="Seller Avatar"/>
@@ -51,18 +50,18 @@
             </div>
         </div>
 
-        <c:if test="${not empty successMessage}">
+        <c:if test="${not empty successMess}">
             <div class="alert-message">
-                ${successMessage}
+                ${successMess}
             </div>
-            <c:remove var="successMessage" scope="session" />
+            <c:remove var="successMess" scope="session" />
         </c:if>
 
-        <c:if test="${not empty errorMessage}">
+        <c:if test="${not empty errMess}">
             <div class="alert-message error">
-                ${errorMessage}
+                ${errMess}
             </div>
-            <c:remove var="errorMessage" scope="session" />
+            <c:remove var="errMess" scope="session" />
         </c:if>
 
 
@@ -84,23 +83,23 @@
 
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
-                        <a href="seller-order-management" class="sidebar-link active"> <%-- Correct Link --%>
+                        <a href="seller-order-management" class="sidebar-link active">
                             <i class="fas fa-bag-shopping"></i> Quản lý đơn hàng
                         </a>
-                        <a href="seller-pet-management" class="sidebar-link"> <%-- Correct Link --%>
+                        <a href="seller-pet-management" class="sidebar-link">
                             <i class="fas fa-dog"></i> Quản lý thú cưng
                         </a>
                     </div>
 
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
-                        <a href="seller-create-pet" class="sidebar-link"> <%-- Correct Link --%>
+                        <a href="seller-create-pet" class="sidebar-link">
                             <i class="fas fa-paw"></i> Đăng bán thú cưng
                         </a>
                         <a href="profile" class="sidebar-link">
                             <i class="fas fa-user-circle"></i> Tài khoản của tôi
                         </a>
-                        <a href="change-password" class="sidebar-link"> <%-- Correct Link --%>
+                        <a href="change-password" class="sidebar-link">
                             <i class="fas fa-key"></i> Đổi mật khẩu
                         </a>
                         <a href="logout" class="sidebar-link">
@@ -212,22 +211,21 @@
                                                     </a>
 
                                                     <c:if test="${order.orderStatus == 'Pending'}">
-                                                        <%-- Changed to call a JavaScript function instead of a direct href --%>
                                                         <a class="action-btn confirm-btn" title="Xác nhận đơn hàng" 
                                                            href="#" 
-                                                           onclick="showConfirmationModal('xác nhận đơn hàng này', 'seller-order-management?action=confirm&orderId=${order.orderId}', 'btn-success')">
+                                                           onclick="showConfirmationModal(event, 'xác nhận đơn hàng này', 'updateorderstatus?action=confirm&status=Confirmed&orderId=${order.orderId}', 'btn-success')">
                                                             <i class="fas fa-check"></i>
                                                         </a>
                                                         <a class="action-btn reject-btn" title="Từ chối đơn hàng" 
                                                            href="#" 
-                                                           onclick="showConfirmationModal('từ chối đơn hàng này', 'seller-order-management?action=reject&orderId=${order.orderId}', 'btn-danger')">
+                                                           onclick="showConfirmationModal(event, 'từ chối đơn hàng này', 'updateorderstatus?action=reject&status=Rejected&orderId=${order.orderId}', 'btn-danger')">
                                                             <i class="fas fa-times"></i>
                                                         </a>
                                                     </c:if>
                                                     <c:if test="${order.orderStatus == 'Confirmed'}">
                                                         <a class="action-btn shipping-btn" title="Giao hàng"
                                                            href="#"
-                                                           onclick="showConfirmationModal('giao hàng cho đơn này', 'seller-order-management?action=shipping&orderId=${order.orderId}', 'btn-primary')">
+                                                           onclick="showConfirmationModal(event, 'giao hàng cho đơn này', 'updateorderstatus?action=shipping&status=Shipping&orderId=${order.orderId}', 'btn-primary')">
                                                             <i class="fas fa-truck"></i>
                                                         </a>
                                                     </c:if>
@@ -274,17 +272,17 @@
 
             let urlToRedirect = '';
 
-            function showConfirmationModal(actionText, url, buttonClass) {
+            function showConfirmationModal(event, actionText, url, buttonClass) {
                 if (event) {
                     event.preventDefault();
                 }
 
-                modalText.innerText = `Bạn có chắc chắn muốn ${actionText}?`;
+                modalText.innerText = `Bạn có chắc chắn muốn ` + actionText + ` ?`;
 
                 urlToRedirect = url;
 
-                modalConfirmButton.className = 'btn'; // Reset classes
-                modalConfirmButton.classList.add(buttonClass); // Add the specific class
+                modalConfirmButton.className = 'btn';
+                modalConfirmButton.classList.add(buttonClass);
 
                 modal.classList.add('show');
             }

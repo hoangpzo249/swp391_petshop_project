@@ -11,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -56,7 +57,23 @@ public class UpdateOrderStatusServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        OrderDAO _dao = new OrderDAO();
+        String status = request.getParameter("status");
+        int id = Integer.parseInt(request.getParameter("orderId"));
+        HttpSession session = request.getSession(false);
+        String referer = request.getHeader("referer");
+
+        if (_dao.updateOrderStatusById(id, status)) {
+            session.setAttribute("successMess", "Cập nhật đơn hàng thành công.");
+        } else {
+            session.setAttribute("errMess", "Cập nhật đơn hàng không thành công.");
+        }
+
+        if (referer != null) {
+            response.sendRedirect(referer);
+        } else {
+            response.sendRedirect("displayorder");
+        }
     }
 
     /**
@@ -72,19 +89,19 @@ public class UpdateOrderStatusServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String orderId = request.getParameter("id");
-        String newStatus = request.getParameter("status");
-
-        OrderDAO orderDAO = new OrderDAO();
-        boolean success = orderDAO.updateOrderStatusById(orderId, newStatus);
-
-        if (success) {
-            request.setAttribute("message", "Order status updated successfully!");
-        } else {
-            request.setAttribute("error", "Failed to update order status");
-        }
-
-        response.sendRedirect("orderdetail?id=" + orderId);
+//        String orderId = request.getParameter("id");
+//        String newStatus = request.getParameter("status");
+//
+//        OrderDAO orderDAO = new OrderDAO();
+//        boolean success = orderDAO.updateOrderStatusById(orderId, newStatus);
+//
+//        if (success) {
+//            request.setAttribute("message", "Order status updated successfully!");
+//        } else {
+//            request.setAttribute("error", "Failed to update order status");
+//        }
+//
+//        response.sendRedirect("orderdetail?id=" + orderId);
     }
 
     /**

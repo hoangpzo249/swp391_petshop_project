@@ -51,18 +51,18 @@
             </div>
         </div>
 
-        <c:if test="${not empty successMessage}">
+        <c:if test="${not empty successMess}">
             <div class="alert-message">
-                ${successMessage}
+                ${successMess}
             </div>
-            <c:remove var="successMessage" scope="session" />
+            <c:remove var="successMess" scope="session" />
         </c:if>
 
-        <c:if test="${not empty errorMessage}">
+        <c:if test="${not empty errorMess}">
             <div class="alert-message error">
-                ${errorMessage}
+                ${errorMess}
             </div>
-            <c:remove var="errorMessage" scope="session" />
+            <c:remove var="errorMess" scope="session" />
         </c:if>
 
 
@@ -100,7 +100,7 @@
                         <a href="profile" class="sidebar-link">
                             <i class="fas fa-user-circle"></i> Tài khoản của tôi
                         </a>
-                        <a href="change-password" class="sidebar-link"> <%-- Correct Link --%>
+                        <a href="change-password" class="sidebar-link">
                             <i class="fas fa-key"></i> Đổi mật khẩu
                         </a>
                         <a href="logout" class="sidebar-link">
@@ -120,7 +120,7 @@
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
                         <li><a href="sellerpanel">Seller</a></li>
-                        <li><a href="seller-order-management">Quản lý đơn hàng</a></li>
+                        <li><a href="displayorder">Quản lý đơn hàng</a></li>
                         <li>Chi tiết đơn hàng</li>
                     </ul>
                 </div>
@@ -133,31 +133,27 @@
                         </h3>
                         <div class="card-tools">
                             <!-- Action Buttons -->
-                            <form method="post" action="your-servlet-url" id="updateStatusForm">
-                                <input type="hidden" name="orderId" value="${order.orderId}">
-
-                                <input type="hidden" name="status" id="statusInput">
-
-                                <c:if test="${order.orderStatus == 'Pending'}">
-                                    <button type="button" class="btn btn-success" 
-                                            onclick="showConfirmationModal('xác nhận đơn hàng này', 'Confirmed', 'btn-success')">
-                                        <i class="fas fa-check"></i> Xác nhận
-                                    </button>
-                                    <button type="button" class="btn btn-danger" 
-                                            onclick="showConfirmationModal('từ chối đơn hàng này', 'Rejected', 'btn-danger')">
-                                        <i class="fas fa-times"></i> Từ chối
-                                    </button>
-                                </c:if>
-
-                                <c:if test="${order.orderStatus == 'Confirmed'}">
-                                    <button type="button" class="btn btn-primary" 
-                                            onclick="showConfirmationModal('giao hàng cho đơn này', 'Shipping', 'btn-primary')">
-                                        <i class="fas fa-truck"></i> Giao hàng
-                                    </button>
-                                </c:if>
 
 
-                            </form>
+                            <c:if test="${order.orderStatus == 'Pending'}">
+                                <button type="button" class="btn btn-success" 
+                                        onclick="showConfirmationModal('xác nhận đơn hàng này', 'updateorderstatus?action=confirm&status=Confirmed&orderId=${order.orderId}', 'btn-success')">
+                                    <i class="fas fa-check"></i> Xác nhận
+                                </button>
+                                <button type="button" class="btn btn-danger" 
+                                        onclick="showConfirmationModal('từ chối đơn hàng này', 'updateorderstatus?action=reject&status=Rejected&orderId=${order.orderId}', 'btn-danger')">
+                                    <i class="fas fa-times"></i> Từ chối
+                                </button>
+                            </c:if>
+
+                            <c:if test="${order.orderStatus == 'Confirmed'}">
+                                <button type="button" class="btn btn-primary" 
+                                        onclick="showConfirmationModal('giao hàng cho đơn này', 'updateorderstatus?action=shipping&status=Shipping&orderId=${order.orderId}', 'btn-primary')">
+                                    <i class="fas fa-truck"></i> Giao hàng
+                                </button>
+                            </c:if>
+
+
                         </div>
                     </div>
                     <div class="card-body">
@@ -276,37 +272,35 @@
             const modalText = document.getElementById('modalText');
             const modalConfirmButton = document.getElementById('modalConfirmButton');
 
-            const updateForm = document.getElementById('updateStatusForm');
-            const statusInput = document.getElementById('statusInput');
+            let urlToRedirect = '';
 
-            let statusToSubmit = '';
-
-            function showConfirmationModal(actionText, statusValue, buttonClass) {
+            function showConfirmationModal(actionText, url, buttonClass) {
                 if (event) {
                     event.preventDefault();
                 }
 
-                statusToSubmit = statusValue;
-
                 modalText.innerText = `Bạn có chắc chắn muốn ${actionText}?`;
 
-                modalConfirmButton.className = 'btn'; // Reset classes
-                modalConfirmButton.classList.add(buttonClass); // Add the specific class
+                urlToRedirect = url;
+
+                modalConfirmButton.className = 'btn';
+                modalConfirmButton.classList.add(buttonClass);
 
                 modal.classList.add('show');
             }
 
-            function closeModal() {
-                modal.classList.remove('show');
+            function confirmAction() {
+                if (urlToRedirect) {
+                    window.location.href = urlToRedirect;
+                }
             }
 
-            modalConfirmButton.addEventListener('click', function () {
-                statusInput.value = statusToSubmit;
+            modalConfirmButton.addEventListener('click', confirmAction);
 
-                updateForm.submit();
-
-                closeModal();
-            });
+            function closeModal() {
+                modal.classList.remove('show');
+                urlToRedirect = '';
+            }
 
             window.onclick = function (event) {
                 if (event.target === modal) {

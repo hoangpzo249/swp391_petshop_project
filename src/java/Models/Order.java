@@ -24,6 +24,7 @@ public class Order {
     private String paymentMethod;
     private String paymentStatus;
     private double totalPrice;
+    private String rejectionReason;
 
     public Order() {
     }
@@ -42,6 +43,16 @@ public class Order {
         this.paymentStatus = paymentStatus;
         this.totalPrice = totalPrice;
     }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
+    
+    
 
     public int getOrderId() {
         return orderId;
