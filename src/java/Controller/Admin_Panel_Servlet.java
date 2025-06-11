@@ -309,7 +309,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 response.sendRedirect(url);
                 return;
             }
-
+            
+            String oldRole = acc.getAccRole();
 //            String role = acc.getAccRole();
             String email = acc.getAccEmail();
             String fullname = acc.getAccFname() + acc.getAccLname();
@@ -323,7 +324,9 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 if ("on".equals(sendEmail)) {
                     try {
                         request.setAttribute("updateRole", acc);
-                        EmailSender.sendUpdateRole(email, fullname);
+                        
+                        EmailSender.sendUpdateRole(email, fullname, oldRole, newRole);
+                        
                         session.setAttribute("successMess", "Cập nhật vai trò thành công và thông báo tới người dùng này");
 
                     } catch (Exception e) {
@@ -485,9 +488,28 @@ public class Admin_Panel_Servlet extends HttpServlet {
 
                 String addressCus = request.getParameter("addressCus");
 
-                boolean checkUsernameCus = accDao.isUsernameExist(usernameCus);
-                if (checkUsernameCus) {
-                    session.setAttribute("errMess", "Tên tài khoản đã tồn tại.");
+                boolean checkUsernameCusExist = accDao.isUsernameExist(usernameCus);
+                if (checkUsernameCusExist) {
+                    session.setAttribute("errMess", "Tên tài khoản của bạn đã tồn tại.");
+
+                    session.setAttribute("usernameCus", usernameCus);
+                    session.setAttribute("emailCus", emailCus);
+                    session.setAttribute("passCus", passCus);
+                    session.setAttribute("comfirmPassCus", comfirmPassCus);
+                    session.setAttribute("fNameCus", fNameCus);
+                    session.setAttribute("lNameCus", lNameCus);
+                    session.setAttribute("phoneCus", phoneCus);
+                    session.setAttribute("dobCus", dobCus);
+                    session.setAttribute("addressCus", addressCus);
+
+                    String url = "admin-panel?action=create-account&type=customer";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                String checkUsernameCus = "^[a-z0-9_]{5,30}$";
+                if (!usernameCus.matches(checkUsernameCus)) {
+                    session.setAttribute("errMess", "Tên tài khoản chỉ cho phép chữ cái thường, số và dấu gạch dưới. Tối thiểu 5 kí tự và tối đa 30 kí tự");
 
                     session.setAttribute("usernameCus", usernameCus);
                     session.setAttribute("emailCus", emailCus);
@@ -525,7 +547,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
 
                 boolean checkPassCus = isValidPassword(passCus);
                 if (!checkPassCus) {
-                    session.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
+                    session.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt, không chứa khoảng trắng.");
 
                     session.setAttribute("usernameCus", usernameCus);
                     session.setAttribute("emailCus", emailCus);
@@ -671,6 +693,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
 
                 accDao.registerAccCusByAdmin(acc);
                 try {
+                    EmailSender.createAccCusSuccess(emailCus, fNameCus + " " + lNameCus, emailCus, passCus);
                     session.setAttribute("successMess", "Tạo tài khoản cho khách hàng thành công");
 
                     session.removeAttribute("usernameCus");
@@ -717,8 +740,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
 
                 String addressStaff = request.getParameter("addressStaff");
 
-                boolean checkUsernameStaff = accDao.isUsernameExist(usernameStaff);
-                if (checkUsernameStaff) {
+                boolean checkUsernameStaffExist = accDao.isUsernameExist(usernameStaff);
+                if (checkUsernameStaffExist) {
                     session.setAttribute("errMess", "Tên tài khoản đã tồn tại.");
 
                     session.setAttribute("usernameStaff", usernameStaff);
@@ -730,6 +753,29 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     session.setAttribute("phoneStaff", phoneStaff);
                     session.setAttribute("dobStaff", dobStaff);
                     session.setAttribute("addressStaff", addressStaff);
+                    session.setAttribute("roleStaff", roleStaff);
+                    session.setAttribute("statusStaff", statusStaff);
+
+                    String url = "admin-panel?action=create-account&type=staff";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                String checkUsernameStaff = "^[a-z0-9_]{5,30}$";
+                if (!usernameStaff.matches(checkUsernameStaff)) {
+                    session.setAttribute("errMess", "Tên tài khoản chỉ cho phép chữ cái thường, số và dấu gạch dưới. Tối thiểu 5 kí tự và tối đa 30 kí tự");
+
+                    session.setAttribute("usernameStaff", usernameStaff);
+                    session.setAttribute("emailStaff", emailStaff);
+                    session.setAttribute("passStaff", passStaff);
+                    session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                    session.setAttribute("fNameStaff", fNameStaff);
+                    session.setAttribute("lNameStaff", lNameStaff);
+                    session.setAttribute("phoneStaff", phoneStaff);
+                    session.setAttribute("dobStaff", dobStaff);
+                    session.setAttribute("addressStaff", addressStaff);
+                    session.setAttribute("roleStaff", roleStaff);
+                    session.setAttribute("statusStaff", statusStaff);
 
                     String url = "admin-panel?action=create-account&type=staff";
                     response.sendRedirect(url);
@@ -749,6 +795,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     session.setAttribute("phoneStaff", phoneStaff);
                     session.setAttribute("dobStaff", dobStaff);
                     session.setAttribute("addressStaff", addressStaff);
+                    session.setAttribute("roleStaff", roleStaff);
+                    session.setAttribute("statusStaff", statusStaff);
 
                     String url = "admin-panel?action=create-account&type=staff";
                     response.sendRedirect(url);
@@ -757,7 +805,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
 
                 boolean checkPassStaff = isValidPassword(passStaff);
                 if (!checkPassStaff) {
-                    session.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
+                    session.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt, không chứa khoảng trắng");
 
                     session.setAttribute("usernameStaff", usernameStaff);
                     session.setAttribute("emailStaff", emailStaff);
@@ -768,6 +816,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     session.setAttribute("phoneStaff", phoneStaff);
                     session.setAttribute("dobStaff", dobStaff);
                     session.setAttribute("addressStaff", addressStaff);
+                    session.setAttribute("roleStaff", roleStaff);
+                    session.setAttribute("statusStaff", statusStaff);
 
                     String url = "admin-panel?action=create-account&type=staff";
                     response.sendRedirect(url);
@@ -786,6 +836,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     session.setAttribute("phoneStaff", phoneStaff);
                     session.setAttribute("dobStaff", dobStaff);
                     session.setAttribute("addressStaff", addressStaff);
+                    session.setAttribute("roleStaff", roleStaff);
+                    session.setAttribute("statusStaff", statusStaff);
 
                     String url = "admin-panel?action=create-account&type=staff";
                     response.sendRedirect(url);
@@ -805,6 +857,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     session.setAttribute("phoneStaff", phoneStaff);
                     session.setAttribute("dobStaff", dobStaff);
                     session.setAttribute("addressStaff", addressStaff);
+                    session.setAttribute("roleStaff", roleStaff);
+                    session.setAttribute("statusStaff", statusStaff);
 
                     String url = "admin-panel?action=create-account&type=staff";
                     response.sendRedirect(url);
@@ -824,6 +878,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     session.setAttribute("phoneStaff", phoneStaff);
                     session.setAttribute("dobStaff", dobStaff);
                     session.setAttribute("addressStaff", addressStaff);
+                    session.setAttribute("roleStaff", roleStaff);
+                    session.setAttribute("statusStaff", statusStaff);
 
                     String url = "admin-panel?action=create-account&type=staff";
                     response.sendRedirect(url);
@@ -836,7 +892,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
                         LocalDate dateCheck = LocalDate.parse(dobStaff);
                         LocalDate now = LocalDate.now();
 
-                        if (dateCheck.isAfter(now) || Period.between(dateCheck, now).getYears() < 20 || Period.between(dateCheck, now).getYears() > 65) {
+                        if (dateCheck.isAfter(now) || Period.between(dateCheck, now).getYears() < 18 || Period.between(dateCheck, now).getYears() > 65) {
                             session.setAttribute("errMess", "Ngày sinh không hợp lệ");
 
                             session.setAttribute("usernameStaff", usernameStaff);
@@ -848,6 +904,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
                             session.setAttribute("phoneStaff", phoneStaff);
                             session.setAttribute("dobStaff", dobStaff);
                             session.setAttribute("addressStaff", addressStaff);
+                            session.setAttribute("roleStaff", roleStaff);
+                            session.setAttribute("statusStaff", statusStaff);
 
                             String url = "admin-panel?action=create-account&type=staff";
                             response.sendRedirect(url);
@@ -867,6 +925,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
                         session.setAttribute("phoneStaff", phoneStaff);
                         session.setAttribute("dobStaff", dobStaff);
                         session.setAttribute("addressStaff", addressStaff);
+                        session.setAttribute("roleStaff", roleStaff);
+                        session.setAttribute("statusStaff", statusStaff);
 
                         String url = "admin-panel?action=create-account&type=staff";
                         response.sendRedirect(url);
@@ -884,6 +944,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     session.setAttribute("phoneStaff", phoneStaff);
                     session.setAttribute("dobStaff", dobStaff);
                     session.setAttribute("addressStaff", addressStaff);
+                    session.setAttribute("roleStaff", roleStaff);
+                    session.setAttribute("statusStaff", statusStaff);
 
                     String url = "admin-panel?action=create-account&type=staff";
                     response.sendRedirect(url);
@@ -904,9 +966,10 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 acc.setAccPhoneNumber(phoneStaff);
                 acc.setAccDob(dateStaff);
                 acc.setAccAddress(addressStaff);
-                
+
                 accDao.registerAccStaffByAdmin(acc);
                 try {
+                    EmailSender.createAccStaffSuccess(emailStaff, fNameStaff + " " + lNameStaff, emailStaff, passStaff, roleStaff);
                     session.setAttribute("successMess", "Tạo tài khoản cho nhân viên thành công");
 
                     session.removeAttribute("usernameStaff");
@@ -918,6 +981,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     session.removeAttribute("phoneStaff");
                     session.removeAttribute("dobStaff");
                     session.removeAttribute("addressStaff");
+                    session.removeAttribute("roleStaff");
+                    session.removeAttribute("statusStaff");
 
                 } catch (Exception e) {
 
@@ -930,6 +995,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     session.removeAttribute("phoneStaff");
                     session.removeAttribute("dobStaff");
                     session.removeAttribute("addressStaff");
+                    session.removeAttribute("roleStaff");
+                    session.removeAttribute("statusStaff");
 
                     session.setAttribute("errMess", "Tạo tài khoản cho nhân viên không thành công");
                 }

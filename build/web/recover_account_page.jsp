@@ -42,7 +42,6 @@
                         <div class="errMess">
                             <p>${errMessRecover}</p>
                         </div>
-                        <c:remove var="errMessRecover" scope="session" />
                     </c:if>
                 </form>
             </c:if>
@@ -54,7 +53,6 @@
                         <c:if test="${not empty emailRecoverSendOtp}">
                             <p>Gửi mã OTP thành công tới:</p>
                             <p class="email-display">${emailRecoverSendOtp}</p>
-                            <c:remove var="emailRecoverSendOtp" scope="session" />
                         </c:if>
 
                     </div>
@@ -95,12 +93,12 @@
 
                     <div class="input-group">
                         <label for="email">Mật khẩu mới*</label>
-                        <input type="password" name="passwordRecover" value="${passwordRecover}" required>
+                        <input type="password" name="passwordRecover" required>
                     </div>
 
                     <div class="input-group">
                         <label for="comfirm_password">Xác nhận mật khẩu *</label>
-                        <input type="password" name="comfirm_passwordRecover" value="${comfirm_passwordRecover}" required>
+                        <input type="password" name="comfirm_passwordRecover" required>
                     </div>
 
                     <c:if test="${not empty errMessPassRecover}">

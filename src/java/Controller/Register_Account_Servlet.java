@@ -80,7 +80,7 @@ public class Register_Account_Servlet extends HttpServlet {
                 long resendOtp = 60 * 1000;
 
                 if (nowTime - curTimeSendOtp < resendOtp) {
-                    long countTimeResend = (resendOtp - (nowTime-curTimeSendOtp))/1000; 
+                    long countTimeResend = (resendOtp - (nowTime - curTimeSendOtp)) / 1000;
                     request.setAttribute("errMessRegisOtp", "Bạn cần chờ " + countTimeResend + " GIÂY để gửi lại OTP");
                     request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
                     return;
@@ -132,17 +132,8 @@ public class Register_Account_Servlet extends HttpServlet {
             String fullNameRegis = fNameRegister + " " + lNameRegister;
 
             String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
-            if (!fNameRegister.matches(checkName)) {
-                request.setAttribute("errMessRegister", "Tên của bạn không được chứa kí tự đặc biệt và số");
-                request.setAttribute("emailRegister", emailRegister);
-                request.setAttribute("passRegister", passRegister);
-                request.setAttribute("confirm_passwordRegister", confirm_passwordRegister);
-                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
-                return;
-            }
-
-            if (!lNameRegister.matches(checkName)) {
-                request.setAttribute("errMessRegister", "Tên của bạn không được chứa kí tự đặc biệt");
+            if (!fNameRegister.matches(checkName) || !lNameRegister.matches(checkName)) {
+                request.setAttribute("errMessRegister", "Họ và Tên của bạn không được chứa kí tự đặc biệt và số");
                 request.setAttribute("emailRegister", emailRegister);
                 request.setAttribute("passRegister", passRegister);
                 request.setAttribute("confirm_passwordRegister", confirm_passwordRegister);
@@ -179,7 +170,7 @@ public class Register_Account_Servlet extends HttpServlet {
 
             boolean checkPass = isValidPassword(passRegister);
             if (!checkPass) {
-                request.setAttribute("errMessRegister", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
+                request.setAttribute("errMessRegister", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số, kí tự đặc biệt và không chứa dấu cách.");
 
                 request.setAttribute("fNameRegister", fNameRegister);
                 request.setAttribute("lNameRegister", fNameRegister);
@@ -307,6 +298,9 @@ public class Register_Account_Servlet extends HttpServlet {
         boolean hasSpecial = false;
 
         for (char c : password.toCharArray()) {
+            if (Character.isWhitespace(c)) {
+                return false;
+            }
             if (Character.isUpperCase(c)) {
                 hasUpper = true;
             } else if (Character.isLowerCase(c)) {

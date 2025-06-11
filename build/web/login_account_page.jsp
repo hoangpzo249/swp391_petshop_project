@@ -17,9 +17,8 @@
     }
     }
     
-request.setAttribute("email", email);
-//request.setAttribute("email", email);
-request.setAttribute("password", password);
+request.setAttribute("emailLogin", email);
+request.setAttribute("passwordLogin", password);
 
 %>
 
@@ -65,7 +64,7 @@ request.setAttribute("password", password);
 
                 <div class="login-options">
                     <div class="remember-password">
-                        <input type="checkbox" id="remember" name="remember" value="on">
+                        <input type="checkbox" id="remember" name="remember" value="on" checked>
                         <label for="remember">Nhớ mật khẩu</label>
                     </div>
                     <a href="recover" class="forgot-password">Bạn quên mật khẩu?</a>

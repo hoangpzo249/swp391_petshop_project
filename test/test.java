@@ -15,22 +15,15 @@ import org.mindrot.jbcrypt.BCrypt;
 public class test {
 
     public static void main(String[] args) {
-//        String email = "filmmusic249@gmai.com";
-//        System.out.println(genUsername(email));
         Scanner sc = new Scanner(System.in);
-//        genPass();
-        while (true) {
-            System.out.println("Nhập mật khẩu của bạn:");
-            String inputPass = sc.nextLine();
-
-            boolean checkPass = isValidPassword(inputPass);
-
-            if (checkPass) {
-                System.out.println("Mật khẩu hợp lệ");
-                return;
-            } else {
-                System.err.println("Mk ngu");
-            }
+        
+        System.out.println("Nhập username: ");
+        String input = sc.nextLine();
+        boolean checkname = checkName(input);
+        if(checkname) {
+            System.out.println("Hợp lệ");
+        } else {
+            System.err.println("Error");
         }
     }
 
@@ -92,6 +85,11 @@ public class test {
             }
         }
         return hasUpper && hasLower && hasDigit && hasSpecial;
+    }
+
+    public static boolean checkName(String name) {
+        String checkName = "^[a-z0-9_]{5,30}$";
+            return name.matches(checkName);
     }
 
 }

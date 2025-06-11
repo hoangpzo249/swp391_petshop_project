@@ -58,8 +58,8 @@ public class Logout_Account_Servlet extends HttpServlet {
         if(session != null){
             session.invalidate();
             HttpSession sessionLogout = request.getSession();
-            sessionLogout.setAttribute("loginSuccess", "Đăng xuất thành công");
-            response.sendRedirect("homepage");
+            sessionLogout.setAttribute("successMessRecover", "Bạn đã đăng xuất thành công.");
+            response.sendRedirect("login");
         } else {
             request.getRequestDispatcher("home_page.jsp").forward(request, response);
         }

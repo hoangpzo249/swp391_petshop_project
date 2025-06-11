@@ -128,7 +128,7 @@
                             <div class="create-form-container">
                                 <div class="form-header">
                                     <h3><i class="fas fa-user"></i> Tạo tài khoản khách hàng mới</h3>
-                                    <p>Điền thông tin để tạo tài khoản khách hàng mới</p>
+                                    <p>Điền thông tin để tạo tài khoản khách hàng mới, <span class="required" style="font-style: italic"> thông tin tài khoản sẽ được gửi về Email của khách hàng.</span></p>
                                 </div>
 
                                 <form action="admin-panel" method="post" class="create-account-form">
@@ -230,7 +230,7 @@
                             <div class="create-form-container">
                                 <div class="form-header">
                                     <h3><i class="fas fa-briefcase"></i> Tạo tài khoản nhân viên mới</h3>
-                                    <p>Điền thông tin để tạo tài khoản nhân viên mới</p>
+                                    <p>Điền thông tin để tạo tài khoản nhân viên mới, <span class="required" style="font-style: italic">thông tin tài khoản sẽ được gửi về Email của nhân viên.</span></p>
                                 </div>
 
                                 <form action="admin-panel" method="post" class="create-account-form">
@@ -281,9 +281,9 @@
                                                 <div class="select-group">
                                                     <select name="roleStaff" class="form-control" required>
                                                         <option value="">-- Chọn vai trò --</option>
-                                                        <option value="Manager">Manager</option>
-                                                        <option value="Saler">Saler</option>
-                                                        <option value="Shipper">Shipper</option>
+                                                        <option value="Manager" <c:if test="${roleStaff == 'Manager'}">selected</c:if>>Manager</option>
+                                                        <option value="Saler"<c:if test="${roleStaff == 'Saler'}">selected</c:if>>Saler</option>
+                                                        <option value="Shipper"<c:if test="${roleStaff == 'Shipper'}">selected</c:if>>Shipper</option>
                                                     </select>
                                                     <span class="select-arrow"><i class="fas fa-chevron-down"></i></span>
                                                 </div>
@@ -292,8 +292,8 @@
                                                 <label for="status">Trạng thái</label>
                                                 <div class="select-group">
                                                     <select name="statusStaff" class="form-control" required>
-                                                        <option value="Active">Hoạt động</option>
-                                                        <option value="Inactive">Không hoạt động</option>
+                                                        <option value="Active" <c:if test="${statusStaff == 'Active'}">selected</c:if>>Hoạt động</option>
+                                                        <option value="Inactive" <c:if test="${statusStaff == 'Inactive'}">selected</c:if>>Không hoạt động</option>
                                                     </select>
                                                     <span class="select-arrow"><i class="fas fa-chevron-down"></i></span>
                                                 </div>

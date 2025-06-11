@@ -157,17 +157,21 @@ public class Profile_Account_Servlet extends HttpServlet {
                 lName = acc.getAccLname();
             }
 
-            if (!fName.matches(checkName)) {
+            String checkUsername = "^[a-z0-9_]{5,30}$";
+            if (!username.matches(checkUsername)) {
+                session.setAttribute("errMess", "Tên tài khoản chỉ cho phép chữ cái thường, số và dấu gạch dưới. Tối thiểu 5 kí tự và tối đa 30 kí tự");
+
+                String url = "admin-panel?action=create-account&type=customer";
+                response.sendRedirect(url);
+                return;
+            }
+
+            if (!fName.matches(checkName) || !lName.matches(checkName)) {
                 request.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt và số");
                 request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
                 return;
             }
 
-            if (!lName.matches(checkName)) {
-                request.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt và số");
-                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-                return;
-            }
             if (dob == null || dob.trim().isEmpty()) {
                 date = new java.sql.Date(acc.getAccDob().getTime());
             } else {
@@ -175,7 +179,7 @@ public class Profile_Account_Servlet extends HttpServlet {
                     LocalDate dateCheck = LocalDate.parse(dob);
                     LocalDate now = LocalDate.now();
 
-                    if (dateCheck.isAfter(now) || Period.between(dateCheck, now).getYears() < 10) {
+                    if (dateCheck.isAfter(now) || Period.between(dateCheck, now).getYears() < 10 || Period.between(dateCheck, now).getYears() > 90) {
                         request.setAttribute("errMess", "Ngày sinh không hợp lệ");
                         request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
                         return;
@@ -227,7 +231,7 @@ public class Profile_Account_Servlet extends HttpServlet {
 
             boolean checkValidPass = isValidPassword(password);
             if (!checkValidPass) {
-                request.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số và kí tự đặc biệt");
+                request.setAttribute("errMess", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số, kí tự đặc biệt và không chứa khoảng trắng.");
 //                request.setAttribute("firstname", fName);
 //                request.setAttribute("lastname", lName);
 //                request.setAttribute("email", email);
@@ -265,7 +269,7 @@ public class Profile_Account_Servlet extends HttpServlet {
                     request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
                     System.out.println(acc.getAccPassword());
                 } else {
-                    request.setAttribute("errMess", "Đổi tài khoản Email thành công, bạn hãy thử lại sau");
+                    request.setAttribute("errMess", "Đổi mật khẩu không thành công, bạn hãy thử lại sau");
                     request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
                 }
             } else {
