@@ -1068,16 +1068,16 @@ textarea.form-control {
 
 .action-btn.shipping-btn {
     background: linear-gradient(45deg, #f26f21, #ff8c42);
-    
+
     box-shadow: 0 4px 10px rgba(242, 111, 33, 0.3);
-    
+
     transition: all 0.3s ease;
 }
 
 .action-btn.shipping-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(242, 111, 33, 0.4);
-    
+
 }
 
 .alert-message {
@@ -1135,4 +1135,58 @@ textarea.form-control {
         opacity: 0;
         visibility: hidden;
     }
+}
+
+#rejectionReasonContainer {
+    margin-top: 20px;
+}
+
+#rejectionReasonContainer label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+}
+
+#rejectionReason.form-control {
+    min-height: 90px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.rejection-reason-section {
+    background-color: rgba(231, 76, 60, 0.05);
+    border: 1px solid rgba(231, 76, 60, 0.2);
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-top: 25px;
+}
+
+.rejection-reason-section .section-title {
+    color: #e74c3c;
+    border-bottom: 1px solid rgba(231, 76, 60, 0.1);
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.rejection-reason-section .section-title i {
+    color: #e74c3c;
+}
+
+.rejection-text {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.6;
+    padding-top: 5px;
+}
+
+.pet-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.pet-card-link:hover {
+    text-decoration: none;
+    color: inherit;
 }

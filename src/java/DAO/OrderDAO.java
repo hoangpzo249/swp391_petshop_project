@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,20 +42,49 @@ public class OrderDAO {
         return order;
     }
 
-    public boolean updateOrderStatusById(int id, String status) {
+    public boolean updateOrderStatusById(int id, String status, String reason) {
         DBContext db = new DBContext();
+        Connection conn = null;
+        PreparedStatement ps = null;
+
         try {
             conn = db.getConnection();
-            String sql = "UPDATE OrderTB\n"
-                    + "SET orderStatus = ?\n"
-                    + "WHERE orderId = ?;";
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, status);
-            ps.setInt(2, id);
+            String sql;
+
+            if (reason != null && !reason.trim().isEmpty()) {
+                sql = "UPDATE OrderTB "
+                        + "SET orderStatus = ?, rejectionReason = ? "
+                        + "WHERE orderId = ?;";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, status);
+                ps.setString(2, reason);
+                ps.setInt(3, id);
+            } else {
+                sql = "UPDATE OrderTB "
+                        + "SET orderStatus = ?, rejectionReason = NULL "
+                        + "WHERE orderId = ?;";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, status);
+                ps.setInt(2, id);
+            }
+
             ps.executeUpdate();
             return true;
         } catch (Exception ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return false;
     }
@@ -86,6 +116,88 @@ public class OrderDAO {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+     public List<Order> filterOrders(String searchKey, String status, Date startDate, Date endDate) {
+        DBContext db = new DBContext();
+        List<Order> list = new ArrayList<>();
+        
+        List<Object> params = new ArrayList<>();
+
+        String baseSql = "SELECT o.*, ISNULL(oc.totalPrice, 0) AS totalPrice FROM OrderTB o "
+                       + "LEFT JOIN (SELECT orderId, SUM(priceAtOrder) as totalPrice FROM OrderContentTB GROUP BY orderId) oc "
+                       + "ON o.orderId = oc.orderId ";
+
+        StringBuilder whereClause = new StringBuilder();
+
+        if (searchKey != null && !searchKey.trim().isEmpty()) {
+            if (searchKey.matches(".*[a-zA-Z].*")) {
+                whereClause.append("customerName LIKE ? ");
+                params.add("%" + searchKey + "%");
+            } else {
+                try {
+                    Integer.parseInt(searchKey);
+                    whereClause.append("o.orderId = ? ");
+                    params.add(searchKey);
+                } catch (NumberFormatException e) {
+                }
+            }
+        }
+
+        if (status != null && !status.trim().isEmpty()) {
+            if (whereClause.length() > 0) {
+                whereClause.append("AND ");
+            }
+            whereClause.append("orderStatus = ? ");
+            params.add(status);
+        }
+
+        if (startDate != null) {
+            if (whereClause.length() > 0) {
+                whereClause.append("AND ");
+            }
+            whereClause.append("CAST(orderDate AS DATE) >= ? ");
+            params.add(startDate);
+        }
+
+        if (endDate != null) {
+            if (whereClause.length() > 0) {
+                whereClause.append("AND ");
+            }
+            whereClause.append("CAST(orderDate AS DATE) <= ? ");
+            params.add(endDate);
+        }
+
+        String finalSql = baseSql;
+        if (whereClause.length() > 0) {
+            finalSql += "WHERE " + whereClause.toString();
+        }
+        finalSql += "ORDER BY o.orderId ASC";
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(finalSql);
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(orderInfo(rs));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return list;
     }
 
     public Order getOrderById(String id) {

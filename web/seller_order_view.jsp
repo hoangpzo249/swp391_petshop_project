@@ -83,7 +83,7 @@
 
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
-                        <a href="seller-order-management" class="sidebar-link active">
+                        <a href="displayorder" class="sidebar-link active">
                             <i class="fas fa-bag-shopping"></i> Quản lý đơn hàng
                         </a>
                         <a href="seller-pet-management" class="sidebar-link">
@@ -135,7 +135,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="seller-order-management" method="get" id="filterForm">
+                        <form action="displayorder" method="GET" id="filterForm">
                             <div class="filter-controls">
                                 <div class="input-group">
                                     <i class="fas fa-search"></i>
@@ -218,7 +218,7 @@
                                                         </a>
                                                         <a class="action-btn reject-btn" title="Từ chối đơn hàng" 
                                                            href="#" 
-                                                           onclick="showConfirmationModal(event, 'từ chối đơn hàng này', 'updateorderstatus?action=reject&status=Rejected&orderId=${order.orderId}', 'btn-danger')">
+                                                           onclick="showConfirmationModal(event, 'từ chối đơn hàng này', 'updateorderstatus?action=reject&status=Rejected&orderId=${order.orderId}', 'btn-danger', true)"> <%-- ADDED 'true' --%>
                                                             <i class="fas fa-times"></i>
                                                         </a>
                                                     </c:if>
@@ -258,6 +258,12 @@
                 </div>
                 <div class="modal-body">
                     <p id="modalText">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
+
+                    <div id="rejectionReasonContainer" style="display: none;">
+                        <label for="rejectionReason">Lý do từ chối:</label>
+                        <textarea id="rejectionReason" class="form-control" rows="3" placeholder="Nhập lý do từ chối đơn hàng..."></textarea>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-outline" onclick="closeModal()">Hủy bỏ</button>
@@ -270,26 +276,49 @@
             const modalText = document.getElementById('modalText');
             const modalConfirmButton = document.getElementById('modalConfirmButton');
 
-            let urlToRedirect = '';
+            const reasonContainer = document.getElementById('rejectionReasonContainer');
+            const reasonTextarea = document.getElementById('rejectionReason');
 
-            function showConfirmationModal(event, actionText, url, buttonClass) {
+            let urlToRedirect = '';
+            let reasonIsRequired = false;
+
+
+            function showConfirmationModal(event, actionText, url, buttonClass, requiresReason = false) {
                 if (event) {
                     event.preventDefault();
                 }
 
-                modalText.innerText = `Bạn có chắc chắn muốn ` + actionText + ` ?`;
-
+                modalText.innerText = `Bạn có chắc chắn muốn ` + actionText + `?`;
                 urlToRedirect = url;
+                reasonIsRequired = requiresReason;
+
+                if (requiresReason) {
+                    reasonContainer.style.display = 'block';
+                    reasonTextarea.value = '';
+                } else {
+                    reasonContainer.style.display = 'none';
+                }
 
                 modalConfirmButton.className = 'btn';
                 modalConfirmButton.classList.add(buttonClass);
-
                 modal.classList.add('show');
             }
 
             function confirmAction() {
-                if (urlToRedirect) {
-                    window.location.href = urlToRedirect;
+                let finalUrl = urlToRedirect;
+
+                if (reasonIsRequired) {
+                    const reason = reasonTextarea.value.trim();
+                    if (reason === '') {
+                        alert('Vui lòng nhập lý do từ chối.');
+                        reasonTextarea.focus();
+                        return;
+                    }
+                    finalUrl += '&reason=' + encodeURIComponent(reason);
+                }
+
+                if (finalUrl) {
+                    window.location.href = finalUrl;
                 }
             }
 
@@ -298,6 +327,7 @@
             function closeModal() {
                 modal.classList.remove('show');
                 urlToRedirect = '';
+                reasonIsRequired = false;
             }
 
             window.onclick = function (event) {

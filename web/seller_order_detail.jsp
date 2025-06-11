@@ -27,7 +27,6 @@
             </div>
 
             <div class="seller-profile">
-                <%-- Assuming user's image is available, otherwise use placeholder --%>
                 <c:choose>
                     <c:when test="${not empty sessionScope.userAccount.accImage}">
                         <img src="data:image/jpeg;base64,${sessionScope.userAccount.getBase64Image()}" alt="Seller Avatar"/>
@@ -84,17 +83,17 @@
 
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
-                        <a href="seller-order-management" class="sidebar-link active"> <%-- Correct Link --%>
+                        <a href="seller-order-management" class="sidebar-link active">
                             <i class="fas fa-bag-shopping"></i> Quản lý đơn hàng
                         </a>
-                        <a href="seller-pet-management" class="sidebar-link"> <%-- Correct Link --%>
+                        <a href="seller-pet-management" class="sidebar-link">
                             <i class="fas fa-dog"></i> Quản lý thú cưng
                         </a>
                     </div>
 
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
-                        <a href="seller-create-pet" class="sidebar-link"> <%-- Correct Link --%>
+                        <a href="seller-create-pet" class="sidebar-link">
                             <i class="fas fa-paw"></i> Đăng bán thú cưng
                         </a>
                         <a href="profile" class="sidebar-link">
@@ -133,26 +132,23 @@
                         </h3>
                         <div class="card-tools">
                             <!-- Action Buttons -->
-
-
                             <c:if test="${order.orderStatus == 'Pending'}">
                                 <button type="button" class="btn btn-success" 
-                                        onclick="showConfirmationModal('xác nhận đơn hàng này', 'updateorderstatus?action=confirm&status=Confirmed&orderId=${order.orderId}', 'btn-success')">
+                                        onclick="showConfirmationModal(event, 'xác nhận đơn hàng này', 'updateorderstatus?action=confirm&status=Confirmed&orderId=${order.orderId}', 'btn-success')">
                                     <i class="fas fa-check"></i> Xác nhận
                                 </button>
                                 <button type="button" class="btn btn-danger" 
-                                        onclick="showConfirmationModal('từ chối đơn hàng này', 'updateorderstatus?action=reject&status=Rejected&orderId=${order.orderId}', 'btn-danger')">
+                                        onclick="showConfirmationModal(event, 'từ chối đơn hàng này', 'updateorderstatus?action=reject&status=Rejected&orderId=${order.orderId}', 'btn-danger', true)"> <%-- ADD ", true" HERE --%>
                                     <i class="fas fa-times"></i> Từ chối
                                 </button>
                             </c:if>
 
                             <c:if test="${order.orderStatus == 'Confirmed'}">
                                 <button type="button" class="btn btn-primary" 
-                                        onclick="showConfirmationModal('giao hàng cho đơn này', 'updateorderstatus?action=shipping&status=Shipping&orderId=${order.orderId}', 'btn-primary')">
+                                        onclick="showConfirmationModal(event, 'giao hàng cho đơn này', 'updateorderstatus?action=shipping&status=Shipping&orderId=${order.orderId}', 'btn-primary')">
                                     <i class="fas fa-truck"></i> Giao hàng
                                 </button>
                             </c:if>
-
 
                         </div>
                     </div>
@@ -208,6 +204,14 @@
                                 </div>
                             </div>
                         </div>
+                        <c:if test="${order.orderStatus == 'Rejected' and not empty order.rejectionReason}">
+                            <div class="rejection-reason-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-comment-slash"></i> Lý do từ chối
+                                </h3>
+                                <p class="rejection-text">${order.rejectionReason}</p>
+                            </div>
+                        </c:if>
                     </div>
                 </div>
 
@@ -219,20 +223,22 @@
                     <div class="card-body">
                         <div class="pet-grid">
                             <c:forEach items="${petList}" var="pet">
-                                <div class="pet-item-card">
-                                    <div class="pet-item-header">${pet.petName}</div>
-                                    <div class="pet-item-body">
-                                        <p><strong>ID:</strong> ${pet.petId}</p>
-                                        <p><strong>Giống:</strong> ${pet.breed.breedName}</p>
-                                        <p><strong>Màu sắc:</strong> ${pet.petColor}</p>
-                                        <p><strong>Giới tính:</strong> ${pet.petGender}</p>
-                                        <p><strong>Giá tại thời điểm đặt:</strong> 
-                                            <span style="font-weight: bold; color: #f26f21;">
-                                                <fmt:formatNumber value="${pet.priceAtOrder}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
-                                            </span>
-                                        </p>
+                                <a href="displaypet?id=${pet.petId}" class="pet-card-link">
+                                    <div class="pet-item-card">
+                                        <div class="pet-item-header">${pet.petName}</div>
+                                        <div class="pet-item-body">
+                                            <p><strong>ID:</strong> ${pet.petId}</p>
+                                            <p><strong>Giống:</strong> ${pet.breed.breedName}</p>
+                                            <p><strong>Màu sắc:</strong> ${pet.petColor}</p>
+                                            <p><strong>Giới tính:</strong> ${pet.petGender}</p>
+                                            <p><strong>Giá tại thời điểm đặt:</strong> 
+                                                <span style="font-weight: bold; color: #f26f21;">
+                                                    <fmt:formatNumber value="${pet.priceAtOrder}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                                </span>
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </c:forEach>
                             <c:if test="${empty petList}">
                                 <p>Không có thông tin thú cưng cho đơn hàng này.</p>
@@ -248,7 +254,6 @@
                 </div>
             </div>
         </div>
-        <!-- ======================== END OF MAIN CONTENT (EDITED SECTION) ======================== -->
         <div class="seller-footer">
             © 2025 PETFPT Shop - Hệ thống quản lý
         </div>
@@ -260,6 +265,12 @@
                 </div>
                 <div class="modal-body">
                     <p id="modalText">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
+
+                    <div id="rejectionReasonContainer" style="display: none;">
+                        <label for="rejectionReason">Lý do từ chối:</label>
+                        <textarea id="rejectionReason" class="form-control" rows="3" placeholder="Nhập lý do từ chối đơn hàng..."></textarea>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-outline" onclick="closeModal()">Hủy bỏ</button>
@@ -272,26 +283,49 @@
             const modalText = document.getElementById('modalText');
             const modalConfirmButton = document.getElementById('modalConfirmButton');
 
-            let urlToRedirect = '';
+            const reasonContainer = document.getElementById('rejectionReasonContainer');
+            const reasonTextarea = document.getElementById('rejectionReason');
 
-            function showConfirmationModal(actionText, url, buttonClass) {
+            let urlToRedirect = '';
+            let reasonIsRequired = false;
+
+
+            function showConfirmationModal(event, actionText, url, buttonClass, requiresReason = false) {
                 if (event) {
                     event.preventDefault();
                 }
 
-                modalText.innerText = `Bạn có chắc chắn muốn ${actionText}?`;
-
+                modalText.innerText = `Bạn có chắc chắn muốn ` + actionText + `?`;
                 urlToRedirect = url;
+                reasonIsRequired = requiresReason;
+
+                if (requiresReason) {
+                    reasonContainer.style.display = 'block';
+                    reasonTextarea.value = '';
+                } else {
+                    reasonContainer.style.display = 'none';
+                }
 
                 modalConfirmButton.className = 'btn';
                 modalConfirmButton.classList.add(buttonClass);
-
                 modal.classList.add('show');
             }
 
             function confirmAction() {
-                if (urlToRedirect) {
-                    window.location.href = urlToRedirect;
+                let finalUrl = urlToRedirect;
+
+                if (reasonIsRequired) {
+                    const reason = reasonTextarea.value.trim();
+                    if (reason === '') {
+                        alert('Vui lòng nhập lý do từ chối.');
+                        reasonTextarea.focus();
+                        return;
+                    }
+                    finalUrl += '&reason=' + encodeURIComponent(reason);
+                }
+
+                if (finalUrl) {
+                    window.location.href = finalUrl;
                 }
             }
 
@@ -300,6 +334,7 @@
             function closeModal() {
                 modal.classList.remove('show');
                 urlToRedirect = '';
+                reasonIsRequired = false;
             }
 
             window.onclick = function (event) {

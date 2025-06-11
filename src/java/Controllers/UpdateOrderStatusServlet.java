@@ -58,12 +58,13 @@ public class UpdateOrderStatusServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         OrderDAO _dao = new OrderDAO();
+        HttpSession session = request.getSession(false);
         String status = request.getParameter("status");
         int id = Integer.parseInt(request.getParameter("orderId"));
-        HttpSession session = request.getSession(false);
+        String reason=request.getParameter("reason");
         String referer = request.getHeader("referer");
 
-        if (_dao.updateOrderStatusById(id, status)) {
+        if (_dao.updateOrderStatusById(id, status, reason)) {
             session.setAttribute("successMess", "Cập nhật đơn hàng thành công.");
         } else {
             session.setAttribute("errMess", "Cập nhật đơn hàng không thành công.");

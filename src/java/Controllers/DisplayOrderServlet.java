@@ -12,6 +12,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,12 +62,46 @@ public class DisplayOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        OrderDAO _dao = new OrderDAO();
+        request.setCharacterEncoding("UTF-8");
 
-        List<Order> list = _dao.getOrders();
+        String searchKey = request.getParameter("searchKey");
+        String status = request.getParameter("status");
+
+        String startDateStr = request.getParameter("startDate");
+        String endDateStr = request.getParameter("endDate");
+
+        Date startDate = null;
+        Date endDate = null;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            if (startDateStr != null && !startDateStr.isEmpty()) {
+                java.util.Date utilStartDate = sdf.parse(startDateStr);
+                startDate = new Date(utilStartDate.getTime());
+            }
+
+            if (endDateStr != null && !endDateStr.isEmpty()) {
+                java.util.Date utilEndDate = sdf.parse(endDateStr);
+                endDate = new Date(utilEndDate.getTime());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            HttpSession session = request.getSession(false);
+            String referer = request.getHeader("referer");
+            session.setAttribute("errorMess", "Định dạng ngày không hợp lệ.");
+            if (referer != null) {
+                response.sendRedirect(referer);
+            } else {
+                response.sendRedirect("displayorder");
+            }
+            return;
+        }
+
+        OrderDAO _dao = new OrderDAO();
+        List<Order> list = _dao.filterOrders(searchKey, status, startDate, endDate);
 
         request.setAttribute("orderList", list);
-
         request.getRequestDispatcher("seller_order_view.jsp")
                 .forward(request, response);
 
@@ -80,7 +118,48 @@ public class DisplayOrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        request.setCharacterEncoding("UTF-8");
+
+        String searchKey = request.getParameter("searchKey");
+        String status = request.getParameter("status");
+
+        String startDateStr = request.getParameter("startDate");
+        String endDateStr = request.getParameter("endDate");
+
+        Date startDate = null;
+        Date endDate = null;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            if (startDateStr != null && !startDateStr.isEmpty()) {
+                java.util.Date utilStartDate = sdf.parse(startDateStr);
+                startDate = new Date(utilStartDate.getTime());
+            }
+
+            if (endDateStr != null && !endDateStr.isEmpty()) {
+                java.util.Date utilEndDate = sdf.parse(endDateStr);
+                endDate = new Date(utilEndDate.getTime());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            HttpSession session = request.getSession(false);
+            String referer = request.getHeader("referer");
+            session.setAttribute("errorMess", "Định dạng ngày không hợp lệ.");
+            if (referer != null) {
+                response.sendRedirect(referer);
+            } else {
+                response.sendRedirect("displayorder");
+            }
+            return;
+        }
+
+        OrderDAO _dao = new OrderDAO();
+        List<Order> list = _dao.filterOrders(searchKey, status, startDate, endDate);
+
+        request.setAttribute("orderList", list);
+        request.getRequestDispatcher("seller_order_view.jsp")
+                .forward(request, response);
     }
 
     /**
