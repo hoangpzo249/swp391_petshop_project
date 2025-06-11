@@ -19,6 +19,7 @@ import java.sql.SQLException;
  * @author Admin
  */
 public class DiscountDAO extends DBContext {
+    
 
 //        R-1
     public ArrayList<Discount> getAllDiscountFromDatabase() {
@@ -136,6 +137,7 @@ public class DiscountDAO extends DBContext {
                     + " values( ?, ?, ?, ?, "
                     + "?, ?, ?, ?, ?) ";
             preStatement = connection.prepareStatement(sql);
+            
             preStatement.setString(1, added.getDiscountCode());
             preStatement.setString(2, added.getDiscountType());
             preStatement.setFloat(3, added.getDisCountValue());
@@ -189,6 +191,43 @@ public class DiscountDAO extends DBContext {
         return rowAffected == 1;
     }
 
+    public boolean isExistDiscountCode(String discountCode) {
+        boolean isExist = false;
+        PreparedStatement preStatement = null;
+        ResultSet rs = null;
+        try {
+            String sql = "select Count(*) from discountTB where discountCode = ? ";
+            preStatement = connection.prepareStatement(sql);
+            preStatement.setString(1, discountCode);
+            rs = preStatement.executeQuery();
+            while (rs.next()) {
+                int rowContainCode = rs.getInt(1);
+                if (rowContainCode != 0) {
+                    isExist = true;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Có lỗi khi truy vấn");
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (Exception e) {
+                    System.err.println(" có lỗi khi đóng resultset");
+                }
+            }
+            if (preStatement != null) {
+                try {
+                    preStatement.close();
+                } catch (Exception e) {
+                    System.err.println("Có lỗi khi đóng Statement");
+                }
+            }
+        }
+        return isExist;
+    }
+
     public static void main(String[] args) {
         DiscountDAO UnitTsstDao = new DiscountDAO();
         // unit test for All
@@ -238,7 +277,14 @@ public class DiscountDAO extends DBContext {
 //        } else {
 //            System.out.println("upodate failed");
 //        }
-        
+        //6. unit test for checkExistCode
+        String testCode = "chay duoc roI";
+//        ở đây thì database có hành vi ko kiểu tra thừa 1 dấu cách- liệu nhiều dấu thì sao? cũng vẫn chạy bth
+        if (UnitTsstDao.isExistDiscountCode(testCode+"      ")) {
+            System.out.println("đã tìm thấy discount code: "+testCode);
+        } else {
+            System.out.println("không tìm thấy discount code: "+testCode+" trong database");
+        }
         // 1. Unit test for getAll
         System.out.println("sau khi làm gì đó; ");
         discountList = UnitTsstDao.getAllDiscountFromDatabase();

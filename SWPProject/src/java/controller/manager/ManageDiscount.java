@@ -11,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,6 +61,8 @@ public class ManageDiscount extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+//        int totalError = 0;
+        ArrayList<String> errors = new ArrayList<>();
         String userAcction = request.getParameter("userAcction");
         DiscountDAO discountDao = new DiscountDAO();
         if (userAcction == null) {
@@ -69,25 +72,173 @@ public class ManageDiscount extends HttpServlet {
         } else {
             switch (userAcction) {
                 case "add":
+                    // 1. InternalValidation - this will check the condition of the data been sended from JSP-View 
+                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
                     String discountCode = request.getParameter("discountCode");
                     String discountType = request.getParameter("discountType");
-                    // this is the String value of discountvalue, need to be parse to int
-                    // tự hỏi ko biết cần để disoountValue Strng ở dây không nhỉ? hay nhét vô try catch là xong cũng được.                    
                     String discountValueString = request.getParameter("discountValue");
-                    int discountValue = 0;
+                    float discountValue = 0;
                     String description = request.getParameter("description");
-                    // this is the String value of discountvalue, need to be parse to date
                     String validFromString = request.getParameter("validFrom");
                     String validToString = request.getParameter("validTo");
-                    Date validFrom;
-                    Date validTo;
-                    // this is the String value of discountvalue, need to be parse to int
+                    Date validFrom = null;
+                    Date validTo = null;
                     String minOrderAmountString = request.getParameter("minOrderAmount");
                     String maxUsageString = request.getParameter("maxUsage");
-//                    this must be convert to boolean
+                    int minOrderAmount = 0;
+                    int maxUsage = 0;
+                    // this must be convert to boolean
                     String isActiveString = request.getParameter("isActive");
+                    boolean isActive = false;
 
-                    processRequest(request, response);
+                    // 1.1. Check single validation
+                    // check discountCode
+                    if (discountCode == null || discountCode.isBlank()) {
+                        errors.add("Discount code must not be blank");
+                    }
+                    // check discountType
+                    if (discountType == null || discountType.isBlank()) {
+                        errors.add("Discount type must not be blank");
+                    } else {
+                        //  this can be affect by jsp value
+                        if (!(discountType.equalsIgnoreCase("Fixed") || discountType.equalsIgnoreCase("Percent"))) {
+                            errors.add("the discount type must be one of Fixed or Percent");
+                        }
+                    }
+                    // check discountValue
+                    if (discountValueString == null || discountValueString.isBlank()) {
+                        errors.add("Discount value must not be blank/empty");
+                    } else {
+                        try {
+                            discountValue = Float.parseFloat(discountValueString);
+                            if (discountValue <= 0) {
+                                errors.add("the value must greatter than 0");
+                            }
+                        } catch (Exception e) {
+                            errors.add("discount value must be a number");
+                        }
+                    }
+                    // check description
+                    if (description == null || description.isBlank()) {
+                        errors.add("Description must not be blank");
+                    }
+
+                    // check valid From                    
+                    if (validFromString == null || validFromString.isBlank()) {
+                        errors.add("valid from must not be blank");
+                    } else {
+                        try {
+                            validFrom = dateFormatter.parse(validFromString);
+                            if (validFrom.compareTo(new Date()) < 0) {
+                                errors.add("The from Date must equal or after today !");
+                            }
+                        } catch (Exception e) {
+                            errors.add("the valid from date must be the correct format");
+                        }
+                    }
+
+                    // check valid To   
+                    if (validToString == null || validToString.isBlank()) {
+                        errors.add("valid to must not be blank");
+                    } else {
+                        try {
+                            validTo = dateFormatter.parse(validToString);
+                        } catch (Exception e) {
+                            errors.add("the valid to date must be the correct format");
+                            errors.add(validFromString);
+                        }
+                    }
+
+//                    check for minOrderAmount
+                    if (minOrderAmountString == null || minOrderAmountString.isBlank()) {
+                        errors.add("min order amount must not be blank");
+                    } else {
+                        try {
+                            minOrderAmount = Integer.parseInt(minOrderAmountString);
+                            if (minOrderAmount < 0) {
+                                errors.add("the min order must not below 0");
+                            }
+                        } catch (Exception e) {
+                            errors.add("the min order amoun must be number");
+                        }
+                    }
+
+                    if (maxUsageString == null || maxUsageString.isBlank()) {
+                        errors.add("max usage must not be blank");
+                    } else {
+                        try {
+                            maxUsage = Integer.parseInt(minOrderAmountString);
+                            if (maxUsage <= 0) {
+                                errors.add("the min order must greatter than 0");
+                            }
+                        } catch (Exception e) {
+                            errors.add("the min order amoun must be number");
+                        }
+                    }
+
+                    if (isActiveString == null || isActiveString.isBlank()) {
+                        errors.add("status must not be blank");
+                    } else {
+                        //  this can be affect by jsp value
+                        if (!(isActiveString.equalsIgnoreCase("true") || isActiveString.equalsIgnoreCase("false"))) {
+                            errors.add("the discount type must be one of Fixed or Percent");
+                        } else {
+                            isActive = (isActiveString.equalsIgnoreCase("true"));
+                        }
+                    }
+
+                    // 2. Check combination condition
+                    // 2.1 betweeen
+                    if (discountType != null && discountType.equals("Percent") && discountValue >= 100) {
+                        errors.add("The discount Value must smaller than 100% and larger than 0%"); //ném thêm vào BR
+                    }
+                    //check condition of validFrom and ValidTo
+                    if (validFrom != null && validTo != null && (!validTo.after(validFrom))) {
+                        errors.add("valid To must after validFrom");
+                    }
+
+                    //if the request have problem
+                    if (!errors.isEmpty()) {
+                        request.setAttribute("errors", errors);
+                        request.setAttribute("discountCode", discountCode);
+                        request.setAttribute("discountValue", discountValueString);
+                        request.setAttribute("description", description);
+//                         cause jsp receieve data String with format; "yyyy-MM-dd"
+                        request.setAttribute("validFrom", validFromString);
+                        request.setAttribute("validTo", validToString);
+                        request.setAttribute("minOrderAmount", minOrderAmountString);
+                        request.setAttribute("maxUsage", maxUsageString);
+
+                        request.getRequestDispatcher("managerpages/adddiscount.jsp").forward(request, response);
+                    } else {
+                        if (discountDao.isExistDiscountCode(discountCode.trim())) {
+                            errors.add("Discount code đã tồn tại trong databse");
+                            request.setAttribute("errors", errors);
+                            request.getRequestDispatcher("managerpages/adddiscount.jsp").forward(request, response);
+                        } else {
+                            Discount added = new Discount();
+                            added.setDiscountCode(discountCode.trim());
+                            added.setDiscountType(discountType.trim());
+                            added.setDisCountValue(discountValue);
+                            added.setDescription(description.trim());
+                            added.setValidFrom(validFrom);
+                            added.setValidTo(validTo);
+                            added.setMinOrderAmount(minOrderAmount);
+                            added.setMaxUsage(maxUsage);
+                            added.setIsActive(isActive);
+                            if (discountDao.createDiscountToDatabase(added)) {
+                                request.setAttribute("addStatus", "added successfull");
+                                request.getRequestDispatcher("managerpages/adddiscount.jsp").forward(request, response);
+                            } else {
+                                errors.add("add failed, i do not know the reason ?");
+                                request.setAttribute("errors", errors);
+                                request.getRequestDispatcher("managerpages/adddiscount.jsp").forward(request, response);
+                            }
+                        }
+                    }
+                    break;
+
+                case "":
                     break;
             }
         }
@@ -118,4 +269,9 @@ public class ManageDiscount extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private ArrayList<String> validInputDiscount(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+        return null;
+    }
 }
