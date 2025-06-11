@@ -11,10 +11,10 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
         <script src="js/scroll_chat.js" type="text/javascript"></script>
-        <!--<script src="js/favoriteittem.js" type="text/javascript"></script>-->
-        <link href="css/main_product.css?v=4" rel="stylesheet" type="text/css"/>
+
+        <link href="css/main_product.css?v=6" rel="stylesheet" type="text/css"/>
         <script src="js/readmore_product.js" type="text/javascript"></script>
-        <script src="js/add_alert.js?v=2" type="text/javascript"></script>
+
     </head>
 
     <body>
@@ -120,7 +120,7 @@
                     </div>
 
 
-                    <form action="addtocart" method="GET" class="cartForm" target="cart-response-frame">
+                    <form action="addtocart" method="GET" class="cartForm">
 
 
 
@@ -186,7 +186,17 @@
                 </c:forEach>
 
             </div>
-            <iframe id="cart-response-frame" name="cart-response-frame" style="display:none;"></iframe>
+           
+
+            <c:if test="${not empty sessionScope.cartMessage}">
+                <div  class="toast">
+                    <i class="fas fa-check-circle"></i>
+                    ${sessionScope.cartMessage}
+                </div>
+                <c:remove var="cartMessage" scope="session" />
+            </c:if>
+
+
 
 
 

@@ -229,7 +229,9 @@ public class CartDAO {
             ps.setInt(1, accId);
             rs = ps.executeQuery();
             while (rs.next()) {
-                Cart cart = new Cart(accId, rs.getInt("petId"), 1, 0);
+                PetDAO p = new PetDAO();
+                int petId=rs.getInt("petId");
+                Cart cart = new Cart(accId,petId , 1, p.getPetById(petId).getPetPrice());
                 list.add(cart);
             }
         } catch (Exception ex) {

@@ -115,16 +115,10 @@ public class AddToCartServlet extends HttpServlet {
                     session.setAttribute("cartcount", guestCart.size());
                 }
 
-                Integer cartcount = (Integer) session.getAttribute("cartcount");
-                int count = (cartcount != null) ? cartcount : 0;
+                
 
-                response.setContentType("text/plain");
+               response.sendRedirect("displaypet?id=" + idStr);
 
-                PrintWriter out = response.getWriter();
-
-                String message = (String) session.getAttribute("cartMessage");
-
-                out.print(message + "|" + count);
 
             } catch (NumberFormatException e) {
 

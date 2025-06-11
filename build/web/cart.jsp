@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
         <script src="js/scroll_chat.js" type="text/javascript"></script>
-        <script src="js/cart_selection.js?v=6" type="text/javascript"></script>
+        <script src="js/cart_selection.js?v=10" type="text/javascript"></script>
         <link href="css/cart.css?v=3" rel="stylesheet" type="text/css"/>
         <script src="js/cart_tick.js" type="text/javascript"></script>
 
@@ -33,7 +33,7 @@
                 </div>
                 <form action="listshoppet">
                     <div class="search">
-                        <input type="text" name="search" value="${sessionScope.search}" placeholder="Tìm kiếm thú cưng ..."/>
+                        <input type="text" name="search" value="${sessionScope.search}" placeholder="Tìm kiếm thú cưng ..." style="border: none;"/>
                         <button type="submit" class="search-button">
                             <img src="images/search.png" width="512" height="512" alt="search" />
                         </button>
@@ -115,11 +115,6 @@
                                 </td>
 
 
-
-
-
-
-
                                 <td class="item-info">
                                     <a href="displaypet?id=${pet.petId}" class="item-link">
                                         <img src="${pet.petImageBase64}" alt="${pet.petName}" class="cart-img" />
@@ -153,8 +148,6 @@
                         </c:forEach>
                     </tbody>
                 </table>
-
-
 
 
                 <form id="checkoutForm" action="ajaxServlet" method="POST">
@@ -227,43 +220,15 @@
                         <div>Tổng cộng:</div>
                         <div id="total-display">0₫</div>
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    <input type="hidden" name="totalprice" id="totalInput" />
+                   
                     <label class="terms-label">
                         <input type="checkbox" required />
                         Tôi đồng ý với <a href="footer_termofuse.jsp" target="_blank">điều khoản</a>.
                     </label>
 
-
-
-                    <button 
-                        type="submit" 
-                        formaction="ajaxServlet"
-                        class="checkout-btn"
-                        >Tiến hành thanh toán</button>
+                    <button type="submit" class="checkout-btn">Tiến hành thanh toán</button>
                 </form>
-
-
-
-
-
-
-
-
-
-
 
 
                 <!-- about -->
@@ -331,3 +296,36 @@
 
                 </body>
                 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

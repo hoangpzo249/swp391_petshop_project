@@ -35,10 +35,7 @@ public class DeleteFromCart extends HttpServlet {
 
             int totalItems = cartDAO.getTotalCartItems(accountId);
             session.setAttribute("cartcount", totalItems);
-            request.setAttribute("guestName", request.getParameter("guestName"));
-            request.setAttribute("guestPhone", request.getParameter("guestPhone"));
-            request.setAttribute("guestAddress", request.getParameter("guestAddress"));
-            request.setAttribute("email", request.getParameter("email"));
+            
         } else {
 
             List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");

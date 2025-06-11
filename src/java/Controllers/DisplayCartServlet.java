@@ -58,6 +58,7 @@ public class DisplayCartServlet extends HttpServlet {
             request.setAttribute("name", account.getAccFname() + " " + account.getAccLname());
             request.setAttribute("phone", account.getAccPhoneNumber());
             request.setAttribute("address", account.getAccAddress());
+            request.setAttribute("email", account.getAccEmail());
 
         } else {
             List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
@@ -88,7 +89,7 @@ public class DisplayCartServlet extends HttpServlet {
         if (account != null) {
             session.setAttribute("cartcount", cartDao.getTotalCartItems(account.getAccId()));
         } else {
-            session.setAttribute("guestCart", updatedPetCart);
+            
             session.setAttribute("cartcount", updatedPetCart.size());
         }
 
