@@ -15,15 +15,13 @@ public class Breed {
     private int breedId;
     private String breedName;
     private String breedSpecies;
-    private double breedStatus;
+    private boolean breedStatus;
     private byte[] breedImage;
 
     public Breed() {
     }
-    
-    
 
-    public Breed(int breedId, String breedName, String breedSpecies, double breedStatus, byte[] breedImage) {
+    public Breed(int breedId, String breedName, String breedSpecies, boolean breedStatus, byte[] breedImage) {
         this.breedId = breedId;
         this.breedName = breedName;
         this.breedSpecies = breedSpecies;
@@ -55,11 +53,11 @@ public class Breed {
         this.breedSpecies = breedSpecies;
     }
 
-    public double getBreedStatus() {
+    public boolean isBreedStatus() {
         return breedStatus;
     }
 
-    public void setBreedStatus(double breedStatus) {
+    public void setBreedStatus(boolean breedStatus) {
         this.breedStatus = breedStatus;
     }
 
@@ -75,7 +73,7 @@ public class Breed {
         if (breedImage != null) {
             return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(breedImage);
         }
-        if (breedSpecies.equals("Chó")) {
+        if (breedSpecies != null && breedSpecies.equals("Dog")) {
             return "images/defaultdog.jpg";
         } else {
             return "images/defaultcat.jpg";
@@ -86,5 +84,4 @@ public class Breed {
     public String toString() {
         return "Breed{" + "breedId=" + breedId + ", breedName=" + breedName + ", breedSpecies=" + breedSpecies + ", breedStatus=" + breedStatus + '}';
     }
-
 }

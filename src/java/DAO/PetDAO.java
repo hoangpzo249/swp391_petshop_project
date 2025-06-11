@@ -39,6 +39,123 @@ public class PetDAO {
         );
     }
 
+    public List<Pet> filterPetsForSeller(String searchKey, String availability, String species, String breedId, String gender, String vaccination) {
+        List<Pet> list = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+        DBContext db = new DBContext();
+
+        String sql = "SELECT p.*, b.breedName "
+                + "FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId ";
+
+        StringBuilder whereClause = new StringBuilder();
+
+        if (searchKey != null && !searchKey.trim().isEmpty()) {
+            if (whereClause.length() > 0) {
+                whereClause.append("AND ");
+            }
+            if (searchKey.matches(".*[a-zA-Z].*")) {
+                whereClause.append("p.petName LIKE ? ");
+                params.add("%" + searchKey + "%");
+            } else {
+                try {
+                    Integer.parseInt(searchKey);
+                    whereClause.append("p.petId = ? ");
+                    params.add(searchKey);
+                } catch (NumberFormatException e) {
+                }
+            }
+        }
+
+        if (availability != null && !availability.isEmpty()) {
+            if (whereClause.length() > 0) {
+                whereClause.append("AND ");
+            }
+            whereClause.append("p.petAvailability = ? ");
+            params.add(availability);
+        }
+
+        if (species != null && !species.isEmpty()) {
+            if (whereClause.length() > 0) {
+                whereClause.append("AND ");
+            }
+            whereClause.append("b.breedSpecies = ? ");
+            params.add(species);
+        }
+
+        if (breedId != null && !breedId.isEmpty()) {
+            if (whereClause.length() > 0) {
+                whereClause.append("AND ");
+            }
+            whereClause.append("p.breedId = ? ");
+            params.add(breedId);
+        }
+
+        if (gender != null && !gender.isEmpty()) {
+            if (whereClause.length() > 0) {
+                whereClause.append("AND ");
+            }
+            whereClause.append("p.petGender = ? ");
+            params.add(gender);
+        }
+
+        if (vaccination != null && !vaccination.isEmpty()) {
+            if (whereClause.length() > 0) {
+                whereClause.append("AND ");
+            }
+            whereClause.append("p.petVaccination = ? ");
+            params.add(vaccination);
+        }
+
+        if (whereClause.length() > 0) {
+            sql += "WHERE " + whereClause.toString();
+        }
+
+        sql += "ORDER BY p.petId DESC";
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Pet pet = PetInfo(rs);
+                Breed breed = new Breed();
+                breed.setBreedId(rs.getInt("breedId"));
+                breed.setBreedName(rs.getString("breedName"));
+                pet.setBreed(breed);
+                pet.setImages(getImagesByPetId(pet.getPetId()));
+                list.add(pet);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+
+        return list;
+    }
+
     public boolean updatePetAvailabilityById(ArrayList<Integer> petIds) {
         if (petIds == null || petIds.isEmpty()) {
             return true;
@@ -134,6 +251,40 @@ public class PetDAO {
         }
 
         return list;
+    }
+
+    public List<byte[]> getImagesByPetId(int petId) {
+        List<byte[]> images = new ArrayList<>();
+        try {
+            conn = new DBContext().getConnection();
+            String sql = "SELECT imageData FROM PetImageTB WHERE petId = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, petId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                images.add(rs.getBytes("imageData"));
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+        }
+        return images;
     }
 
     public List<Pet> getSimilarPets(int breedId, int excludedPetId) {
@@ -243,40 +394,6 @@ public class PetDAO {
         return list;
     }
 
-    public List<byte[]> getImagesByPetId(int petId) {
-        List<byte[]> images = new ArrayList<>();
-        try {
-            conn = new DBContext().getConnection();
-            String sql = "SELECT imageData FROM PetImageTB WHERE petId = ?";
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, petId);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                images.add(rs.getBytes("imageData"));
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (ps != null) {
-                ps.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (Exception e) {
-        }
-        return images;
-    }
-
     public List<String> getAllOrigins() {
         List<String> list = new ArrayList<>();
         String sql = "SELECT DISTINCT petOrigin FROM PetTB WHERE petOrigin IS NOT NULL";
@@ -379,7 +496,7 @@ public class PetDAO {
 
         try {
             conn = new DBContext().getConnection();
-            String sql = "SELECT p.*, b.breedName FROM PetTB p INNER JOIN BreedTB b ON p.breedId = b.breedId "
+            String sql = "SELECT p.*, b.breedName FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
                     + "WHERE p.petAvailability = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?)";
 
             if (!"%".equals(breed)) {
@@ -406,8 +523,7 @@ public class PetDAO {
 
             if (sort != null && !sort.isEmpty()) {
                 switch (sort) {
-                    case "popular", "new" ->
-                        sql += " ORDER BY p.petId DESC";
+
                     case "az" ->
                         sql += " ORDER BY p.petName ASC";
                     case "za" ->
@@ -452,27 +568,32 @@ public class PetDAO {
             while (rs.next()) {
                 Pet pet = PetInfo(rs);
                 pet.setBreedName(rs.getString("breedName"));
+                boolean ageMatches = true;
+
                 if (ageRange != null && !ageRange.isEmpty()) {
                     Date dob = pet.getPetDob();
-                    if (dob != null) {
-                        int months = getAgeInMonths(dob);
-                        boolean match = ("under30".equals(ageRange) && months < 30)
-                                || ("30-36".equals(ageRange) && months >= 30 && months <= 36)
-                                || ("37-44".equals(ageRange) && months >= 37 && months <= 44)
-                                || ("above44".equals(ageRange) && months >= 45);
-                        if (!match) {
-                            continue;
-                        }
+                    if (dob == null) {
+                        ageMatches = false;
                     } else {
-                        continue;
+                        int months = getAgeInMonths(dob);
+
+                        if ("under30".equals(ageRange)) {
+                            ageMatches = months < 30;
+                        } else if ("30-36".equals(ageRange)) {
+                            ageMatches = months >= 30 && months <= 36;
+                        } else if ("37-44".equals(ageRange)) {
+                            ageMatches = months >= 37 && months <= 44;
+                        } else if ("above44".equals(ageRange)) {
+                            ageMatches = months >= 45;
+                        }
                     }
                 }
-                tempList.add(pet);
-            }
 
-            rs.close();
-            ps.close();
-            conn.close();
+                if (ageMatches) {
+                    tempList.add(pet);
+                }
+
+            }
 
             for (Pet pet : tempList) {
                 pet.setImages(getImagesByPetId(pet.getPetId()));
