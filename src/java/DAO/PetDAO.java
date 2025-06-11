@@ -39,6 +39,10 @@ public class PetDAO {
         );
     }
     
+    public boolean updatePetAvailabilityById(ArrayList<Integer> list) {
+        return false;
+    }
+    
     public List<Pet> getPetForOrderDetail(int orderId) {
         DBContext db = new DBContext();
         List<Pet> list = new ArrayList<>();

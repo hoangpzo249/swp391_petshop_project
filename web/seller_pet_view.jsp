@@ -97,7 +97,12 @@
                     <div class="card-header">
                         <h3 class="card-title"><i class="fas fa-list-ul"></i> Danh sách thú cưng</h3>
                         <div class="card-tools">
-                            <a href="seller-create-pet" class="btn btn-primary"><i class="fas fa-plus"></i> Đăng bán thú cưng</a>
+                            <button class="btn btn-primary" onclick="location.href = 'admin-panel?action=create-account&type=customer'">
+                                <i class="fas fa-paw"></i> Đăng bán thú cưng
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-file-export"></i> Xuất dữ liệu
+                            </button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -107,6 +112,7 @@
                                     <i class="fas fa-search"></i>
                                     <input type="text" name="searchKey" placeholder="Tìm theo Mã, Tên thú cưng..." value="${param.searchKey}">
                                 </div>
+
                                 <div class="select-group">
                                     <select name="availability" onchange="this.form.submit()">
                                         <option value="" ${empty param.availability ? 'selected' : ''}>Tất cả trạng thái</option>
@@ -114,6 +120,42 @@
                                         <option value="0" ${param.availability == '0' ? 'selected' : ''}>Đã bán</option>
                                     </select>
                                 </div>
+
+                                <%-- NEW FILTERS --%>
+                                <div class="select-group">
+                                    <select name="species" onchange="this.form.submit()">
+                                        <option value="">Tất cả loài</option>
+                                        <c:forEach items="${speciesList}" var="s">
+                                            <option value="${s}" ${param.species == s ? 'selected' : ''}>${s}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+
+                                <div class="select-group">
+                                    <select name="breedId" onchange="this.form.submit()">
+                                        <option value="">Tất cả giống</option>
+                                        <c:forEach items="${breedList}" var="b">
+                                            <option value="${b.breedId}" ${param.breedId == b.breedId ? 'selected' : ''}>${b.breedName}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+
+                                <div class="select-group">
+                                    <select name="gender" onchange="this.form.submit()">
+                                        <option value="">Tất cả giới tính</option>
+                                        <option value="Male" ${param.gender == 'Male' ? 'selected' : ''}>Đực</option>
+                                        <option value="Female" ${param.gender == 'Female' ? 'selected' : ''}>Cái</option>
+                                    </select>
+                                </div>
+
+                                <div class="select-group">
+                                    <select name="vaccination" onchange="this.form.submit()">
+                                        <option value="">Tiêm phòng</option>
+                                        <option value="1" ${param.vaccination == '1' ? 'selected' : ''}>Đã tiêm</option>
+                                        <option value="0" ${param.vaccination == '0' ? 'selected' : ''}>Chưa tiêm</option>
+                                    </select>
+                                </div>
+
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
                             </div>
                         </form>

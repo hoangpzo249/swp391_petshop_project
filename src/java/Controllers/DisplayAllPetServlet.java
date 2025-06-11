@@ -59,7 +59,7 @@ public class DisplayAllPetServlet extends HttpServlet {
         PetDAO _dao=new PetDAO();
         List<Pet> listpet=_dao.getAllPets();
         request.setAttribute("listpet", listpet);
-        request.getRequestDispatcher("seller_pet_list.jsp")
+        request.getRequestDispatcher("seller_pet_view.jsp")
                 .forward(request, response);
     } 
 

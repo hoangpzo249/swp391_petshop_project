@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAO.OrderDAO;
+import DAO.PetDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -57,15 +58,20 @@ public class UpdateOrderStatusServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        OrderDAO _dao = new OrderDAO();
+        OrderDAO _daoorder = new OrderDAO();
+        PetDAO _daopet=new PetDAO();
         HttpSession session = request.getSession(false);
         String status = request.getParameter("status");
         int id = Integer.parseInt(request.getParameter("orderId"));
         String reason=request.getParameter("reason");
         String referer = request.getHeader("referer");
 
-        if (_dao.updateOrderStatusById(id, status, reason)) {
+        if (_daoorder.updateOrderStatusById(id, status, reason)) {
             session.setAttribute("successMess", "Cập nhật đơn hàng thành công.");
+            
+            if (reason.equals("Rejected") && !_daopet.updatePetAvailabilityById(_daoorder.getOrderContentById(id))) {
+                session.setAttribute("errMess", "Cập nhật trạng thái thú cưng không thành công.");
+            }
         } else {
             session.setAttribute("errMess", "Cập nhật đơn hàng không thành công.");
         }

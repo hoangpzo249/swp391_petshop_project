@@ -249,14 +249,14 @@ public class OrderDAO {
         return null;
     }
 
-    public ArrayList<Integer> getOrderContentById(String id) {
+    public ArrayList<Integer> getOrderContentById(int id) {
         DBContext db = new DBContext();
         ArrayList<Integer> list = new ArrayList<>();
         try {
             conn = db.getConnection();
             String sql = "SELECT * FROM OrderContentTB WHERE orderId=?";
             ps = conn.prepareStatement(sql);
-            ps.setString(1, id);
+            ps.setInt(1, id);
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(rs.getInt("petId"));
