@@ -69,7 +69,7 @@ public class UpdateOrderStatusServlet extends HttpServlet {
         if (_daoorder.updateOrderStatusById(id, status, reason)) {
             session.setAttribute("successMess", "Cập nhật đơn hàng thành công.");
             
-            if (reason.equals("Rejected") && !_daopet.updatePetAvailabilityById(_daoorder.getOrderContentById(id))) {
+            if (status.equals("Rejected") && !_daopet.updatePetAvailabilityById(_daoorder.getOrderContentById(id))) {
                 session.setAttribute("errMess", "Cập nhật trạng thái thú cưng không thành công.");
             }
         } else {

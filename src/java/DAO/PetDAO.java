@@ -38,34 +38,78 @@ public class PetDAO {
                 rs.getInt("createdBy")
         );
     }
-    
-    public boolean updatePetAvailabilityById(ArrayList<Integer> list) {
-        return false;
+
+    public boolean updatePetAvailabilityById(ArrayList<Integer> petIds) {
+        if (petIds == null || petIds.isEmpty()) {
+            return true;
+        }
+
+        DBContext db = new DBContext();
+        String sql = "UPDATE PetTB SET petAvailability = 1 WHERE petId = ?";
+
+        try {
+            conn = db.getConnection();
+            conn.setAutoCommit(false);
+
+            ps = conn.prepareStatement(sql);
+
+            for (Integer id : petIds) {
+                ps.setInt(1, id);
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+            conn.commit();
+            return true;
+
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, "Error updating pet availability", ex);
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (Exception e) {
+                Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, "Error rolling back transaction", e);
+            }
+            return false;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (Exception e) {
+                Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, "Error closing resources", e);
+            }
+        }
     }
-    
+
     public List<Pet> getPetForOrderDetail(int orderId) {
         DBContext db = new DBContext();
         List<Pet> list = new ArrayList<>();
-        String sql = "SELECT p.*, b.breedName, oc.priceAtOrder " +
-                     "FROM PetTB p " +
-                     "JOIN OrderContentTB oc ON p.petId = oc.petId " +
-                     "JOIN BreedTB b ON p.breedId = b.breedId " +
-                     "WHERE oc.orderId = ?";
+        String sql = "SELECT p.*, b.breedName, oc.priceAtOrder "
+                + "FROM PetTB p "
+                + "JOIN OrderContentTB oc ON p.petId = oc.petId "
+                + "JOIN BreedTB b ON p.breedId = b.breedId "
+                + "WHERE oc.orderId = ?";
 
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setInt(1, orderId);
-            
+
             rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 Pet pet = PetInfo(rs);
 
                 Breed breed = new Breed();
                 breed.setBreedId(rs.getInt("breedId"));
                 breed.setBreedName(rs.getString("breedName"));
-                
+
                 pet.setBreed(breed);
                 pet.setPriceAtOrder(rs.getDouble("priceAtOrder"));
 
@@ -75,14 +119,20 @@ public class PetDAO {
             Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
             } catch (Exception e) {
                 Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, e);
             }
         }
-        
+
         return list;
     }
 
