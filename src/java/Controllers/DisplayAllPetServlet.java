@@ -69,6 +69,7 @@ public class DisplayAllPetServlet extends HttpServlet {
         String breedId = request.getParameter("breedId");
         String gender = request.getParameter("gender");
         String vaccination = request.getParameter("vaccination");
+        String petStatus = request.getParameter("petStatus");
 
         BreedDAO breedDAO = new BreedDAO();
         List<String> speciesList = breedDAO.getAllSpecies();
@@ -78,7 +79,7 @@ public class DisplayAllPetServlet extends HttpServlet {
         request.setAttribute("breedList", breedList);
 
         PetDAO petDAO = new PetDAO();
-        List<Pet> petList = petDAO.filterPetsForSeller(searchKey, availability, species, breedId, gender, vaccination);
+        List<Pet> petList = petDAO.filterPetsForSeller(searchKey, availability, species, breedId, gender, vaccination, petStatus);
 
         request.setAttribute("petList", petList);
 

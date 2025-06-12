@@ -21,6 +21,7 @@ public class Pet {
     private String petOrigin;
     private String petGender;
     private int petAvailability;
+    private int petStatus;
     private String petColor;
     private int petVaccination;
     private String petDescription;
@@ -29,6 +30,27 @@ public class Pet {
     private int createdBy;
     private Breed breed;
     private double priceAtOrder;
+
+    public Pet() {
+    }
+
+    public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender,
+            int petAvailability, String petColor, int petVaccination, String petDescription,
+            double petPrice, int breedId, int createdBy, int petStatus) {
+        this.petId = petId;
+        this.petName = petName;
+        this.petDob = petDob;
+        this.petOrigin = petOrigin;
+        this.petGender = petGender;
+        this.petAvailability = petAvailability;
+        this.petColor = petColor;
+        this.petVaccination = petVaccination;
+        this.petDescription = petDescription;
+        this.petPrice = petPrice;
+        this.breedId = breedId;
+        this.createdBy = createdBy;
+        this.petStatus = petStatus;
+    }
 
     public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender,
             int petAvailability, String petColor, int petVaccination, String petDescription,
@@ -66,6 +88,34 @@ public class Pet {
         this.images = images;
     }
 
+    public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender, int petAvailability, int petStatus, String petColor, int petVaccination, String petDescription, double petPrice, int breedId, int createdBy, Breed breed, double priceAtOrder, String breedName, List<byte[]> images) {
+        this.petId = petId;
+        this.petName = petName;
+        this.petDob = petDob;
+        this.petOrigin = petOrigin;
+        this.petGender = petGender;
+        this.petAvailability = petAvailability;
+        this.petStatus = petStatus;
+        this.petColor = petColor;
+        this.petVaccination = petVaccination;
+        this.petDescription = petDescription;
+        this.petPrice = petPrice;
+        this.breedId = breedId;
+        this.createdBy = createdBy;
+        this.breed = breed;
+        this.priceAtOrder = priceAtOrder;
+        this.breedName = breedName;
+        this.images = images;
+    }
+
+    public int getPetStatus() {
+        return petStatus;
+    }
+
+    public void setPetStatus(int petStatus) {
+        this.petStatus = petStatus;
+    }
+
     public double getPriceAtOrder() {
         return priceAtOrder;
     }
@@ -74,7 +124,6 @@ public class Pet {
         this.priceAtOrder = priceAtOrder;
     }
 
-
     public Breed getBreed() {
         return breed;
     }
@@ -82,8 +131,6 @@ public class Pet {
     public void setBreed(Breed breed) {
         this.breed = breed;
     }
-    
-    
 
     public int getPetId() {
         return petId;
@@ -218,9 +265,9 @@ public class Pet {
 
     public String getPetImageBase64() {
         if (images != null && !images.isEmpty()) {
-            return "data:image/png;base64," + Base64.getEncoder().encodeToString(images.get(0));
+            return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(images.get(0));
         }
-        return "images/defaultcatdog.png";
+        return "images/placeholder.jpg";
     }
 
     public int getPetAgeInMonths() {

@@ -107,7 +107,7 @@
                     </div>
                     <div class="card-body">
 
-                        <form action="seller-pet-management" method="GET" id="filterForm">
+                        <form action="displayallpet" method="GET" id="filterForm">
                             <div class="filter-controls">
                                 <div class="input-group" style="flex-grow: 1;">
                                     <i class="fas fa-search"></i>
@@ -118,6 +118,13 @@
                                         <option value="">Tất cả trạng thái</option>
                                         <option value="1" ${param.availability == '1' ? 'selected' : ''}>Còn hàng</option>
                                         <option value="0" ${param.availability == '0' ? 'selected' : ''}>Đã bán</option>
+                                    </select>
+                                </div>
+                                <div class="select-group">
+                                    <select name="petStatus">
+                                        <option value="">Trạng thái đăng</option>
+                                        <option value="1" ${param.petStatus == '1' ? 'selected' : ''}>Đang hiển thị</option>
+                                        <option value="0" ${param.petStatus == '0' ? 'selected' : ''}>Đã ẩn</option>
                                     </select>
                                 </div>
                                 <button type="button" class="btn btn-outline" onclick="toggleAdvancedFilters()">
@@ -163,6 +170,9 @@
                             </div>
 
                             <div class="filter-actions">
+                                <button type="button" class="btn btn-outline" onclick="location.href = 'displayallpet'">
+                                    <i class="fas fa-times"></i> Xóa bộ lọc
+                                </button>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
                             </div>
                         </form>
@@ -176,7 +186,8 @@
                                         <th>Tên Thú Cưng</th>
                                         <th>Giống</th>
                                         <th>Giá</th>
-                                        <th>Trạng Thái</th>
+                                        <th>Trạng Thái Bán</th>
+                                        <th>Trạng Thái Đăng</th>
                                         <th style="width: 15%;">Thao Tác</th>
                                     </tr>
                                 </thead>
@@ -185,8 +196,8 @@
                                         <tr>
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${not empty pet.getBase64Image()}">
-                                                        <img src="data:image/jpeg;base64,${pet.getBase64Image()}" alt="${pet.petName}" class="table-avatar"/>
+                                                    <c:when test="${not empty pet.images}">
+                                                        <img src="${pet.getPetImageBase64()}" alt="${pet.petName}" class="table-avatar"/>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <img src="images/placeholder.jpg" alt="No Image" class="table-avatar"/>
@@ -212,17 +223,45 @@
                                                 </c:choose>
                                             </td>
                                             <td>
+                                                <c:choose>
+                                                    <c:when test="${pet.petStatus == 1}">
+                                                        <span class="status-badge status-active">Hiển thị</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="status-badge status-blocked">Đã ẩn</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
                                                 <div class="table-actions">
-                                                    <a class="action-btn view-btn" title="Xem chi tiết" href="displaypet?id=${pet.petId}"><i class="fas fa-eye"></i></a>
-                                                    <a class="action-btn edit-btn" title="Chỉnh sửa" href="seller-edit-pet?id=${pet.petId}"><i class="fas fa-pencil-alt"></i></a>
-                                                    <a class="action-btn block-btn" title="Xóa" href="#"><i class="fas fa-trash"></i></a>
+                                                    <a class="action-btn view-btn" title="Xem chi tiết" href="displaypet?id=${pet.petId}">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a class="action-btn edit-btn" title="Chỉnh sửa" href="seller-edit-pet?id=${pet.petId}">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+
+                                                    <c:choose>
+                                                        <c:when test="${pet.petStatus == 1}">
+                                                            <a class="action-btn block-btn" title="Ẩn thú cưng" 
+                                                               href="update-pet-status?petId=${pet.petId}¤tStatus=1"> <%-- CORRECTED --%>
+                                                                <i class="fas fa-eye-slash"></i>
+                                                            </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <a class="action-btn unhide-btn" title="Hiện thú cưng" 
+                                                               href="update-pet-status?petId=${pet.petId}¤tStatus=0"> <%-- CORRECTED --%>
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </div>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                     <c:if test="${empty petList}">
                                         <tr>
-                                            <td colspan="7" style="text-align: center; padding: 30px;">
+                                            <td colspan="8" style="text-align: center; padding: 30px;"> <%-- Change colspan from 7 to 8 --%>
                                                 Không tìm thấy thú cưng nào phù hợp.
                                             </td>
                                         </tr>

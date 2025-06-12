@@ -17,8 +17,10 @@ public class TestPet {
     private static PetDAO _dao = new PetDAO();
 
     public static void main(String[] args) {
-        List<Pet> list=getAllPets();
-        System.out.println(list.size());
+        List<Pet> list=getPets();
+        for (Pet pet : list) {
+            System.out.println(pet.toString());
+        }
     }
     
     private static boolean update(ArrayList<Integer> list) {
@@ -26,11 +28,15 @@ public class TestPet {
     }
     
     private static List<Pet> getPets() {
-        return _dao.filterPetsForSeller(null, null, null, null, null, null);
+        return _dao.filterPetsForSeller(null, null, null, null, null, null, null);
     }
     private static List<Pet> getAllPets() {
         return _dao.getAllPets();
     }
+//    private static List<Pet> filterPets() {
+////        return _dao.f();
+//    }
+    
     
     
 }

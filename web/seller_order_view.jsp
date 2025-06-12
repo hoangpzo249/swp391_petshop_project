@@ -86,7 +86,7 @@
                         <a href="displayorder" class="sidebar-link active">
                             <i class="fas fa-bag-shopping"></i> Quản lý đơn hàng
                         </a>
-                        <a href="seller-pet-management" class="sidebar-link">
+                        <a href="displayallpet" class="sidebar-link">
                             <i class="fas fa-dog"></i> Quản lý thú cưng
                         </a>
                     </div>

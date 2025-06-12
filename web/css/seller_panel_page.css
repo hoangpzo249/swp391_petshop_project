@@ -1221,3 +1221,11 @@ textarea.form-control {
     width: 100%;
     margin-top: 15px;
 }
+
+.action-btn.unhide-btn {
+    background-color: #2ecc71;
+}
+
+.action-btn.unhide-btn:hover {
+    background-color: #27ae60;
+}
