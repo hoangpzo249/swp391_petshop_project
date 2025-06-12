@@ -155,30 +155,39 @@
                         <div class="filter-controls">
                             <form action="admin-panel">
                                 <input type="hidden" name="action" value="account">
-                                <input type="hidden" name="type" value="all">
+
                                 <div class="input-group">
                                     <i class="fas fa-search"></i>
                                     <input type="text" name="key" placeholder="Tìm kiếm người dùng..." value="${key}">
-                                    <button type="submit" style="display: none;"></button>
+
+                                </div>
+                                <button style="display: none" type="submit"></button>
+                            </form>
+
+                            <form action="admin-panel">
+                                <input type="hidden" name="action" value="account">
+                                <div class="select-group">
+                                    <select id="filterRole" name="role" onchange="this.form.submit()">
+                                        <option value="">Tất cả loại tài khoản</option>
+                                        <option value="Admin" ${param.role == 'Admin' ? 'selected' : ''}>Admin</option>
+                                        <option value="Manager" ${param.role == 'Manager' ? 'selected' : ''}>Manager</option>
+                                        <option value="Saler" ${param.role == 'Saler' ? 'selected' : ''}>Saler</option>
+                                        <option value="Shipper" ${param.role == 'Shipper' ? 'selected' : ''}>Shipper</option>
+                                        <option value="Customer" ${param.role == 'Customer' ? 'selected' : ''}>Khách hàng</option>
+                                    </select>
                                 </div>
                             </form>
-                            <div class="select-group">
-                                <select id="filterRole">
-                                    <option value="">Tất cả loại tài khoản</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Manager">Manager</option>
-                                    <option value="Saler">Saler</option>
-                                    <option value="Shipper">Shipper</option>
-                                    <option value="Customer">Khách hàng</option>
-                                </select>
-                            </div>
-                            <div class="select-group">
-                                <select id="filterStatus">
-                                    <option value="">Tất cả trạng thái</option>
-                                    <option value="active">Đang hoạt động</option>
-                                    <option value="blocked">Đã khóa</option>
-                                </select>
-                            </div>
+
+                            <form action="admin-panel">
+                                <input type="hidden" name="action" value="account">
+                                <div class="select-group">
+                                    <select id="filterStatus" name="status" onchange="this.form.submit()" >
+                                        <option value="">Tất cả trạng thái</option>
+                                        <option value="Active" ${param.status == 'Active' ? 'selected' : ''}>Đang hoạt động</option>
+                                        <option value="Inactive" ${param.status == 'Inactive' ? 'selected' : ''}>Đã khóa</option>
+                                    </select>
+                                </div>
+                            </form>
                         </div>
                         <div class="table-container">
                             <table>

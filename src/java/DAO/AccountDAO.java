@@ -526,6 +526,7 @@ public class AccountDAO extends DBContext {
         }
         return null;
     }
+
     public Account getAccId(int id) {
         try {
             con = db.getConnection();
@@ -671,13 +672,89 @@ public class AccountDAO extends DBContext {
         List<Account> list = new ArrayList<>();
         try {
             con = db.getConnection();
-            String sql = "SELECT * FROM AccountTB WHERE accFname LIKE ? OR accLname LIKE ? OR accEmail LIKE ?";
+            String sql = "SELECT * FROM AccountTB WHERE (accFname LIKE ? OR accLname LIKE ? OR accEmail LIKE ?)";
+
             ps = con.prepareStatement(sql);
+
             String likeKeyword = "%" + keyword + "%";
 
             ps.setString(1, likeKeyword);
             ps.setString(2, likeKeyword);
             ps.setString(3, likeKeyword);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Account acc = new Account();
+                acc.setAccId(rs.getInt("accId"));
+                acc.setAccUsername(rs.getString("accUsername"));
+                acc.setAccEmail(rs.getString("accEmail"));
+                acc.setAccFname(rs.getString("accFname"));
+                acc.setAccLname(rs.getString("accLname"));
+                acc.setAccRole(rs.getString("accRole"));
+                acc.setAccStatus(rs.getString("accStatus"));
+                acc.setAccDob(rs.getDate("accDob"));
+                acc.setAccAddress(rs.getString("accAddress"));
+
+                acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
+                acc.setAccDescription(rs.getString("accDescription"));
+                acc.setAccCreateDate(rs.getString("accCreateDate"));
+                acc.setAccImage(rs.getBytes("accImage"));
+
+                list.add(acc);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public List<Account> filterRoleAcc(String role) {
+        List<Account> list = new ArrayList<>();
+        try {
+            con = db.getConnection();
+            String sql = "SELECT * FROM AccountTB WHERE accRole = ?";
+
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, role);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Account acc = new Account();
+                acc.setAccId(rs.getInt("accId"));
+                acc.setAccUsername(rs.getString("accUsername"));
+                acc.setAccEmail(rs.getString("accEmail"));
+                acc.setAccFname(rs.getString("accFname"));
+                acc.setAccLname(rs.getString("accLname"));
+                acc.setAccRole(rs.getString("accRole"));
+                acc.setAccStatus(rs.getString("accStatus"));
+                acc.setAccDob(rs.getDate("accDob"));
+                acc.setAccAddress(rs.getString("accAddress"));
+
+                acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
+                acc.setAccDescription(rs.getString("accDescription"));
+                acc.setAccCreateDate(rs.getString("accCreateDate"));
+                acc.setAccImage(rs.getBytes("accImage"));
+
+                list.add(acc);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public List<Account> filterStatusAcc(String status) {
+        List<Account> list = new ArrayList<>();
+        try {
+            con = db.getConnection();
+            String sql = "SELECT * FROM AccountTB WHERE accStatus = ?";
+
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, status);
 
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -739,5 +816,4 @@ public class AccountDAO extends DBContext {
 //        }
 //        return null;
 //    }
-
 }

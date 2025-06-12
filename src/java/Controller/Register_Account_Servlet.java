@@ -210,7 +210,7 @@ public class Register_Account_Servlet extends HttpServlet {
 
                 request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
             } catch (Exception e) {
-                request.setAttribute("errMessRegister", "Bạn cần thực hiện lại");
+                request.setAttribute("errMessRegister", "Gửi OTP không thành công, bạn cần thực hiện lại");
                 request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
             }
 

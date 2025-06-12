@@ -72,6 +72,8 @@ public class Admin_Panel_Servlet extends HttpServlet {
         String act = request.getParameter("act");
         String check = request.getParameter("check");
         String key = request.getParameter("key");
+        String role = request.getParameter("role");
+        String status = request.getParameter("status");
 
         AccountDAO accDao = new AccountDAO();
 
@@ -125,18 +127,39 @@ public class Admin_Panel_Servlet extends HttpServlet {
 //            System.out.println("ID:" + acc.getAccId());
             request.getRequestDispatcher("admin_accBan_page.jsp").forward(request, response);
 
-        } else if ("account".equals(action) && "all".equals(type)) {
+        } else if ("account".equals(action) && key != null) {
+            List<Account> accList = accDao.searchAcc(key);
+
+            request.setAttribute("key", key);
+            request.setAttribute("accList", accList);
+            request.getRequestDispatcher("admin_accList_page.jsp").forward(request, response);
+
+        } else if ("account".equals(action) && role != null) {
             List<Account> accList;
-
-            if (key != null && !key.trim().isEmpty()) {
-
-                accList = accDao.searchAcc(key.trim());
-
-                request.setAttribute("key", key);
-
-            } else {
+            if (role.trim().isEmpty()) {
                 accList = accDao.getAllAccount();
+            } else {
+                accList = accDao.filterRoleAcc(role);
             }
+
+//            request.setAttribute("key", key);
+            request.setAttribute("accList", accList);
+            request.getRequestDispatcher("admin_accList_page.jsp").forward(request, response);
+
+        } else if ("account".equals(action) && status != null) {
+            List<Account> accList;
+            if (status.trim().isEmpty()) {
+                accList = accDao.getAllAccount();
+            } else {
+                accList = accDao.filterStatusAcc(status);
+            }
+//            request.setAttribute("key", key);
+            request.setAttribute("accList", accList);
+            request.getRequestDispatcher("admin_accList_page.jsp").forward(request, response);
+
+        } else if ("account".equals(action) && type != null) {
+            List<Account> accList = accDao.getAllAccount();
+
             request.setAttribute("accList", accList);
             request.getRequestDispatcher("admin_accList_page.jsp").forward(request, response);
 
@@ -236,9 +259,16 @@ public class Admin_Panel_Servlet extends HttpServlet {
 
                 boolean updateaAccPass = accDao.updatePass(email, hashPass);
                 if (updateaAccPass) {
-                    request.setAttribute("resetpass", acc);
-                    acc.setAccPassword(password);
-                    session.setAttribute("successMess", "Mật khẩu cập nhật thành công");
+                    try {
+                        EmailSender.sendResetPassByAdmin(email, acc.getAccFname() + " " + acc.getAccLname(), email, password);
+                        request.setAttribute("resetpass", acc);
+                        acc.setAccPassword(password);
+                        session.setAttribute("successMess", "Mật khẩu cập nhật thành công và thông báo tới người dùng");
+                    } catch (Exception e) {
+                        request.setAttribute("resetpass", acc);
+                        acc.setAccPassword(password);
+                        session.setAttribute("successMess", "Mật khẩu cập nhật thành công");
+                    }
                 } else {
                     session.setAttribute("errMess", "Đổi mật khẩu không thành công, bạn cần thử lại");
                 }
@@ -309,7 +339,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 response.sendRedirect(url);
                 return;
             }
-            
+
             String oldRole = acc.getAccRole();
 //            String role = acc.getAccRole();
             String email = acc.getAccEmail();
@@ -324,9 +354,9 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 if ("on".equals(sendEmail)) {
                     try {
                         request.setAttribute("updateRole", acc);
-                        
+
                         EmailSender.sendUpdateRole(email, fullname, oldRole, newRole);
-                        
+
                         session.setAttribute("successMess", "Cập nhật vai trò thành công và thông báo tới người dùng này");
 
                     } catch (Exception e) {

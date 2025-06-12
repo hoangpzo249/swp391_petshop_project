@@ -114,7 +114,7 @@
 
                 <!-- Reset Password Card -->
                 <form action="admin-panel" method="post">
-                      <input type="hidden" name="action" value="account">
+                    <input type="hidden" name="action" value="account">
                     <input type="hidden" name="type" value="${resetpass.accRole}">
                     <input type="hidden" name="act" value="reset-pass">
                     <input type="hidden" name="id" value="${resetpass.accId}">
@@ -123,6 +123,8 @@
                             <h3 class="card-title">
                                 <i class="fas fa-lock"></i> Đặt lại mật khẩu tài khoản
                             </h3>
+                            <br>
+                            <p><span class="required" style="font-style: italic; font-size: 14px"> Sau khi thành công, thông tin tài khoản sẽ được gửi về Email của khách hàng.</span></p>
                         </div>
                         <div class="card-body">
                             <div class="reset-password-container">

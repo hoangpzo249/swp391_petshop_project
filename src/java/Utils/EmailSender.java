@@ -21,8 +21,8 @@ import javax.mail.internet.MimeMessage;
 public class EmailSender {
 
     public static void sendOTP(String receiveEmail, String otp) throws MessagingException {
-        final String senderEmail = "kaded429@gmail.com";
-        final String senderPassword = "kwfo nzqf nrmz cvlx";
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
 
         Properties pro = new Properties();
         pro.put("mail.smtp.auth", "true");
@@ -46,8 +46,8 @@ public class EmailSender {
     }
 
     public static void sendOTPRecover(String receiveEmail, String otp) throws MessagingException {
-        final String senderEmail = "kaded429@gmail.com";
-        final String senderPassword = "kwfo nzqf nrmz cvlx";
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
 
         Properties pro = new Properties();
         pro.put("mail.smtp.auth", "true");
@@ -71,8 +71,8 @@ public class EmailSender {
     }
 
 //    public static void sendOTPChangeEmail(String receiveEmail, String otp) throws MessagingException {
-//        final String senderEmail = "kaded429@gmail.com";
-//        final String senderPassword = "kwfo nzqf nrmz cvlx";
+//        final String senderEmail = "fptpet@gmail.com";
+//        final String senderPassword = "mfjm zfut ledv svkn";
 //
 //        Properties pro = new Properties();
 //        pro.put("mail.smtp.auth", "true");
@@ -95,8 +95,8 @@ public class EmailSender {
 //        Transport.send(mess);
 //    }
     public static void registerSuccess(String receiveEmail, String fullName) throws MessagingException {
-        final String senderEmail = "kaded429@gmail.com";
-        final String senderPassword = "kwfo nzqf nrmz cvlx";
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
 
         Properties pro = new Properties();
         pro.put("mail.smtp.auth", "true");
@@ -130,8 +130,8 @@ public class EmailSender {
     }
 
     public static void createAccCusSuccess(String receiveEmail, String fullName, String emailCus, String passCus) throws MessagingException {
-        final String senderEmail = "kaded429@gmail.com";
-        final String senderPassword = "kwfo nzqf nrmz cvlx";
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
 
         Properties pro = new Properties();
         pro.put("mail.smtp.auth", "true");
@@ -168,8 +168,8 @@ public class EmailSender {
     }
 
     public static void createAccStaffSuccess(String receiveEmail, String fullName, String emailStaff, String passStaff, String roleStaff) throws MessagingException {
-        final String senderEmail = "kaded429@gmail.com";
-        final String senderPassword = "kwfo nzqf nrmz cvlx";
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
 
         Properties pro = new Properties();
         pro.put("mail.smtp.auth", "true");
@@ -206,8 +206,8 @@ public class EmailSender {
     }
 
     public static void sendUpdateRole(String receiveEmail, String fullName, String oldRole, String newRole) throws MessagingException {
-        final String senderEmail = "kaded429@gmail.com";
-        final String senderPassword = "kwfo nzqf nrmz cvlx";
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
 
         Properties pro = new Properties();
         pro.put("mail.smtp.auth", "true");
@@ -241,10 +241,10 @@ public class EmailSender {
 
         Transport.send(mess);
     }
-
-    public static void sendBanAcc(String receiveEmail, String fullName, String reasonBan) throws MessagingException {
-        final String senderEmail = "kaded429@gmail.com";
-        final String senderPassword = "kwfo nzqf nrmz cvlx";
+    
+    public static void sendResetPassByAdmin(String receiveEmail, String fullName, String email, String newpass) throws MessagingException {
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
 
         Properties pro = new Properties();
         pro.put("mail.smtp.auth", "true");
@@ -264,7 +264,45 @@ public class EmailSender {
 //        mess.setSubject("Mật khẩu mới của bạn - FPTPet Shop", "UTF-8");
 //        mess.setText("Xin chào,\n\nMật khẩu mới tài khoản của bạn là: " + newpass + "\nVui lòng không chia sẻ này cho người khác.\n\nCảm ơn bạn!\nFPTPet Shop", "UTF-8");
 
-        mess.setSubject("Chào mừng bạn đến với FPTPet Shop!", "UTF-8");
+        mess.setSubject("Mật khẩu tài khoản của bạn đã được cập nhật tại FPTPet Shop", "UTF-8");
+
+        String messto = "Xin chào, " + fullName + "!\n\n"
+                + "Mật khẩu của tài khoản bạn tại FPTPet Shop đã được đặt lại bởi quản trị viên.\n\n"
+                + "Thông tin tài khoản:\n"
+                + "- Email: " + email + "\n"
+                + "- Mật khẩu mới: " + newpass + "\n\n"
+                + "Bạn đăng nhập và đổi mật khẩu ngay để đảm bảo an toàn cho tài khoản.\n"
+                + "Nếu bạn không yêu cầu thay đổi này, vui lòng liên hệ bộ phận hỗ trợ của chúng tôi ngay lập tức.\n\n"
+                + "Trân trọng,\n"
+                + "FPTPet Shop Team";
+        mess.setText(messto, "UTF-8");
+
+        Transport.send(mess);
+    }
+
+    public static void sendBanAcc(String receiveEmail, String fullName, String reasonBan) throws MessagingException {
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
+
+        Properties pro = new Properties();
+        pro.put("mail.smtp.auth", "true");
+        pro.put("mail.smtp.starttls.enable", "true");
+        pro.put("mail.smtp.host", "smtp.gmail.com");
+        pro.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(pro, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        MimeMessage mess = new MimeMessage(session);
+        mess.setFrom(new InternetAddress(senderEmail));
+        mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiveEmail));
+//        mess.setSubject("Mật khẩu mới của bạn - FPTPet Shop", "UTF-8");
+//        mess.setText("Xin chào,\n\nMật khẩu mới tài khoản của bạn là: " + newpass + "\nVui lòng không chia sẻ này cho người khác.\n\nCảm ơn bạn!\nFPTPet Shop", "UTF-8");
+
+        mess.setSubject("Thông báo từ FPTPet Shop!", "UTF-8");
 
         String messto = "Xin chào, " + fullName + "!"
                 + "\nTài khoản của bạn đã bị vô hiệu hóa với lí do sau:\n" + reasonBan + "\n\n"
@@ -276,8 +314,8 @@ public class EmailSender {
     }
 
     public static void sendUnBanAcc(String receiveEmail, String fullName) throws MessagingException {
-        final String senderEmail = "kaded429@gmail.com";
-        final String senderPassword = "kwfo nzqf nrmz cvlx";
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
 
         Properties pro = new Properties();
         pro.put("mail.smtp.auth", "true");
@@ -297,7 +335,7 @@ public class EmailSender {
 //        mess.setSubject("Mật khẩu mới của bạn - FPTPet Shop", "UTF-8");
 //        mess.setText("Xin chào,\n\nMật khẩu mới tài khoản của bạn là: " + newpass + "\nVui lòng không chia sẻ này cho người khác.\n\nCảm ơn bạn!\nFPTPet Shop", "UTF-8");
 
-        mess.setSubject("Chào mừng bạn đến với FPTPet Shop!", "UTF-8");
+        mess.setSubject("Thông báo từ FPTPet Shop!", "UTF-8");
 
         String messto = "Xin chào, " + fullName + "!"
                 + "\nTài khoản của bạn đã được mở khóa thành công\n"
