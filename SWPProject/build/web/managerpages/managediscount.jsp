@@ -15,8 +15,10 @@
     </head>
     <body>
         <h2>this is managediscountpage</h2>
-        <c:set var="Omg" value= "đoán xem"/>
-        <h1>${Omg} meo meo heheheheheeee meomeomeooooomeoooo</h1>
+        <h4>${requestScope.actionStatus}</h4>
+        <c:forEach var="error" items="${requestScope.errors}">
+            <h4 style="color: red">${error}</h4>
+        </c:forEach>
         <a href="managerpages/adddiscount.jsp"> ấn vào đây để thêm discount</a>
         <table border="1">
             <thead>
@@ -52,9 +54,23 @@
                         <td>${discount.maxUsage}</td>
                         <td>${discount.usageCount}</td>
                         <td>${discount.isActive eq 'true' ? 'Active' : 'Deactive'}</td>
-                        <td><a href=""> ${discount.isActive eq 'true' ? 'Deactive Discount' : 'Active Discount'}</a></td>
+                        <td> 
+                            <form action="${pageContext.request.contextPath}/ManageDiscount" method="get">
+                                <input type="hidden" name="userAcction" value="updateStatus">
+                                <input type="hidden" name="updateStatusId" value="${discount.discountId}">
+                                <input type="hidden" name="updateStatus" value="${discount.isActive eq 'true' ? 'false': 'true'}">
+                                <input type="submit" value="${discount.isActive eq 'true' ? 'Deactive Discount' : 'Active Discount'}">
+                            </form>
+                        </td>
                         <td><a href=""> update </a></td>
-                        <td><a href=""> delete </a></td>
+                        <!--với action add thì ta cần truyền vào: 1. useraction, 2. id cần xóa-->
+                        <td>
+                            <form action="${pageContext.request.contextPath}/ManageDiscount" method="get">
+                                <input type="hidden" name="userAcction" value="delete">
+                                <input type="hidden" name="deleteId" value="${discount.discountId}">
+                                <input type="submit" value="delete Discount">
+                            </form>
+                        </td>
                     </tr>
                 </c:forEach>
             </tbody>

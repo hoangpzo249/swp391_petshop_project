@@ -15,59 +15,60 @@
     </head>
     <body>
         <h1>Add Discount Page</h1>
-        <!-- chỗ này để get trước để thấy param được truyền đi-->
-        <h4>${requestScope.addStatus}</h4>
+        <h4 style="color: blue">${requestScope.addStatus}</h4>
+
         <c:forEach var="error" items="${requestScope.errors}">
             <h4 style="color: red">${error}</h4>
         </c:forEach>
-        
+
+        <a href="${pageContext.request.contextPath}/ManageDiscount">quay lại manage discount page  </a>
         <form action="${pageContext.request.contextPath}/ManageDiscount" method="get">
-            
+
             <table>
                 <tbody>
                     <tr>
                         <td> discount code:</td>
-                        <td><input type="text" required name="discountCode" value="${requestScope.discountCode}"></td>
+                        <td><input type="text" required name="discountCode" value="${param.discountCode}"></td>
                     </tr>
                     <tr>
                         <td>discount type: </td>
                         <td>
                             <select name="discountType" >
                                 <option value="Fixed" >Fixed</option>
-                                <option value="Percent" <%=(request.getParameter("discountType")!=null&&request.getParameter("discountType").equals("Percent"))?"selected":""%>>Percent</option>
+                                <option value="Percent" ${param.discountType eq 'Percent' ? 'selected' :''}  >Percent</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <td>discount value:</td>
-                        <td><input type="number" required name="discountValue" min="0" step="any" value="${requestScope.discountValue}"></td>
+                        <td><input type="number" required name="discountValue" min="0" step="any" value="${param.discountValue}"></td>
                     </tr>
                     <tr>
                         <td>discount description:</td>
-                        <td><input type="text" required name="description" value="${requestScope.description}"></td>
+                        <td><input type="text" required name="description" value="${param.description}"></td>
                     </tr>
                     <tr>
                         <td>discount valid From:</td>
-                        <td><input type="date" required name="validFrom" value="${requestScope.validFrom}"></td>
+                        <td><input type="date" required name="validFrom" value="${param.validFrom}"></td>
                     </tr>
                     <tr>
                         <td>discount valid to:</td>
-                        <td><input type="date" required name="validTo" value="${requestScope.validTo}"></td>
+                        <td><input type="date" required name="validTo" value="${param.validTo}"></td>
                     </tr>
                     <tr>
                         <td>discount min Order Amount:</td>
-                        <td><input type="number" required name="minOrderAmount" min="0"value="${requestScope.minOrderAmount}"></td>
+                        <td><input type="number" required name="minOrderAmount" min="0"value="${param.minOrderAmount}"></td>
                     </tr>
                     <tr>
                         <td>discount max usage:</td>
-                        <td><input type="number" required name="maxUsage"min="1" step="1" value="${requestScope.maxUsage}"></td>
+                        <td><input type="number" required name="maxUsage"min="1" step="1" value="${param.maxUsage}"></td>
                     </tr>
                     <tr>
                         <td>discount status</td>
                         <td>            
                             <select name="isActive">
                                 <option value="true">Active</option>
-                                <option value="false" <%=request.getParameter("isActive")!=null&&request.getParameter("isActive").equals("false")?"selected":""%> >Deactive</option>
+                                <option value="false" ${param.isActive eq 'false' ? 'selected' :''} >Deactive</option>
                             </select>
                         </td>
                     </tr>
