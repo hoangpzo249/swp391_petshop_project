@@ -40,6 +40,38 @@ public class PetDAO {
         );
     }
 
+    public boolean updatePetStatusById(int id, int status) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "UPDATE PetTB\n"
+                    + "SET petStatus=?\n"
+                    + "WHERE petId=?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, status);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }
+
     public List<Pet> filterPetsForSeller(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus) {
         List<Pet> list = new ArrayList<>();
         List<Object> params = new ArrayList<>();

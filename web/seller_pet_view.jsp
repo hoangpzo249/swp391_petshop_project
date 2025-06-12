@@ -244,13 +244,13 @@
                                                     <c:choose>
                                                         <c:when test="${pet.petStatus == 1}">
                                                             <a class="action-btn block-btn" title="Ẩn thú cưng" 
-                                                               href="update-pet-status?petId=${pet.petId}¤tStatus=1"> <%-- CORRECTED --%>
+                                                               href="updatepetstatus?petId=${pet.petId}&status=0">
                                                                 <i class="fas fa-eye-slash"></i>
                                                             </a>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <a class="action-btn unhide-btn" title="Hiện thú cưng" 
-                                                               href="update-pet-status?petId=${pet.petId}¤tStatus=0"> <%-- CORRECTED --%>
+                                                               href="updatepetstatus?petId=${pet.petId}&status=1">
                                                                 <i class="fas fa-eye"></i>
                                                             </a>
                                                         </c:otherwise>
@@ -261,7 +261,7 @@
                                     </c:forEach>
                                     <c:if test="${empty petList}">
                                         <tr>
-                                            <td colspan="8" style="text-align: center; padding: 30px;"> <%-- Change colspan from 7 to 8 --%>
+                                            <td colspan="8" style="text-align: center; padding: 30px;">
                                                 Không tìm thấy thú cưng nào phù hợp.
                                             </td>
                                         </tr>

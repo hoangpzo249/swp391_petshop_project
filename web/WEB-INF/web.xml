@@ -20,6 +20,14 @@
         <servlet-name>DisplayAllPetServlet</servlet-name>
         <servlet-class>Controllers.DisplayAllPetServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DisplayPetServlet</servlet-name>
+        <servlet-class>Controllers.DisplayPetServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdatePetStatus</servlet-name>
+        <servlet-class>Controllers.UpdatePetStatus</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DisplayOrderServlet</servlet-name>
         <url-pattern>/displayorder</url-pattern>
@@ -39,5 +47,13 @@
     <servlet-mapping>
         <servlet-name>DisplayAllPetServlet</servlet-name>
         <url-pattern>/displayallpet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DisplayPetServlet</servlet-name>
+        <url-pattern>/displaypet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdatePetStatus</servlet-name>
+        <url-pattern>/updatepetstatus</url-pattern>
     </servlet-mapping>
 </web-app>
