@@ -117,15 +117,16 @@ public class OrderDAO {
         }
         return null;
     }
-     public List<Order> filterOrders(String searchKey, String status, Date startDate, Date endDate) {
+
+    public List<Order> filterOrders(String searchKey, String status, Date startDate, Date endDate) {
         DBContext db = new DBContext();
         List<Order> list = new ArrayList<>();
-        
+
         List<Object> params = new ArrayList<>();
 
         String baseSql = "SELECT o.*, ISNULL(oc.totalPrice, 0) AS totalPrice FROM OrderTB o "
-                       + "LEFT JOIN (SELECT orderId, SUM(priceAtOrder) as totalPrice FROM OrderContentTB GROUP BY orderId) oc "
-                       + "ON o.orderId = oc.orderId ";
+                + "LEFT JOIN (SELECT orderId, SUM(priceAtOrder) as totalPrice FROM OrderContentTB GROUP BY orderId) oc "
+                + "ON o.orderId = oc.orderId ";
 
         StringBuilder whereClause = new StringBuilder();
 
@@ -190,9 +191,15 @@ public class OrderDAO {
             return null;
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
             } catch (Exception e) {
                 Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
             }
@@ -249,9 +256,62 @@ public class OrderDAO {
         return null;
     }
 
-    public ArrayList<Integer> getOrderContentById(int id) {
+    public String getCustomerEmailByOrderId(int id) {
         DBContext db = new DBContext();
-        ArrayList<Integer> list = new ArrayList<>();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT customerEmail FROM OrderTB\n"
+                    + "WHERE orderId=?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getString(1);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return null;
+    }
+
+    public double getOrderPriceById(int id) {
+        DBContext db = new DBContext();
+        double totalPrice = 0;
+        String sql = "SELECT SUM(priceAtOrder) AS totalPrice FROM OrderContentTB WHERE orderId = ?";
+
+        try (Connection conn = db.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    totalPrice = rs.getDouble("totalPrice");
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, "Error fetching order price for ID: " + id, ex);
+        }
+
+        return totalPrice;
+    }
+
+    public List<Integer> getOrderContentById(int id) {
+        DBContext db = new DBContext();
+        List<Integer> list = new ArrayList<>();
         try {
             conn = db.getConnection();
             String sql = "SELECT * FROM OrderContentTB WHERE orderId=?";

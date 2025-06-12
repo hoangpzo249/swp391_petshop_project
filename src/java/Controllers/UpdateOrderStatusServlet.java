@@ -6,6 +6,8 @@ package Controllers;
 
 import DAO.OrderDAO;
 import DAO.PetDAO;
+import Models.Pet;
+import Utils.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +15,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -59,23 +63,58 @@ public class UpdateOrderStatusServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         OrderDAO _daoorder = new OrderDAO();
-        PetDAO _daopet=new PetDAO();
+        PetDAO _daopet = new PetDAO();
         HttpSession session = request.getSession(false);
         String status = request.getParameter("status");
         int id = Integer.parseInt(request.getParameter("orderId"));
-        String reason=request.getParameter("reason");
+        String reason = request.getParameter("reason");
         String referer = request.getHeader("referer");
 
         if (_daoorder.updateOrderStatusById(id, status, reason)) {
-            session.setAttribute("successMess", "Cập nhật đơn hàng thành công.");
-            
-            if (status.equals("Rejected") && !_daopet.updatePetAvailabilityById(_daoorder.getOrderContentById(id))) {
-                session.setAttribute("errMess", "Cập nhật trạng thái thú cưng không thành công.");
+            String email = _daoorder.getCustomerEmailByOrderId(id);
+            List<Pet> listpet = new ArrayList<>();
+            for (Integer i : _daoorder.getOrderContentById(id)) {
+                listpet.add(_daopet.getPetById(i));
             }
+            switch (status) {
+                case "Confirmed":
+                    session.setAttribute("successMess", "Xác nhận đơn hàng " + id + " thành công.");
+                    if (email != null) {
+                        EmailSender.sendConfirmOrder(email, id, listpet, _daoorder.getOrderPriceById(id));
+                    }
+                    break;
+                case "Rejected":
+                    session.setAttribute("successMess", "Từ chối đơn hàng " + id + " thành công.");
+                    if (!_daopet.updatePetAvailabilityById(_daoorder.getOrderContentById(id), 1)) {
+                        session.setAttribute("errMess", "Cập nhật trạng thái thú cưng không thành công.");
+                    }
+                    if (email != null) {
+                        EmailSender.sendRejectOrder(email, id, listpet, _daoorder.getOrderPriceById(id), reason);
+                    }
+                    break;
+                case "Shipping":
+                    session.setAttribute("successMess", "Cập nhật trạng thái đơn hàng " + id + " thành công.");
+                    if (email != null) {
+                        EmailSender.sendShippingOrder(email, id, listpet, _daoorder.getOrderPriceById(id));
+                    }
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+
         } else {
-            session.setAttribute("errMess", "Cập nhật đơn hàng không thành công.");
+            session.setAttribute("errMess", "Thực hiện hành động không thành công.");
         }
 
+//        if (status.equals("Confirmed")) {
+//            
+//        }
+//        else if (status.equals("Rejected")) {
+//            
+//        }
+//        else if (status.equals("s")) {
+//            
+//        }
         if (referer != null) {
             response.sendRedirect(referer);
         } else {

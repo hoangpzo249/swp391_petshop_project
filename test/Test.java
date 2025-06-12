@@ -110,7 +110,7 @@ public class Test {
 //    }
     
     public static void main(String[] args) {
-        ArrayList<Integer> list=_orddao.getOrderContentById(1);
+        List<Integer> list=_orddao.getOrderContentById(1);
         for (Integer i : list) {
             System.out.println(i);
         }

@@ -23,8 +23,8 @@ public class TestPet {
         }
     }
     
-    private static boolean update(ArrayList<Integer> list) {
-        return _dao.updatePetAvailabilityById(list);
+    private static boolean update(List<Integer> list) {
+        return _dao.updatePetAvailabilityById(list, 1);
     }
     
     private static List<Pet> getPets() {

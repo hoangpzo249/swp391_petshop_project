@@ -111,22 +111,22 @@ public class PetDAO {
         return list;
     }
 
-    public boolean updatePetAvailabilityById(ArrayList<Integer> petIds) {
+    public boolean updatePetAvailabilityById(List<Integer> petIds, int status) {
         if (petIds == null || petIds.isEmpty()) {
             return true;
         }
 
         DBContext db = new DBContext();
-        String sql = "UPDATE PetTB SET petAvailability = 1 WHERE petId = ?";
+        String sql = "UPDATE PetTB SET petAvailability = ? WHERE petId = ?";
 
         try {
             conn = db.getConnection();
             conn.setAutoCommit(false);
 
             ps = conn.prepareStatement(sql);
-
+            ps.setInt(1, status);
             for (Integer id : petIds) {
-                ps.setInt(1, id);
+                ps.setInt(2, id);
                 ps.addBatch();
             }
 
@@ -247,35 +247,22 @@ public class PetDAO {
 
     public Pet getPetById(int id) {
         Pet pet = null;
-        try {
-            conn = new DBContext().getConnection();
-            String sql = "SELECT * FROM PetTB WHERE petId = ?";
-            ps = conn.prepareStatement(sql);
+        String sql = "SELECT p.*, b.breedName FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId WHERE p.petId = ?";
+        DBContext db = new DBContext();
+        try (Connection conn = db.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                pet = PetInfo(rs);
-                pet.setImages(getImagesByPetId(pet.getPetId()));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    pet = PetInfo(rs);
+                    Breed breed = new Breed();
+                    breed.setBreedId(rs.getInt("breedId"));
+                    breed.setBreedName(rs.getString("breedName"));
+                    pet.setBreed(breed);
+                    pet.setImages(getImagesByPetId(pet.getPetId()));
+                }
             }
         } catch (Exception ex) {
-        }
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (ps != null) {
-                ps.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (Exception e) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return pet;
     }
