@@ -16,9 +16,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link rel="icon" type="image/png" href="images/logo_banner/logo1.png">
         <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="css/main_type.css?v=9" />
+        <link rel="stylesheet" href="css/main_type.css?v=11" />
 
-        
+
     </head>
     <body>
         <div class="header">
@@ -72,7 +72,7 @@
         <div class="container">
 
 
-            <aside class="sidebar">
+            <aside class="sidebar" style="margin-bottom: 89px;">
                 <h3><a href="listshoppet" style="text-decoration: none; color: black">Tất cả thú cưng</a></h3>
 
                 <h3><a href="listshoppet?species=Dog" style="text-decoration: none; color: black">Tất cả giống chó</a></h3>
@@ -104,7 +104,7 @@
 
 
                     <form method="get" action="listshoppet">
-                       
+
                         <input type="hidden" name="species" value="${param.species}" />
                         <input type="hidden" name="breed" value="${param.breed}" />
 
@@ -114,7 +114,7 @@
                             <label>Tên / giống</label>
                             <div class="search-container">
                                 <input type="text" name="search" value="${param.search}" placeholder="Tìm kiếm thú cưng ..." class="search-input" >
-                                
+
                             </div>
                         </div>
                         <div class="form-group">
@@ -160,17 +160,14 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Tuổi</label>
-                            <select name="age" >
-
-                                <option value="">Tất cả</option>
-                                <option value="under30" ${param.age == 'under30' ? 'selected' : ''}>Dưới 2.5 tuổi</option>
-                                <option value="30-36" ${param.age == '30-36' ? 'selected' : ''}>2.5 – 3 tuổi</option>
-                                <option value="37-44" ${param.age == '37-44' ? 'selected' : ''}>3 – 3.5 tuổi</option>
-                                <option value="above44" ${param.age == 'above44' ? 'selected' : ''}>Trên 3.5 tuổi</option>
-
-                            </select>
+                            <label>Ngày sinh từ:</label>
+                            <input type="date" name="dobFrom" value="${param.dobFrom}" />
                         </div>
+                        <div class="form-group">
+                            <label>Đến ngày:</label>
+                            <input type="date" name="dobTo" value="${param.dobTo}" />
+                        </div>
+
                         <div class="form-group">
                             <label>Tiêm vắc xin</label>
                             <select name="vaccination" >
@@ -213,8 +210,11 @@
                             <input type="hidden" name="gender" value="${param.gender}" />
                             <input type="hidden" name="color" value="${param.color}" />
                             <input type="hidden" name="origin" value="${param.origin}" />
+                            <input type="hidden" name="dobFrom" value="${param.dobFrom}" />
+                            <input type="hidden" name="dobTo" value="${param.dobTo}" />
+
                             <input type="hidden" name="priceRange" value="${param.priceRange}" />
-                            <input type="hidden" name="age" value="${param.age}" />
+
                             <input type="hidden" name="vaccination" value="${param.vaccination}" />
 
                             <select name="sortpet" onchange="this.form.submit()">
@@ -267,19 +267,20 @@
                         </div>
                     </c:forEach>
 
-                   
+
 
 
 
                 </div>
-                     <div class="pagination">
-    <c:forEach begin="1" end="${totalPages}" var="i">
-        <a href="listshoppet?page=${i}&breed=${param.breed}&species=${param.species}&search=${param.search}&priceRange=${param.priceRange}&sortpet=${param.sortpet}&gender=${param.gender}&color=${param.color}&origin=${param.origin}&age=${param.age}&vaccination=${param.vaccination}"
-           class="${i == currentPage ? 'active' : ''}">
-            ${i}
-        </a>
-    </c:forEach>
-</div>
+                <div class="pagination">
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <a href="listshoppet?page=${i}&breed=${param.breed}&species=${param.species}&search=${param.search}&priceRange=${param.priceRange}&sortpet=${param.sortpet}&gender=${param.gender}&color=${param.color}&origin=${param.origin}&dobFrom=${param.dobFrom}&dobTo=${param.dobTo}&vaccination=${param.vaccination}"
+                           class="${i == currentPage ? 'active' : ''}">
+                            ${i}
+                        </a>
+
+                    </c:forEach>
+                </div>
 
             </main>
         </div>

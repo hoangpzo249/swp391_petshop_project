@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class PetDAO {
 
@@ -111,12 +112,13 @@ public class PetDAO {
         Pet pet = null;
         try {
             conn = new DBContext().getConnection();
-            String sql = "SELECT * FROM PetTB WHERE petId = ?";
+            String sql = "SELECT p.*, b.breedName FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId WHERE p.petId = ?";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
                 pet = PetInfo(rs);
+                pet.setBreedName(rs.getString("breedName"));
                 pet.setImages(getImagesByPetId(pet.getPetId()));
             }
         } catch (Exception ex) {
@@ -222,30 +224,6 @@ public class PetDAO {
         return years * 12 + months;
     }
 
-    public List<String> getAllAgeRanges() {
-        List<String> list = new ArrayList<>();
-        String sql = "SELECT petDob FROM PetTB WHERE petDob IS NOT NULL";
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Date dob = rs.getDate("petDob");
-                if (dob != null) {
-                    int months = getAgeInMonths(dob);
-                    if (months < 30 && !list.contains("Dưới 2.5 tuổi")) {
-                        list.add("Dưới 2.5 tuổi");
-                    } else if (months >= 30 && months <= 36 && !list.contains("2.5 – 3 tuổi")) {
-                        list.add("2.5 – 3 tuổi");
-                    } else if (months >= 37 && months <= 44 && !list.contains("3 – 3.5 tuổi")) {
-                        list.add("3 – 3.5 tuổi");
-                    } else if (months >= 45 && !list.contains("Trên 3.5 tuổi")) {
-                        list.add("Trên 3.5 tuổi");
-                    }
-                }
-            }
-        } catch (Exception e) {
-        }
-        return list;
-    }
-
     public List<String> getAllVaccinationStatus() {
         List<String> list = new ArrayList<>();
         String sql = "SELECT DISTINCT petVaccination FROM PetTB";
@@ -260,10 +238,10 @@ public class PetDAO {
     }
 
     public List<Pet> filterPets(String breed, String species, String search, int num1, int num2, String sort,
-            String gender, String color, String origin, String ageRange, String vaccinationStatus) {
+            String gender, String color, String origin, String dobFrom, String dobTo, String vaccinationStatus) {
 
         List<Pet> listPet = new ArrayList<>();
-        List<Pet> tempList = new ArrayList<>();
+       
 
         if (breed == null || breed.isEmpty()) {
             breed = "%";
@@ -300,6 +278,13 @@ public class PetDAO {
             if (origin != null && !origin.isEmpty()) {
                 sql += " AND p.petOrigin = ?";
             }
+            if (dobFrom != null && !dobFrom.isEmpty()) {
+                sql += " AND p.petDob >= ?";
+            }
+            if (dobTo != null && !dobTo.isEmpty()) {
+                sql += " AND p.petDob <= ?";
+            }
+
             if (vaccinationStatus != null && !vaccinationStatus.isEmpty()) {
                 sql += " AND p.petVaccination = ?";
             }
@@ -343,44 +328,31 @@ public class PetDAO {
             if (origin != null && !origin.isEmpty()) {
                 ps.setString(i++, origin);
             }
+            if (dobFrom != null && !dobFrom.isEmpty()) {
+                ps.setDate(i++, java.sql.Date.valueOf(dobFrom));
+            }
+            if (dobTo != null && !dobTo.isEmpty()) {
+                ps.setDate(i++, java.sql.Date.valueOf(dobTo));
+            }
+
             if (vaccinationStatus != null && !vaccinationStatus.isEmpty()) {
                 ps.setInt(i++, vaccinationStatus.equals("Đã tiêm") ? 1 : 0);
             }
+            
 
             rs = ps.executeQuery();
             while (rs.next()) {
                 Pet pet = PetInfo(rs);
                 pet.setBreedName(rs.getString("breedName"));
-                boolean ageMatches = true;
-
-                if (ageRange != null && !ageRange.isEmpty()) {
-                    Date dob = pet.getPetDob();
-                    if (dob == null) {
-                        ageMatches = false;
-                    } else {
-                        int months = getAgeInMonths(dob);
-
-                        if ("under30".equals(ageRange)) {
-                            ageMatches = months < 30;
-                        } else if ("30-36".equals(ageRange)) {
-                            ageMatches = months >= 30 && months <= 36;
-                        } else if ("37-44".equals(ageRange)) {
-                            ageMatches = months >= 37 && months <= 44;
-                        } else if ("above44".equals(ageRange)) {
-                            ageMatches = months >= 45;
-                        }
-                    }
-                }
-
-                if (ageMatches) {
-                    tempList.add(pet);
-                }
-
+                
+                listPet.add(pet); 
             }
-
-            for (Pet pet : tempList) {
+            rs.close();
+            ps.close();
+            conn.close();
+            for (Pet pet:listPet){
                 pet.setImages(getImagesByPetId(pet.getPetId()));
-                listPet.add(pet);
+                
             }
 
         } catch (Exception ex) {
@@ -403,6 +375,7 @@ public class PetDAO {
             }
         } catch (Exception e) {
         }
+
         return listPet;
     }
 }

@@ -43,7 +43,7 @@ public class ListShopPetServlet extends HttpServlet {
                     Pet pet = petDao.getPetById(c.getPetId());
                     if (pet != null && pet.getPetAvailability() == 1) {
                         filtered.add(c);
-                    } 
+                    }
                 }
             }
 
@@ -82,7 +82,9 @@ public class ListShopPetServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         String color = request.getParameter("color");
         String origin = request.getParameter("origin");
-        String age = request.getParameter("age");
+        String dobFrom = request.getParameter("dobFrom");
+        String dobTo = request.getParameter("dobTo");
+
         String vaccination = request.getParameter("vaccination");
 
         int giapet1 = 0, giapet2 = 0;
@@ -101,8 +103,9 @@ public class ListShopPetServlet extends HttpServlet {
 
         List<Pet> petList = petDAO.filterPets(
                 breed, species, search, giapet1, giapet2,
-                sort, gender, color, origin, age, vaccination
+                sort, gender, color, origin, dobFrom, dobTo, vaccination
         );
+
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, petList.size());
         int totalPages = (int) Math.ceil((double) petList.size() / pageSize);
@@ -115,14 +118,16 @@ public class ListShopPetServlet extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
 
-       
         request.setAttribute("listDogBreed", breedDAO.displayDogBreeds());
         request.setAttribute("listCatBreed", breedDAO.displayCatBreeds());
 
         request.setAttribute("listOrigin", petDAO.getAllOrigins());
+        request.setAttribute("dobFrom", dobFrom);
+        request.setAttribute("dobTo", dobTo);
+
         request.setAttribute("listColor", petDAO.getAllColors());
         request.setAttribute("listGender", petDAO.getAllGenders());
-        request.setAttribute("listAge", petDAO.getAllAgeRanges());
+
         request.setAttribute("listVaccine", petDAO.getAllVaccinationStatus());
         request.setAttribute("priceRange", priceRange);
 

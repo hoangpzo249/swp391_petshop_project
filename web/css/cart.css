@@ -1,4 +1,4 @@
-/* Updated CSS for cart.css */
+
 
 body {
     font-family: 'Asap', sans-serif;
@@ -201,4 +201,26 @@ input[type="text"]:focus {
     padding: 6px;
     text-align: center;
 }
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #f44336;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    z-index: 9999;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease-in-out;
+    font-family: 'Asap', sans-serif;
+}
+.toast.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
 

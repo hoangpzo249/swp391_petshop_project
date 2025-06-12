@@ -24,6 +24,10 @@
         <servlet-name>DeleteFromCart</servlet-name>
         <servlet-class>Controllers.DeleteFromCart</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CheckoutServlet</servlet-name>
+        <servlet-class>Controllers.CheckoutServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -47,5 +51,9 @@
     <servlet-mapping>
         <servlet-name>DeleteFromCart</servlet-name>
         <url-pattern>/deletefromcart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckoutServlet</servlet-name>
+        <url-pattern>/checkout</url-pattern>
     </servlet-mapping>
 </web-app>

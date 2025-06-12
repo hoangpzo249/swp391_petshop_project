@@ -45,11 +45,7 @@ public class TestPetDAO {
             System.out.println(color);
         }
 
-        System.out.println("\n Test getAllAgeRanges():");
-        List<String> ageRanges = dao.getAllAgeRanges();
-        for (String range : ageRanges) {
-            System.out.println(range);
-        }
+    
 
         System.out.println("\n Test getAllVaccinationStatus():");
         List<String> vaccinationStatus = dao.getAllVaccinationStatus();
@@ -69,15 +65,6 @@ public class TestPetDAO {
         String vaccinationStatus1 = "Đã tiêm"; 
 
         
-        List<Pet> pets = dao.filterPets(breed, species, search, num1, num2, sort,
-                gender, color, origin, ageRange, vaccinationStatus1);
-
-        
-        System.out.println("Số thú cưng tìm được: " + pets.size());
-        for (Pet pet : pets) {
-            System.out.println(pet); 
-        }
+       
     }
- 
-    }
-
+}

@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,7 +13,7 @@
         <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
         <script src="js/scroll_chat.js" type="text/javascript"></script>
 
-        <link href="css/main_product.css?v=6" rel="stylesheet" type="text/css"/>
+        <link href="css/main_product.css?v=17" rel="stylesheet" type="text/css"/>
         <script src="js/readmore_product.js" type="text/javascript"></script>
 
     </head>
@@ -124,14 +125,7 @@
 
 
 
-                        <div class="total-price">
-                            <span>Tổng số tiền:</span>
-                            <span class="price">
-                                <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
-                            </span>
 
-
-                        </div>
                         <div class="action-buttons">
                             <input type="hidden" name="id" value="${pet.petId}">
 
@@ -140,6 +134,19 @@
 
                         </div>
                     </form>
+                    <div class="pet-info">
+                        <p><strong>Giống:</strong> ${pet.breedName}</p>
+                        <p><strong>Ngày sinh:</strong> <fmt:formatDate value="${pet.petDob}" pattern="dd/MM/yyyy"/></p>
+                        <p><strong>Xuất xứ:</strong> ${pet.petOrigin}</p>
+                        <p><strong>Màu sắc:</strong> ${pet.petColor}</p>
+                        <p><strong>Tiêm vắc xin:</strong> 
+                            <c:choose>
+                                <c:when test="${pet.petVaccination == 1}">Đã tiêm</c:when>
+                                <c:otherwise>Chưa tiêm</c:otherwise>
+                            </c:choose>
+                        </p>
+                    </div>
+
 
                     <div class="status">
                         <span>Tình trạng: Còn hàng</span>
@@ -177,7 +184,9 @@
                                 <span class="sale-badge">Sale</span>
                                 <img src="${x.getPetImageBase64()}" width="800" height="800" alt="${x.petName}"/>
                             </div>
-                            <p class="item-favo-name">${x.petName}</p>
+                            <div class="item-favo-name">${x.petName}
+
+                            </div>
                         </a>
                         <div class="tym-item">
                             <fmt:formatNumber value="${x.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
@@ -186,15 +195,20 @@
                 </c:forEach>
 
             </div>
-           
+
 
             <c:if test="${not empty sessionScope.cartMessage}">
-                <div  class="toast">
-                    <i class="fas fa-check-circle"></i>
-                    ${sessionScope.cartMessage}
+                <c:set var="messageText" value="${sessionScope.cartMessage}" />
+                <c:set var="isWarning" value="${fn:containsIgnoreCase(messageText, 'đã tồn tại') || fn:containsIgnoreCase(messageText, 'tồn tại')}" />
+
+                <div class="toast ${isWarning ? 'toast-warning' : ''}">
+                    <i class="fas ${isWarning ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i>
+                    ${messageText}
                 </div>
+
                 <c:remove var="cartMessage" scope="session" />
             </c:if>
+
 
 
 

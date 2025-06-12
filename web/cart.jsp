@@ -13,9 +13,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
         <script src="js/scroll_chat.js" type="text/javascript"></script>
-        <script src="js/cart_selection.js?v=10" type="text/javascript"></script>
-        <link href="css/cart.css?v=3" rel="stylesheet" type="text/css"/>
-        <script src="js/cart_tick.js" type="text/javascript"></script>
+        <script src="js/cart_selection.js?v=17" type="text/javascript"></script>
+        <link href="css/cart.css?v=4" rel="stylesheet" type="text/css"/>
+
 
     </head>
 
@@ -150,84 +150,20 @@
                 </table>
 
 
-                <form id="checkoutForm" action="ajaxServlet" method="POST">
-                    <div class="address-info">
-                        <h3>Thông tin nhận hàng</h3>
-                        <c:choose>
-                            <c:when test="${not empty sessionScope.account}">
+                <form id="checkoutForm" action="checkout" method="POST">
 
-                                <p><strong>Tên đăng nhập:</strong> ${name}</p>
-                                <input type="hidden" name="guestName" value="${name}" />
-
-                                <p><strong>Số điện thoại:</strong> ${phone}</p>
-                                <input type="hidden" name="guestPhone" value="${phone}" />
-
-                                <p><strong>Địa chỉ:</strong> ${address}</p>
-                                <input type="hidden" name="guestAddress" value="${address}" />
-                                <p><strong>Email:</strong> ${email}</p>
-                                <input type="hidden" name="email" value="${email}" />
-
-                                <div class="new-address-alert">
-                                    <p>
-                                        <i class="fas fa-exclamation-circle icon-alert"></i>
-                                        <strong>Địa chỉ không đúng?</strong> Vui lòng cập nhật trong 
-                                        <a href="account_profile_user.jsp">Tài khoản của bạn</a>
-                                    </p>
-                                </div>
-                            </c:when>
-
-                            <c:otherwise>
-                                <div class="form-group">
-
-
-                                    <label for="guestName">Tên người nhận:</label>
-                                    <input type="text" id="guestName" name="guestName" required />
-                                    <span class="error" id="nameError"></span>
-                                </div>
-                                <div class="form-group">
-
-                                    <label for="guestPhone">Số điện thoại:</label>
-                                    <input type="text" id="guestPhone" name="guestPhone" required />
-                                    <span class="error" id="phoneError"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="guestAddress">Địa chỉ:</label>
-                                    <input type="text" id="guestAddress" name="guestAddress" required />
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="email">Email:</label>
-                                    <input type="text" id="email" name="email" required />
-                                </div>
-
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-
-
-                    <h3>Phương thức thanh toán</h3>
-                    <label><input type="radio" name="payment-method" value="bank" checked /> Chuyển khoản ngân hàng</label>
-                    <label><input type="radio" name="payment-method" value="cod" /> Trả tiền mặt khi nhận hàng</label>
                     <div class="summary-row">
                         <div>Tạm tính:</div>
                         <div id="subtotal-display">0₫</div>
                     </div>
-                    <div class="summary-row">
-                        <div>Giảm giá:</div>
-                        <div id="discount-display">- 0₫</div>
-                    </div>
-                    <div class="summary-row total">
-                        <div>Tổng cộng:</div>
-                        <div id="total-display">0₫</div>
-                    </div>
-                    <input type="hidden" name="totalprice" id="totalInput" />
-                   
+
+
                     <label class="terms-label">
                         <input type="checkbox" required />
                         Tôi đồng ý với <a href="footer_termofuse.jsp" target="_blank">điều khoản</a>.
                     </label>
 
-                    <button type="submit" class="checkout-btn">Tiến hành thanh toán</button>
+                    <button type="submit" class="checkout-btn">Xác nhận giỏ hàng</button>
                 </form>
 
 
@@ -293,9 +229,10 @@
                 <footer>
                     © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
                 </footer>
-
+                <div id="toast" class="toast"></div>
                 </body>
                 </html>
+
 
 
 
