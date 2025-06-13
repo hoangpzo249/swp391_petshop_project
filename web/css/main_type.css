@@ -1,0 +1,270 @@
+body {
+    font-family: 'Asap', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    line-height: 1.5;
+}
+
+.container {
+    display: flex;
+    padding: 20px 40px;
+    gap: 30px;
+    max-width: 1440px;
+    margin: auto;
+}
+
+.sidebar {
+    width: 280px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+    position: sticky;
+    top: 20px;
+}
+
+.sidebar h3 {
+    font-size: 18px;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #ff9933;
+    color: #222;
+}
+
+.sidebar ul {
+    padding-left: 15px;
+    margin: 0;
+}
+
+.sidebar li {
+    margin-bottom: 8px;
+}
+
+.filter-category {
+    color: #444;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.filter-category.selected,
+.filter-category:hover {
+    font-weight: bold;
+    color: #e67300;
+}
+
+.form-group {
+    margin-top: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.search-icon-btn {
+    background: #ff9933;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.search-icon-btn:hover {
+    background: #e67300;
+}
+
+select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+
+.loc {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.loc button[type="submit"] {
+    padding: 10px;
+    background: #ff9933;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.loc button[type="submit"]:hover {
+    background: #e67300;
+}
+
+.reset-button {
+    text-align: center;
+    padding: 10px;
+    background: #666;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.reset-button:hover {
+    background: #444;
+}
+
+.sort-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.custom-select select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.product-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 10px;
+    min-height: 720px;
+}
+
+.detail-favo-item-product {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
+}
+
+.detail-favo-item {
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.detail-favo-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.image-favo-container {
+    position: relative;
+}
+
+.image-favo-container img {
+    border-radius: 10px;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.sale-badge {
+    position: absolute;
+    background: red;
+    color: white;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 5px;
+    top: 10px;
+    left: 10px;
+}
+
+.item-favo-name {
+    font-weight: bold;
+    margin-top: 10px;
+    color: #333;
+}
+
+.item-favo-breed {
+    font-weight: normal;
+    font-size: 14px;
+    color: #777;
+}
+
+.price {
+    color: #e67300;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.pagination {
+    margin-top: 50px;
+    text-align: center;
+    width: 100%;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    text-decoration: none;
+    margin: 0 4px;
+    color: #333;
+    transition: 0.3s ease;
+}
+
+.pagination a:hover,
+.pagination a.active,
+.pagination a[style*='background: orange'] {
+    background: orange;
+    color: white;
+    font-weight: bold;
+}
+
+footer {
+    background: #222;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+}
+
+input[type="date"] {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 100%;
+    font-family: 'Asap', sans-serif;
+    color: #333;
+}
+
+input[type="date"]:focus {
+    outline: none;
+    border-color: #ff9933;
+    box-shadow: 0 0 3px #ff9933;
+}
+
