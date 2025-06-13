@@ -1,0 +1,89 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Models;
+
+import java.util.Base64;
+
+/**
+ *
+ * @author Lenovo
+ */
+public class Breed {
+    private int breedId;
+    private String breedName;
+    private String breedSpecies;
+    private double breedStatus;
+    private byte[] breedImage;
+
+    public Breed(int breedId, String breedName, String breedSpecies, double breedStatus, byte[] breedImage) {
+        this.breedId = breedId;
+        this.breedName = breedName;
+        this.breedSpecies = breedSpecies;
+        this.breedStatus = breedStatus;
+        this.breedImage = breedImage;
+    }
+
+    public int getBreedId() {
+        return breedId;
+    }
+
+    public void setBreedId(int breedId) {
+        this.breedId = breedId;
+    }
+
+    public String getBreedName() {
+        return breedName;
+    }
+
+    public void setBreedName(String breedName) {
+        this.breedName = breedName;
+    }
+
+    public String getBreedSpecies() {
+        return breedSpecies;
+    }
+
+    public void setBreedSpecies(String breedSpecies) {
+        this.breedSpecies = breedSpecies;
+    }
+
+    public double getBreedStatus() {
+        return breedStatus;
+    }
+
+    public void setBreedStatus(double breedStatus) {
+        this.breedStatus = breedStatus;
+    }
+
+    public byte[] getBreedImage() {
+        return breedImage;
+    }
+
+    public void setBreedImage(byte[] breedImage) {
+        this.breedImage = breedImage;
+    }
+
+   
+
+   
+    public String getBreedImageBase64() {
+        if (breedImage != null) {
+            return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(breedImage);
+        }
+        if (breedSpecies.equals("Chó")) return "images/defaultdog.jpg"; 
+        else return "images/defaultcat.jpg"; 
+    }
+
+    @Override
+    public String toString() {
+        return "Breed{" + "breedId=" + breedId + ", breedName=" + breedName + ", breedSpecies=" + breedSpecies + ", breedStatus=" + breedStatus + '}';
+    }
+
+    
+
+    
+    
+    
+}
