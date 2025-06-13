@@ -6,8 +6,10 @@ package Controllers;
 
 import DAO.BreedDAO;
 import DAO.PetDAO;
+import DAO.PetImageDAO;
 import Models.Breed;
 import Models.Pet;
+import Models.PetImage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -63,6 +65,7 @@ public class UpdatePetServlet extends HttpServlet {
             throws ServletException, IOException {
         PetDAO _daopet = new PetDAO();
         BreedDAO _daobreed=new BreedDAO();
+        PetImageDAO _daoimage=new PetImageDAO();
 
         int petId = Integer.parseInt(request.getParameter("id"));
 
@@ -71,9 +74,11 @@ public class UpdatePetServlet extends HttpServlet {
         if (pendingOrderId == 0) {
             Pet pet=_daopet.getPetById(petId);
             List<Breed> breedList=_daobreed.getAllBreeds();
+            List<PetImage> imageList=_daoimage.getPetImagesById(petId);
             
             request.setAttribute("pet", pet);
             request.setAttribute("breedList", breedList);
+            request.setAttribute("imageList", imageList);
             
             request.getRequestDispatcher("seller_pet_edit.jsp")
                     .forward(request, response);

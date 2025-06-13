@@ -269,7 +269,7 @@ public class Pet {
         }
         return "images/placeholder.jpg";
     }
-
+    
     public int getPetAgeInMonths() {
         if (petDob == null) {
             return 0;

@@ -1,6 +1,8 @@
 
 import DAO.PetDAO;
+import DAO.PetImageDAO;
 import Models.Pet;
+import Models.PetImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,14 +17,17 @@ import java.util.List;
 public class TestPet {
 
     private static PetDAO _dao = new PetDAO();
+    private static PetImageDAO _daoimage = new PetImageDAO();
 
     public static void main(String[] args) {
-//        List<Pet> list=getPets();
-//        for (Pet pet : list) {
-//            System.out.println(pet.toString());
-//        }
-//System.out.println(updateStatus(1, 0));
-System.out.println(petInPendingOrder(41));
+        List<PetImage> list=getImages(1);
+        for (PetImage petImage : list) {
+            System.out.println(petImage.toString());
+        }
+    }
+    
+    private static List<PetImage> getImages(int id) {
+        return _daoimage.getPetImagesById(id);
     }
     
     private static int petInPendingOrder(int id) {

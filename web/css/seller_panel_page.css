@@ -1029,10 +1029,7 @@ textarea.form-control {
     grid-template-columns: 1fr 2fr;
     gap: 12px;
 }
-.detail-label {
-    font-weight: 600;
-    color: #555;
-}
+
 .detail-value {
     color: #333;
 }
@@ -1078,63 +1075,6 @@ textarea.form-control {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(242, 111, 33, 0.4);
 
-}
-
-.alert-message {
-    background-color: rgba(242, 111, 33, 0.1);
-    color: #f26f21;
-    border: 2px solid #f26f21;
-    border-radius: 8px;
-    padding: 15px 20px;
-    text-align: center;
-    font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    z-index: 1000;
-    min-width: 250px;
-    max-width: 350px;
-    animation: slideIn 0.5s ease-in-out forwards, fadeOut 0.5s ease-in-out 4.5s forwards;
-}
-
-.alert-message::before {
-    content: '\f058';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    margin-right: 10px;
-    font-size: 18px;
-}
-
-.alert-message.error {
-    background-color: rgba(231, 76, 60, 0.1);
-    color: #e74c3c;
-    border-color: #e74c3c;
-}
-
-.alert-message.error::before {
-    content: '\f057';
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-        visibility: hidden;
-    }
 }
 
 #rejectionReasonContainer {
@@ -1234,26 +1174,27 @@ textarea.form-control {
     flex-grow: 1 !important;
 }
 
-/* --- ADD THESE NEW RULES TO seller_panel_page.css --- */
 
-/* Defines the two-column layout for forms */
+
+
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Creates two equal columns */
-    gap: 0 30px; /* 0px vertical gap, 30px horizontal gap */
-    align-items: start; /* Aligns items to the top of each cell */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 20px 30px; 
+    align-items: start;
 }
 
-/* Instructs an element within the grid to span both columns */
+
 .form-full-width {
-    grid-column: 1 / -1; /* Spans from the first to the last column line */
+    grid-column: 1 / -1; 
 }
 
-/* Manages the layout for multiple image previews */
+
 .image-management-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 15px;
+    margin-bottom: 20px;
 }
 
 .image-preview-item {
@@ -1272,7 +1213,7 @@ textarea.form-control {
     position: absolute;
     top: 8px;
     right: 8px;
-    transform: scale(1.5); /* Makes the checkbox bigger and easier to click */
+    transform: scale(1.5);
     cursor: pointer;
 }
 
@@ -1281,4 +1222,24 @@ textarea.form-control {
     padding: 20px 25px;
     background-color: #f9f9f9;
     border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.form-group .select-wrapper {
+    position: relative;
+    display: block;
+}
+
+.form-group .select-wrapper::after {
+    content: '\f107';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    pointer-events: none;
 }

@@ -153,32 +153,38 @@
 
 
                                 <%-- Full Width Sections (Spanning both columns) --%>
+                                <%-- Full Width Section for the Statuses --%>
                                 <div class="form-full-width">
-                                    <div class="form-group">
-                                        <label>Trạng thái</label>
-                                        <div style="display: flex; gap: 20px;">
-                                            <div class="select-group" style="flex:1;">
-                                                <label for="petAvailability">Trạng thái bán</label>
-                                                <select id="petAvailability" name="petAvailability" class="form-control">
-                                                    <option value="1" ${pet.petAvailability == 1 ? 'selected' : ''}>Còn hàng</option>
-                                                    <option value="0" ${pet.petAvailability == 0 ? 'selected' : ''}>Đã bán</option>
-                                                </select>
-                                            </div>
-                                            <div class="select-group" style="flex:1;">
-                                                <label for="petStatus">Trạng thái đăng</label>
-                                                <select id="petStatus" name="petStatus" class="form-control">
-                                                    <option value="1" ${pet.petStatus == 1 ? 'selected' : ''}>Hiển thị</option>
-                                                    <option value="0" ${pet.petStatus == 0 ? 'selected' : ''}>Ẩn</option>
-                                                </select>
-                                            </div>
-                                            <div class="select-group" style="flex:1;">
-                                                <label for="petVaccination">Tiêm phòng</label>
-                                                <select id="petVaccination" name="petVaccination" class="form-control">
-                                                    <option value="1" ${pet.petVaccination == 1 ? 'selected' : ''}>Đã tiêm</option>
-                                                    <option value="0" ${pet.petVaccination == 0 ? 'selected' : ''}>Chưa tiêm</option>
-                                                </select>
-                                            </div>
+                                    <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #555;">Trạng thái</label>
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+
+                                        <%-- Trạng thái bán --%>
+                                        <div class="form-group">
+                                            <label for="petAvailability">Trạng thái bán</label>
+                                            <select id="petAvailability" name="petAvailability" class="form-control">
+                                                <option value="1" ${pet.petAvailability == 1 ? 'selected' : ''}>Còn hàng</option>
+                                                <option value="0" ${pet.petAvailability == 0 ? 'selected' : ''}>Đã bán</option>
+                                            </select>
                                         </div>
+
+                                        <%-- Trạng thái đăng --%>
+                                        <div class="form-group">
+                                            <label for="petStatus">Trạng thái đăng</label>
+                                            <select id="petStatus" name="petStatus" class="form-control">
+                                                <option value="1" ${pet.petStatus == 1 ? 'selected' : ''}>Hiển thị</option>
+                                                <option value="0" ${pet.petStatus == 0 ? 'selected' : ''}>Ẩn</option>
+                                            </select>
+                                        </div>
+
+                                        <%-- Tiêm phòng --%>
+                                        <div class="form-group">
+                                            <label for="petVaccination">Tiêm phòng</label>
+                                            <select id="petVaccination" name="petVaccination" class="form-control">
+                                                <option value="1" ${pet.petVaccination == 1 ? 'selected' : ''}>Đã tiêm</option>
+                                                <option value="0" ${pet.petVaccination == 0 ? 'selected' : ''}>Chưa tiêm</option>
+                                            </select>
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -186,9 +192,9 @@
                                     <div class="form-group">
                                         <label>Quản lý hình ảnh</label>
                                         <div class="image-management-grid">
-                                            <c:forEach items="${pet.images}" var="image">
+                                            <c:forEach items="${imageList}" var="image">
                                                 <div class="image-preview-item">
-                                                    <img src="data:image/jpeg;base64,${image.getBase64ImageData()}" alt="Pet Image">
+                                                    <img src="${image.getPetImageBase64()}" alt="Pet Image">
                                                     <input type="checkbox" name="deleteImageIds" value="${image.imageId}" class="image-delete-check" title="Chọn để xóa ảnh này">
                                                 </div>
                                             </c:forEach>
@@ -216,9 +222,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="seller-footer">
-        © 2025 PETFPT Shop - Hệ thống quản lý
-    </div>
-</body>
+        <div class="seller-footer">
+            © 2025 PETFPT Shop - Hệ thống quản lý
+        </div>
+    </body>
 </html>
