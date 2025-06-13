@@ -1,33 +1,49 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package Models;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 
+/**
+ *
+ * @author Lenovo
+ */
 public class Account {
+
     private int accId;
     private String accUsername;
     private String accEmail;
     private String accPassword;
     private String accFname;
     private String accLname;
-    private Date accDob;
+    private LocalDate accDob;
     private String accAddress;
     private String accPhoneNumber;
     private String accRole;
     private String accDescription;
-    private Date accCreateDate;
+    private LocalDateTime accCreateDate;
     private byte[] accImage;
     private String accStatus;
 
     public Account() {
-        this.accId = -1;
     }
 
-    public Account(int accId, String accUsername, String accEmail, String accPassword,
-                   String accFname, String accLname, Date accDob, String accAddress,
-                   String accPhoneNumber, String accRole, String accDescription,
-                   Date accCreateDate, byte[] accImage, String accStatus) {
-        this.accId = accId;
+    public Account(String accUsername,
+                   String accEmail,
+                   String accPassword,
+                   String accFname,
+                   String accLname,
+                   LocalDate accDob,
+                   String accAddress,
+                   String accPhoneNumber,
+                   String accRole,
+                   String accDescription,
+                   byte[] accImage,
+                   String accStatus) {
         this.accUsername = accUsername;
         this.accEmail = accEmail;
         this.accPassword = accPassword;
@@ -38,70 +54,159 @@ public class Account {
         this.accPhoneNumber = accPhoneNumber;
         this.accRole = accRole;
         this.accDescription = accDescription;
-        this.accCreateDate = accCreateDate;
         this.accImage = accImage;
         this.accStatus = accStatus;
     }
 
-    public int getAccId() { return accId; }
-    public void setAccId(int accId) { this.accId = accId; }
+    public Account(int accId,
+                   String accUsername,
+                   String accEmail,
+                   String accPassword,
+                   String accFname,
+                   String accLname,
+                   LocalDate accDob,
+                   String accAddress,
+                   String accPhoneNumber,
+                   String accRole,
+                   String accDescription,
+                   LocalDateTime accCreateDate,
+                   byte[] accImage,
+                   String accStatus) {
+        this(accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress,
+             accPhoneNumber, accRole, accDescription, accImage, accStatus);
+        this.accId = accId;
+        this.accCreateDate = accCreateDate;
+    }
 
-    public String getAccUsername() { return accUsername; }
-    public void setAccUsername(String accUsername) { this.accUsername = accUsername; }
+    public int getAccId() {
+        return accId;
+    }
 
-    public String getAccEmail() { return accEmail; }
-    public void setAccEmail(String accEmail) { this.accEmail = accEmail; }
+    public void setAccId(int accId) {
+        this.accId = accId;
+    }
 
-    public String getAccPassword() { return accPassword; }
-    public void setAccPassword(String accPassword) { this.accPassword = accPassword; }
+    public String getAccUsername() {
+        return accUsername;
+    }
 
-    public String getAccFname() { return accFname; }
-    public void setAccFname(String accFname) { this.accFname = accFname; }
+    public void setAccUsername(String accUsername) {
+        this.accUsername = accUsername;
+    }
 
-    public String getAccLname() { return accLname; }
-    public void setAccLname(String accLname) { this.accLname = accLname; }
+    public String getAccEmail() {
+        return accEmail;
+    }
 
-    public Date getAccDob() { return accDob; }
-    public void setAccDob(Date accDob) { this.accDob = accDob; }
+    public void setAccEmail(String accEmail) {
+        this.accEmail = accEmail;
+    }
 
-    public String getAccAddress() { return accAddress; }
-    public void setAccAddress(String accAddress) { this.accAddress = accAddress; }
+    public String getAccPassword() {
+        return accPassword;
+    }
 
-    public String getAccPhoneNumber() { return accPhoneNumber; }
-    public void setAccPhoneNumber(String accPhoneNumber) { this.accPhoneNumber = accPhoneNumber; }
+    public void setAccPassword(String accPassword) {
+        this.accPassword = accPassword;
+    }
 
-    public String getAccRole() { return accRole; }
-    public void setAccRole(String accRole) { this.accRole = accRole; }
+    public String getAccFname() {
+        return accFname;
+    }
 
-    public String getAccDescription() { return accDescription; }
-    public void setAccDescription(String accDescription) { this.accDescription = accDescription; }
+    public void setAccFname(String accFname) {
+        this.accFname = accFname;
+    }
 
-    public Date getAccCreateDate() { return accCreateDate; }
-    public void setAccCreateDate(Date accCreateDate) { this.accCreateDate = accCreateDate; }
+    public String getAccLname() {
+        return accLname;
+    }
 
-    public byte[] getAccImage() { return accImage; }
-    public void setAccImage(byte[] accImage) { this.accImage = accImage; }
+    public void setAccLname(String accLname) {
+        this.accLname = accLname;
+    }
 
-    public String getAccStatus() { return accStatus; }
-    public void setAccStatus(String accStatus) { this.accStatus = accStatus; }
+    public LocalDate getAccDob() {
+        return accDob;
+    }
+
+    public void setAccDob(LocalDate accDob) {
+        this.accDob = accDob;
+    }
+
+    public String getAccAddress() {
+        return accAddress;
+    }
+
+    public void setAccAddress(String accAddress) {
+        this.accAddress = accAddress;
+    }
+
+    public String getAccPhoneNumber() {
+        return accPhoneNumber;
+    }
+
+    public void setAccPhoneNumber(String accPhoneNumber) {
+        this.accPhoneNumber = accPhoneNumber;
+    }
+
+    public String getAccRole() {
+        return accRole;
+    }
+
+    public void setAccRole(String accRole) {
+        this.accRole = accRole;
+    }
+
+    public String getAccDescription() {
+        return accDescription;
+    }
+
+    public void setAccDescription(String accDescription) {
+        this.accDescription = accDescription;
+    }
+
+    public LocalDateTime getAccCreateDate() {
+        return accCreateDate;
+    }
+
+    public void setAccCreateDate(LocalDateTime accCreateDate) {
+        this.accCreateDate = accCreateDate;
+    }
+
+    public byte[] getAccImage() {
+        return accImage;
+    }
+
+    public void setAccImage(byte[] accImage) {
+        this.accImage = accImage;
+    }
+
+    public String getAccStatus() {
+        return accStatus;
+    }
+
+    public void setAccStatus(String accStatus) {
+        this.accStatus = accStatus;
+    }
 
     @Override
     public String toString() {
         return "Account{" +
-                "accId=" + accId +
-                ", accUsername='" + accUsername + '\'' +
-                ", accEmail='" + accEmail + '\'' +
-                ", accPassword='" + accPassword + '\'' +
-                ", accFname='" + accFname + '\'' +
-                ", accLname='" + accLname + '\'' +
-                ", accDob=" + accDob +
-                ", accAddress='" + accAddress + '\'' +
-                ", accPhoneNumber='" + accPhoneNumber + '\'' +
-                ", accRole='" + accRole + '\'' +
-                ", accDescription='" + accDescription + '\'' +
-                ", accCreateDate=" + accCreateDate +
-                ", accImage=" + Arrays.toString(accImage) +
-                ", accStatus='" + accStatus + '\'' +
-                '}';
+               "accId=" + accId +
+               ", accUsername='" + accUsername + '\'' +
+               ", accEmail='" + accEmail + '\'' +
+               ", accPassword='" + accPassword + '\'' +
+               ", accFname='" + accFname + '\'' +
+               ", accLname='" + accLname + '\'' +
+               ", accDob=" + accDob +
+               ", accAddress='" + accAddress + '\'' +
+               ", accPhoneNumber='" + accPhoneNumber + '\'' +
+               ", accRole='" + accRole + '\'' +
+               ", accDescription='" + accDescription + '\'' +
+               ", accCreateDate=" + accCreateDate +
+               ", accImage=" + Arrays.toString(accImage) +
+               ", accStatus='" + accStatus + '\'' +
+               '}';
     }
 }

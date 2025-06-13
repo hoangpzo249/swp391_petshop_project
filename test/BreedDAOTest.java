@@ -20,14 +20,14 @@ public class BreedDAOTest {
         System.out.println(" Danh sách giống chó:");
         List<Breed> dogBreeds = breedDAO.displayDogBreeds();
         for (Breed breed : dogBreeds) {
-            System.out.println("- " + breed.getBreedName() + " | ID: " + breed.getBreedId() + " | Status: " + breed.getBreedStatus());
+//            System.out.println("- " + breed.getBreedName() + " | ID: " + breed.getBreedId() + " | Status: " + breed.getBreedStatus());
         }
 
         
         System.out.println(" Danh sách giống mèo:");
         List<Breed> catBreeds = breedDAO.displayCatBreeds();
         for (Breed breed : catBreeds) {
-            System.out.println("- " + breed.getBreedName() + " | ID: " + breed.getBreedId() + " | Status: " + breed.getBreedStatus());
+//            System.out.println("- " + breed.getBreedName() + " | ID: " + breed.getBreedId() + " | Status: " + breed.getBreedStatus());
         }
 
         

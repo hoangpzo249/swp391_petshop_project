@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import Models.Breed;
 import Models.Pet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,13 +13,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PetDAO {
 
-    Connection conn;
-    PreparedStatement ps;
-    ResultSet rs;
+    private Connection conn;
+    private PreparedStatement ps;
+    private ResultSet rs;
 
     private Pet PetInfo(ResultSet rs) throws Exception {
         return new Pet(
@@ -33,148 +35,219 @@ public class PetDAO {
                 rs.getString("petDescription"),
                 rs.getDouble("petPrice"),
                 rs.getInt("breedId"),
-                rs.getInt("createdBy")
+                rs.getInt("createdBy"),
+                rs.getInt("petStatus")
         );
+    }
+
+    public boolean updatePetStatusById(int id, int status) {
+        String sql = "UPDATE PetTB SET petStatus = ? WHERE petId = ?";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, status);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 
     public List<byte[]> getImagesByPetId(int petId) {
         List<byte[]> images = new ArrayList<>();
-        try {
-            conn = new DBContext().getConnection();
-            String sql = "SELECT imageData FROM PetImageTB WHERE petId = ?";
-            ps = conn.prepareStatement(sql);
+        String sql = "SELECT imageData FROM PetImageTB WHERE petId = ?";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, petId);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                images.add(rs.getBytes("imageData"));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    images.add(rs.getBytes("imageData"));
+                }
             }
-        } catch (Exception e) {
-        }
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (ps != null) {
-                ps.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return images;
     }
 
-    public List<Pet> getSimilarPets(int breedId, int excludedPetId) {
+    public List<Pet> filterPetsForSeller(String searchKey,
+            String availability,
+            String species,
+            String breedId,
+            String gender,
+            String vaccination,
+            String petStatus) {
         List<Pet> list = new ArrayList<>();
-        try {
-            conn = new DBContext().getConnection();
-            String sql = "SELECT * FROM PetTB WHERE petAvailability=1 AND breedId=? AND petId!=?";
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, breedId);
-            ps.setInt(2, excludedPetId);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                Pet pet = PetInfo(rs);
-                pet.setImages(getImagesByPetId(pet.getPetId()));
-                list.add(pet);
+        List<Object> params = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT p.*, b.breedName "
+                + "FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
+                + "WHERE 1=1 "
+        );
+
+        if (searchKey != null && !searchKey.trim().isEmpty()) {
+            if (searchKey.matches(".*[a-zA-Z].*")) {
+                sql.append("AND p.petName LIKE ? ");
+                params.add("%" + searchKey + "%");
+            } else {
+                try {
+                    Integer.parseInt(searchKey);
+                    sql.append("AND p.petId = ? ");
+                    params.add(searchKey);
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
+        if (availability != null && !availability.isEmpty()) {
+            sql.append("AND p.petAvailability = ? ");
+            params.add(availability);
+        }
+        if (species != null && !species.isEmpty()) {
+            sql.append("AND b.breedSpecies = ? ");
+            params.add(species);
+        }
+        if (breedId != null && !breedId.isEmpty()) {
+            sql.append("AND p.breedId = ? ");
+            params.add(breedId);
+        }
+        if (gender != null && !gender.isEmpty()) {
+            sql.append("AND p.petGender = ? ");
+            params.add(gender);
+        }
+        if (vaccination != null && !vaccination.isEmpty()) {
+            sql.append("AND p.petVaccination = ? ");
+            params.add(vaccination);
+        }
+        if (petStatus != null && !petStatus.isEmpty()) {
+            sql.append("AND p.petStatus = ? ");
+            params.add(petStatus);
+        }
+        sql.append("ORDER BY p.petId ASC");
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Pet pet = PetInfo(rs);
+                    Breed breed = new Breed();
+                    breed.setBreedId(rs.getInt("breedId"));
+                    breed.setBreedName(rs.getString("breedName"));
+                    pet.setBreed(breed);
+                    pet.setImages(getImagesByPetId(pet.getPetId()));
+                    list.add(pet);
+                }
             }
         } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (Exception e) {
+        return list;
+    }
+
+    public boolean updatePetAvailabilityById(List<Integer> petIds, int status) {
+        if (petIds == null || petIds.isEmpty()) {
+            return true;
         }
-        try {
-            if (ps != null) {
-                ps.close();
+        String sql = "UPDATE PetTB SET petAvailability = ? WHERE petId = ?";
+        try (Connection conn = new DBContext().getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, status);
+                for (Integer id : petIds) {
+                    ps.setInt(2, id);
+                    ps.addBatch();
+                }
+                ps.executeBatch();
             }
-        } catch (Exception e) {
+            conn.commit();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, "Error updating pet availability", ex);
+            return false;
         }
-        try {
-            if (conn != null) {
-                conn.close();
+    }
+
+    public List<Pet> getPetForOrderDetail(int orderId) {
+        List<Pet> list = new ArrayList<>();
+        String sql
+                = "SELECT p.*, b.breedName, oc.priceAtOrder "
+                + "FROM PetTB p "
+                + "JOIN OrderContentTB oc ON p.petId = oc.petId "
+                + "JOIN BreedTB b ON p.breedId = b.breedId "
+                + "WHERE oc.orderId = ?";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Pet pet = PetInfo(rs);
+                    Breed breed = new Breed();
+                    breed.setBreedId(rs.getInt("breedId"));
+                    breed.setBreedName(rs.getString("breedName"));
+                    pet.setBreed(breed);
+                    pet.setPriceAtOrder(rs.getDouble("priceAtOrder"));
+                    list.add(pet);
+                }
             }
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public List<Pet> getSimilarPets(int breedId, int excludedPetId) {
+        List<Pet> list = new ArrayList<>();
+        String sql = "SELECT * FROM PetTB WHERE petAvailability=1 AND petStatus=1 AND breedId=? AND petId!=?";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, breedId);
+            ps.setInt(2, excludedPetId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Pet pet = PetInfo(rs);
+                    pet.setImages(getImagesByPetId(pet.getPetId()));
+                    list.add(pet);
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
 
     public Pet getPetById(int id) {
         Pet pet = null;
-        try {
-            conn = new DBContext().getConnection();
-            String sql = "SELECT p.*, b.breedName FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId WHERE p.petId = ?";
-            ps = conn.prepareStatement(sql);
+        String sql
+                = "SELECT p.*, b.breedName "
+                + "FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
+                + "WHERE p.petId = ?";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                pet = PetInfo(rs);
-                pet.setBreedName(rs.getString("breedName"));
-                pet.setImages(getImagesByPetId(pet.getPetId()));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    pet = PetInfo(rs);
+                    Breed breed = new Breed();
+                    breed.setBreedId(rs.getInt("breedId"));
+                    breed.setBreedName(rs.getString("breedName"));
+                    pet.setBreed(breed);
+                    pet.setImages(getImagesByPetId(pet.getPetId()));
+                }
             }
         } catch (Exception ex) {
-        }
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (ps != null) {
-                ps.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (Exception e) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return pet;
     }
 
     public List<Pet> getAllPets() {
         List<Pet> list = new ArrayList<>();
-        try {
-            conn = new DBContext().getConnection();
-            String sql = "SELECT * FROM PetTB";
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
+        String sql = "SELECT * FROM PetTB";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Pet pet = PetInfo(rs);
                 pet.setImages(getImagesByPetId(pet.getPetId()));
                 list.add(pet);
             }
         } catch (Exception ex) {
-        }
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (ps != null) {
-                ps.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (Exception e) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -186,7 +259,8 @@ public class PetDAO {
             while (rs.next()) {
                 list.add(rs.getString("petOrigin"));
             }
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -198,7 +272,8 @@ public class PetDAO {
             while (rs.next()) {
                 list.add(rs.getString("petGender"));
             }
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -210,7 +285,8 @@ public class PetDAO {
             while (rs.next()) {
                 list.add(rs.getString("petColor"));
             }
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -224,6 +300,29 @@ public class PetDAO {
         return years * 12 + months;
     }
 
+    public List<String> getAllAgeRanges() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT petDob FROM PetTB WHERE petDob IS NOT NULL";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Date dob = rs.getDate("petDob");
+                int months = getAgeInMonths(dob);
+                if (months < 30 && !list.contains("Dưới 2.5 tuổi")) {
+                    list.add("Dưới 2.5 tuổi");
+                } else if (months >= 30 && months <= 36 && !list.contains("2.5 – 3 tuổi")) {
+                    list.add("2.5 – 3 tuổi");
+                } else if (months >= 37 && months <= 44 && !list.contains("3 – 3.5 tuổi")) {
+                    list.add("3 – 3.5 tuổi");
+                } else if (months >= 45 && !list.contains("Trên 3.5 tuổi")) {
+                    list.add("Trên 3.5 tuổi");
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
     public List<String> getAllVaccinationStatus() {
         List<String> list = new ArrayList<>();
         String sql = "SELECT DISTINCT petVaccination FROM PetTB";
@@ -232,7 +331,8 @@ public class PetDAO {
                 int status = rs.getInt("petVaccination");
                 list.add(status == 1 ? "Đã tiêm" : "Chưa tiêm");
             }
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -241,7 +341,6 @@ public class PetDAO {
             String gender, String color, String origin, String dobFrom, String dobTo, String vaccinationStatus) {
 
         List<Pet> listPet = new ArrayList<>();
-       
 
         if (breed == null || breed.isEmpty()) {
             breed = "%";
@@ -338,21 +437,20 @@ public class PetDAO {
             if (vaccinationStatus != null && !vaccinationStatus.isEmpty()) {
                 ps.setInt(i++, vaccinationStatus.equals("Đã tiêm") ? 1 : 0);
             }
-            
 
             rs = ps.executeQuery();
             while (rs.next()) {
                 Pet pet = PetInfo(rs);
                 pet.setBreedName(rs.getString("breedName"));
-                
-                listPet.add(pet); 
+
+                listPet.add(pet);
             }
             rs.close();
             ps.close();
             conn.close();
-            for (Pet pet:listPet){
+            for (Pet pet : listPet) {
                 pet.setImages(getImagesByPetId(pet.getPetId()));
-                
+
             }
 
         } catch (Exception ex) {
@@ -377,5 +475,24 @@ public class PetDAO {
         }
 
         return listPet;
+    }
+
+    public int getPendingOrderIdForPet(int petId) {
+        String sql
+                = "SELECT o.orderId FROM OrderContentTB oc "
+                + "JOIN OrderTB o ON oc.orderId = o.orderId "
+                + "WHERE oc.petId = ? AND o.orderStatus = 'Pending'";
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, petId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("orderId");
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE,
+                    "Error checking pending order", ex);
+        }
+        return 0;
     }
 }

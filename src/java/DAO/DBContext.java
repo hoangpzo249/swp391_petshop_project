@@ -1,28 +1,30 @@
-
 package DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+
 /**
  *
  * @author VU VAN HUY
  */
 public class DBContext {
+
     private final String serverName = "localhost";
-    private final String dbName = "PetShopDB";
+    private final String dbName = "PetShopFPT_DB";
     private final String portNumber = "1433";
     private final String userID = "sa";
     private final String password = "123";
-    
+
     public Connection getConnection() throws Exception {
-        String url = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName+";encrypt=true;trustServerCertificate=true;";
+        String url = "jdbc:sqlserver://" + serverName + ":" + portNumber
+                   + ";databaseName=" + dbName
+                   + ";encrypt=true;trustServerCertificate=true;";
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         return DriverManager.getConnection(url, userID, password);
     }
-    
+
     public void closeConnection(Connection con, PreparedStatement ps, ResultSet rs) throws Exception {
         if (rs != null && !rs.isClosed()) {
             rs.close();
@@ -33,5 +35,5 @@ public class DBContext {
         if (con != null && !con.isClosed()) {
             con.close();
         }
-    }    
+    }
 }
