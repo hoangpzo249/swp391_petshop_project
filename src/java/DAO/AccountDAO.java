@@ -4,7 +4,7 @@
  */
 package DAO;
 
-import Model.Account;
+import Models.Account;
 import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.sql.Connection;

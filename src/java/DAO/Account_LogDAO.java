@@ -4,7 +4,7 @@
  */
 package DAO;
 
-import Model.Account_Log;
+import Models.Account_Log;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

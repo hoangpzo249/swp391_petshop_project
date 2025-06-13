@@ -17,35 +17,35 @@
     </session-config>
     <servlet>
         <servlet-name>Login_Account_Servlet</servlet-name>
-        <servlet-class>Controller.Login_Account_Servlet</servlet-class>
+        <servlet-class>Controllers.Login_Account_Servlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Homepage_Servlet</servlet-name>
-        <servlet-class>Controller.Homepage_Servlet</servlet-class>
+        <servlet-class>Controllers.Homepage_Servlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Register_Account_Servlet</servlet-name>
-        <servlet-class>Controller.Register_Account_Servlet</servlet-class>
+        <servlet-class>Controllers.Register_Account_Servlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Recover_Account_Servlet</servlet-name>
-        <servlet-class>Controller.Recover_Account_Servlet</servlet-class>
+        <servlet-class>Controllers.Recover_Account_Servlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Login_Google_Servlet</servlet-name>
-        <servlet-class>Controller.Login_Google_Servlet</servlet-class>
+        <servlet-class>Controllers.Login_Google_Servlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Profile_Account_Servlet</servlet-name>
-        <servlet-class>Controller.Profile_Account_Servlet</servlet-class>
+        <servlet-class>Controllers.Profile_Account_Servlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Logout_Account_Servlet</servlet-name>
-        <servlet-class>Controller.Logout_Account_Servlet</servlet-class>
+        <servlet-class>Controllers.Logout_Account_Servlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Admin_Panel_Servlet</servlet-name>
-        <servlet-class>Controller.Admin_Panel_Servlet</servlet-class>
+        <servlet-class>Controllers.Admin_Panel_Servlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login_Account_Servlet</servlet-name>

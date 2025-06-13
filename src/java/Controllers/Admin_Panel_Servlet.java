@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller;
+package Controllers;
 
 import DAO.AccountDAO;
 import DAO.Account_LogDAO;
-import Model.Account;
-import Model.Account_Log;
+import Models.Account;
+import Models.Account_Log;
 import Utils.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -5,7 +5,7 @@
 package Filter;
 
 import DAO.AccountDAO;
-import Model.Account;
+import Models.Account;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
