@@ -21,7 +21,12 @@ public class TestPet {
 //        for (Pet pet : list) {
 //            System.out.println(pet.toString());
 //        }
-System.out.println(updateStatus(1, 0));
+//System.out.println(updateStatus(1, 0));
+System.out.println(petInPendingOrder(41));
+    }
+    
+    private static int petInPendingOrder(int id) {
+        return _dao.getPendingOrderIdForPet(id);
     }
     
     private static boolean updateStatus(int id, int status) {

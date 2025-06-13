@@ -562,4 +562,27 @@ public class PetDAO {
         }
         return listPet;
     }
+
+    public int getPendingOrderIdForPet(int petId) {
+        DBContext db = new DBContext();
+        String sql = "SELECT o.orderId FROM OrderContentTB oc "
+                + "JOIN OrderTB o ON oc.orderId = o.orderId "
+                + "WHERE oc.petId = ? AND o.orderStatus = 'Pending'";
+
+        try (Connection conn = db.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, petId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("orderId");
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, "Error checking if pet is in pending order", ex);
+        }
+
+        return 0;
+    }
+
 }

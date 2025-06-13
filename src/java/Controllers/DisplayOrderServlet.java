@@ -89,7 +89,7 @@ public class DisplayOrderServlet extends HttpServlet {
             e.printStackTrace();
             HttpSession session = request.getSession(false);
             String referer = request.getHeader("referer");
-            session.setAttribute("errorMess", "Định dạng ngày không hợp lệ.");
+            session.setAttribute("errMess", "Định dạng ngày không hợp lệ.");
             if (referer != null) {
                 response.sendRedirect(referer);
             } else {
@@ -145,7 +145,7 @@ public class DisplayOrderServlet extends HttpServlet {
             e.printStackTrace();
             HttpSession session = request.getSession(false);
             String referer = request.getHeader("referer");
-            session.setAttribute("errorMess", "Định dạng ngày không hợp lệ.");
+            session.setAttribute("errMess", "Định dạng ngày không hợp lệ.");
             if (referer != null) {
                 response.sendRedirect(referer);
             } else {

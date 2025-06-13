@@ -237,7 +237,7 @@
                                                     <a class="action-btn view-btn" title="Xem chi tiết" href="displaypet?id=${pet.petId}">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a class="action-btn edit-btn" title="Chỉnh sửa" href="seller-edit-pet?id=${pet.petId}">
+                                                    <a class="action-btn edit-btn" title="Chỉnh sửa" href="updatepet?id=${pet.petId}">
                                                         <i class="fas fa-pencil-alt"></i>
                                                     </a>
 

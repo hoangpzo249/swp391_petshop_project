@@ -99,68 +99,79 @@
                         <div class="card-body">
                             <div class="form-grid">
                                 <%-- Left Column --%>
-                                <div>
-                                    <div class="form-group">
-                                        <label for="petName">Tên thú cưng</label>
-                                        <input type="text" id="petName" name="petName" class="form-control" value="${pet.petName}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="breedId">Giống</label>
-                                        <select id="breedId" name="breedId" class="form-control" required>
-                                            <c:forEach items="${breedList}" var="b">
-                                                <option value="${b.breedId}" ${pet.breedId == b.breedId ? 'selected' : ''}>${b.breedName}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="petDob">Ngày sinh</label>
-                                        <input type="date" id="petDob" name="petDob" class="form-control" value="<fmt:formatDate value='${pet.petDob}' pattern='yyyy-MM-dd'/>" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="petPrice">Giá bán (₫)</label>
-                                        <input type="number" id="petPrice" name="petPrice" class="form-control" value="${pet.petPrice}" required min="0">
-                                    </div>
+                                <div class="form-group">
+                                    <label for="petName">Tên thú cưng</label>
+                                    <input type="text" id="petName" name="petName" class="form-control" value="${pet.petName}" required>
                                 </div>
 
                                 <%-- Right Column --%>
-                                <div>
-                                    <div class="form-group">
-                                        <label for="petGender">Giới tính</label>
-                                        <select id="petGender" name="petGender" class="form-control">
-                                            <option value="Male" ${pet.petGender == 'Male' ? 'selected' : ''}>Đực</option>
-                                            <option value="Female" ${pet.petGender == 'Female' ? 'selected' : ''}>Cái</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="petColor">Màu sắc</label>
-                                        <input type="text" id="petColor" name="petColor" class="form-control" value="${pet.petColor}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="petOrigin">Nguồn gốc</label>
-                                        <input type="text" id="petOrigin" name="petOrigin" class="form-control" value="${pet.petOrigin}">
-                                    </div>
+                                <div class="form-group">
+                                    <label for="petGender">Giới tính</label>
+                                    <select id="petGender" name="petGender" class="form-control">
+                                        <option value="Male" ${pet.petGender == 'Male' ? 'selected' : ''}>Đực</option>
+                                        <option value="Female" ${pet.petGender == 'Female' ? 'selected' : ''}>Cái</option>
+                                    </select>
                                 </div>
 
-                                <%-- Full Width Section --%>
+                                <%-- Left Column --%>
+                                <div class="form-group">
+                                    <label for="breedId">Giống</label>
+                                    <select id="breedId" name="breedId" class="form-control" required>
+                                        <c:forEach items="${breedList}" var="b">
+                                            <option value="${b.breedId}" ${pet.breedId == b.breedId ? 'selected' : ''}>${b.breedName}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+
+                                <%-- Right Column --%>
+                                <div class="form-group">
+                                    <label for="petColor">Màu sắc</label>
+                                    <input type="text" id="petColor" name="petColor" class="form-control" value="${pet.petColor}">
+                                </div>
+
+                                <%-- Left Column --%>
+                                <div class="form-group">
+                                    <label for="petDob">Ngày sinh</label>
+                                    <input type="date" id="petDob" name="petDob" class="form-control" value="<fmt:formatDate value='${pet.petDob}' pattern='yyyy-MM-dd'/>" required>
+                                </div>
+
+                                <%-- Right Column --%>
+                                <div class="form-group">
+                                    <label for="petOrigin">Nguồn gốc</label>
+                                    <input type="text" id="petOrigin" name="petOrigin" class="form-control" value="${pet.petOrigin}">
+                                </div>
+
+                                <%-- Left Column --%>
+                                <div class="form-group">
+                                    <label for="petPrice">Giá bán (₫)</label>
+                                    <fmt:formatNumber value="${pet.petPrice}" pattern="0" var="formattedPrice" />
+                                    <input type="number" id="petPrice" name="petPrice" class="form-control" value="${formattedPrice}" required min="0" step="1000">
+                                </div>
+
+                                <%-- Right Column (empty for alignment, or add another field here) --%>
+                                <div></div>
+
+
+                                <%-- Full Width Sections (Spanning both columns) --%>
                                 <div class="form-full-width">
                                     <div class="form-group">
                                         <label>Trạng thái</label>
                                         <div style="display: flex; gap: 20px;">
-                                            <div class="select-group">
+                                            <div class="select-group" style="flex:1;">
                                                 <label for="petAvailability">Trạng thái bán</label>
                                                 <select id="petAvailability" name="petAvailability" class="form-control">
                                                     <option value="1" ${pet.petAvailability == 1 ? 'selected' : ''}>Còn hàng</option>
                                                     <option value="0" ${pet.petAvailability == 0 ? 'selected' : ''}>Đã bán</option>
                                                 </select>
                                             </div>
-                                            <div class="select-group">
+                                            <div class="select-group" style="flex:1;">
                                                 <label for="petStatus">Trạng thái đăng</label>
                                                 <select id="petStatus" name="petStatus" class="form-control">
                                                     <option value="1" ${pet.petStatus == 1 ? 'selected' : ''}>Hiển thị</option>
                                                     <option value="0" ${pet.petStatus == 0 ? 'selected' : ''}>Ẩn</option>
                                                 </select>
                                             </div>
-                                            <div class="select-group">
+                                            <div class="select-group" style="flex:1;">
                                                 <label for="petVaccination">Tiêm phòng</label>
                                                 <select id="petVaccination" name="petVaccination" class="form-control">
                                                     <option value="1" ${pet.petVaccination == 1 ? 'selected' : ''}>Đã tiêm</option>
@@ -197,7 +208,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer" style="text-align: right; padding: 20px;">
+                        <div class="card-footer">
                             <a href="seller-pet-management" class="btn btn-outline">Hủy bỏ</a>
                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                         </div>

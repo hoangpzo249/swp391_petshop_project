@@ -4,7 +4,10 @@
  */
 package Controllers;
 
+import DAO.BreedDAO;
 import DAO.PetDAO;
+import Models.Breed;
+import Models.Pet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,12 +15,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  *
  * @author Lenovo
  */
-public class UpdatePetStatus extends HttpServlet {
+public class UpdatePetServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,10 +40,10 @@ public class UpdatePetStatus extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdatePetStatus</title>");
+            out.println("<title>Servlet UpdatePetServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdatePetStatus at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet UpdatePetServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,39 +62,32 @@ public class UpdatePetStatus extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PetDAO _daopet = new PetDAO();
-        HttpSession session = request.getSession(false);
+        BreedDAO _daobreed=new BreedDAO();
 
-        int petId = Integer.parseInt(request.getParameter("petId"));
-        int targetStatus = Integer.parseInt(request.getParameter("status"));
-        String referer = request.getHeader("referer");
+        int petId = Integer.parseInt(request.getParameter("id"));
+
         int pendingOrderId = _daopet.getPendingOrderIdForPet(petId);
 
-        switch (targetStatus) {
-            case 1:
-                if (_daopet.updatePetStatusById(petId, targetStatus)) {
-                    session.setAttribute("successMess", "Thú cưng #" + petId + " đã hiển thị thành công.");
-                } else {
-                    session.setAttribute("errMess", "Hiển thị thú cưng #" + petId + " thất bại");
-                }
-                break;
-            case 0:
-                if (pendingOrderId == 0) {
-                    if (_daopet.updatePetStatusById(petId, targetStatus)) {
-                        session.setAttribute("successMess", "Thú cưng #" + petId + " đã ẩn thành công.");
-                    } else {
-                        session.setAttribute("errMess", "Ẩn thú cưng #" + petId + " thất bại");
-                    }
-                } else {
-                    session.setAttribute("errMess", "Không thể ẩn thú cưng #" + petId + ", Thú cưng ở trong đơn hàng chờ xác nhận #" + pendingOrderId);
-                }
-                break;
-            default:
-                throw new AssertionError();
-        }
-        if (referer != null) {
-            response.sendRedirect(referer);
+        if (pendingOrderId == 0) {
+            Pet pet=_daopet.getPetById(petId);
+            List<Breed> breedList=_daobreed.getAllBreeds();
+            
+            request.setAttribute("pet", pet);
+            request.setAttribute("breedList", breedList);
+            
+            request.getRequestDispatcher("seller_pet_edit.jsp")
+                    .forward(request, response);
         } else {
-            response.sendRedirect("displayallpet");
+            HttpSession session = request.getSession(false);
+            String referer = request.getHeader("referer");
+            session.setAttribute("errMess", "Không thể chỉnh sửa thú cưng #" + petId + ". Thú cưng ở trong đơn hàng chờ xác nhận #" + pendingOrderId);
+            
+            if (referer!=null) {
+                response.sendRedirect(referer);
+            }
+            else {
+                response.sendRedirect("displayallpet");
+            }
         }
     }
 

@@ -57,11 +57,11 @@
             <c:remove var="successMess" scope="session" />
         </c:if>
 
-        <c:if test="${not empty errorMess}">
+        <c:if test="${not empty errMess}">
             <div class="alert-message error">
-                ${errorMess}
+                ${errMess}
             </div>
-            <c:remove var="errorMess" scope="session" />
+            <c:remove var="errMess" scope="session" />
         </c:if>
 
 
