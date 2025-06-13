@@ -3,26 +3,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller;
-
-import dao.OrderDAO;
-import dao.ReviewDAO;
+package Controller;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import DAO.OrderContentDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import model.Review;
+import model.OrderContent;
 
 /**
  *
  * @author QuangAnh
  */
-public class ReviewListServlet extends HttpServlet {
-   private ReviewDAO dao;
+public class OrderContentServlet extends HttpServlet {
+   
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -38,10 +37,10 @@ public class ReviewListServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ReviewListServlet</title>");  
+            out.println("<title>Servlet OrderContentServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ReviewListServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet OrderContentServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,7 +57,17 @@ public class ReviewListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
+        String oid = request.getParameter("orderId");
+        if (oid == null) {
+            request.setAttribute("orderContents", null);
+        } else {
+            int orderId = Integer.parseInt(oid);
+            OrderContentDAO dao = new OrderContentDAO();
+            List<OrderContent> list = dao.getByOrderId(orderId);
+            request.setAttribute("orderContents", list);
+        }
+
+        request.getRequestDispatcher("order-content.jsp").forward(request, response);
     } 
 
     /** 
@@ -71,22 +80,7 @@ public class ReviewListServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        int accId = (int) request.getSession().getAttribute("accId");
-        int rating = Integer.parseInt(request.getParameter("rating"));
-        String reviewText = request.getParameter("reviewText");
-        
-        Review review = new Review();
-        review.setAccId(accId);
-        review.setRating(rating);
-        review.setReviewText(reviewText);
-        
-        try{
-            dao.insertReview(review);
-            response.sendRedirect("reviews.jsp?msg=success");
-        } catch (Exception e){
-            e.printStackTrace();
-            response.sendRedirect("reviews.jsp?msg=error");
-        }
+        processRequest(request, response);
     }
 
     /** 

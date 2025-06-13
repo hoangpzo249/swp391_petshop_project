@@ -50,13 +50,14 @@
                     <c:when test="${order.status == 'Pending'}">
                         <form action="CancelOrderServlet" method="post">
                             <input type="hidden" name="orderId" value="${order.id}" />
-                            <button type="submit">Cancel</button>
+                            <button type="submit" onclick="return confirm('Bạn có chắc muốn hủy đơn này?')">Cancel</button>
                         </form>
                     </c:when>
                     <c:when test="${order.status == 'Paid'}">
                         <form action="RequestCancelServlet" method="post">
                             <input type="hidden" name="orderId" value="${order.id}" />
-                            <button type="submit">Request Cancel</button>
+                            <button type="submit" onclick="return confirm('Bạn muốn gửi yêu cầu hủy đơn?')">Request Cancel</button>
+                        </form>
                         </form>
                     </c:when>
                     <c:when test="${order.status == 'Delivered'}">

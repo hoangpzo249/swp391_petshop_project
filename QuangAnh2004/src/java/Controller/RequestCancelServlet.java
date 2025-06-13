@@ -3,22 +3,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller;
-
-import dao.OrderDAO;
+package Controller;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import DAO.DBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
 
 /**
  *
  * @author QuangAnh
  */
-public class CancelOrderServlet extends HttpServlet {
+public class RequestCancelServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +35,10 @@ public class CancelOrderServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CancelOrderServlet</title>");  
+            out.println("<title>Servlet RequestCancelServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CancelOrderServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet RequestCancelServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,9 +55,8 @@ public class CancelOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
-    }
-    
+        processRequest(request, response);
+    } 
 
     /** 
      * Handles the HTTP <code>POST</code> method.
@@ -69,12 +68,32 @@ public class CancelOrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        int orderId = Integer.parseInt(request.getParameter("orderId"));
-        OrderDAO dao = new OrderDAO();
-        boolean success = dao.cancelPendingOrderByCustomer(orderId, orderId);
+        String orderIdStr = request.getParameter("orderId");
 
-        String msg = success ? "Order cancelled" : "Cancel failed";
-        response.sendRedirect("ViewOrdersServlet?msg=" + URLEncoder.encode(msg, "UTF-8"));
+        if (orderIdStr == null) {
+            response.sendRedirect("error.jsp");
+            return;
+        }
+
+        int orderId = Integer.parseInt(orderIdStr);
+
+        try {
+            DBContext db = new DBContext();
+            try (
+                Connection conn = db.getConnection();
+                PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE OrderTB SET orderStatus = ? WHERE orderId = ? AND orderStatus = 'Paid'"
+                )
+            ) {
+                ps.setString(1, "Cancel Requested");
+                ps.setInt(2, orderId);
+                ps.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        response.sendRedirect("ViewOrderServlet");
     }
 
     /** 

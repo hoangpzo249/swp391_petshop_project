@@ -3,8 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller;
-import dao.OrderDAO;
+package Controller;
+
+import DAO.InvoiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,14 +14,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import model.Order;
-
+import model.Invoice;
 
 /**
  *
  * @author QuangAnh
  */
-public class ViewOrderServlet extends HttpServlet {
+public class InvoiceServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -37,10 +37,10 @@ public class ViewOrderServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ViewOrderServlet</title>");  
+            out.println("<title>Servlet InvoiceServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ViewOrderServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet InvoiceServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,24 +57,21 @@ public class ViewOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
-        HttpSession session = request.getSession(false);
+         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("accId") == null) {
-            response.sendRedirect("login.jsp");
-        return;
-    }
+            response.sendRedirect("login_account_page.jsp");
+            return;
+        }
+
         int accId = (int) session.getAttribute("accId");
-        
-        try{
-            OrderDAO dao = new OrderDAO();
-            List<Order> orders = dao.getOrderAccId(accId);
-            request.setAttribute("orderList", orders);
-            request.getRequestDispatcher("order-history.jsp").forward(request, response);
-        } catch (Exception e){
-             e.printStackTrace();
-            request.setAttribute("errorMessage", "Database error while retrieving invoice.");
+
+        InvoiceDAO dao = new InvoiceDAO();
+        List<Invoice> invoices = dao.getInvoicesByAccountId(accId);
+
+        request.setAttribute("invoices", invoices);
+        request.getRequestDispatcher("Invoice.jsp").forward(request, response);
     } 
-    }
+
     /** 
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request

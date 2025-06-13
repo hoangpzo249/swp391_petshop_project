@@ -3,22 +3,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller;
+package Controller;
 
-import dao.OrderDAO;
+import DAO.NotificationDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
+import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import model.Notification;
 
 /**
  *
  * @author QuangAnh
  */
-public class RequestCancelServlet extends HttpServlet {
+public class NotificationServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +37,10 @@ public class RequestCancelServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RequestCancelServlet</title>");  
+            out.println("<title>Servlet NotificationServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RequestCancelServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet NotificationServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,12 +57,21 @@ public class RequestCancelServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        int orderId = Integer.parseInt(request.getParameter("orderId"));
-        OrderDAO dao = new OrderDAO();
-        boolean success = dao.requestCancellationForPaidOrder(orderId);
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("accId") == null) {
+            response.sendRedirect("login_account_page.jsp");
+            return;
+        }
 
-        String msg = success ? "Cancellation requested" : "Request failed";
-        response.sendRedirect("ViewOrdersServlet?msg=" + URLEncoder.encode(msg, "UTF-8"));
+        int accId = (Integer) session.getAttribute("accId");
+        String type = request.getParameter("type");
+
+        NotificationDAO dao = new NotificationDAO();
+        List<Notification> notifications = dao.getNotificationsByAccId(accId, type);
+
+        request.setAttribute("notifications", notifications);
+        request.setAttribute("selectedType", type);
+        request.getRequestDispatcher("notification-history.jsp").forward(request, response);
     } 
 
     /** 

@@ -3,23 +3,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller;
-
-import dao.InvoiceDAO;
+package Controller;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import DAO.DBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import model.Invoice;
+
 /**
  *
  * @author QuangAnh
  */
-public class InvoiceServlet extends HttpServlet {
+public class CancelOrderServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -28,7 +28,6 @@ public class InvoiceServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-  
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -37,10 +36,10 @@ public class InvoiceServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet InvoiceServlet</title>");  
+            out.println("<title>Servlet CancelOrderServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet InvoiceServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet CancelOrderServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,25 +56,32 @@ public class InvoiceServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        HttpSession session = request.getSession(false); // tranh NullPointerException
-        if(session == null || session.getAttribute("accId") == null){
-            response.sendRedirect("login_account_page.jsp");
+        String orderIdStr = request.getParameter("orderId");
+
+        if (orderIdStr == null) {
+            response.sendRedirect("error.jsp");
             return;
         }
-        
-        int accId = (int) session.getAttribute("accId");
-        
-        try{
-            InvoiceDAO dao = new InvoiceDAO();
-            List<Invoice> invoices = dao.getInvoicesByAccId(accId);
-            
-            request.setAttribute("invoices", invoices);
-            request.getRequestDispatcher("invoice_history,jsp").forward(request, response);
-        }catch (Exception e){
+
+        int orderId = Integer.parseInt(orderIdStr);
+
+        try {
+            DBContext db = new DBContext();
+            try (
+                Connection conn = db.getConnection();
+                PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE OrderTB SET orderStatus = ? WHERE orderId = ? AND orderStatus = 'Pending'"
+                )
+            ) {
+                ps.setString(1, "Cancelled");
+                ps.setInt(2, orderId);
+                ps.executeUpdate();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Database error while retrieving invoice.");
-            
         }
+
+        response.sendRedirect("ViewOrderServlet");
     } 
 
     /** 
