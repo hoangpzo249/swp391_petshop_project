@@ -3,10 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Github/swp391_petshop_project/src/java/Controller/Admin_Panel_Servlet.java</file>
-            <file>file:/D:/Github/swp391_petshop_project/src/java/DAO/AccountDAO.java</file>
-            <file>file:/D:/Github/swp391_petshop_project/web/admin_accList_page.jsp</file>
-            <file>file:/D:/Github/swp391_petshop_project/web/admin_account_page.jsp</file>
+            <file>file:/D:/Github/swp391_petshop_project/src/java/Controllers/Profile_Account_Servlet.java</file>
+            <file>file:/D:/Github/swp391_petshop_project/web/home_page.jsp</file>
+            <file>file:/D:/Github/swp391_petshop_project/web/css/header_footer.css</file>
         </group>
     </open-files>
 </project-private>
