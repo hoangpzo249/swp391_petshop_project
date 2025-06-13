@@ -1,11 +1,11 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Asap', sans-serif;
 }
 
-/*header*/
+/* header */
 .header {
     align-items: center;
     background: #f26f21;
@@ -26,7 +26,7 @@
     height: auto;
 }
 
-/*menu*/
+/* menu */
 .menu {
     display: flex;
     list-style: none;
@@ -35,31 +35,25 @@
     padding-bottom: 15px;
     gap: 20px;
     align-items: center;
+    text-align: center;
 }
 
 .menu li {
     margin: 0 10px;
-
 }
 
 .menu a {
     text-decoration: none;
     color: white;
-
     transition: color 0.3s;
     font-size: 20px;
-
 }
 
 .menu a:hover {
     text-decoration: underline;
 }
 
-.menu{
-    text-align: center;
-}
-
-/*search*/
+/* search */
 .search {
     display: flex;
     gap: 250px;
@@ -95,14 +89,15 @@
     height: auto;
 }
 
-/*acount*/
-.accountcard{
+/* account card */
+.accountcard {
     display: flex;
-    align-content: center;
+    align-items: center;
     gap: 30px;
 }
 
-.account{
+/* account */
+.account {
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -110,15 +105,16 @@
 
 .account img {
     width: 50px;
-
+    height: 50px;
+    transition: transform 0.3s;
+    margin: 0 auto;
 }
 
-.account img:hover, .card img:hover {
+.account img:hover {
     transform: scale(1.1);
-
 }
 
-.account a, .card a {
+.account a {
     text-decoration: none;
     color: white;
     display: flex;
@@ -129,8 +125,13 @@
     margin: 0px;
 }
 
-/*card*/
-.card{
+.logintext {
+    margin: 0px;
+    font-size: 14px;
+}
+
+/* card */
+.card {
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -138,26 +139,32 @@
 
 .card img {
     width: 50px;
+    height: 50px;
+    transition: transform 0.3s;
+    margin: 0 auto;
 }
 
-.logintext {
+.card img:hover {
+    transform: scale(1.1);
+}
+
+.card a {
+    text-decoration: none;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    list-style: none;
     margin: 0px;
 }
 
 .cardtext {
     margin: 0px;
+    font-size: 14px;
 }
 
-/*.cartcount {
-    padding: 5px 10px;
-    background-color: white;
-    color: orange;
-    border-radius: 50%;
-    font-size: 14px;
-    text-align: center;
-}*/
-
-/*about*/
+/* about */
 .about-section {
     padding: 75px 200px;
     margin-top: 20px;
@@ -182,11 +189,11 @@
     font-size: 20px;
 }
 
-.contactpet{
+.contactpet {
     margin-top: 10px;
 }
 
-.about-column p{
+.about-column p {
     margin-bottom: 10px;
 }
 
@@ -194,26 +201,18 @@
     list-style: none;
 }
 
-
 .about-column ul li {
     margin: 10px 0;
 }
 
-.about-column ul li a {
+.about-column ul li a,
+.about-column p a {
     text-decoration: none;
     color: black;
 }
 
-.about-column p a{
-    color: black;
-    text-decoration: none;
-}
-
+.about-column ul li a:hover,
 .about-column p a:hover {
-    color: #ff6600;
-}
-
-.about-column ul li a:hover {
     color: #ff6600;
 }
 
@@ -237,6 +236,7 @@
     margin-right: 5px;
 }
 
+/* scroll + chat */
 .chat-scroll-container {
     position: fixed;
     bottom: 20px;
@@ -318,9 +318,9 @@
     transform: scale(1.1);
 }
 
+/* footer */
 footer {
     text-align: center;
     padding: 20px 10px;
     font-size: 14px;
 }
-
