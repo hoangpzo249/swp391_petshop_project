@@ -18,45 +18,74 @@
         <link rel="icon" type="image/png" href="images/logo_banner/logo1.png">
         <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="css/main_type.css?v=11" />
-         <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
+        <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
     </head>
     <body>
-       
+
         <div class="header">
             <div class="header1">
-              
+
                 <div>
                     <a href="listmainmenu">
                         <img src="images/logo2.png" alt="logo"/>
                     </a>
                 </div>
 
-                
-               
-
-                
                 <div class="accountcard">
                     <c:choose>
-                        <c:when test="${not empty sessionScope.account}">
+                        <c:when test="${sessionScope.userAccount != null}">
                             <div class="account-dropdown">
                                 <a href="#" class="account-trigger">
-                                    <img src="images/account.png" width="50" height="50" alt="account"/>
+                                    <!-- Cố định kích thước hình ảnh -->
+                                    <img src="images/support button/account.png" width="50" height="50" alt="account"/>
                                     <p class="username">Tài khoản</p>
                                 </a>
                                 <div class="dropdown-content">
-                                    <c:if test="${sessionScope.account.accRole eq 'Admin'}">
-                                        <a href="admin.jsp" class="dropdown-item">
-                                            <i class="fas fa-user-cog"></i> 
-                                            <span>Admin Panel</span>
-                                        </a>
-                                    </c:if>
-                                    <a href="account_profile_user.jsp" class="dropdown-item">
+                                    <c:choose>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Admin'}">
+                                            <a href="admin-panel" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Admin</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Manager'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Manager</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Saler</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Shipper</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                    <a href="profile" class="dropdown-item">
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
+                                    </a>
+                                    <a href="orders" class="dropdown-item">
+                                        <i class="fas fa-shopping-bag"></i> 
+                                        <span>Đơn hàng đã mua</span>
                                     </a>
                                     <a href="logout" class="dropdown-item logout">
                                         <i class="fas fa-sign-out-alt"></i> 
@@ -68,8 +97,8 @@
 
                         <c:otherwise>
                             <div class="account">
-                                <a href="account_login.jsp">
-                                    <img src="images/account.png" width="50" height="50" alt="account"/>
+                                <a href="login">
+                                    <img src="images/support button/account.png" width="50" height="50" alt="account"/>
                                     <p class="logintext">Đăng nhập</p>
                                 </a>
                             </div>
@@ -78,7 +107,7 @@
 
                     <div class="card">
                         <a href="displaycart">
-                            <img src="images/card.png" width="50" height="50" alt="card"/>
+                            <img src="images/support button/card.png" width="50" height="50" alt="card"/>
                             <p class="cardtext">
                                 Giỏ Hàng
                                 <span id="cart-count" class="cartcount">${sessionScope.cartcount}</span>
@@ -88,17 +117,14 @@
                 </div>
             </div>
 
-            
+
             <nav>
                 <ul class="menu">
-                    <li><a href="listmainmenu">Trang Chủ</a></li>
+                    <li><a href="homepage">Trang Chủ</a></li>
                     <li><a href="listshoppet?species=Dog&sort=popular">Chó Cưng</a></li>
                     <li><a href="listshoppet?species=Cat&sort=popular">Mèo Cưng</a></li>
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
                     <li><a href="menu_contact.jsp">Liên Hệ</a></li>
-                        <c:if test="${not empty sessionScope.account and sessionScope.account.accRole eq 'Admin'}">
-                        <li><a href="admin.jsp">Admin Panel</a></li>
-                        </c:if>
                 </ul>
             </nav>
         </div>
@@ -110,7 +136,6 @@
             ">Thú Cưng Tìm Kiếm</h2>
 
         <div class="container">
-
 
             <aside class="sidebar" style="margin-bottom: 89px;">
                 <h3><a href="listshoppet" style="text-decoration: none; color: black">Tất cả thú cưng</a></h3>

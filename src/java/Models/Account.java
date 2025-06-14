@@ -1,49 +1,39 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Models;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Date;
 
 /**
  *
- * @author Lenovo
+ * @author HuyHoang
  */
 public class Account {
-
     private int accId;
     private String accUsername;
     private String accEmail;
     private String accPassword;
     private String accFname;
     private String accLname;
-    private LocalDate accDob;
+
+    private Date accDob;
+    
     private String accAddress;
     private String accPhoneNumber;
     private String accRole;
     private String accDescription;
-    private LocalDateTime accCreateDate;
+
+    private String accCreateDate;
     private byte[] accImage;
     private String accStatus;
 
     public Account() {
     }
 
-    public Account(String accUsername,
-                   String accEmail,
-                   String accPassword,
-                   String accFname,
-                   String accLname,
-                   LocalDate accDob,
-                   String accAddress,
-                   String accPhoneNumber,
-                   String accRole,
-                   String accDescription,
-                   byte[] accImage,
-                   String accStatus) {
+    public Account(int accId, String accUsername, String accEmail, String accPassword, String accFname, String accLname, Date accDob, String accAddress, String accPhoneNumber, String accRole, String accDescription, String accCreateDate, byte[] accImage, String accStatus) {
+        this.accId = accId;
         this.accUsername = accUsername;
         this.accEmail = accEmail;
         this.accPassword = accPassword;
@@ -54,28 +44,9 @@ public class Account {
         this.accPhoneNumber = accPhoneNumber;
         this.accRole = accRole;
         this.accDescription = accDescription;
+        this.accCreateDate = accCreateDate;
         this.accImage = accImage;
         this.accStatus = accStatus;
-    }
-
-    public Account(int accId,
-                   String accUsername,
-                   String accEmail,
-                   String accPassword,
-                   String accFname,
-                   String accLname,
-                   LocalDate accDob,
-                   String accAddress,
-                   String accPhoneNumber,
-                   String accRole,
-                   String accDescription,
-                   LocalDateTime accCreateDate,
-                   byte[] accImage,
-                   String accStatus) {
-        this(accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress,
-             accPhoneNumber, accRole, accDescription, accImage, accStatus);
-        this.accId = accId;
-        this.accCreateDate = accCreateDate;
     }
 
     public int getAccId() {
@@ -126,11 +97,11 @@ public class Account {
         this.accLname = accLname;
     }
 
-    public LocalDate getAccDob() {
+    public Date getAccDob() {
         return accDob;
     }
 
-    public void setAccDob(LocalDate accDob) {
+    public void setAccDob(Date accDob) {
         this.accDob = accDob;
     }
 
@@ -166,11 +137,11 @@ public class Account {
         this.accDescription = accDescription;
     }
 
-    public LocalDateTime getAccCreateDate() {
+    public String getAccCreateDate() {
         return accCreateDate;
     }
 
-    public void setAccCreateDate(LocalDateTime accCreateDate) {
+    public void setAccCreateDate(String accCreateDate) {
         this.accCreateDate = accCreateDate;
     }
 
@@ -192,21 +163,8 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" +
-               "accId=" + accId +
-               ", accUsername='" + accUsername + '\'' +
-               ", accEmail='" + accEmail + '\'' +
-               ", accPassword='" + accPassword + '\'' +
-               ", accFname='" + accFname + '\'' +
-               ", accLname='" + accLname + '\'' +
-               ", accDob=" + accDob +
-               ", accAddress='" + accAddress + '\'' +
-               ", accPhoneNumber='" + accPhoneNumber + '\'' +
-               ", accRole='" + accRole + '\'' +
-               ", accDescription='" + accDescription + '\'' +
-               ", accCreateDate=" + accCreateDate +
-               ", accImage=" + Arrays.toString(accImage) +
-               ", accStatus='" + accStatus + '\'' +
-               '}';
+        return "Account{" + "accId=" + accId + ", accUsername=" + accUsername + ", accEmail=" + accEmail + ", accPassword=" + accPassword + ", accFname=" + accFname + ", accLname=" + accLname + ", accDob=" + accDob + ", accAddress=" + accAddress + ", accPhoneNumber=" + accPhoneNumber + ", accRole=" + accRole + ", accDescription=" + accDescription + ", accCreateDate=" + accCreateDate + ", accImage=" + accImage + ", accStatus=" + accStatus + '}';
     }
+
+    
 }
