@@ -33,8 +33,8 @@ public class ListShopPetServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         CartDAO _daoCart = new CartDAO();
-        if (session.getAttribute("account") != null) {
-            int accountId = ((Account) session.getAttribute("account")).getAccId();
+        if (session.getAttribute("userAccount") != null) {
+            int accountId = ((Account) session.getAttribute("userAccount")).getAccId();
             List<Cart> carts = _daoCart.getCart(accountId);
             List<Cart> filtered = new ArrayList<>();
             PetDAO petDao = new PetDAO();

@@ -24,7 +24,7 @@
             <div class="header1">
                 <!-- Logo -->
                 <div>
-                    <a href="listmainmenu">
+                    <a href="homepage">
                         <img src="images/logo2.png" alt="logo"/>
                     </a>
                 </div>
@@ -70,7 +70,7 @@
 
                         <c:otherwise>
                             <div class="account">
-                                <a href="account_login.jsp">
+                                <a href="login">
                                     <img src="images/account.png" width="50" height="50" alt="account"/>
                                     <p class="logintext">Đăng nhập</p>
                                 </a>
@@ -93,7 +93,7 @@
 
             <nav>
                 <ul class="menu">
-                    <li><a href="listmainmenu">Trang Chủ</a></li>
+                    <li><a href="homepage">Trang Chủ</a></li>
                     <li><a href="listshoppet?species=Dog&sort=popular">Chó Cưng</a></li>
                     <li><a href="listshoppet?species=Cat&sort=popular">Mèo Cưng</a></li>
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>

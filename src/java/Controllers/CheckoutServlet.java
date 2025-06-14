@@ -112,7 +112,7 @@ public class CheckoutServlet extends HttpServlet {
         
 
         HttpSession session = request.getSession();
-        Account account = (Account) session.getAttribute("account");
+        Account account = (Account) session.getAttribute("userAccount");
         session.setAttribute("cartcount", selectedPetList.size());
         
 
