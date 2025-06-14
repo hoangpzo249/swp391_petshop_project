@@ -19,20 +19,22 @@
 <body>
     <h2>Your Orders</h2>
     <table border="1">
-        <tr>
-        <tr>
-        <th>Mã đơn</th>
-        <th>Ngày đặt</th>
-        <th>Trạng thái</th>
-        <th>Phương thức thanh toán</th>
-        <th>Trạng thái thanh toán</th>
-        <th>Khách hàng</th>
-        <th>SĐT</th>
-        <th>Email</th>
-        <th>Địa chỉ</th>
-        <th>Thao tác</th>
-    </tr>
-        </tr>
+        <thead>
+            <tr>
+                <th>orderId</th>
+                <th>accId</th>
+                <th>orderDate</th>
+                <th>orderStatus</th>
+                <th>customerName</th>
+                <th>customerEmail</th>
+                <th>customerPhone</th>
+                <th>customerAddress</th>
+                <th>shipperId</th>
+                <th>paymentMethod</th>
+                <th>paymentStatus</th>
+                <th>rejectionReason</th>
+            </tr>
+        </thead>
         <c:forEach var="order" items="${requestScope.orderList}">
         <tr>
                     <td>${order.orderId}</td>
