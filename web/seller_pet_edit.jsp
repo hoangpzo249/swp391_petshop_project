@@ -88,7 +88,7 @@
                     <h1 class="page-title"><i class="fas fa-pencil-alt"></i> Chỉnh sửa thú cưng #${pet.petId}</h1>
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
-                        <li><a href="seller-pet-management">Quản lý thú cưng</a></li>
+                        <li><a href="displayallpet">Quản lý thú cưng</a></li>
                         <li>Chỉnh sửa</li>
                     </ul>
                 </div>
@@ -98,13 +98,10 @@
                         <input type="hidden" name="petId" value="${pet.petId}">
                         <div class="card-body">
                             <div class="form-grid">
-                                <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="petName">Tên thú cưng</label>
                                     <input type="text" id="petName" name="petName" class="form-control" value="${pet.petName}" required>
                                 </div>
-
-                                <%-- Right Column --%>
                                 <div class="form-group">
                                     <label for="petGender">Giới tính</label>
                                     <select id="petGender" name="petGender" class="form-control">
@@ -112,8 +109,6 @@
                                         <option value="Female" ${pet.petGender == 'Female' ? 'selected' : ''}>Cái</option>
                                     </select>
                                 </div>
-
-                                <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="breedId">Giống</label>
                                     <select id="breedId" name="breedId" class="form-control" required>
@@ -122,79 +117,51 @@
                                         </c:forEach>
                                     </select>
                                 </div>
-
-                                <%-- Right Column --%>
                                 <div class="form-group">
                                     <label for="petColor">Màu sắc</label>
                                     <input type="text" id="petColor" name="petColor" class="form-control" value="${pet.petColor}">
                                 </div>
-
-                                <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="petDob">Ngày sinh</label>
                                     <input type="date" id="petDob" name="petDob" class="form-control" value="<fmt:formatDate value='${pet.petDob}' pattern='yyyy-MM-dd'/>" required>
                                 </div>
-
-                                <%-- Right Column --%>
                                 <div class="form-group">
                                     <label for="petOrigin">Nguồn gốc</label>
                                     <input type="text" id="petOrigin" name="petOrigin" class="form-control" value="${pet.petOrigin}">
                                 </div>
-
-                                <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="petPrice">Giá bán (₫)</label>
                                     <fmt:formatNumber value="${pet.petPrice}" pattern="0" var="formattedPrice" />
                                     <input type="number" id="petPrice" name="petPrice" class="form-control" value="${formattedPrice}" required min="0" step="1000">
                                 </div>
-
-                                <%-- Right Column (empty for alignment, or add another field here) --%>
                                 <div></div>
-
-
-                                <%-- Full Width Section for the Statuses --%>
                                 <div class="form-full-width">
                                     <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #555;">Trạng thái & Tiêm phòng</label>
                                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
-
-                                        <%-- Trạng thái bán --%>
-                                        <div class="form-group">
-                                            <label for="petAvailability">Trạng thái bán</label>
-                                            <select id="petAvailability" name="petAvailability" class="form-control">
-                                                <option value="1" ${pet.petAvailability == 1 ? 'selected' : ''}>Còn hàng</option>
-                                                <option value="0" ${pet.petAvailability == 0 ? 'selected' : ''}>Đã bán</option>
-                                            </select>
-                                        </div>
-
-                                        <%-- Trạng thái đăng --%>
-                                        <div class="form-group">
-                                            <label for="petStatus">Trạng thái đăng</label>
-                                            <select id="petStatus" name="petStatus" class="form-control">
-                                                <option value="1" ${pet.petStatus == 1 ? 'selected' : ''}>Hiển thị</option>
-                                                <option value="0" ${pet.petStatus == 0 ? 'selected' : ''}>Ẩn</option>
-                                            </select>
-                                        </div>
-
-                                        <%-- Tiêm phòng --%>
-                                        <div class="form-group">
-                                            <label for="petVaccination">Tiêm phòng</label>
-                                            <select id="petVaccination" name="petVaccination" class="form-control">
-                                                <option value="1" ${pet.petVaccination == 1 ? 'selected' : ''}>Đã tiêm</option>
-                                                <option value="0" ${pet.petVaccination == 0 ? 'selected' : ''}>Chưa tiêm</option>
-                                            </select>
-                                        </div>
-
+                                        <div class="form-group"><label for="petAvailability">Trạng thái bán</label><select id="petAvailability" name="petAvailability" class="form-control"><option value="1" ${pet.petAvailability == 1 ? 'selected' : ''}>Còn hàng</option><option value="0" ${pet.petAvailability == 0 ? 'selected' : ''}>Đã bán</option></select></div>
+                                        <div class="form-group"><label for="petStatus">Trạng thái đăng</label><select id="petStatus" name="petStatus" class="form-control"><option value="1" ${pet.petStatus == 1 ? 'selected' : ''}>Hiển thị</option><option value="0" ${pet.petStatus == 0 ? 'selected' : ''}>Ẩn</option></select></div>
+                                        <div class="form-group"><label for="petVaccination">Tiêm phòng</label><select id="petVaccination" name="petVaccination" class="form-control"><option value="1" ${pet.petVaccination == 1 ? 'selected' : ''}>Đã tiêm</option><option value="0" ${pet.petVaccination == 0 ? 'selected' : ''}>Chưa tiêm</option></select></div>
                                     </div>
                                 </div>
 
                                 <div class="form-full-width">
                                     <div class="form-group">
-                                        <label>Hình ảnh thú cưng</label>
+                                        <label>Quản lý hình ảnh thú cưng (giới hạn 5 ảnh)</label>
                                         <div class="image-management-grid">
                                             <c:forEach items="${imageList}" var="image">
                                                 <div class="image-preview-item">
                                                     <img src="${image.imagePath}" alt="Pet Image">
-                                                    <input type="checkbox" name="deleteImageIds" value="${image.imageId}" class="image-delete-check" title="Chọn để xóa ảnh này">
+                                                    <div class="image-actions">
+                                                        <button type="button" class="btn-image-action btn-change" 
+                                                                onclick="document.getElementById('file-input-${image.imageId}').click();">
+                                                            <i class="fas fa-sync-alt"></i> Đổi ảnh
+                                                        </button>
+
+                                                        <button type="button" class="btn-image-action btn-delete" 
+                                                                onclick="showConfirmationModal(event, 'xóa ảnh này', 'deleteForm-${image.imageId}', 'btn-danger')">
+                                                            <i class="fas fa-trash-alt"></i> Xóa
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </c:forEach>
                                         </div>
@@ -214,15 +181,53 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <a href="seller-pet-management" class="btn btn-outline">Hủy bỏ</a>
+                            <a href="displayallpet" class="btn btn-outline">Hủy bỏ</a>
                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+
+        <div style="display: none;">
+            <c:forEach items="${imageList}" var="image">
+                <form id="changeForm-${image.imageId}" action="petimageaction" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="change">
+                    <input type="hidden" name="petId" value="${pet.petId}">
+                    <input type="hidden" name="imageId" value="${image.imageId}">
+                    <input type="file" id="file-input-${image.imageId}" name="newImageFile" accept="image/*" 
+                           onchange="document.getElementById('changeForm-${image.imageId}').submit();">
+                </form>
+
+                <form id="deleteForm-${image.imageId}" action="petimageaction" method="POST">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="petId" value="${pet.petId}">
+                    <input type="hidden" name="imageId" value="${image.imageId}">
+                </form>
+            </c:forEach>
+        </div>
+
+
         <div class="seller-footer">
             © 2025 PETFPT Shop - Hệ thống quản lý
         </div>
+
+        <div class="modal-backdrop" id="confirmationModal">
+            <div class="modal-dialog">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalTitle">Xác nhận hành động</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalText">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeModal()">Hủy bỏ</button>
+                    <button id="modalConfirmButton" class="btn">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/pet_image_confirmation_window.js"></script>
     </body>
 </html>

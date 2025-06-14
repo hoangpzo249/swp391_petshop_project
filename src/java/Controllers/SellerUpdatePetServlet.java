@@ -11,6 +11,7 @@ import DAO.PetImagePathDAO;
 import Models.Breed;
 import Models.Pet;
 import Models.PetImage;
+import Utils.ImgBbUploader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -20,7 +21,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +120,8 @@ public class SellerUpdatePetServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         PetDAO _daopet = new PetDAO();
+        PetImagePathDAO _daoimage = new PetImagePathDAO();
+        String referer = request.getHeader("referer");
 
         try {
             int petId = Integer.parseInt(request.getParameter("petId"));
@@ -150,21 +155,42 @@ public class SellerUpdatePetServlet extends HttpServlet {
             petToUpdate.setPetPrice(petPrice);
             petToUpdate.setBreedId(breedId);
 
-            String[] deleteImageIds = request.getParameterValues("deleteImageIds");
+            List<String> imageURLs = new ArrayList<>();
+            int availableSlots = 5 - _daoimage.countImagesById(petId);
 
-            List<byte[]> newImagesData = new ArrayList<>();
-            for (Part part : request.getParts()) {
-                if ("newImages".equals(part.getName()) && part.getSize() > 0) {
-                    try (InputStream is = part.getInputStream()) {
-                        newImagesData.add(is.readAllBytes());
+            if (availableSlots > 0) {
+                List<Part> imageParts = new ArrayList<>();
+                for (Part part : request.getParts()) {
+                    if ("newImages".equals(part.getName()) && part.getSize() > 0) {
+                        imageParts.add(part);
                     }
                 }
+
+                imageParts.stream()
+                        .limit(availableSlots)
+                        .forEach(part -> {
+                            try {
+                                File tempFile = File.createTempFile("upload-", ".tmp");
+                                try (InputStream is = part.getInputStream()) {
+                                    Files.copy(is, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                                }
+
+                                String url = ImgBbUploader.uploadImage(tempFile);
+                                if (url != null) {
+                                    imageURLs.add(url);
+                                }
+
+                                tempFile.delete();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
             }
 
-//            boolean updateSuccess = _daopet.updatePet(petToUpdate);
-//            boolean deleteSuccess = _daopet.deleteImages(deleteImageIds);
-//            boolean addSuccess = _daopet.addImages(petId, newImagesData);
             if (_daopet.updatePetById(petId, petToUpdate)) {
+                if (!imageURLs.isEmpty()) {
+                    _daoimage.addImage(petId, imageURLs);
+                }
                 session.setAttribute("successMess", "Cập nhật thông tin thú cưng #" + petId + " thành công!");
             } else {
                 session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình cập nhật. Vui lòng thử lại.");
@@ -175,9 +201,8 @@ public class SellerUpdatePetServlet extends HttpServlet {
             session.setAttribute("errMess", "Lỗi: Dữ liệu không hợp lệ hoặc đã xảy ra sự cố máy chủ.");
         }
 
-        response.sendRedirect("displayallpet");
+        response.sendRedirect(referer);
     }
-
 
     /**
      * Returns a short description of the servlet.

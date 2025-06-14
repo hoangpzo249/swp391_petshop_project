@@ -93,19 +93,20 @@ public class SellerAddPetServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         PetDAO _daopet = new PetDAO();
-        PetImagePathDAO _daopetimage = new PetImagePathDAO();
-
-        List<Part> imageParts = new ArrayList<>();
-        for (Part part : request.getParts()) {
-            if ("images".equals(part.getName()) && part.getSize() > 0) {
-                imageParts.add(part);
-            }
-        }
+        PetImagePathDAO _daoimage = new PetImagePathDAO();
 
         try {
+            List<Part> imageParts = new ArrayList<>();
+            for (Part part : request.getParts()) {
+                if ("images".equals(part.getName()) && part.getSize() > 0) {
+                    imageParts.add(part);
+                }
+            }
+
             String petName = request.getParameter("petName");
             String petDobStr = request.getParameter("petDob");
             String petOrigin = request.getParameter("petOrigin");
@@ -142,25 +143,33 @@ public class SellerAddPetServlet extends HttpServlet {
             if (newPetId != -1) {
                 List<String> imageURLs = new ArrayList<>();
 
-                for (Part part : imageParts) {
-                    File tempFile = File.createTempFile("upload-", ".tmp");
-                    try (InputStream is = part.getInputStream()) {
-                        Files.copy(is, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                    }
-                    String url = ImgBbUploader.uploadImage(tempFile);
-                    if (url != null) {
-                        imageURLs.add(url);
-                    }
-                    tempFile.delete();
+                imageParts.stream()
+                        .limit(5)
+                        .forEach(part -> {
+                            try {
+                                File tempFile = File.createTempFile("upload-", ".tmp");
+                                try (InputStream is = part.getInputStream()) {
+                                    Files.copy(is, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                                }
+                                String url = ImgBbUploader.uploadImage(tempFile);
+                                if (url != null) {
+                                    imageURLs.add(url);
+                                }
+                                tempFile.delete();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+
+                if (imageParts.size() > 5) {
+                    session.setAttribute("infoMess", "Chỉ 5 ảnh đầu tiên được tải lên vì đã đạt giới hạn.");
                 }
 
                 if (imageURLs.isEmpty()) {
                     imageURLs.add("https://i.ibb.co/NggxZvb7/defaultcatdog.png");
                 }
 
-                boolean imageSuccess = _daopetimage.addImage(newPetId, imageURLs);
-
-                if (imageSuccess) {
+                if (_daoimage.addImage(newPetId, imageURLs)) {
                     session.setAttribute("successMess", "Đăng bán thú cưng thành công!");
                 } else {
                     session.setAttribute("errMess", "Thú cưng đã được tạo nhưng có lỗi khi lưu hình ảnh. Vui lòng kiểm tra lại.");

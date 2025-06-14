@@ -1,6 +1,7 @@
 
 import DAO.PetDAO;
 import DAO.PetImageDAO;
+import DAO.PetImagePathDAO;
 import Models.Pet;
 import Models.PetImage;
 import java.sql.Date;
@@ -19,12 +20,14 @@ public class TestPet {
 
     private static PetDAO _dao = new PetDAO();
     private static PetImageDAO _daoimage = new PetImageDAO();
+    private static PetImagePathDAO _daoimage2=new PetImagePathDAO();
 
     public static void main(String[] args) {
-        Pet pet=_dao.getPetById(1);
-        pet.setPetName("Vàng 3");
-        pet.setPetDob(new Date(2022, 1, 1));
-        System.out.println(addPet(pet));
+        System.out.println(countImage(1));
+    }
+    
+    private static int countImage(int petId) {
+        return _daoimage2.countImagesById(petId);
     }
     
     private static int addPet(Pet pet) {
@@ -35,9 +38,9 @@ public class TestPet {
         return _dao.updatePetById(id, pet);
     }
     
-    private static List<PetImage> getImages(int id) {
-        return _daoimage.getPetImagesById(id);
-    }
+//    private static List<PetImage> getImages(int id) {
+//        return _daoimage.getPetImagesById(id);
+//    }
     
     private static int petInPendingOrder(int id) {
         return _dao.getPendingOrderIdForPet(id);

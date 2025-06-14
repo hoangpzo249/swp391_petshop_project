@@ -64,6 +64,10 @@
         <servlet-name>SellerQuickLoginServlet</servlet-name>
         <servlet-class>Controllers.SellerQuickLoginServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SellerPetImageActionServlet</servlet-name>
+        <servlet-class>Controllers.SellerPetImageActionServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -127,5 +131,9 @@
     <servlet-mapping>
         <servlet-name>SellerQuickLoginServlet</servlet-name>
         <url-pattern>/quicklogin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SellerPetImageActionServlet</servlet-name>
+        <url-pattern>/petimageaction</url-pattern>
     </servlet-mapping>
 </web-app>

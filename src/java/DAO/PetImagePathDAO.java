@@ -24,6 +24,37 @@ public class PetImagePathDAO {
     PreparedStatement ps;
     ResultSet rs;
 
+    public boolean changeImageById(int imageId, String imageURL) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "UPDATE PetImagePathTB SET imagePath = ? WHERE imageId = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, imageURL);
+            ps.setInt(2, imageId);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(PetImagePathDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    public boolean deleteImageById(int petId, int imageId) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "DELETE FROM PetImagePathTB WHERE imageId = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, imageId);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(PetImagePathDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
     public List<PetImage> getPetImagesById(int petId) {
         List<PetImage> imageList = new ArrayList<>();
         DBContext db = new DBContext();
@@ -106,4 +137,19 @@ public class PetImagePathDAO {
         }
     }
 
+    public int countImagesById(int petId) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT COUNT(*) AS imageCount FROM PetImagePathTB WHERE petId = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, petId);
+            rs = ps.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        } catch (Exception ex) {
+            Logger.getLogger(PetImagePathDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 }
