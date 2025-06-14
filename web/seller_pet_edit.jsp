@@ -193,7 +193,7 @@
                                         <div class="image-management-grid">
                                             <c:forEach items="${imageList}" var="image">
                                                 <div class="image-preview-item">
-                                                    <img src="${image.getPetImageBase64()}" alt="Pet Image">
+                                                    <img src="${image.imagePath}" alt="Pet Image">
                                                     <input type="checkbox" name="deleteImageIds" value="${image.imageId}" class="image-delete-check" title="Chọn để xóa ảnh này">
                                                 </div>
                                             </c:forEach>

@@ -4,9 +4,12 @@
  */
 package DAO;
 
+import Models.PetImage;
+import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +23,51 @@ public class PetImagePathDAO {
     Connection conn;
     PreparedStatement ps;
     ResultSet rs;
+
+    public List<PetImage> getPetImagesById(int petId) {
+        List<PetImage> imageList = new ArrayList<>();
+        DBContext db = new DBContext();
+        String sql = "SELECT * FROM PetImagePathTB WHERE petId = ?";
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, petId);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                PetImage image = new PetImage();
+
+                image.setImageId(rs.getInt("imageId"));
+                image.setPetId(rs.getInt("petId"));
+                image.setImagePath(rs.getString("imagePath"));
+
+                Timestamp timestamp = rs.getTimestamp("uploadedAt");
+                if (timestamp != null) {
+                    image.setUploadedAt(timestamp.toLocalDateTime());
+                }
+
+                imageList.add(image);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(PetImagePathDAO.class.getName()).log(Level.SEVERE, "Error retrieving pet images for petId: " + petId, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                Logger.getLogger(PetImagePathDAO.class.getName()).log(Level.SEVERE, "Error closing database resources", e);
+            }
+        }
+        return imageList;
+    }
 
     public boolean addImage(int petId, List<String> imageURLs) {
         DBContext db = new DBContext();

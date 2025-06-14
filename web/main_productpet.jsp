@@ -86,7 +86,7 @@
                 <div class="left-column">
                     <div class="main-image-container">
                         <div class="image-box">
-                            <img src="${pet.getPetImageBase64()}" alt="${pet.petName}" class="main-image" />
+                            <img src="${pet.getFirstImage()}" alt="${pet.petName}" class="main-image" />
                         </div>
                     </div>
 
@@ -95,13 +95,13 @@
 
                         <div class="thumbnails">
                             <div class="thumbnail-box">
-                                <img src="${pet.getPetImageBase64()}" alt="Thumbnail 1" class="thumbnail-img" />
+                                <img src="${pet.getFirstImage()}" alt="Thumbnail 1" class="thumbnail-img" />
                             </div>
                             <div class="thumbnail-box">
-                                <img src="${pet.getPetImageBase64()}" alt="Thumbnail 2" class="thumbnail-img" />
+                                <img src="${pet.getFirstImage()}" alt="Thumbnail 2" class="thumbnail-img" />
                             </div>
                             <div class="thumbnail-box">
-                                <img src="${pet.getPetImageBase64()}" alt="Thumbnail 3" class="thumbnail-img" />
+                                <img src="${pet.getFirstImage()}" alt="Thumbnail 3" class="thumbnail-img" />
                             </div>
                         </div>
 
@@ -182,7 +182,7 @@
                         <a href="displaypet?id=${x.getPetId()}">
                             <div class="image-favo-container">
                                 <span class="sale-badge">Sale</span>
-                                <img src="${x.getPetImageBase64()}" width="800" height="800" alt="${x.petName}"/>
+                                <img src="${x.getFirstImage()}" width="800" height="800" alt="${x.petName}"/>
                             </div>
                             <div class="item-favo-name">${x.petName}
 

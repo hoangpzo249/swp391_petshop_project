@@ -7,6 +7,7 @@ package Controllers;
 import DAO.BreedDAO;
 import DAO.PetDAO;
 import DAO.PetImageDAO;
+import DAO.PetImagePathDAO;
 import Models.Breed;
 import Models.Pet;
 import Models.PetImage;
@@ -71,7 +72,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
             throws ServletException, IOException {
         PetDAO _daopet = new PetDAO();
         BreedDAO _daobreed = new BreedDAO();
-        PetImageDAO _daoimage = new PetImageDAO();
+        PetImagePathDAO _daoimage = new PetImagePathDAO();
 
         int petId = Integer.parseInt(request.getParameter("id"));
 

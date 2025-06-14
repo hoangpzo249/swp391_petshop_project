@@ -244,14 +244,7 @@
                             <a href="displaypet?id=${x.petId}">
                                 <div class="image-favo-container">
                                     <span class="sale-badge">Sale</span>
-                                    <c:choose>
-                                        <c:when test="${not empty x.images && not empty x.petImageBase64}">
-                                            <img src="${x.petImageBase64}" width="200" height="200" alt="${x.petName}" style="object-fit: cover; border-radius: 8px;" />
-                                        </c:when>
-                                        <c:otherwise>
-                                            <img src="images/default-pet.png" width="200" height="200" alt="default" style="object-fit: cover; border-radius: 8px;" />
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <img src="${x.getFirstImage()}" width="200" height="200" alt="${x.petName}" style="object-fit: cover; border-radius: 8px;" />
                                 </div>
                                 <p class="item-favo-name">
                                     ${x.petName}

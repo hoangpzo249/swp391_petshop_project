@@ -195,14 +195,7 @@
                                     <c:forEach items="${petList}" var="pet">
                                         <tr>
                                             <td>
-                                                <c:choose>
-                                                    <c:when test="${not empty pet.images}">
-                                                        <img src="${pet.getPetImageBase64()}" alt="${pet.petName}" class="table-avatar"/>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <img src="images/placeholder.jpg" alt="No Image" class="table-avatar"/>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <img src="${pet.getFirstImage()}" alt="${pet.petName}" class="table-avatar"/>
                                             </td>
                                             <td><strong>#${pet.petId}</strong></td>
                                             <td>${pet.petName}</td>

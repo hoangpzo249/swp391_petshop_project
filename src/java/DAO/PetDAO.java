@@ -139,20 +139,24 @@ public class PetDAO {
         }
     }
 
-    public List<byte[]> getImagesByPetId(int petId) {
-        List<byte[]> images = new ArrayList<>();
-        String sql = "SELECT imageData FROM PetImageTB WHERE petId = ?";
+    public List<String> getImagePathsByPetId(int petId) {
+        List<String> imagePaths = new ArrayList<>();
+
+        String sql = "SELECT imagePath FROM PetImagePathTB WHERE petId = ?";
+
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, petId);
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    images.add(rs.getBytes("imageData"));
+                    imagePaths.add(rs.getString("imagePath"));
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PetImagePathDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return images;
+        return imagePaths;
     }
 
     public List<Pet> filterPetsForSeller(String searchKey,
@@ -220,7 +224,7 @@ public class PetDAO {
                     breed.setBreedId(rs.getInt("breedId"));
                     breed.setBreedName(rs.getString("breedName"));
                     pet.setBreed(breed);
-                    pet.setImages(getImagesByPetId(pet.getPetId()));
+                    pet.setImages(getImagePathsByPetId(pet.getPetId()));
                     list.add(pet);
                 }
             }
@@ -289,7 +293,7 @@ public class PetDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Pet pet = PetInfo(rs);
-                    pet.setImages(getImagesByPetId(pet.getPetId()));
+                    pet.setImages(getImagePathsByPetId(pet.getPetId()));
                     list.add(pet);
                 }
             }
@@ -314,7 +318,7 @@ public class PetDAO {
                     breed.setBreedId(rs.getInt("breedId"));
                     breed.setBreedName(rs.getString("breedName"));
                     pet.setBreed(breed);
-                    pet.setImages(getImagesByPetId(pet.getPetId()));
+                    pet.setImages(getImagePathsByPetId(pet.getPetId()));
                 }
             }
         } catch (Exception ex) {
@@ -329,7 +333,7 @@ public class PetDAO {
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Pet pet = PetInfo(rs);
-                pet.setImages(getImagesByPetId(pet.getPetId()));
+                pet.setImages(getImagePathsByPetId(pet.getPetId()));
                 list.add(pet);
             }
         } catch (Exception ex) {
@@ -535,7 +539,7 @@ public class PetDAO {
             ps.close();
             conn.close();
             for (Pet pet : listPet) {
-                pet.setImages(getImagesByPetId(pet.getPetId()));
+                pet.setImages(getImagePathsByPetId(pet.getPetId()));
 
             }
 
