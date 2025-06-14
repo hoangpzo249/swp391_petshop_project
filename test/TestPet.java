@@ -22,9 +22,13 @@ public class TestPet {
 
     public static void main(String[] args) {
         Pet pet=_dao.getPetById(1);
-        pet.setPetName("Vàng 2");
+        pet.setPetName("Vàng 3");
         pet.setPetDob(new Date(2022, 1, 1));
-        System.out.println(updatePet(1, pet));
+        System.out.println(addPet(pet));
+    }
+    
+    private static int addPet(Pet pet) {
+        return _dao.addPet(pet);
     }
     
     private static boolean updatePet(int id, Pet pet) {

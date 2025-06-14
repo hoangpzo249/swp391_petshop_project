@@ -74,7 +74,7 @@
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
-                        <a href="seller-create-pet" class="sidebar-link"><i class="fas fa-paw"></i> Đăng bán thú cưng</a>
+                        <a href="addpet" class="sidebar-link"><i class="fas fa-paw"></i> Đăng bán thú cưng</a>
                         <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
                         <a href="change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
                         <a href="logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
@@ -97,7 +97,7 @@
                     <div class="card-header">
                         <h3 class="card-title"><i class="fas fa-list-ul"></i> Danh sách thú cưng</h3>
                         <div class="card-tools">
-                            <button class="btn btn-primary" onclick="location.href = 'admin-panel?action=create-account&type=customer'">
+                            <button class="btn btn-primary" onclick="location.href = 'addpet'">
                                 <i class="fas fa-paw"></i> Đăng bán thú cưng
                             </button>
                             <button class="btn btn-outline">

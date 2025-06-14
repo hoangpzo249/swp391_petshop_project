@@ -14,6 +14,63 @@ public class AccountDAO {
     private PreparedStatement ps;
     private ResultSet rs;
 
+    public Account quickLogin() {
+        DBContext db = new DBContext();
+        Account account = null;
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT * FROM AccountTB WHERE accId=3";
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                account = new Account();
+                account.setAccId(rs.getInt("accId"));
+                account.setAccUsername(rs.getString("accUsername"));
+                account.setAccEmail(rs.getString("accEmail"));
+                account.setAccPassword(rs.getString("accPassword"));
+                account.setAccFname(rs.getString("accFname"));
+                account.setAccLname(rs.getString("accLname"));
+
+                java.sql.Date dob = rs.getDate("accDob");
+                if (dob != null) {
+                    account.setAccDob(dob.toLocalDate());
+                }
+
+                account.setAccAddress(rs.getString("accAddress"));
+                account.setAccPhoneNumber(rs.getString("accPhoneNumber"));
+                account.setAccRole(rs.getString("accRole"));
+                account.setAccDescription(rs.getString("accDescription"));
+
+                Timestamp createDate = rs.getTimestamp("accCreateDate");
+                if (createDate != null) {
+                    account.setAccCreateDate(createDate.toLocalDateTime());
+                }
+
+                account.setAccImage(rs.getBytes("accImage"));
+                account.setAccStatus(rs.getString("accStatus"));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return account;
+    }
+
     public List<Account> getAllAccounts() {
         List<Account> list = new ArrayList<>();
         try {

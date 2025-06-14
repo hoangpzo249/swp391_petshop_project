@@ -4,9 +4,9 @@
  */
 package Controllers;
 
-import DAO.BreedDAO;
+import DAO.OrderDAO;
 import DAO.PetDAO;
-import Models.Breed;
+import Models.Order;
 import Models.Pet;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Lenovo
  */
-public class DisplayAllPetServlet extends HttpServlet {
+public class SellerDisplayOrderDetailServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +39,10 @@ public class DisplayAllPetServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DisplayAllPetServlet</title>");
+            out.println("<title>Servlet DisplayOrderDetail</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DisplayAllPetServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DisplayOrderDetail at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,29 +61,24 @@ public class DisplayAllPetServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setCharacterEncoding("UTF-8");
+        String id = request.getParameter("orderId");
+        if (id == null || id.isEmpty()) {
+            response.sendRedirect("seller-order-management");
+            return;
+        }
 
-        String searchKey = request.getParameter("searchKey");
-        String availability = request.getParameter("availability");
-        String species = request.getParameter("species");
-        String breedId = request.getParameter("breedId");
-        String gender = request.getParameter("gender");
-        String vaccination = request.getParameter("vaccination");
-        String petStatus = request.getParameter("petStatus");
+        OrderDAO _daoorder = new OrderDAO();
+        PetDAO _daopet = new PetDAO();
 
-        BreedDAO breedDAO = new BreedDAO();
-        List<String> speciesList = breedDAO.getAllSpecies();
-        List<Breed> breedList = breedDAO.getAllBreeds();
+        Order order = _daoorder.getOrderById(id);
 
-        request.setAttribute("speciesList", speciesList);
-        request.setAttribute("breedList", breedList);
-
-        PetDAO petDAO = new PetDAO();
-        List<Pet> petList = petDAO.filterPetsForSeller(searchKey, availability, species, breedId, gender, vaccination, petStatus);
-
+        List<Pet> petList = _daopet.getPetForOrderDetail(Integer.parseInt(id));
         request.setAttribute("petList", petList);
 
-        request.getRequestDispatcher("seller_pet_view.jsp").forward(request, response);
+        request.setAttribute("order", order);
+
+        request.getRequestDispatcher("seller_order_detail.jsp")
+                .forward(request, response);
     }
 
     /**

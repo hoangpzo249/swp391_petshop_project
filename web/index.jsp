@@ -22,7 +22,7 @@
                 </c:otherwise>
             </c:choose>
 
-            <a href="login">Login</a>
+            <a href="quicklogin">Login</a>
             <a href="chatAI">AI</a>
             <a href="displayallpet">Pet List</a>
             <a href="displayorder">Order List</a>

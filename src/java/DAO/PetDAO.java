@@ -9,6 +9,7 @@ import Models.Pet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,6 +39,50 @@ public class PetDAO {
                 rs.getInt("createdBy"),
                 rs.getInt("petStatus")
         );
+    }
+
+    public int addPet(Pet pet) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "INSERT INTO PetTB ("
+                    + "petName, petDob, petOrigin, petGender, petAvailability, "
+                    + "petColor, petVaccination, petDescription, petPrice, "
+                    + "breedId, createdBy, petStatus) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            ps.setString(1, pet.getPetName());
+            ps.setDate(2, pet.getPetDob() != null ? new java.sql.Date(pet.getPetDob().getTime()) : null);
+            ps.setString(3, pet.getPetOrigin());
+            ps.setString(4, pet.getPetGender());
+            ps.setInt(5, pet.getPetAvailability());
+            ps.setString(6, pet.getPetColor());
+            ps.setInt(7, pet.getPetVaccination());
+            ps.setString(8, pet.getPetDescription());
+            ps.setDouble(9, pet.getPetPrice());
+            ps.setInt(10, pet.getBreedId());
+            ps.setInt(11, pet.getCreatedBy());
+            ps.setInt(12, pet.getPetStatus());
+
+            int affectedRows = ps.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new Exception("Creating pet failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                } else {
+                    throw new Exception("Creating pet failed, no ID obtained.");
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+        }
     }
 
     public boolean updatePetById(int id, Pet pet) {

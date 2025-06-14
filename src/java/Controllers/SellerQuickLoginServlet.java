@@ -6,6 +6,7 @@
 package Controllers;
 
 import DAO.AccountDAO;
+import Models.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -18,7 +19,7 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author Lenovo
  */
-public class TestLoginServlet extends HttpServlet {
+public class SellerQuickLoginServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +36,10 @@ public class TestLoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet TestLoginServlet</title>");  
+            out.println("<title>Servlet SellerQuickLoginServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet TestLoginServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet SellerQuickLoginServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,13 +56,11 @@ public class TestLoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-//        AccountDAO _dao=new AccountDAO();
-//        HttpSession session=request.getSession(false);
-//        if (session==null) {
-//            session=request.getSession();
-//        }
-//        session.setAttribute("account", _dao.getTestAccount());
-//        request.getRequestDispatcher("index.jsp").forward(request, response);
+        AccountDAO _dao=new AccountDAO();
+        Account account=_dao.quickLogin();
+        HttpSession session=request.getSession();
+        session.setAttribute("account", account);
+        response.sendRedirect("index.jsp");
     } 
 
     /** 

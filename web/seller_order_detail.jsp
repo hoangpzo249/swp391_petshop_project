@@ -93,7 +93,7 @@
 
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
-                        <a href="seller-create-pet" class="sidebar-link">
+                        <a href="addpet" class="sidebar-link">
                             <i class="fas fa-paw"></i> Đăng bán thú cưng
                         </a>
                         <a href="profile" class="sidebar-link">

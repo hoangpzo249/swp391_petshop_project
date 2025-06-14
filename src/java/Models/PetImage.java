@@ -16,7 +16,9 @@ public class PetImage {
     private int petId;
     private byte[] imageData;
     private LocalDateTime uploadedAt;
-
+        
+    private final String defaultImage="https://ibb.co/PssxwL0t";
+    
     public PetImage() {
     }
 
@@ -59,6 +61,10 @@ public class PetImage {
         this.uploadedAt = uploadedAt;
     }
 
+    public String getDefaultImage() {
+        return defaultImage;
+    }
+    
     @Override
     public String toString() {
         return "PetImage{" + "imageId=" + imageId + ", petId=" + petId + ", imageData=" + imageData + ", uploadedAt=" + uploadedAt + '}';

@@ -6,20 +6,23 @@ package Controllers;
 
 import DAO.BreedDAO;
 import DAO.PetDAO;
-import DAO.PetImageDAO;
+import DAO.PetImagePathDAO;
 import Models.Account;
 import Models.Breed;
 import Models.Pet;
-import Models.PetImage;
+import Utils.ImgBbUploader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +31,8 @@ import java.util.List;
  *
  * @author Lenovo
  */
-@jakarta.servlet.annotation.MultipartConfig 
-public class UpdatePetServlet extends HttpServlet {
+@MultipartConfig
+public class SellerAddPetServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,10 +51,10 @@ public class UpdatePetServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdatePetServlet</title>");
+            out.println("<title>Servlet AddPetServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdatePetServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AddPetServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -69,36 +72,14 @@ public class UpdatePetServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PetDAO _daopet = new PetDAO();
         BreedDAO _daobreed = new BreedDAO();
-        PetImageDAO _daoimage = new PetImageDAO();
 
-        int petId = Integer.parseInt(request.getParameter("id"));
+        List<Breed> breedList = _daobreed.getAllBreeds();
 
-        int pendingOrderId = _daopet.getPendingOrderIdForPet(petId);
+        request.setAttribute("breedList", breedList);
 
-        if (pendingOrderId == 0) {
-            Pet pet = _daopet.getPetById(petId);
-            List<Breed> breedList = _daobreed.getAllBreeds();
-            List<PetImage> imageList = _daoimage.getPetImagesById(petId);
-
-            request.setAttribute("pet", pet);
-            request.setAttribute("breedList", breedList);
-            request.setAttribute("imageList", imageList);
-
-            request.getRequestDispatcher("seller_pet_edit.jsp")
-                    .forward(request, response);
-        } else {
-            HttpSession session = request.getSession(false);
-            String referer = request.getHeader("referer");
-            session.setAttribute("errMess", "Không thể chỉnh sửa thú cưng #" + petId + ". Thú cưng ở trong đơn hàng chờ xác nhận #" + pendingOrderId);
-
-            if (referer != null) {
-                response.sendRedirect(referer);
-            } else {
-                response.sendRedirect("displayallpet");
-            }
-        }
+        request.getRequestDispatcher("seller_pet_add.jsp")
+                .forward(request, response);
     }
 
     /**
@@ -112,13 +93,19 @@ public class UpdatePetServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         PetDAO _daopet = new PetDAO();
+        PetImagePathDAO _daopetimage = new PetImagePathDAO();
+
+        List<Part> imageParts = new ArrayList<>();
+        for (Part part : request.getParts()) {
+            if ("images".equals(part.getName()) && part.getSize() > 0) {
+                imageParts.add(part);
+            }
+        }
 
         try {
-            int petId = Integer.parseInt(request.getParameter("petId"));
             String petName = request.getParameter("petName");
             String petDobStr = request.getParameter("petDob");
             String petOrigin = request.getParameter("petOrigin");
@@ -130,43 +117,56 @@ public class UpdatePetServlet extends HttpServlet {
             String petDescription = request.getParameter("petDescription");
             double petPrice = Double.parseDouble(request.getParameter("petPrice"));
             int breedId = Integer.parseInt(request.getParameter("breedId"));
+            int creatorid = ((Account) session.getAttribute("account")).getAccId();
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date utilPetDob = sdf.parse(petDobStr);
             java.sql.Date sqlPetDob = new java.sql.Date(utilPetDob.getTime());
 
-            Pet petToUpdate = _daopet.getPetById(petId);
-            petToUpdate.setPetId(petId);
-            petToUpdate.setPetName(petName);
-            petToUpdate.setPetDob(sqlPetDob);
-            petToUpdate.setPetOrigin(petOrigin);
-            petToUpdate.setPetGender(petGender);
-            petToUpdate.setPetAvailability(petAvailability);
-            petToUpdate.setPetColor(petColor);
-            petToUpdate.setPetVaccination(petVaccination);
-            petToUpdate.setPetStatus(petStatus);
-            petToUpdate.setPetDescription(petDescription);
-            petToUpdate.setPetPrice(petPrice);
-            petToUpdate.setBreedId(breedId);
+            Pet pet = new Pet();
+            pet.setPetName(petName);
+            pet.setPetDob(sqlPetDob);
+            pet.setPetOrigin(petOrigin);
+            pet.setPetGender(petGender);
+            pet.setPetAvailability(petAvailability);
+            pet.setPetColor(petColor);
+            pet.setPetVaccination(petVaccination);
+            pet.setPetStatus(petStatus);
+            pet.setPetDescription(petDescription);
+            pet.setPetPrice(petPrice);
+            pet.setBreedId(breedId);
+            pet.setCreatedBy(creatorid);
 
-            String[] deleteImageIds = request.getParameterValues("deleteImageIds");
+            int newPetId = _daopet.addPet(pet);
 
-            List<byte[]> newImagesData = new ArrayList<>();
-            for (Part part : request.getParts()) {
-                if ("newImages".equals(part.getName()) && part.getSize() > 0) {
+            if (newPetId != -1) {
+                List<String> imageURLs = new ArrayList<>();
+
+                for (Part part : imageParts) {
+                    File tempFile = File.createTempFile("upload-", ".tmp");
                     try (InputStream is = part.getInputStream()) {
-                        newImagesData.add(is.readAllBytes());
+                        Files.copy(is, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                     }
+                    String url = ImgBbUploader.uploadImage(tempFile);
+                    if (url != null) {
+                        imageURLs.add(url);
+                    }
+                    tempFile.delete();
                 }
-            }
 
-//            boolean updateSuccess = _daopet.updatePet(petToUpdate);
-//            boolean deleteSuccess = _daopet.deleteImages(deleteImageIds);
-//            boolean addSuccess = _daopet.addImages(petId, newImagesData);
-            if (_daopet.updatePetById(petId, petToUpdate)) {
-                session.setAttribute("successMess", "Cập nhật thông tin thú cưng #" + petId + " thành công!");
+                if (imageURLs.isEmpty()) {
+                    imageURLs.add("https://i.ibb.co/NggxZvb7/defaultcatdog.png");
+                }
+
+                boolean imageSuccess = _daopetimage.addImage(newPetId, imageURLs);
+
+                if (imageSuccess) {
+                    session.setAttribute("successMess", "Đăng bán thú cưng thành công!");
+                } else {
+                    session.setAttribute("errMess", "Thú cưng đã được tạo nhưng có lỗi khi lưu hình ảnh. Vui lòng kiểm tra lại.");
+                }
             } else {
-                session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình cập nhật. Vui lòng thử lại.");
+                session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình đăng bán. Vui lòng thử lại.");
             }
 
         } catch (Exception e) {
@@ -176,7 +176,6 @@ public class UpdatePetServlet extends HttpServlet {
 
         response.sendRedirect("displayallpet");
     }
-
 
     /**
      * Returns a short description of the servlet.

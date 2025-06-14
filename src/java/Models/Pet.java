@@ -61,31 +61,6 @@ public class Pet {
         this.petStatus = petStatus;
     }
 
-    public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender,
-               int petAvailability, String petColor, int petVaccination, String petDescription,
-               double petPrice, int breedId, int createdBy, Breed breed, double priceAtOrder,
-               String breedName, List<byte[]> images) {
-        this(petId, petName, petDob, petOrigin, petGender, petAvailability,
-             petColor, petVaccination, petDescription, petPrice, breedId, createdBy);
-        this.breed = breed;
-        this.priceAtOrder = priceAtOrder;
-        this.breedName = breedName;
-        this.images = images;
-    }
-
-    public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender,
-               int petAvailability, int petStatus, String petColor, int petVaccination,
-               String petDescription, double petPrice, int breedId, int createdBy,
-               Breed breed, double priceAtOrder, String breedName, List<byte[]> images) {
-        this(petId, petName, petDob, petOrigin, petGender, petAvailability,
-             petColor, petVaccination, petDescription, petPrice, breedId, createdBy);
-        this.petStatus = petStatus;
-        this.breed = breed;
-        this.priceAtOrder = priceAtOrder;
-        this.breedName = breedName;
-        this.images = images;
-    }
-
     public int getPetId() {
         return petId;
     }
@@ -246,15 +221,4 @@ public class Pet {
         return "images/defaultcatdog.png";
     }
 
-    public int getPetAgeInMonths() {
-        if (petDob == null) {
-            return 0;
-        }
-        Calendar now = Calendar.getInstance();
-        Calendar birth = Calendar.getInstance();
-        birth.setTime(petDob);
-        int months = (now.get(Calendar.YEAR) - birth.get(Calendar.YEAR)) * 12
-                + now.get(Calendar.MONTH) - birth.get(Calendar.MONTH);
-        return months;
-    }
 }
