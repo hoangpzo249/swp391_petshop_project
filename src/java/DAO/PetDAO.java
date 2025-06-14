@@ -41,7 +41,7 @@ public class PetDAO {
         List<byte[]> images = new ArrayList<>();
         try {
             conn = new DBContext().getConnection();
-            String sql = "SELECT imageData FROM PetImageTB WHERE petId = ?";
+            String sql = "SELECT TOP 4 imageData FROM PetImageTB WHERE petId = ? ORDER BY imageId ";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, petId);
             rs = ps.executeQuery();
@@ -215,14 +215,7 @@ public class PetDAO {
         return list;
     }
 
-    public static int getAgeInMonths(Date dob) {
-        Calendar birth = Calendar.getInstance();
-        birth.setTime(dob);
-        Calendar now = Calendar.getInstance();
-        int years = now.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
-        int months = now.get(Calendar.MONTH) - birth.get(Calendar.MONTH);
-        return years * 12 + months;
-    }
+    
 
     public List<String> getAllVaccinationStatus() {
         List<String> list = new ArrayList<>();
@@ -243,12 +236,7 @@ public class PetDAO {
         List<Pet> listPet = new ArrayList<>();
        
 
-        if (breed == null || breed.isEmpty()) {
-            breed = "%";
-        }
-        if (species == null || species.isEmpty()) {
-            species = "%";
-        }
+
         if (search == null || search.isEmpty()) {
             search = "%";
         } else {
@@ -260,10 +248,10 @@ public class PetDAO {
             String sql = "SELECT p.*, b.breedName FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
                     + "WHERE p.petAvailability = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?)";
 
-            if (!"%".equals(breed)) {
+            if (breed != null && !breed.isEmpty()) {
                 sql += " AND b.breedId = ?";
             }
-            if (!"%".equals(species)) {
+            if (species != null && !species.isEmpty()) {
                 sql += " AND b.breedSpecies = ?";
             }
             if (num1 != 0 || num2 != 0) {
@@ -309,10 +297,10 @@ public class PetDAO {
             int i = 1;
             ps.setString(i++, search);
             ps.setString(i++, search);
-            if (!"%".equals(breed)) {
+            if (breed != null && !breed.isEmpty()) {
                 ps.setInt(i++, Integer.parseInt(breed));
             }
-            if (!"%".equals(species)) {
+            if (species != null && !species.isEmpty()) {
                 ps.setString(i++, species);
             }
             if (num1 != 0 || num2 != 0) {
@@ -350,10 +338,7 @@ public class PetDAO {
             rs.close();
             ps.close();
             conn.close();
-            for (Pet pet:listPet){
-                pet.setImages(getImagesByPetId(pet.getPetId()));
-                
-            }
+           
 
         } catch (Exception ex) {
         }

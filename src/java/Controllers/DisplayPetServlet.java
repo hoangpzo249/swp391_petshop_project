@@ -21,12 +21,14 @@ public class DisplayPetServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String id = request.getParameter("id");
-        try {
+       
 
             int petId = Integer.parseInt(id);
             PetDAO dao = new PetDAO();
 
             Pet pet = dao.getPetById(petId);
+            List<byte[]> images = dao.getImagesByPetId(petId);
+            pet.setImages(images);
 
             List<Pet> similarPets = dao.getSimilarPets(pet.getBreedId(), petId);
 
@@ -36,9 +38,7 @@ public class DisplayPetServlet extends HttpServlet {
 
             request.getRequestDispatcher("main_productpet.jsp").forward(request, response);
 
-        } catch (Exception e) {
-
-        }
+       
 
     }
 

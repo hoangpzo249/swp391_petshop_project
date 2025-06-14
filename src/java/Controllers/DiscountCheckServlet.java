@@ -78,78 +78,84 @@ public class DiscountCheckServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Lấy danh sách pet từ form
-        String[] petIds = request.getParameterValues("selectedPets");
-        List<Pet> selectedPetList = new ArrayList<>();
-        PetDAO petDAO = new PetDAO();
-        double total = 0.0;
+        String action = request.getParameter("action");
+        if ("apply-discount".equals(action)) {
 
-        if (petIds != null) {
-            for (String idStr : petIds) {
-                try {
-                    int id = Integer.parseInt(idStr);
-                    Pet pet = petDAO.getPetById(id);
-                    if (pet != null) {
-                        selectedPetList.add(pet);
-                        total += pet.getPetPrice();
+            String[] petIds = request.getParameterValues("selectedPets");
+            List<Pet> selectedPetList = new ArrayList<>();
+            PetDAO petDAO = new PetDAO();
+            double total = 0.0;
+
+            if (petIds != null) {
+                for (String idStr : petIds) {
+                    try {
+                        int id = Integer.parseInt(idStr);
+                        Pet pet = petDAO.getPetById(id);
+                        if (pet != null) {
+                            selectedPetList.add(pet);
+                            total += pet.getPetPrice();
+                        }
+                    } catch (NumberFormatException e) {
+
                     }
-                } catch (NumberFormatException e) {
-                    // Bỏ qua ID không hợp lệ
                 }
             }
-        }
 
-        // 2. Kiểm tra mã giảm giá
-        String code = request.getParameter("discountCode");
-        DiscountDAO dao = new DiscountDAO();
-        Discount d = dao.getActiveDiscountByCode(code);
+            String code = request.getParameter("discountCode");
 
-        double discountAmount = 0.0;
-        boolean isValid = false;
-        String message;
+            DiscountDAO dao = new DiscountDAO();
+            Discount d = dao.getActiveDiscountByCode(code);
 
-        if (d == null || !d.isActive()) {
-            message = "Mã giảm giá không tồn tại hoặc đã bị khóa.";
-        } else if (d.getValidTo().before(new Date())) {
-            message = "Mã giảm giá đã hết hạn.";
-        } else if (total < d.getMinOrderAmount()) {
-            message = "Đơn hàng chưa đạt mức tối thiểu để dùng mã này.";
-        } else {
-            if (d.getDiscountType().equalsIgnoreCase("percent")) {
-                discountAmount = total * d.getDiscountValue() / 100.0;
-            } else if (d.getDiscountType().equalsIgnoreCase("fixed")) {
-                discountAmount = d.getDiscountValue();
+            double discountAmount = 0.0;
+            boolean isValid = false;
+            String message;
+
+            if (d == null || !d.isActive()) {
+                message = "Mã giảm giá không tồn tại hoặc đã bị khóa.";
+            } else if (!d.isValidNow()) {
+                message = "Mã giảm giá đã hết hạn.";
+            } else if (total < d.getMinOrderAmount()) {
+                message = "Đơn hàng chưa đạt mức tối thiểu để dùng mã này.";
+            } else if (!d.isUsageAvailable()) {
+                message = "Mã đã hết lượt sử dụng";
+            } else {
+                if (d.getDiscountType().equalsIgnoreCase("percent")) {
+                    discountAmount = total * d.getDiscountValue() / 100.0;
+                } else if (d.getDiscountType().equalsIgnoreCase("fixed")) {
+                    discountAmount = d.getDiscountValue();
+                }
+                isValid = true;
+                message = "Áp dụng mã thành công!";
+                request.setAttribute("discountCode", d.getDiscountCode());
             }
-            isValid = true;
-            message = "Áp dụng mã thành công!";
-            request.setAttribute("discountCode", d.getDiscountCode());
+
+            double finalTotal = total - discountAmount;
+            request.setAttribute("discountMessage", message);
+            request.setAttribute("discountValid", isValid);
+            request.setAttribute("discountAmount", discountAmount);
+            request.setAttribute("total", total);
+            request.setAttribute("finalTotal", finalTotal);
+            request.setAttribute("selectedPets", selectedPetList);
+            request.setAttribute("guestName", request.getParameter("guestName"));
+            request.setAttribute("guestPhone", request.getParameter("guestPhone"));
+            request.setAttribute("guestAddress", request.getParameter("guestAddress"));
+            request.setAttribute("email", request.getParameter("email"));
+
+        } else if ("checkout".equals(action)) {
+            response.sendRedirect("ajaxServlet");
+            return;
         }
 
-        // 3. Lưu vào request scope
-        request.setAttribute("discountMessage", message);
-        request.setAttribute("discountValid", isValid);
-        request.setAttribute("discountAmount", discountAmount);
-        request.setAttribute("total", total);
-        request.setAttribute("selectedPets", selectedPetList);
-
-        // 4. Lưu lại thông tin người nhận (guest)
-        request.setAttribute("guestName", request.getParameter("guestName"));
-        request.setAttribute("guestPhone", request.getParameter("guestPhone"));
-        request.setAttribute("guestAddress", request.getParameter("guestAddress"));
-        request.setAttribute("email", request.getParameter("email"));
-
-        // 5. Chuyển tiếp về checkout.jsp (giữ toàn bộ dữ liệu qua request)
         request.getRequestDispatcher("checkout.jsp").forward(request, response);
     }
 
-
-/**
- * Returns a short description of the servlet.
- *
- * @return a String containing servlet description
- */
-@Override
-public String getServletInfo() {
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 

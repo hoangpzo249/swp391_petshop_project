@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class BreedDAO {
 
     Connection conn;
@@ -23,10 +22,10 @@ public class BreedDAO {
         List<Breed> listBreed = new ArrayList<>();
         try {
             conn = db.getConnection();
-            String sql = "SELECT breedId, breedName, breedSpecies, breedStatus, breedImage "
-                       + "FROM BreedTB "
-                       + "WHERE breedSpecies = N'Dog' "
-                       + "ORDER BY breedName ASC";
+            String sql = "SELECT breedId, breedName, breedSpecies "
+                    + "FROM BreedTB "
+                    + "WHERE breedSpecies = N'Dog' "
+                    + "ORDER BY breedName ASC";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -34,17 +33,32 @@ public class BreedDAO {
                 int id = rs.getInt("breedId");
                 String name = rs.getString("breedName");
                 String species = rs.getString("breedSpecies");
-                double status = rs.getDouble("breedStatus");
-                byte[] imageBytes = rs.getBytes("breedImage");
+                
+                
 
-                listBreed.add(new Breed(id, name, species, status, imageBytes));
+                listBreed.add(new Breed(id, name, species));
             }
         } catch (Exception ex) {
-           
+
         }
-        try { if (rs != null) rs.close(); } catch (Exception e) {}
-        try { if (ps != null) ps.close(); } catch (Exception e) {}
-        try { if (conn != null) conn.close(); } catch (Exception e) {}
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+        }
         return listBreed;
     }
 
@@ -53,10 +67,10 @@ public class BreedDAO {
         List<Breed> listBreed = new ArrayList<>();
         try {
             conn = db.getConnection();
-            String sql = "SELECT breedId, breedName, breedSpecies, breedStatus, breedImage "
-                       + "FROM BreedTB "
-                       + "WHERE breedSpecies = N'Cat' "
-                       + "ORDER BY breedName ASC";
+            String sql = "SELECT breedId, breedName, breedSpecies "
+                    + "FROM BreedTB "
+                    + "WHERE breedSpecies = N'Cat' "
+                    + "ORDER BY breedName ASC";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -64,17 +78,31 @@ public class BreedDAO {
                 int id = rs.getInt("breedId");
                 String name = rs.getString("breedName");
                 String species = rs.getString("breedSpecies");
-                double status = rs.getDouble("breedStatus");
-                byte[] imageBytes = rs.getBytes("breedImage");
+                
 
-                listBreed.add(new Breed(id, name, species, status, imageBytes));
+                listBreed.add(new Breed(id, name, species));
             }
         } catch (Exception ex) {
-            
+
         }
-        try { if (rs != null) rs.close(); } catch (Exception e) {}
-        try { if (ps != null) ps.close(); } catch (Exception e) {}
-        try { if (conn != null) conn.close(); } catch (Exception e) {}
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+        }
         return listBreed;
     }
 }

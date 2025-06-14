@@ -73,10 +73,8 @@ public class DisplayCartServlet extends HttpServlet {
                 Pet pet = petDao.getPetById(c.getPetId());
                 if (pet != null && pet.getPetAvailability() == 1) {
                     pets.add(pet);
-                    double price = pet.getPetPrice();
-                    c.setPrice(price);
-                    totalPrice += price;
                     updatedPetCart.add(c);
+
                 } else {
                     if (account != null) {
                         cartDao.deleteFromPetCart(account.getAccId(), c.getPetId());
@@ -89,12 +87,16 @@ public class DisplayCartServlet extends HttpServlet {
         if (account != null) {
             session.setAttribute("cartcount", cartDao.getTotalCartItems(account.getAccId()));
         } else {
-            
             session.setAttribute("cartcount", updatedPetCart.size());
+
+            session.setAttribute("guestCart", updatedPetCart);
+
+        }
+        if (petCart.size() > updatedPetCart.size()) {
+            session.setAttribute("cartMessage", "Một số sản phẩm bạn đã chọn hiện không còn khả dụng nên không hiển thị trong giỏ hàng.");
         }
 
         request.setAttribute("pets", pets);
-        request.setAttribute("totalPrice", totalPrice);
 
         request.getRequestDispatcher("cart.jsp").forward(request, response);
     }

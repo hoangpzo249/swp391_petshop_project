@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -76,10 +77,6 @@ public class CheckoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String[] selectedPets = request.getParameterValues("selectedPets");
-        if (selectedPets == null || selectedPets.length == 0) {
-            response.sendRedirect("displaycart"); // Nếu chưa chọn
-            return;
-        }
 
         PetDAO petDao = new PetDAO();
         List<Pet> selectedPetList = new ArrayList<>();
@@ -87,44 +84,55 @@ public class CheckoutServlet extends HttpServlet {
 
         for (String id : selectedPets) {
             try {
-                int petId = Integer.parseInt(id); // Ép String → int
+                int petId = Integer.parseInt(id);
                 Pet pet = petDao.getPetById(petId);
                 if (pet != null && pet.getPetAvailability() == 1) {
                     selectedPetList.add(pet);
                     total += pet.getPetPrice();
                 }
-            } catch (NumberFormatException e) {
-                // Nếu id không hợp lệ (không ép được sang int) thì bỏ qua
-                e.printStackTrace();
+            } catch (Exception e) {
+
             }
+        }
+        if (selectedPets != null && selectedPets.length > selectedPetList.size()) {
+            request.setAttribute("warningMessage", "Một số sản phẩm bạn chọn có thể không còn tồn tại hoặc đã bị xoá khỏi cửa hàng.");
+        }
+        
+
+        if (selectedPetList.isEmpty()) {
+            HttpSession session = request.getSession();
+            session.setAttribute("cartMessage", "Sản phẩm bạn chọn đã không còn khả dụng. Vui lòng kiểm tra lại giỏ hàng.");
+            response.sendRedirect("displaycart");
+            return;
         }
 
         request.setAttribute("selectedPets", selectedPetList);
         request.setAttribute("total", total);
+        request.setAttribute("finalTotal", total);
+        
 
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
+        session.setAttribute("cartcount", selectedPetList.size());
+        
 
-        if (account
-                != null) {
+        if (account != null) {
             request.setAttribute("name", account.getAccFname() + " " + account.getAccLname());
             request.setAttribute("phone", account.getAccPhoneNumber());
             request.setAttribute("address", account.getAccAddress());
             request.setAttribute("email", account.getAccEmail());
         }
 
-        request.getRequestDispatcher(
-                "checkout.jsp").forward(request, response);
+        request.getRequestDispatcher("checkout.jsp").forward(request, response);
     }
 
-
-/**
- * Returns a short description of the servlet.
- *
- * @return a String containing servlet description
- */
-@Override
-public String getServletInfo() {
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 
