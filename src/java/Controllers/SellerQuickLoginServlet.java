@@ -2,14 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package Controllers;
 
-import DAO.BreedDAO;
-import DAO.PetDAO;
-import DAO.PetImageDAO;
-import Models.Breed;
-import Models.Pet;
-import Models.PetImage;
+import DAO.AccountDAO;
+import Models.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,44 +14,40 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  *
- * @author Lenovo
+ * @author HuyHoang
  */
-public class UpdatePetServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
+public class SellerQuickLoginServlet extends HttpServlet {
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdatePetServlet</title>");
+            out.println("<title>Servlet SellerQuickLoginServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdatePetServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SellerQuickLoginServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    }
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -62,43 +55,16 @@ public class UpdatePetServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        PetDAO _daopet = new PetDAO();
-        BreedDAO _daobreed=new BreedDAO();
-        PetImageDAO _daoimage=new PetImageDAO();
+    throws ServletException, IOException {
+        AccountDAO _dao=new AccountDAO();
+        Account account=_dao.quickLogin();
+        HttpSession session=request.getSession();
+        session.setAttribute("userAccount", account);
+        response.sendRedirect("index.jsp");
+    } 
 
-        int petId = Integer.parseInt(request.getParameter("id"));
-
-        int pendingOrderId = _daopet.getPendingOrderIdForPet(petId);
-
-        if (pendingOrderId == 0) {
-            Pet pet=_daopet.getPetById(petId);
-            List<Breed> breedList=_daobreed.getAllBreeds();
-            List<PetImage> imageList=_daoimage.getPetImagesById(petId);
-            
-            request.setAttribute("pet", pet);
-            request.setAttribute("breedList", breedList);
-            request.setAttribute("imageList", imageList);
-            
-            request.getRequestDispatcher("seller_pet_edit.jsp")
-                    .forward(request, response);
-        } else {
-            HttpSession session = request.getSession(false);
-            String referer = request.getHeader("referer");
-            session.setAttribute("errMess", "Không thể chỉnh sửa thú cưng #" + petId + ". Thú cưng ở trong đơn hàng chờ xác nhận #" + pendingOrderId);
-            
-            if (referer!=null) {
-                response.sendRedirect(referer);
-            }
-            else {
-                response.sendRedirect("displayallpet");
-            }
-        }
-    }
-
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -106,13 +72,12 @@ public class UpdatePetServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override

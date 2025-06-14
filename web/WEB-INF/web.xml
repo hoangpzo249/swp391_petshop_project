@@ -38,27 +38,39 @@
     <!-- Order & Admin related servlets -->
     <servlet>
         <servlet-name>DisplayOrderServlet</servlet-name>
-        <servlet-class>Controllers.DisplayOrderServlet</servlet-class>
+        <servlet-class>Controllers.SellerDisplayOrderServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DisplayOrderDetail</servlet-name>
-        <servlet-class>Controllers.DisplayOrderDetail</servlet-class>
+        <servlet-class>Controllers.SellerDisplayOrderDetailServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>UpdateOrderStatusServlet</servlet-name>
-        <servlet-class>Controllers.UpdateOrderStatusServlet</servlet-class>
+        <servlet-class>Controllers.SellerUpdateOrderStatusServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DisplayAllPetServlet</servlet-name>
-        <servlet-class>Controllers.DisplayAllPetServlet</servlet-class>
+        <servlet-class>Controllers.SellerDisplayAllPetServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>UpdatePetStatus</servlet-name>
-        <servlet-class>Controllers.UpdatePetStatus</servlet-class>
+        <servlet-class>Controllers.SellerUpdatePetStatusServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>UpdatePetServlet</servlet-name>
-        <servlet-class>Controllers.UpdatePetServlet</servlet-class>
+        <servlet-class>Controllers.SellerUpdatePetServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddPetServlet</servlet-name>
+        <servlet-class>Controllers.SellerAddPetServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SellerQuickLoginServlet</servlet-name>
+        <servlet-class>Controllers.SellerQuickLoginServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SellerPetImageActionServlet</servlet-name>
+        <servlet-class>Controllers.SellerPetImageActionServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Admin_Panel_Servlet</servlet-name>
@@ -197,9 +209,20 @@
         <servlet-name>Admin_Panel_Servlet</servlet-name>
         <url-pattern>/admin-panel</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddPetServlet</servlet-name>
+        <url-pattern>/addpet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SellerQuickLoginServlet</servlet-name>
+        <url-pattern>/quicklogin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SellerPetImageActionServlet</servlet-name>
+        <url-pattern>/petimageaction</url-pattern>
+    </servlet-mapping>
 
     <session-config>
         <session-timeout>15</session-timeout>
     </session-config>
-
 </web-app>

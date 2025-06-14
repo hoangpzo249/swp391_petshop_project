@@ -31,7 +31,7 @@ public class Pet {
     private Breed breed;
     private double priceAtOrder;
     private String breedName;
-    private List<byte[]> images;
+    private List<String> images;
 
     public Pet() {
     }
@@ -59,31 +59,6 @@ public class Pet {
         this(petId, petName, petDob, petOrigin, petGender, petAvailability,
              petColor, petVaccination, petDescription, petPrice, breedId, createdBy);
         this.petStatus = petStatus;
-    }
-
-    public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender,
-               int petAvailability, String petColor, int petVaccination, String petDescription,
-               double petPrice, int breedId, int createdBy, Breed breed, double priceAtOrder,
-               String breedName, List<byte[]> images) {
-        this(petId, petName, petDob, petOrigin, petGender, petAvailability,
-             petColor, petVaccination, petDescription, petPrice, breedId, createdBy);
-        this.breed = breed;
-        this.priceAtOrder = priceAtOrder;
-        this.breedName = breedName;
-        this.images = images;
-    }
-
-    public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender,
-               int petAvailability, int petStatus, String petColor, int petVaccination,
-               String petDescription, double petPrice, int breedId, int createdBy,
-               Breed breed, double priceAtOrder, String breedName, List<byte[]> images) {
-        this(petId, petName, petDob, petOrigin, petGender, petAvailability,
-             petColor, petVaccination, petDescription, petPrice, breedId, createdBy);
-        this.petStatus = petStatus;
-        this.breed = breed;
-        this.priceAtOrder = priceAtOrder;
-        this.breedName = breedName;
-        this.images = images;
     }
 
     public int getPetId() {
@@ -214,11 +189,11 @@ public class Pet {
         this.breedName = breedName;
     }
 
-    public List<byte[]> getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(List<byte[]> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
@@ -238,27 +213,8 @@ public class Pet {
                ", CreatedBy=" + createdBy +
                '}';
     }
-
-    public String getPetImageBase64() {
-        if (images != null && !images.isEmpty()) {
-            return "data:image/png;base64," + Base64.getEncoder().encodeToString(images.get(0));
-        }
-        return "images/defaultcatdog.png";
-    }
-     public List<String> getImagesBase64List() {
-    List<String> result = new ArrayList<>();
-    if (images != null && images.size() > 1) {
-        for (int i = 1; i < images.size(); i++) {
-            byte[] img = images.get(i);
-            if (img != null && img.length > 0) {
-                result.add("data:image/png;base64," + Base64.getEncoder().encodeToString(img));
-            }
-        }
-    }
-    return result;
-}
-
-
-
     
+    public String getFirstImage() {
+        return images.get(0);
+    }
 }

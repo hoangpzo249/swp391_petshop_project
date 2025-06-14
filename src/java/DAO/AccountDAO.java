@@ -1,4 +1,3 @@
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -44,13 +43,56 @@ public class AccountDAO extends DBContext {
             ps.setString(9, "Customer");
             ps.setString(10, "New account");
 
-//            int rowsAffected = ps.executeUpdate();
             ps.executeUpdate();
-//            return rowsAffected > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        return false;
+    }
+
+    public Account quickLogin() {
+        Account account = null;
+        try {
+            con = db.getConnection();
+            String sql = "SELECT * FROM AccountTB WHERE accId=3";
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                account = new Account();
+                account.setAccId(rs.getInt("accId"));
+                account.setAccUsername(rs.getString("accUsername"));
+                account.setAccEmail(rs.getString("accEmail"));
+                account.setAccPassword(rs.getString("accPassword"));
+                account.setAccFname(rs.getString("accFname"));
+                account.setAccLname(rs.getString("accLname"));
+                account.setAccDob(rs.getDate("accDob"));
+                account.setAccAddress(rs.getString("accAddress"));
+                account.setAccPhoneNumber(rs.getString("accPhoneNumber"));
+                account.setAccRole(rs.getString("accRole"));
+                account.setAccDescription(rs.getString("accDescription"));
+                account.setAccCreateDate(rs.getString("accCreateDate"));
+                account.setAccImage(rs.getBytes("accImage"));
+                account.setAccStatus(rs.getString("accStatus"));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return account;
     }
 
     public void registerAccCusByAdmin(Account account) {
@@ -296,6 +338,7 @@ public class AccountDAO extends DBContext {
 
     public Account ggByEmail(String email) {
         try {
+            con = db.getConnection();
             String sql = "Select * from AccountTB where accEmail =?";
             ps = con.prepareStatement(sql);
 
@@ -366,27 +409,6 @@ public class AccountDAO extends DBContext {
         return hashPass;
     }
 
-//    public void updateProfile(String accUsername, String accFname, String accLname, String accPhoneNumber, String accAddress, String accDescription, int accId) {
-//        try {
-//            con = db.getConnection();
-//            String sql = "UPDATE AccountTB SET accUsername =?, accFname = ?, accLname= ?,accPhoneNumber = ?,accAddress = ?,accDescription  = ? where accId = ?";
-//
-//            ps = con.prepareStatement(sql);
-//
-//            ps.setString(1, accUsername);
-//            ps.setString(2, accFname);
-//            ps.setString(3, accLname);
-//            ps.setDate(4, new java.sql.Date(accDob.getTime()));
-//            ps.setString(4, accPhoneNumber);
-//            ps.setString(5, accAddress);
-//            ps.setString(6, accDescription);
-//            ps.setInt(7, accId);
-//
-//            ps.executeUpdate();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
     public void updateProfile(Account acc) {
         try {
             con = db.getConnection();
@@ -452,6 +474,7 @@ public class AccountDAO extends DBContext {
                 accList.add(acc);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return accList;
     }
@@ -482,17 +505,10 @@ public class AccountDAO extends DBContext {
                 accList.add(acc);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return accList;
     }
-//    
-//    public static void main(String[] args) {
-//        AccountDAO acc = new AccountDAO();
-//        List<Account> accList  = acc.get10AccountNew();
-//        for (Account account : accList) {
-//            System.out.println(account);
-//        }
-//    }
 
     public Account getAccId(int id, String role) {
         try {
@@ -522,6 +538,7 @@ public class AccountDAO extends DBContext {
                 return acc;
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -553,6 +570,7 @@ public class AccountDAO extends DBContext {
                 return acc;
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -576,17 +594,18 @@ public class AccountDAO extends DBContext {
                 Date accDob = rs.getDate("accDob");
                 String accAddress = rs.getString("accAddress");
                 String accPhoneNumber = rs.getString("accPhoneNumber");
-                String accRole = rs.getString("accRole");
+                String accRoleRes = rs.getString("accRole");
                 String accDescription = rs.getString("accDescription");
                 String accCreateDate = rs.getString("accCreateDate");
                 byte[] accImage = rs.getBytes("accImage");
                 String accStatus = rs.getString("accStatus");
-                Account acc = new Account(accId, accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRole, accDescription, accCreateDate, accImage, accStatus);
+                Account acc = new Account(accId, accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRoleRes, accDescription, accCreateDate, accImage, accStatus);
                 accList.add(acc);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
-        return null;
+        return accList;
     }
 
     public Account getAccIdStatus(int id, String role, String ban) {
@@ -618,6 +637,7 @@ public class AccountDAO extends DBContext {
                 return acc;
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -633,6 +653,7 @@ public class AccountDAO extends DBContext {
                 count = rs.getInt(1);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return count;
     }
@@ -648,6 +669,7 @@ public class AccountDAO extends DBContext {
                 count = rs.getInt(1);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return count;
     }
@@ -663,6 +685,7 @@ public class AccountDAO extends DBContext {
                 count = rs.getInt(1);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return count;
     }
@@ -693,14 +716,12 @@ public class AccountDAO extends DBContext {
                 acc.setAccStatus(rs.getString("accStatus"));
                 acc.setAccDob(rs.getDate("accDob"));
                 acc.setAccAddress(rs.getString("accAddress"));
-
                 acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
                 acc.setAccDescription(rs.getString("accDescription"));
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
                 acc.setAccImage(rs.getBytes("accImage"));
 
                 list.add(acc);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -730,14 +751,12 @@ public class AccountDAO extends DBContext {
                 acc.setAccStatus(rs.getString("accStatus"));
                 acc.setAccDob(rs.getDate("accDob"));
                 acc.setAccAddress(rs.getString("accAddress"));
-
                 acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
                 acc.setAccDescription(rs.getString("accDescription"));
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
                 acc.setAccImage(rs.getBytes("accImage"));
 
                 list.add(acc);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -767,14 +786,12 @@ public class AccountDAO extends DBContext {
                 acc.setAccStatus(rs.getString("accStatus"));
                 acc.setAccDob(rs.getDate("accDob"));
                 acc.setAccAddress(rs.getString("accAddress"));
-
                 acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
                 acc.setAccDescription(rs.getString("accDescription"));
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
                 acc.setAccImage(rs.getBytes("accImage"));
 
                 list.add(acc);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -783,7 +800,7 @@ public class AccountDAO extends DBContext {
     }
 
     public Account FindUserInfo(String username) {
-        Account acc = new Account();
+        Account acc = null;
         try {
             con = db.getConnection();
             ps = con.prepareStatement("SELECT * FROM AccountTB WHERE accUsername = ?");
@@ -807,6 +824,7 @@ public class AccountDAO extends DBContext {
                 acc = new Account(accId, accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRole, accDescription, accCreateDate, accImage, accStatus);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return acc;
     }

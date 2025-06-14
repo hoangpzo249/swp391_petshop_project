@@ -1133,7 +1133,7 @@ textarea.form-control {
 
 
 .filter-controls {
-    display: flex; 
+    display: flex;
     flex-wrap: wrap;
     gap: 15px;
     align-items: center;
@@ -1141,11 +1141,11 @@ textarea.form-control {
 
 
 .advanced-filters-container {
-    display: none; 
-    width: 100%; 
+    display: none;
+    width: 100%;
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 1px solid #eee; 
+    border-top: 1px solid #eee;
     margin-bottom: 15px;
 }
 
@@ -1179,14 +1179,14 @@ textarea.form-control {
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 20px 30px; 
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 30px;
     align-items: start;
 }
 
 
 .form-full-width {
-    grid-column: 1 / -1; 
+    grid-column: 1 / -1;
 }
 
 
@@ -1207,14 +1207,6 @@ textarea.form-control {
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid #eee;
-}
-
-.image-delete-check {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    transform: scale(1.5);
-    cursor: pointer;
 }
 
 .card-footer {
@@ -1242,4 +1234,134 @@ textarea.form-control {
     transform: translateY(-50%);
     color: #888;
     pointer-events: none;
+}
+
+.image-preview-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+}
+
+.image-actions {
+    display: flex;
+    justify-content: space-around;
+    background-color: #fff;
+    border-top: 1px solid #eee;
+}
+
+.image-action-form {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-image-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 10px;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-image-action i {
+    margin-right: 6px;
+}
+
+/* Specific style for the "Change" button */
+.btn-image-action.btn-change {
+    color: #3498db; /* Blue */
+    border-right: 1px solid #eee; /* Separator line */
+}
+
+.btn-image-action.btn-change:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.btn-image-action.btn-delete {
+    color: #e74c3c; /* Red */
+}
+
+.btn-image-action.btn-delete:hover {
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.modal-backdrop.show {
+    display: flex;
+    opacity: 1;
+}
+.modal-dialog {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    transform: translateY(-50px);
+    transition: transform 0.3s ease;
+}
+.modal-backdrop.show .modal-dialog {
+    transform: translateY(0);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+.modal-header .modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+}
+.modal-header .modal-close {
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+}
+.modal-body {
+    padding: 1.5rem;
+}
+.modal-body p {
+    margin: 0;
+}
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e9ecef;
+    gap: 0.5rem;
 }

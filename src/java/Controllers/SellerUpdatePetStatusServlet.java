@@ -4,23 +4,20 @@
  */
 package Controllers;
 
-import DAO.OrderDAO;
 import DAO.PetDAO;
-import Models.Order;
-import Models.Pet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
  * @author Lenovo
  */
-public class DisplayOrderDetail extends HttpServlet {
+public class SellerUpdatePetStatusServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +36,10 @@ public class DisplayOrderDetail extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DisplayOrderDetail</title>");
+            out.println("<title>Servlet UpdatePetStatus</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DisplayOrderDetail at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet UpdatePetStatus at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,25 +57,41 @@ public class DisplayOrderDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String id = request.getParameter("orderId");
-        if (id == null || id.isEmpty()) {
-            response.sendRedirect("seller-order-management");
-            return;
-        }
-
-        OrderDAO _daoorder = new OrderDAO();
         PetDAO _daopet = new PetDAO();
+        HttpSession session = request.getSession(false);
 
-        Order order = _daoorder.getOrderById(id);
+        int petId = Integer.parseInt(request.getParameter("petId"));
+        int targetStatus = Integer.parseInt(request.getParameter("status"));
+        String referer = request.getHeader("referer");
+        int pendingOrderId = _daopet.getPendingOrderIdForPet(petId);
 
-        List<Pet> petList = _daopet.getPetForOrderDetail(Integer.parseInt(id));
-        request.setAttribute("petList", petList);
-
-        request.setAttribute("order", order);
-
-        request.getRequestDispatcher("seller_order_detail.jsp")
-                .forward(request, response);
+        switch (targetStatus) {
+            case 1:
+                if (_daopet.updatePetStatusById(petId, targetStatus)) {
+                    session.setAttribute("successMess", "Thú cưng #" + petId + " đã hiển thị thành công.");
+                } else {
+                    session.setAttribute("errMess", "Hiển thị thú cưng #" + petId + " thất bại");
+                }
+                break;
+            case 0:
+                if (pendingOrderId == 0) {
+                    if (_daopet.updatePetStatusById(petId, targetStatus)) {
+                        session.setAttribute("successMess", "Thú cưng #" + petId + " đã ẩn thành công.");
+                    } else {
+                        session.setAttribute("errMess", "Ẩn thú cưng #" + petId + " thất bại");
+                    }
+                } else {
+                    session.setAttribute("errMess", "Không thể ẩn thú cưng #" + petId + ", Thú cưng ở trong đơn hàng chờ xác nhận #" + pendingOrderId);
+                }
+                break;
+            default:
+                throw new AssertionError();
+        }
+        if (referer != null) {
+            response.sendRedirect(referer);
+        } else {
+            response.sendRedirect("displayallpet");
+        }
     }
 
     /**

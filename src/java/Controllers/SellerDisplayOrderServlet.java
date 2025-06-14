@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author Lenovo
  */
-public class DisplayOrderServlet extends HttpServlet {
+public class SellerDisplayOrderServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
