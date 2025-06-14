@@ -40,6 +40,47 @@ public class PetDAO {
         );
     }
 
+    public boolean updatePetById(int id, Pet pet) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "UPDATE PetTB\n"
+                    + "SET \n"
+                    + "    petName = ?,\n"
+                    + "    petDob = ?,\n"
+                    + "    petOrigin = ?,\n"
+                    + "    petGender = ?,\n"
+                    + "    petAvailability = ?,\n"
+                    + "    petColor = ?,\n"
+                    + "    petVaccination = ?,\n"
+                    + "    petDescription = ?,\n"
+                    + "    petPrice = ?,\n"
+                    + "    breedId = ?,\n"
+                    + "    createdBy = ?,\n"
+                    + "    petStatus = ?\n"
+                    + "WHERE petId = ?;";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, pet.getPetName());
+            ps.setDate(2, pet.getPetDob() != null ? new java.sql.Date(pet.getPetDob().getTime()) : null);
+            ps.setString(3, pet.getPetOrigin());
+            ps.setString(4, pet.getPetGender());
+            ps.setInt(5, pet.getPetAvailability());
+            ps.setString(6, pet.getPetColor());
+            ps.setInt(7, pet.getPetVaccination());
+            ps.setString(8, pet.getPetDescription());
+            ps.setDouble(9, pet.getPetPrice());
+            ps.setInt(10, pet.getBreedId());
+            ps.setInt(11, pet.getCreatedBy());
+            ps.setInt(12, pet.getPetStatus());
+            ps.setInt(13, id);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
     public boolean updatePetStatusById(int id, int status) {
         String sql = "UPDATE PetTB SET petStatus = ? WHERE petId = ?";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {

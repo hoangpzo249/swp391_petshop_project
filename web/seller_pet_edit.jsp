@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="card">
-                    <form action="seller-edit-pet" method="POST" enctype="multipart/form-data">
+                    <form action="updatepet" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="petId" value="${pet.petId}">
                         <div class="card-body">
                             <div class="form-grid">
@@ -152,7 +152,6 @@
                                 <div></div>
 
 
-                                <%-- Full Width Sections (Spanning both columns) --%>
                                 <%-- Full Width Section for the Statuses --%>
                                 <div class="form-full-width">
                                     <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #555;">Trạng thái</label>

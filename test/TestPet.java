@@ -3,6 +3,7 @@ import DAO.PetDAO;
 import DAO.PetImageDAO;
 import Models.Pet;
 import Models.PetImage;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +21,14 @@ public class TestPet {
     private static PetImageDAO _daoimage = new PetImageDAO();
 
     public static void main(String[] args) {
-        List<PetImage> list=getImages(1);
-        for (PetImage petImage : list) {
-            System.out.println(petImage.toString());
-        }
+        Pet pet=_dao.getPetById(1);
+        pet.setPetName("Vàng 2");
+        pet.setPetDob(new Date(2022, 1, 1));
+        System.out.println(updatePet(1, pet));
+    }
+    
+    private static boolean updatePet(int id, Pet pet) {
+        return _dao.updatePetById(id, pet);
     }
     
     private static List<PetImage> getImages(int id) {
