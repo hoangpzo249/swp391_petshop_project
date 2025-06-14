@@ -5,8 +5,8 @@
 package Models;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -245,16 +245,20 @@ public class Pet {
         }
         return "images/defaultcatdog.png";
     }
-
-    public int getPetAgeInMonths() {
-        if (petDob == null) {
-            return 0;
+     public List<String> getImagesBase64List() {
+    List<String> result = new ArrayList<>();
+    if (images != null && images.size() > 1) {
+        for (int i = 1; i < images.size(); i++) {
+            byte[] img = images.get(i);
+            if (img != null && img.length > 0) {
+                result.add("data:image/png;base64," + Base64.getEncoder().encodeToString(img));
+            }
         }
-        Calendar now = Calendar.getInstance();
-        Calendar birth = Calendar.getInstance();
-        birth.setTime(petDob);
-        int months = (now.get(Calendar.YEAR) - birth.get(Calendar.YEAR)) * 12
-                + now.get(Calendar.MONTH) - birth.get(Calendar.MONTH);
-        return months;
     }
+    return result;
+}
+
+
+
+    
 }

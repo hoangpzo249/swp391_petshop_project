@@ -8,6 +8,7 @@ import DAO.BreedDAO;
 import DAO.CartDAO;
 import DAO.PetDAO;
 import Models.Account;
+import Models.Breed;
 import Models.Cart;
 import Models.Pet;
 import jakarta.servlet.ServletException;
@@ -32,8 +33,8 @@ public class ListShopPetServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         CartDAO _daoCart = new CartDAO();
-        if (session.getAttribute("account") != null) {
-            int accountId = ((Account) session.getAttribute("account")).getAccId();
+        if (session.getAttribute("userAccount") != null) {
+            int accountId = ((Account) session.getAttribute("userAccount")).getAccId();
             List<Cart> carts = _daoCart.getCart(accountId);
             List<Cart> filtered = new ArrayList<>();
             PetDAO petDao = new PetDAO();
@@ -68,12 +69,17 @@ public class ListShopPetServlet extends HttpServlet {
         }
 
         PetDAO petDAO = new PetDAO();
-        BreedDAO breedDAO = new BreedDAO();
         int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
         int pageSize = 12;
+        List<String> listSpecies = petDAO.getAllSpecies();
+        List<Breed> listBreed = null;
 
-        String breed = request.getParameter("breed");
+        
         String species = request.getParameter("species");
+        if (species != null && !species.isEmpty()) {
+            listBreed = petDAO.getBreedsBySpecies(species);
+        }
+        String breed = request.getParameter("breed");
         String search = request.getParameter("search");
         search = (search != null) ? search.trim() : "";
 
@@ -118,8 +124,8 @@ public class ListShopPetServlet extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
 
-        request.setAttribute("listDogBreed", breedDAO.displayDogBreeds());
-        request.setAttribute("listCatBreed", breedDAO.displayCatBreeds());
+        request.setAttribute("listSpecies", listSpecies);
+        request.setAttribute("listBreedBySpecies", listBreed);
 
         request.setAttribute("listOrigin", petDAO.getAllOrigins());
         request.setAttribute("dobFrom", dobFrom);

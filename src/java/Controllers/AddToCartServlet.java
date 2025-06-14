@@ -8,7 +8,6 @@ import DAO.CartDAO;
 import DAO.PetDAO;
 import Models.Account;
 import Models.Cart;
-import Models.Pet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -69,12 +68,12 @@ public class AddToCartServlet extends HttpServlet {
 
         String idStr = request.getParameter("id");
 
-        if (idStr != null && session != null) {
-            try {
+        if (idStr != null) {
+          
 
                 int petId = Integer.parseInt(idStr);
 
-                Account acc = (Account) session.getAttribute("account");
+                Account acc = (Account) session.getAttribute("userAccount");
 
                 if (acc != null) {
                     int accId = acc.getAccId();
@@ -120,9 +119,7 @@ public class AddToCartServlet extends HttpServlet {
                response.sendRedirect("displaypet?id=" + idStr);
 
 
-            } catch (NumberFormatException e) {
-
-            }
+           
         }
     }
 
@@ -139,7 +136,7 @@ public class AddToCartServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
+/*
     /**
      * Returns a short description of the servlet.
      *
