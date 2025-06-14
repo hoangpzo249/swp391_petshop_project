@@ -43,22 +43,55 @@
 
                 <div class="accountcard">
                     <c:choose>
-                        <c:when test="${not empty sessionScope.account}">
+                        <c:when test="${sessionScope.userAccount != null}">
                             <div class="account-dropdown">
                                 <a href="#" class="account-trigger">
-                                    <img src="images/account.png" width="50" height="50" alt="account"/>
+                                    <!-- Cố định kích thước hình ảnh -->
+                                    <img src="images/support button/account.png" width="50" height="50" alt="account"/>
                                     <p class="username">Tài khoản</p>
                                 </a>
                                 <div class="dropdown-content">
-                                    <c:if test="${sessionScope.account.accRole eq 'Admin'}">
-                                        <a href="admin.jsp" class="dropdown-item">
-                                            <i class="fas fa-user-cog"></i> 
-                                            <span>Admin Panel</span>
-                                        </a>
-                                    </c:if>
-                                    <a href="account_profile_user.jsp" class="dropdown-item">
+                                    <c:choose>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Admin'}">
+                                            <a href="admin-panel" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Admin</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Manager'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Manager</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Saler</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Shipper</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                    <a href="profile" class="dropdown-item">
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
+                                    </a>
+                                    <a href="orders" class="dropdown-item">
+                                        <i class="fas fa-shopping-bag"></i> 
+                                        <span>Đơn hàng đã mua</span>
                                     </a>
                                     <a href="logout" class="dropdown-item logout">
                                         <i class="fas fa-sign-out-alt"></i> 
@@ -162,7 +195,7 @@
                     <div class="address-info">
                         <h3>Thông tin nhận hàng</h3>
                         <c:choose>
-                            <c:when test="${not empty sessionScope.account}">
+                            <c:when test="${not empty sessionScope.userAccount}">
                                 <p><strong>Tên:</strong> ${name}</p>
                                 <input type="hidden" name="guestName" value="${name}" />
 
@@ -227,10 +260,10 @@
 
 
                     <label class="terms-label">
-                        <input type="checkbox" required />
+                        <input type="checkbox" name="agreedTerms" value="true" ${agreedTerms == 'true' ? 'checked' : ''} required />
                         Tôi đồng ý với <a href="#" onclick="openTerms(); return false;" class="terms-link">điều khoản</a>
-
                     </label>
+
 
 
                     <button type="submit" id="checkout" name="action" value="checkout" class="checkout-btn">Tiến hành thanh toán</button>
@@ -276,7 +309,7 @@
             });
         </script>
 
-       
+
         <div id="terms" class="modal-overlay" style="display:none;">
             <div class="modal-box">
                 <h3>Điều khoản mua bán thú cưng</h3>
