@@ -64,7 +64,7 @@ public class PetDAO {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
         return images;
     }

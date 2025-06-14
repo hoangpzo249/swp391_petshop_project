@@ -69,8 +69,8 @@ public class AddToCartServlet extends HttpServlet {
 
         String idStr = request.getParameter("id");
 
-        if (idStr != null && session != null) {
-            try {
+        if (idStr != null) {
+          
 
                 int petId = Integer.parseInt(idStr);
 
@@ -120,9 +120,7 @@ public class AddToCartServlet extends HttpServlet {
                response.sendRedirect("displaypet?id=" + idStr);
 
 
-            } catch (NumberFormatException e) {
-
-            }
+           
         }
     }
 
@@ -139,7 +137,7 @@ public class AddToCartServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
+/*
     /**
      * Returns a short description of the servlet.
      *

@@ -25,7 +25,7 @@ public class DiscountDAO extends DBContext {
 
             conn = getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, code.trim().toUpperCase());
+            ps.setString(1, code.trim());
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -67,65 +67,5 @@ public class DiscountDAO extends DBContext {
         return d;
     }
 
-    public void insertOrderDiscount(int orderId, String discountCode) {
-        try {
-            Discount d = getActiveDiscountByCode(discountCode);
-            if (d == null) {
-                return;
-            }
-
-            String sql = "INSERT INTO OrderDiscountTB (orderId, discountId) VALUES (?, ?)";
-            conn = getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, orderId);
-            ps.setInt(2, d.getDiscountId());
-            ps.executeUpdate();
-        } catch (Exception e) {
-
-        }
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (ps != null) {
-                ps.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    public void increaseUsageCount(String discountCode) {
-        String sql = "UPDATE DiscountTB SET usageCount = usageCount + 1 WHERE discountCode = ?";
-        try {
-            conn = getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, discountCode.trim().toUpperCase());
-            ps.executeUpdate();
-        } catch (Exception e) {
-           
-        }
-        try {
-            if (ps != null) {
-                ps.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (Exception e) {
-        }
-
-    }
-
+   
 }

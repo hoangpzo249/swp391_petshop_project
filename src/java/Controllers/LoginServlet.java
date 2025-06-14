@@ -94,7 +94,7 @@ public class LoginServlet extends HttpServlet {
                     }
                 }
 
-                session.removeAttribute("guestCart");
+
                
             }
 
