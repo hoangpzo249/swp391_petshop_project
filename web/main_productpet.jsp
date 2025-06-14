@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
-        <link href="css/main_product.css?v=30" rel="stylesheet" type="text/css"/>
+        <link href="css/main_product.css?v=32" rel="stylesheet" type="text/css"/>
         <script src="js/readmore_product.js" type="text/javascript"></script>
         
 

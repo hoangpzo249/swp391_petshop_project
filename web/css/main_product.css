@@ -481,3 +481,79 @@ body {
         opacity: 1;
     }
 }
+
+/* --- NỀN TOÀN TRANG --- */
+body {
+    background: linear-gradient(to bottom, #fff3e6, #ffe5cc);
+}
+
+/* --- KHUNG CHÍNH THÚ CƯNG --- */
+.product-wrapper {
+    background: #fffaf5;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(255, 165, 0, 0.2);
+    border: 1px solid #ffe0b2;
+}
+
+/* --- TIÊU ĐỀ TÊN THÚ CƯNG --- */
+.product-title {
+    color: #f26f21;
+    text-shadow: none;
+}
+
+/* --- GIÁ VÀ NÚT GIỎ HÀNG --- */
+.price-section {
+    color: #ff6f00;
+}
+.add-to-cart {
+    background: linear-gradient(to right, #ffa726, #fb8c00);
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 14px 28px;
+    box-shadow: 0 4px 12px rgba(255, 105, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.add-to-cart:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 16px rgba(255, 105, 0, 0.4);
+}
+
+/* --- MÔ TẢ SẢN PHẨM --- */
+.description-section {
+    background: #fff8f1;
+    border: 1px solid #ffd6a0;
+    box-shadow: 0 8px 24px rgba(255, 160, 0, 0.1);
+}
+
+/* --- THÚ CƯNG TƯƠNG TỰ --- */
+.detail-favo-item {
+    background-color: #fffaf0;
+    border: 1px solid #ffcc80;
+    box-shadow: 0 4px 16px rgba(255, 165, 0, 0.15);
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+}
+.detail-favo-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 6px 20px rgba(255, 165, 0, 0.25);
+}
+
+/* --- SALE BADGE --- */
+.sale-badge {
+    background-color: #f44336;
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+/* --- GIÁ VỚI ICON CHÂN MÈO --- */
+.tym-item::after {
+    content: ' 🐾';
+    font-size: 18px;
+}
+
+/* --- ABOUT SECTION VÀ FOOTER ĐỒNG BỘ MÀU --- */
+.about-section {
+    background-color: #fff3e6;
+}

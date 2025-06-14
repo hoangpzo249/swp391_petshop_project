@@ -64,7 +64,7 @@ public class PetDAO {
                 }
             }
         } catch (Exception ex) {
-            
+
         }
         return images;
     }
@@ -139,7 +139,7 @@ public class PetDAO {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+
         }
         return list;
     }
@@ -162,7 +162,7 @@ public class PetDAO {
             conn.commit();
             return true;
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, "Error updating pet availability", ex);
+
             return false;
         }
     }
@@ -189,7 +189,7 @@ public class PetDAO {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+
         }
         return list;
     }
@@ -208,7 +208,7 @@ public class PetDAO {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+
         }
         return list;
     }
@@ -232,24 +232,9 @@ public class PetDAO {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+
         }
         return pet;
-    }
-
-    public List<Pet> getAllPets() {
-        List<Pet> list = new ArrayList<>();
-        String sql = "SELECT * FROM PetTB";
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Pet pet = PetInfo(rs);
-                pet.setImages(getImagesByPetId(pet.getPetId()));
-                list.add(pet);
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
     }
 
     public List<String> getAllOrigins() {
@@ -260,7 +245,7 @@ public class PetDAO {
                 list.add(rs.getString("petOrigin"));
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+
         }
         return list;
     }
@@ -273,7 +258,7 @@ public class PetDAO {
                 list.add(rs.getString("petGender"));
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+
         }
         return list;
     }
@@ -286,39 +271,7 @@ public class PetDAO {
                 list.add(rs.getString("petColor"));
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
-    }
 
-    public static int getAgeInMonths(Date dob) {
-        Calendar birth = Calendar.getInstance();
-        birth.setTime(dob);
-        Calendar now = Calendar.getInstance();
-        int years = now.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
-        int months = now.get(Calendar.MONTH) - birth.get(Calendar.MONTH);
-        return years * 12 + months;
-    }
-
-    public List<String> getAllAgeRanges() {
-        List<String> list = new ArrayList<>();
-        String sql = "SELECT petDob FROM PetTB WHERE petDob IS NOT NULL";
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Date dob = rs.getDate("petDob");
-                int months = getAgeInMonths(dob);
-                if (months < 30 && !list.contains("Dưới 2.5 tuổi")) {
-                    list.add("Dưới 2.5 tuổi");
-                } else if (months >= 30 && months <= 36 && !list.contains("2.5 – 3 tuổi")) {
-                    list.add("2.5 – 3 tuổi");
-                } else if (months >= 37 && months <= 44 && !list.contains("3 – 3.5 tuổi")) {
-                    list.add("3 – 3.5 tuổi");
-                } else if (months >= 45 && !list.contains("Trên 3.5 tuổi")) {
-                    list.add("Trên 3.5 tuổi");
-                }
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -332,7 +285,46 @@ public class PetDAO {
                 list.add(status == 1 ? "Đã tiêm" : "Chưa tiêm");
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        return list;
+    }
+
+    public List<String> getAllSpecies() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT breedSpecies FROM BreedTB WHERE breedStatus = 1";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(rs.getString(1));
+            }
+        } catch (Exception e) {
+
+        }
+        return list;
+    }
+
+    public List<Breed> getBreedsBySpecies(String species) {
+        List<Breed> list = new ArrayList<>();
+        String query = "SELECT * FROM BreedTB WHERE breedSpecies = ? ";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, species);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Breed(
+                        rs.getInt("breedId"),
+                        rs.getString("breedName"),
+                        rs.getString("breedSpecies"),
+                        rs.getBoolean("breedStatus"),
+                        rs.getBytes("breedImage")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -341,13 +333,6 @@ public class PetDAO {
             String gender, String color, String origin, String dobFrom, String dobTo, String vaccinationStatus) {
 
         List<Pet> listPet = new ArrayList<>();
-
-        if (breed == null || breed.isEmpty()) {
-            breed = "%";
-        }
-        if (species == null || species.isEmpty()) {
-            species = "%";
-        }
         if (search == null || search.isEmpty()) {
             search = "%";
         } else {
@@ -359,10 +344,10 @@ public class PetDAO {
             String sql = "SELECT p.*, b.breedName FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
                     + "WHERE p.petAvailability = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?)";
 
-            if (!"%".equals(breed)) {
+            if (breed != null && !breed.isEmpty()) {
                 sql += " AND b.breedId = ?";
             }
-            if (!"%".equals(species)) {
+            if (species != null && !species.isEmpty()) {
                 sql += " AND b.breedSpecies = ?";
             }
             if (num1 != 0 || num2 != 0) {
@@ -408,10 +393,10 @@ public class PetDAO {
             int i = 1;
             ps.setString(i++, search);
             ps.setString(i++, search);
-            if (!"%".equals(breed)) {
+            if (breed != null && !breed.isEmpty()) {
                 ps.setInt(i++, Integer.parseInt(breed));
             }
-            if (!"%".equals(species)) {
+            if (species != null && !species.isEmpty()) {
                 ps.setString(i++, species);
             }
             if (num1 != 0 || num2 != 0) {

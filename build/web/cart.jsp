@@ -17,7 +17,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <script src="js/cart_selection.js?v=19" type="text/javascript"></script>
-        <link href="css/cart.css?v=6" rel="stylesheet" type="text/css"/>
+        <link href="css/cart.css?v=9" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 
@@ -138,49 +138,49 @@
                         </tr>
                     </thead>
                     <tbody>
-                       
-
-
-
-                    <c:forEach items="${pets}" var="pet">
-                        <tr class="cart-item">
-                            <td>
-                                <input type="checkbox" class="item-check" data-price="${pet.petPrice}" 
-                                       form="confirmForm" name="selectedPets" value="${pet.petId}" />
-                            </td>
-
-
-                            <td class="item-info">
-                                <a href="displaypet?id=${pet.petId}" class="item-link">
-                                    <img src="${pet.petImageBase64}" alt="${pet.petName}" class="cart-img" />
-                                    <div>
-                                        <div class="item-title">${pet.petName}</div>
-                                        <div class="item-price">Giá: <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></div>
-                                    </div>
-                                </a>
-                            </td>
-                            <td>
-                                <input type="number" name="quantity" value="1" class="qty-input" readonly="readonly" />
-                            </td>
-                            <td> <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></td>
 
 
 
 
+                        <c:forEach items="${pets}" var="pet">
+                            <tr class="cart-item">
+                                <td>
+                                    <input type="checkbox" class="item-check" data-price="${pet.petPrice}" 
+                                           form="confirmForm" name="selectedPets" value="${pet.petId}" />
+                                </td>
 
-                            <td class="item-action">
 
-                                <form action="deletefromcart" method="GET" style="display:inline;">
-                                    <input type="hidden" name="id" value="${pet.petId}" />
+                                <td class="item-info">
+                                    <a href="displaypet?id=${pet.petId}" class="item-link">
+                                        <img src="${pet.petImageBase64}" alt="${pet.petName}" class="cart-img" />
+                                        <div>
+                                            <div class="item-title">${pet.petName}</div>
+                                            <div class="item-price">Giá: <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></div>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td>
+                                    <input type="number" name="quantity" value="1" class="qty-input" readonly="readonly" />
+                                </td>
+                                <td> <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></td>
 
-                                    <button class="btn-delete" title="Xóa sản phẩm">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
 
-                        </tr>
-                    </c:forEach>
+
+
+
+                                <td class="item-action">
+
+                                    <form action="deletefromcart" method="GET" style="display:inline;">
+                                        <input type="hidden" name="id" value="${pet.petId}" />
+
+                                        <button class="btn-delete" title="Xóa sản phẩm">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+
+                            </tr>
+                        </c:forEach>
                     </tbody>
                 </table>
 
@@ -270,7 +270,7 @@
                         }, 3500);
                     }
 
-                    
+
                     <c:if test="${not empty sessionScope.cartMessage}">
                     showToast('${sessionScope.cartMessage}', 'error');
                     </c:if>
@@ -284,6 +284,9 @@
                 <footer>
                     © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
                 </footer>
+               
+
+                
 
                 </body>
                 </html>
