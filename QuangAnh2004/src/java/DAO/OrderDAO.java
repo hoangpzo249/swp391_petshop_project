@@ -38,6 +38,7 @@ public class OrderDAO extends DBContext{
                 o.setShipperId(rs.getInt("shipperId"));
                 o.setPaymentMethod(rs.getString("paymentMethod"));
                 o.setPaymentStatus(rs.getString("paymentStatus"));
+                o.setRejectionReason(rs.getString("rejectionReason"));
                 list.add(o);
             }
         }
@@ -83,5 +84,13 @@ public class OrderDAO extends DBContext{
             e.printStackTrace();
         }
         return false;
+    }
+    
+     public static void main(String[] args){
+        OrderDAO  o = new OrderDAO();
+        var list = o.getOrdersByAccount(6);
+        for (Order order : list){
+            System.out.println(order.toString());
+        }
     }
 }

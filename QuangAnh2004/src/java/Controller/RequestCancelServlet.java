@@ -7,6 +7,7 @@ package Controller;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import DAO.DBContext;
+import DAO.OrderDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -71,29 +72,22 @@ public class RequestCancelServlet extends HttpServlet {
         String orderIdStr = request.getParameter("orderId");
 
         if (orderIdStr == null) {
-            response.sendRedirect("error.jsp");
+            request.setAttribute("error", "Thiếu mã đơn hàng.");
+            request.getRequestDispatcher("order.jsp").forward(request, response);
             return;
         }
 
         int orderId = Integer.parseInt(orderIdStr);
+        OrderDAO dao = new OrderDAO();
+        boolean success = dao.requestCancelOrder(orderId);
 
-        try {
-            DBContext db = new DBContext();
-            try (
-                Connection conn = db.getConnection();
-                PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE OrderTB SET orderStatus = ? WHERE orderId = ? AND orderStatus = 'Paid'"
-                )
-            ) {
-                ps.setString(1, "Cancel Requested");
-                ps.setInt(2, orderId);
-                ps.executeUpdate();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (success) {
+            request.setAttribute("message", "Yêu cầu hủy đơn hàng đã được gửi.");
+        } else {
+            request.setAttribute("error", "Không thể gửi yêu cầu hủy. Đơn hàng chưa thanh toán hoặc đã được xử lý.");
         }
 
-        response.sendRedirect("ViewOrderServlet");
+        request.getRequestDispatcher("ViewOrderServlet").forward(request, response);
     }
 
     /** 

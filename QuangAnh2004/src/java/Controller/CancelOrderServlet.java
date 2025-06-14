@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import DAO.DBContext;
+import DAO.OrderDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -56,32 +57,26 @@ public class CancelOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String orderIdStr = request.getParameter("orderId");
+         String orderIdStr = request.getParameter("orderId");
 
         if (orderIdStr == null) {
-            response.sendRedirect("error.jsp");
+            request.setAttribute("error", "Thiếu mã đơn hàng.");
+            request.getRequestDispatcher("order.jsp").forward(request, response);
             return;
         }
 
         int orderId = Integer.parseInt(orderIdStr);
+        OrderDAO dao = new OrderDAO();
+        boolean success = dao.cancelOrder(orderId);
 
-        try {
-            DBContext db = new DBContext();
-            try (
-                Connection conn = db.getConnection();
-                PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE OrderTB SET orderStatus = ? WHERE orderId = ? AND orderStatus = 'Pending'"
-                )
-            ) {
-                ps.setString(1, "Cancelled");
-                ps.setInt(2, orderId);
-                ps.executeUpdate();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (success) {
+            request.setAttribute("message", "Đơn hàng đã được hủy thành công.");
+        } else {
+            request.setAttribute("error", "Hủy đơn hàng thất bại. Có thể đơn đã được xử lý.");
         }
 
-        response.sendRedirect("ViewOrderServlet");
+        // Forward về lại trang danh sách đơn
+        request.getRequestDispatcher("ViewOrderServlet").forward(request, response);
     } 
 
     /** 

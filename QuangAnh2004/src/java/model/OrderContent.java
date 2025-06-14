@@ -12,15 +12,23 @@ public class OrderContent {
     private int orderContentId;
     private int orderId;
     private int petId;
+    private double priceAtOrder;
+    
+    private Pet pet; 
 
+    
     public OrderContent() {
     }
-
-    public OrderContent(int orderContentId, int orderId, int petId) {
+    
+    public OrderContent(int orderContentId, int orderId, int petId, double priceAtOrder, Pet pet) {
         this.orderContentId = orderContentId;
         this.orderId = orderId;
         this.petId = petId;
+        this.priceAtOrder = priceAtOrder;
+        this.pet = pet;
     }
+
+
 
     public int getOrderContentId() {
         return orderContentId;
@@ -46,9 +54,27 @@ public class OrderContent {
         this.petId = petId;
     }
 
+    public double getPriceAtOrder() {
+        return priceAtOrder;
+    }
+
+    public void setPriceAtOrder(double priceAtOrder) {
+        this.priceAtOrder = priceAtOrder;
+    }
+
+    public Pet getPet() {
+        return pet;
+    }
+
+    public void setPet(Pet pet) {
+        this.pet = pet;
+    }
+
     @Override
     public String toString() {
-        return "OrderContent{" + "orderContentId=" + orderContentId + ", orderId=" + orderId + ", petId=" + petId + '}';
+        return "OrderContent{" + "orderContentId=" + orderContentId + ", orderId=" + orderId + ", petId=" + petId + ", priceAtOrder=" + priceAtOrder + ", pet=" + pet + '}';
     }
+
+    
     
 }

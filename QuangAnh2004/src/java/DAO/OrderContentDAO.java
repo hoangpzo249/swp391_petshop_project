@@ -9,29 +9,36 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import model.OrderContent;
+
 /**
  *
  * @author QuangAnh
  */
-public class OrderContentDAO extends DBContext{
+public class OrderContentDAO extends DBContext {
     public List<OrderContent> getByOrderId(int orderId) {
         List<OrderContent> list = new ArrayList<>();
-        String query = "SELECT orderContentId, orderId, petId FROM OrderContentTB WHERE orderId = ?";
+        String query = "SELECT orderContentId, orderId, petId, priceAtOrder FROM OrderContentTB WHERE orderId = ?";
+
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(query)) {
+
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                OrderContent oc = new OrderContent(
-                    rs.getInt("orderContentId"),
-                    rs.getInt("orderId"),
-                    rs.getInt("petId")
-                );
+                OrderContent oc = new OrderContent();
+
+                oc.setOrderContentId(rs.getInt("orderContentId"));
+                oc.setOrderId(rs.getInt("orderId"));
+                oc.setPetId(rs.getInt("petId"));
+                oc.setPriceAtOrder(rs.getDouble("priceAtOrder"));
+
                 list.add(oc);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return list;
     }
 }

@@ -5,7 +5,9 @@
 
 package Controller;
 
+import DAO.OrderContentDAO;
 import DAO.OrderDAO;
+import DAO.PetDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,6 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Order;
+import model.OrderContent;
+import model.Pet;
 
 /**
  *
@@ -58,18 +62,28 @@ public class ViewOrderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        Integer accId = (Integer) session.getAttribute("accId");
+    Integer accId = (Integer) session.getAttribute("accId");
+    if (accId == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
 
-        if (accId == null) {
-            response.sendRedirect("login_account_page.jsp");
-            return;
+    OrderDAO orderDAO = new OrderDAO();
+    OrderContentDAO ocDAO = new OrderContentDAO();
+    PetDAO petDAO = new PetDAO();
+
+    List<Order> orders = orderDAO.getOrdersByAccount(accId);
+    for (Order order : orders) {
+        List<OrderContent> contents = ocDAO.getByOrderId(order.getOrderId());
+        for (OrderContent oc : contents) {
+            Pet pet = petDAO.getPetById(oc.getPetId());
+            oc.setPet(pet); // Gộp dữ liệu thú cưng vào dòng OrderContent
         }
+        order.setOrderContents(contents); // Gán toàn bộ nội dung đơn hàng vào đơn
+    }
 
-        OrderDAO dao = new OrderDAO();
-        List<Order> orderList = dao.getOrdersByAccount(accId);
-
-        request.setAttribute("orderList", orderList);
-        request.getRequestDispatcher("order.jsp").forward(request, response);
+    request.setAttribute("orderList", orders);
+    request.getRequestDispatcher("order.jsp").forward(request, response);
     }
 
     /** 

@@ -35,16 +35,25 @@
         </tr>
         <c:forEach var="order" items="${requestScope.orderList}">
         <tr>
-            <td>${order.orderId}</td>
-            <td>${order.orderDate}</td>
-            <td>${order.orderStatus}</td>
-            <td>${order.paymentMethod}</td>
-            <td>${order.paymentStatus}</td>
-            <td>${order.customerName}</td>
-            <td>${order.customerPhone}</td>
-            <td>${order.customerEmail}</td>
-            <td>${order.customerAddress}</td>
-            <td>
+                    <td>${order.orderId}</td>
+                    <td>${order.accId}</td>
+                    <td>${order.orderDate}</td>
+                    <td>${order.orderStatus}</td>
+                    <td>${order.customerName}</td>
+                    <td>${order.customerEmail}</td>
+                    <td>${order.customerPhone}</td>
+                    <td>${order.customerAddress}</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${order.shipperId == 0}">NULL</c:when>
+                            <c:otherwise>${order.shipperId}</c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>${order.paymentMethod}</td>
+                    <td>${order.paymentStatus}</td>
+                    <td>
+                        <c:out value="${order.rejectionReason}" default="NULL" />
+                    </td>
 
               <c:choose>
                     <c:when test="${order.status == 'Pending'}">

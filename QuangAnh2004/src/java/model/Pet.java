@@ -24,13 +24,14 @@ public class Pet {
     private double petPrice;
     private int breedId;
     private String createdBy;
+    private boolean petStatus;
 
     // Getters & Setters...
 
     public Pet() {
     }
 
-    public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender, boolean petAvailability, String petColor, boolean petVaccination, String petDescription, double petPrice, int breedId, String createdBy) {
+    public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender, boolean petAvailability, String petColor, boolean petVaccination, String petDescription, double petPrice, int breedId, String createdBy, boolean petStatus) {
         this.petId = petId;
         this.petName = petName;
         this.petDob = petDob;
@@ -43,6 +44,7 @@ public class Pet {
         this.petPrice = petPrice;
         this.breedId = breedId;
         this.createdBy = createdBy;
+        this.petStatus = petStatus;
     }
 
     public int getPetId() {
@@ -141,10 +143,19 @@ public class Pet {
         this.createdBy = createdBy;
     }
 
+    public boolean isPetStatus() {
+        return petStatus;
+    }
+
+    public void setPetStatus(boolean petStatus) {
+        this.petStatus = petStatus;
+    }
+
     @Override
     public String toString() {
-        return "Pet{" + "petId=" + petId + ", petName=" + petName + ", petDob=" + petDob + ", petOrigin=" + petOrigin + ", petGender=" + petGender + ", petAvailability=" + petAvailability + ", petColor=" + petColor + ", petVaccination=" + petVaccination + ", petDescription=" + petDescription + ", petPrice=" + petPrice + ", breedId=" + breedId + ", createdBy=" + createdBy + '}';
+        return "Pet{" + "petId=" + petId + ", petName=" + petName + ", petDob=" + petDob + ", petOrigin=" + petOrigin + ", petGender=" + petGender + ", petAvailability=" + petAvailability + ", petColor=" + petColor + ", petVaccination=" + petVaccination + ", petDescription=" + petDescription + ", petPrice=" + petPrice + ", breedId=" + breedId + ", createdBy=" + createdBy + ", petStatus=" + petStatus + '}';
     }
+
     
 }
 

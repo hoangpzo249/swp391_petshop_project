@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 public class DBContext {
 
     private final String serverName = "localhost";
-    private final String dbName = "FPTPet";
+    private final String dbName = "PetShopFPT_DB";
     private final String portNumber = "14330";
     private final String userID = "sa";
     private final String password = "123";

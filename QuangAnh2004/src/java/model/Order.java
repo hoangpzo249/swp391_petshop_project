@@ -5,6 +5,7 @@
 package model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -23,13 +24,14 @@ public class Order {
     private int shipperId;
     private String paymentMethod;
     private String paymentStatus;
-    
+    private String rejectionReason;
     // Getters và setters
-
+    
+    private List<OrderContent> orderContents;
     public Order() {
     }
 
-    public Order(int orderId, int accId, Date orderDate, String orderStatus, String customerName, String customerEmail, String customerPhone, String customerAddress, int shipperId, String paymentMethod, String paymentStatus) {
+    public Order(int orderId, int accId, Date orderDate, String orderStatus, String customerName, String customerEmail, String customerPhone, String customerAddress, int shipperId, String paymentMethod, String paymentStatus, String rejectionReason, List<OrderContent> orderContents) {
         this.orderId = orderId;
         this.accId = accId;
         this.orderDate = orderDate;
@@ -41,6 +43,8 @@ public class Order {
         this.shipperId = shipperId;
         this.paymentMethod = paymentMethod;
         this.paymentStatus = paymentStatus;
+        this.rejectionReason = rejectionReason;
+        this.orderContents = orderContents;
     }
 
     public int getOrderId() {
@@ -131,9 +135,28 @@ public class Order {
         this.paymentStatus = paymentStatus;
     }
 
-    @Override
-    public String toString() {
-        return "Order{" + "orderId=" + orderId + ", accId=" + accId + ", orderDate=" + orderDate + ", orderStatus=" + orderStatus + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", customerPhone=" + customerPhone + ", customerAddress=" + customerAddress + ", shipperId=" + shipperId + ", paymentMethod=" + paymentMethod + ", paymentStatus=" + paymentStatus + '}';
+    public String getRejectionReason() {
+        return rejectionReason;
     }
 
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
+
+    public List<OrderContent> getOrderContents() {
+        return orderContents;
+    }
+
+    public void setOrderContents(List<OrderContent> orderContents) {
+        this.orderContents = orderContents;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" + "orderId=" + orderId + ", accId=" + accId + ", orderDate=" + orderDate + ", orderStatus=" + orderStatus + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", customerPhone=" + customerPhone + ", customerAddress=" + customerAddress + ", shipperId=" + shipperId + ", paymentMethod=" + paymentMethod + ", paymentStatus=" + paymentStatus + ", rejectionReason=" + rejectionReason + ", orderContents=" + orderContents + '}';
+    }
+
+    
+
+    
 }
