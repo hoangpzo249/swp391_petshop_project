@@ -22,9 +22,9 @@ public class CartDAO {
         try {
             conn = db.getConnection();
             String sql = "SELECT COUNT(*) AS totalItems "
-                       + "FROM CartContentTB cc "
-                       + "JOIN CartTB c ON cc.cartId = c.cartId "
-                       + "WHERE c.accId = ?";
+                    + "FROM CartContentTB cc "
+                    + "JOIN CartTB c ON cc.cartId = c.cartId "
+                    + "WHERE c.accId = ?";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, accountId);
             rs = ps.executeQuery();
@@ -32,12 +32,27 @@ public class CartDAO {
                 return rs.getInt("totalItems");
             }
         } catch (Exception ex) {
-            // handle or log as needed
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+
         }
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+        }
+
         return 0;
     }
 
@@ -48,9 +63,9 @@ public class CartDAO {
         try {
             conn = db.getConnection();
             String sql = "SELECT COUNT(*) AS total "
-                       + "FROM CartTB c "
-                       + "JOIN CartContentTB cc ON c.cartId = cc.cartId "
-                       + "WHERE c.accId = ? AND cc.petId = ?";
+                    + "FROM CartTB c "
+                    + "JOIN CartContentTB cc ON c.cartId = cc.cartId "
+                    + "WHERE c.accId = ? AND cc.petId = ?";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, accId);
             ps.setInt(2, petId);
@@ -59,11 +74,26 @@ public class CartDAO {
                 return true;
             }
         } catch (Exception ex) {
-            // handle or log as needed
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            
+        } 
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            
         }
         return false;
     }
@@ -110,11 +140,26 @@ public class CartDAO {
             ps.executeUpdate();
 
         } catch (Exception ex) {
-            // handle or log as needed
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            
+        } 
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            
         }
     }
 
@@ -140,11 +185,26 @@ public class CartDAO {
             }
 
         } catch (Exception ex) {
-            // handle or log as needed
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            
+        } 
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            
         }
     }
 
@@ -156,9 +216,9 @@ public class CartDAO {
         try {
             conn = db.getConnection();
             String sql = "SELECT cc.petId, cc.addedAt "
-                       + "FROM CartTB c "
-                       + "JOIN CartContentTB cc ON c.cartId = cc.cartId "
-                       + "WHERE c.accId = ?";
+                    + "FROM CartTB c "
+                    + "JOIN CartContentTB cc ON c.cartId = cc.cartId "
+                    + "WHERE c.accId = ?";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, accId);
             rs = ps.executeQuery();
@@ -169,12 +229,27 @@ public class CartDAO {
                 list.add(cart);
             }
         } catch (Exception ex) {
-            // handle or log as needed
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
-        }
+            
+        } 
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        
         return list;
     }
 }

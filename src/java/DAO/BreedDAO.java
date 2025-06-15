@@ -109,7 +109,7 @@ public class BreedDAO {
                 list.add(rs.getString("breedSpecies"));
             }
         } catch (Exception ex) {
-            // handle as needed
+            
         } finally {
             try { if (rs != null) rs.close(); } catch (Exception e) {}
             try { if (ps != null) ps.close(); } catch (Exception e) {}
@@ -117,4 +117,28 @@ public class BreedDAO {
         }
         return list;
     }
+    
+    public List<Breed> getBreedsBySpecies(String species) {
+        List<Breed> list = new ArrayList<>();
+        String sql = "SELECT * FROM BreedTB WHERE breedSpecies = ? ";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, species);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Breed(
+                        rs.getInt("breedId"),
+                        rs.getString("breedName"),
+                        rs.getString("breedSpecies"),
+                        rs.getBoolean("breedStatus"),
+                        rs.getBytes("breedImage")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

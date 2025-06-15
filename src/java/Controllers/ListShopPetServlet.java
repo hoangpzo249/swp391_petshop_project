@@ -33,15 +33,17 @@ public class ListShopPetServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         CartDAO _daoCart = new CartDAO();
+         PetDAO petDAO = new PetDAO();
+         BreedDAO breedDAO = new BreedDAO();
         if (session.getAttribute("userAccount") != null) {
             int accountId = ((Account) session.getAttribute("userAccount")).getAccId();
             List<Cart> carts = _daoCart.getCart(accountId);
             List<Cart> filtered = new ArrayList<>();
-            PetDAO petDao = new PetDAO();
+            
 
             for (Cart c : carts) {
                 if (c.getPetId() != null) {
-                    Pet pet = petDao.getPetById(c.getPetId());
+                    Pet pet = petDAO.getPetById(c.getPetId());
                     if (pet != null && pet.getPetAvailability() == 1) {
                         filtered.add(c);
                     }
@@ -54,10 +56,10 @@ public class ListShopPetServlet extends HttpServlet {
             List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
             int guestCount = 0;
             if (guestCart != null) {
-                PetDAO petDao = new PetDAO();
+               
                 for (Cart c : guestCart) {
                     if (c.getPetId() != null) {
-                        Pet pet = petDao.getPetById(c.getPetId());
+                        Pet pet = petDAO.getPetById(c.getPetId());
                         if (pet != null && pet.getPetAvailability() == 1) {
                             guestCount++;
                         }
@@ -68,16 +70,16 @@ public class ListShopPetServlet extends HttpServlet {
 
         }
 
-        PetDAO petDAO = new PetDAO();
+       
         int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
         int pageSize = 12;
-        List<String> listSpecies = petDAO.getAllSpecies();
+        List<String> listSpecies = breedDAO.getAllSpecies();
         List<Breed> listBreed = null;
 
         
         String species = request.getParameter("species");
         if (species != null && !species.isEmpty()) {
-            listBreed = petDAO.getBreedsBySpecies(species);
+            listBreed = breedDAO.getBreedsBySpecies(species);
         }
         String breed = request.getParameter("breed");
         String search = request.getParameter("search");

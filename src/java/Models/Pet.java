@@ -36,10 +36,11 @@ public class Pet {
     public Pet() {
     }
 
+   
     public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender,
                int petAvailability, String petColor, int petVaccination, String petDescription,
-               double petPrice, int breedId, int createdBy) {
-        this.petId = petId;
+               double petPrice, int breedId, int createdBy, int petStatus) {
+      this.petId = petId;
         this.petName = petName;
         this.petDob = petDob;
         this.petOrigin = petOrigin;
@@ -51,13 +52,6 @@ public class Pet {
         this.petPrice = petPrice;
         this.breedId = breedId;
         this.createdBy = createdBy;
-    }
-
-    public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender,
-               int petAvailability, String petColor, int petVaccination, String petDescription,
-               double petPrice, int breedId, int createdBy, int petStatus) {
-        this(petId, petName, petDob, petOrigin, petGender, petAvailability,
-             petColor, petVaccination, petDescription, petPrice, breedId, createdBy);
         this.petStatus = petStatus;
     }
 

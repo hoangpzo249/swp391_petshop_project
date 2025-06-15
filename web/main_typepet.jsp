@@ -27,7 +27,7 @@
                 </a>
             </div>
             <form action="listshoppet" method="get">
-                <!-- carry over all filters in hidden fields -->
+               
                 <input type="hidden" name="species" value="${param.species}" />
                 <input type="hidden" name="breed" value="${param.breed}" />
                 <input type="hidden" name="gender" value="${param.gender}" />
@@ -227,7 +227,7 @@
                 <label for="sort">Sắp xếp theo:</label>
                 <div class="custom-select">
                     <form action="listshoppet" method="get">
-                        <!-- preserve filters -->
+                        
                         <input type="hidden" name="species" value="${param.species}" />
                         <input type="hidden" name="breed" value="${param.breed}" />
                         <input type="hidden" name="search" value="${param.search}" />
@@ -248,7 +248,7 @@
                 </div>
             </div>
 
-            <!-- Resolved pet-list section -->
+            
             <c:if test="${empty listPet}">
                 <p style="color: red; font-weight: bold; text-align: center; margin-top: 30px;">
                     Không tìm thấy kết quả phù hợp với bộ lọc.
@@ -302,8 +302,7 @@
         </main>
     </div>
 
-    <!-- Footer & About Sections Omitted for Brevity -->
-    <!-- Keep your existing about/shop/contact/footer markup here -->
+    
 
     <footer style="background: linear-gradient(to bottom, #fff3e6, #ffe5cc); color: black">
         © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
