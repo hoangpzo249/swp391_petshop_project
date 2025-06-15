@@ -65,6 +65,7 @@ public class AddDiscount extends HttpServlet {
         // this part- validation should be place on filter  to validate data. 
         // 1. InternalValidation - this will check the condition of the data been sended from JSP-View 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
         String discountCode = request.getParameter("discountCode");
         String discountType = request.getParameter("discountType");
         String discountValueString = request.getParameter("discountValue");
@@ -86,6 +87,10 @@ public class AddDiscount extends HttpServlet {
         // check discountCode
         if (discountCode == null || discountCode.isBlank()) {
             errors.add("Discount code must not be blank");
+        } else{
+            if(discountCode.length()>50){
+                errors.add("tge length of discount code must equal or smaller than 50");
+            }
         }
         // check discountType
         if (discountType == null || discountType.isBlank()) {
@@ -105,6 +110,9 @@ public class AddDiscount extends HttpServlet {
                 if (discountValue <= 0) {
                     errors.add("the value must greatter than 0");
                 }
+                if(discountValue%(float)0.01!=0){
+                    errors.add("the discount value must devidable for 0,01");
+                }
             } catch (Exception e) {
                 errors.add("discount value must be a number");
             }
@@ -114,16 +122,19 @@ public class AddDiscount extends HttpServlet {
             errors.add("Description must not be blank");
         }
 
-        // check valid From                    
+        // check valid From
         if (validFromString == null || validFromString.isBlank()) {
             errors.add("valid from must not be blank");
         } else {
             try {
-                validFrom = dateFormatter.parse(validFromString);
-                if (validFrom.compareTo(new Date()) < 0) {
+                validFrom = dateFormatter.parse(validFromString); // valid from would receive only the day, not daytime
+                Date now = new Date();
+                Date today = dateFormatter.parse(dateFormatter.format(now));
+                // We compare valid form with this day start from 00h00m
+                if (validFrom.compareTo(today) < 0) {
                     errors.add("The from Date must equal or after today !");
                 }
-                } catch (Exception e) {
+            } catch (Exception e) {
                 errors.add("the valid from date must be the correct format");
             }
         }

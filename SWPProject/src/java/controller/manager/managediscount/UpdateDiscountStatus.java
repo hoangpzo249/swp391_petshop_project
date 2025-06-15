@@ -11,17 +11,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
-import java.util.Date;
 import model.Discount;
 
 /**
  *
  * @author Admin
  */
-public class ManageDiscount extends HttpServlet {
+public class UpdateDiscountStatus extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +37,10 @@ public class ManageDiscount extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ManageDiscount</title>");
+            out.println("<title>Servlet UpdateDiscountStatus</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ManageDiscount at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet UpdateDiscountStatus at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,49 +59,51 @@ public class ManageDiscount extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ArrayList<String> errors = new ArrayList<>();
-        String userAcction = request.getParameter("userAcction");
         DiscountDAO discountDao = new DiscountDAO();
 
-        if (userAcction == null || userAcction.isBlank()) {
-            redirectToManageDiscountPage(request, response, discountDao);
+        String updateStatusIdString = request.getParameter("updateStatusId");
+        int updateStatusId = 0;
+
+        String updateStatusString = request.getParameter("updateStatus");
+        boolean updateStatus = false;
+        // validate id 
+        if (updateStatusIdString == null || updateStatusIdString.isBlank()) {
+            errors.add("the id is not indentified");
         } else {
-            switch (userAcction) {
-                case "add": {
-//                    redirect to another servlet
-                    request.getRequestDispatcher("AddDiscount").forward(request, response);
-                    break;
+            try {
+                updateStatusId = Integer.parseInt(updateStatusIdString);
+                if (updateStatusId < 0) {
+                    errors.add("the id must greater than 0");
                 }
-                case "delete": {
-                    request.getRequestDispatcher("DeleteDiscount").forward(request, response);
-                    break;
-                }
-                case "updateStatus": {
-                    request.getRequestDispatcher("UpdateDiscountStatus").forward(request, response);
-                    break;
-                }
-                case "update": {
-                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-                    String discountCode = request.getParameter("discountCode");
-                    String discountType = request.getParameter("discountType");
-                    String discountValueString = request.getParameter("discountValue");
-                    float discountValue = 0;
-                    String description = request.getParameter("description");
-                    String validFromString = request.getParameter("validFrom");
-                    String validToString = request.getParameter("validTo");
-                    Date validFrom = null;
-                    Date validTo = null;
-                    String minOrderAmountString = request.getParameter("minOrderAmount");
-                    String maxUsageString = request.getParameter("maxUsage");
-                    int minOrderAmount = 0;
-                    int maxUsage = 0;
-                    // this must be convert to boolean
-                    String isActiveString = request.getParameter("isActive");
-                    boolean isActive = false;
-                    break;
-                }
+            } catch (Exception e) {
+                errors.add("the delete id must be a number! ");
             }
         }
 
+        // validate status
+        if (updateStatusString == null || updateStatusString.isBlank()) {
+            errors.add("the discount type must be one of Fixed or Percent");
+        } else {
+            if (!(updateStatusString.equalsIgnoreCase("true") || updateStatusString.equalsIgnoreCase("false"))) {
+                errors.add("the new status must be one of active or deactive");
+            } else {
+                updateStatus = (updateStatusString.equalsIgnoreCase("true"));
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            request.setAttribute("errors", errors);
+        } else {
+            if (discountDao.UpdateDiscountStatus(updateStatusId, updateStatus)) {
+                request.setAttribute("actionStatus", "update status sucessfully");
+            } else {
+                request.setAttribute("actionStatus", "update status failed");
+            }
+        }
+        
+        ArrayList<Discount> list = discountDao.getAllDiscountFromDatabase();
+        request.setAttribute("discountList", list);
+        request.getRequestDispatcher("managerpages/managediscount.jsp").forward(request, response);
     }
 
     /**
@@ -131,10 +130,4 @@ public class ManageDiscount extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    protected void redirectToManageDiscountPage(HttpServletRequest request, HttpServletResponse response, DiscountDAO discountDao)
-            throws ServletException, IOException {
-        ArrayList<Discount> list = discountDao.getAllDiscountFromDatabase();
-        request.setAttribute("discountList", list);
-        request.getRequestDispatcher("managerpages/managediscount.jsp").forward(request, response);
-    }
 }

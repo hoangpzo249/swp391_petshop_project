@@ -16,6 +16,10 @@
         <servlet-name>DeleteDiscount</servlet-name>
         <servlet-class>controller.manager.managediscount.DeleteDiscount</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateDiscountStatus</servlet-name>
+        <servlet-class>controller.manager.managediscount.UpdateDiscountStatus</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -31,5 +35,9 @@
     <servlet-mapping>
         <servlet-name>DeleteDiscount</servlet-name>
         <url-pattern>/DeleteDiscount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateDiscountStatus</servlet-name>
+        <url-pattern>/UpdateDiscountStatus</url-pattern>
     </servlet-mapping>
 </web-app>

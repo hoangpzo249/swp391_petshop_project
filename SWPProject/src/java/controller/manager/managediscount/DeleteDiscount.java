@@ -59,7 +59,7 @@ public class DeleteDiscount extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ArrayList<String> errors = new ArrayList<>();
-        DiscountDAO discountDao = new DiscountDAO(); 
+        DiscountDAO discountDao = new DiscountDAO();
         String deletedIdString = request.getParameter("deleteId");
         // validate input data
         int deleteId = 0;
@@ -77,19 +77,13 @@ public class DeleteDiscount extends HttpServlet {
         }
         if (!errors.isEmpty()) {
             request.setAttribute("errors", errors);
-            redirectToManageDiscountPage(request, response, discountDao);
         } else { //if it have no error in after the first validate
             if (discountDao.deleteDiscountInDataBase(deleteId)) {
                 request.setAttribute("actionStatus", "delete sucessfully");
             } else {
                 request.setAttribute("actionStatus", "delete failed");
             }
-            redirectToManageDiscountPage(request, response, discountDao);
         }
-    }
-
-    protected void redirectToManageDiscountPage(HttpServletRequest request, HttpServletResponse response, DiscountDAO discountDao)
-            throws ServletException, IOException {
         ArrayList<Discount> list = discountDao.getAllDiscountFromDatabase();
         request.setAttribute("discountList", list);
         request.getRequestDispatcher("managerpages/managediscount.jsp").forward(request, response);

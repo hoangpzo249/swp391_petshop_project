@@ -39,8 +39,8 @@ public class DiscountDAO extends DBContext {
                 presentDiscount.setDiscountType(resultSet.getString("discounttype"));
                 presentDiscount.setDisCountValue(resultSet.getFloat("disCountValue"));
                 presentDiscount.setDescription(resultSet.getString("description"));
-                presentDiscount.setValidFrom(resultSet.getDate("validFrom"));
-                presentDiscount.setValidTo(resultSet.getDate("validTo"));
+                presentDiscount.setValidFrom(resultSet.getTimestamp("validFrom"));
+                presentDiscount.setValidTo(resultSet.getTimestamp("validTo"));
                 presentDiscount.setMinOrderAmount(resultSet.getInt("minOrderAmount"));
                 presentDiscount.setMaxUsage(resultSet.getInt("maxUsage"));
                 presentDiscount.setUsageCount(resultSet.getInt("usageCount"));
@@ -191,6 +191,7 @@ public class DiscountDAO extends DBContext {
         return rowAffected == 1;
     }
 
+    // this function is for check exist before add a new discount
     public boolean isExistDiscountCode(String discountCode) {
         boolean isExist = false;
         PreparedStatement preStatement = null;
