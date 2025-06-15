@@ -40,7 +40,6 @@
                         <c:when test="${sessionScope.userAccount != null}">
                             <div class="account-dropdown">
                                 <a href="#" class="account-trigger">
-                                    <!-- Cố định kích thước hình ảnh -->
                                     <img src="images/support button/account.png" width="50" height="50" alt="account"/>
                                     <p class="username">Tài khoản</p>
                                 </a>
@@ -53,6 +52,12 @@
                                                 <span>Quản lý Admin</span>
                                             </a>
                                         </c:when>
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
+                                            <a href="displayorder" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Seller</span>
+                                            </a>
+                                        </c:when>
 
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Manager'}">
                                             <a href="profile" class="dropdown-item">
@@ -62,7 +67,7 @@
                                         </c:when>
 
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
-                                            <a href="profile" class="dropdown-item">
+                                            <a href="displayorder" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Saler</span>
                                             </a>

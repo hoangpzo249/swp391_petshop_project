@@ -77,9 +77,16 @@
                                         </c:when>
 
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
-                                            <a href="profile" class="dropdown-item">
+                                            <a href="displayorder" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Saler</span>
+                                            </a>
+                                        </c:when>
+                                        
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
+                                            <a href="displayorder" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Seller</span>
                                             </a>
                                         </c:when>
 
