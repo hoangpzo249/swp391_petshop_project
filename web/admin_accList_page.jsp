@@ -147,7 +147,7 @@
                                         <option value="">Tất cả loại tài khoản</option>
                                         <option value="Admin" ${param.role == 'Admin' ? 'selected' : ''}>Admin</option>
                                         <option value="Manager" ${param.role == 'Manager' ? 'selected' : ''}>Manager</option>
-                                        <option value="Saler" ${param.role == 'Saler' ? 'selected' : ''}>Saler</option>
+                                        <option value="Seller" ${param.role == 'Seller' ? 'selected' : ''}>Seller</option>
                                         <option value="Shipper" ${param.role == 'Shipper' ? 'selected' : ''}>Shipper</option>
                                         <option value="Customer" ${param.role == 'Customer' ? 'selected' : ''}>Khách hàng</option>
                                     </select>
@@ -231,7 +231,7 @@
                                                             </a>
 
                                                         </c:when>
-                                                        <c:when test="${acc.getAccRole() eq 'Saler'}">
+                                                        <c:when test="${acc.getAccRole() eq 'Seller'}">
                                                             <a class="action-btn edit-btn" title="Sửa" href = 'admin-panel?action=account&type=${acc.accRole}&act=update-role&id=${acc.getAccId()}'>
                                                                 <i class="fas fa-edit"></i>
                                                             </a>

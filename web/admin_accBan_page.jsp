@@ -138,8 +138,8 @@
                                                     ${banacc.accRole}
                                                 </div>
                                             </c:when>
-                                            <c:when test="${banacc.accRole eq 'Saler'}">
-                                                <div class="account-role-badge saler-role">
+                                            <c:when test="${banacc.accRole eq 'Seller'}">
+                                                <div class="account-role-badge Seller-role">
                                                     ${banacc.accRole}
                                                 </div>
                                             </c:when>

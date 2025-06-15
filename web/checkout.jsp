@@ -67,10 +67,10 @@
                                             </a>
                                         </c:when>
 
-                                        <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
                                             <a href="displayorder" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
-                                                <span>Quản lý Saler</span>
+                                                <span>Quản lý Seller</span>
                                             </a>
                                         </c:when>
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
@@ -137,9 +137,8 @@
                     <li><a href="listshoppet?species=Cat&sort=popular">Mèo Cưng</a></li>
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
                     <li><a href="menu_contact.jsp">Liên Hệ</a></li>
-                        <c:if test="${not empty sessionScope.account and sessionScope.account.accRole eq 'Admin'}">
-                        <li><a href="admin.jsp">Admin Panel</a></li>
-                        </c:if>
+                        
+                        
                 </ul>
             </nav>
         </div>

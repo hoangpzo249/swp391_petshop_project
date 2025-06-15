@@ -282,7 +282,7 @@
                                                     <select name="roleStaff" class="form-control" required>
                                                         <option value="">-- Chọn vai trò --</option>
                                                         <option value="Manager" <c:if test="${roleStaff == 'Manager'}">selected</c:if>>Manager</option>
-                                                        <option value="Saler"<c:if test="${roleStaff == 'Saler'}">selected</c:if>>Saler</option>
+                                                        <option value="Seller"<c:if test="${roleStaff == 'Seller'}">selected</c:if>>Seller</option>
                                                         <option value="Shipper"<c:if test="${roleStaff == 'Shipper'}">selected</c:if>>Shipper</option>
                                                     </select>
                                                     <span class="select-arrow"><i class="fas fa-chevron-down"></i></span>

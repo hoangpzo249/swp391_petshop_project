@@ -36,11 +36,10 @@ public class Pet {
     public Pet() {
     }
 
-   
     public Pet(int petId, String petName, Date petDob, String petOrigin, String petGender,
-               int petAvailability, String petColor, int petVaccination, String petDescription,
-               double petPrice, int breedId, int createdBy, int petStatus) {
-      this.petId = petId;
+            int petAvailability, String petColor, int petVaccination, String petDescription,
+            double petPrice, int breedId, int createdBy, int petStatus) {
+        this.petId = petId;
         this.petName = petName;
         this.petDob = petDob;
         this.petOrigin = petOrigin;
@@ -193,22 +192,25 @@ public class Pet {
 
     @Override
     public String toString() {
-        return "Pet {" +
-               "ID=" + petId +
-               ", Name='" + petName + '\'' +
-               ", DOB=" + petDob +
-               ", Gender='" + petGender + '\'' +
-               ", Origin='" + petOrigin + '\'' +
-               ", Color='" + petColor + '\'' +
-               ", Vaccinated=" + (petVaccination == 1 ? "Yes" : "No") +
-               ", Price=" + petPrice +
-               ", BreedId=" + breedId +
-               ", Description='" + petDescription + '\'' +
-               ", CreatedBy=" + createdBy +
-               '}';
+        return "Pet {"
+                + "ID=" + petId
+                + ", Name='" + petName + '\''
+                + ", DOB=" + petDob
+                + ", Gender='" + petGender + '\''
+                + ", Origin='" + petOrigin + '\''
+                + ", Color='" + petColor + '\''
+                + ", Vaccinated=" + (petVaccination == 1 ? "Yes" : "No")
+                + ", Price=" + petPrice
+                + ", BreedId=" + breedId
+                + ", Description='" + petDescription + '\''
+                + ", CreatedBy=" + createdBy
+                + '}';
     }
-    
+
     public String getFirstImage() {
-        return images.get(0);
+        if (images != null && !images.isEmpty()) {
+            return images.get(0);
+        }
+        return "images/defaultcatdog.png";
     }
 }

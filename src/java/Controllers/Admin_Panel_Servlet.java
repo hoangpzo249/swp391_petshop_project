@@ -322,7 +322,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 return;
             }
 
-//            if (!"Saler".equals(acc.getAccRole()) || !"Manager".equals(acc.getAccRole())) {
+//            if (!"Seller".equals(acc.getAccRole()) || !"Manager".equals(acc.getAccRole())) {
 //                request.setAttribute("updateRole", acc);
 //                session.setAttribute("errMess", "Không thể thực hiện");
 //

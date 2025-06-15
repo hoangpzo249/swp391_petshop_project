@@ -5,12 +5,18 @@
 
 package Controllers;
 
+import DAO.BreedDAO;
+import DAO.PetDAO;
+import Models.Breed;
+import Models.Pet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -53,6 +59,15 @@ public class Homepage_Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        
+        BreedDAO breedDao = new BreedDAO();
+        List<Breed> listBreed = breedDao.get6BreedHot();
+        request.setAttribute("listBreed", listBreed);
+        
+        PetDAO petDao = new PetDAO();
+        List<Pet> listPet = petDao.get6PetNew();
+        request.setAttribute("listPet", listPet);
+        
         request.getRequestDispatcher("home_page.jsp").forward(request, response);
     } 
 
@@ -66,7 +81,7 @@ public class Homepage_Servlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
 
     /** 

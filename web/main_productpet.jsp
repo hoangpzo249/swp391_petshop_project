@@ -19,7 +19,7 @@
 
         <link href="css/main_product.css?v=32" rel="stylesheet" type="text/css"/>
         <script src="js/readmore_product.js" type="text/javascript"></script>
-        
+
 
 
     </head>
@@ -46,7 +46,7 @@
                 </form>
 
 
-                 <div class="accountcard">
+                <div class="accountcard">
                     <c:choose>
                         <c:when test="${sessionScope.userAccount != null}">
                             <div class="account-dropdown">
@@ -72,13 +72,13 @@
                                             </a>
                                         </c:when>
 
-                                        <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
                                             <a href="displayorder" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
-                                                <span>Quản lý Saler</span>
+                                                <span>Quản lý Seller</span>
                                             </a>
                                         </c:when>
-                                        
+
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
                                             <a href="displayorder" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
@@ -143,16 +143,14 @@
                     <li><a href="listshoppet?species=Cat&sort=popular">Mèo Cưng</a></li>
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
                     <li><a href="menu_contact.jsp">Liên Hệ</a></li>
-                        <c:if test="${not empty sessionScope.account and sessionScope.account.accRole eq 'Admin'}">
-                        <li><a href="admin.jsp">Admin Panel</a></li>
-                        </c:if>
+
                 </ul>
             </nav>
         </div>
 
 
     </div>
-    
+
     <div class="container">
         <div class="product-wrapper">
             <!-- Left Column -->
@@ -168,11 +166,11 @@
 
                     <div class="thumbnails">
                         <c:forEach var="img" items="${pet.getImages()}">
-                           
-                                <div class="thumbnail-box">
-                                    <img src="${img}" alt="Thumbnail" class="thumbnail-img" onclick="showImage('${img}')" />
-                                </div>
-                          
+
+                            <div class="thumbnail-box">
+                                <img src="${img}" alt="Thumbnail" class="thumbnail-img" onclick="showImage('${img}')" />
+                            </div>
+
                         </c:forEach>
 
 
@@ -286,51 +284,8 @@
             <c:remove var="cartMessage" scope="session" />
         </c:if>
 
-
-
-
-
-
-
-
         <!--about-->
-        <div class="about-section">
-            <div class="about-column">
-                <h3>Shop</h3>
-                <ul>
-                    <li><a href="listshoppet?species=Chó&sort=popular&giapet1=&giapet2=&breed=&search=">Dành Cho Chó</a></li>
-                    <li><a href="listshoppet?species=Mèo&sort=popular&giapet1=&giapet2=&breed=&search=">Dành Cho Mèo</a></li>
-                    <li><a href="listshop?category=%search=&gia1=&gia2=&sort=popular">Phụ kiện cho Chó & Mèo</a></li>
-                </ul>
-            </div>
 
-            <div class="about-column">
-                <h3>PETFPT Shop</h3>
-                <ul>
-                    <li><a href="menu_about.jsp">Giới Thiệu</a></li>
-                    <li><a href="footer_policy.jsp">Chính sách</a></li>
-                    <li><a href="footer_paymentmethod.jsp">Phương Thức Thanh Toán</a></li>
-                    <li><a href="footer_termofuse.jsp">Điều Khoản Sử Dụng</a></li>
-                </ul>
-            </div>
-
-            <div class="about-column">
-                <h3>Liên Hệ</h3>
-                <p class="contactpet">PETFPT Shop</p>
-                <p><i class="fas fa-phone"></i>0767676770</p>
-                <p><i class="fas fa-map-marker-alt"></i>Khu Công nghệ cao Hòa Lạc <br>
-                    Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
-                <p><i class="fas fa-envelope email"></i>
-                    <a href="mailto:hoangnhhe181051@fpt.edu.vn">hoangnhhe181051@fpt.edu.vn</a>
-                </p>
-
-                <div class="social-container">
-                    <a href="https://www.facebook.com/petfptshop" target="_blank" class="social-icon">
-                        <i class="fab fa-facebook fa-2x"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
 
         <!-- scroll_chat -->
         <div class="chat-scroll-container">
@@ -350,22 +305,57 @@
                 </div>
             </div>
         </div>
-        <footer>
-            © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
-        </footer>
-        <script src="js/scroll_chat.js"></script>
-        <div id="lightbox" class="lightbox" onclick="this.style.display = 'none'">
-            <img id="lightbox-img" src="" />
+    </div>
+    <div class="about-section">
+        <div class="about-column">
+            <h3>Shop</h3>
+            <ul>
+                <li><a href="listshoppet?species=Chó&sort=popular&giapet1=&giapet2=&breed=&search=">Dành Cho Chó</a></li>
+                <li><a href="listshoppet?species=Mèo&sort=popular&giapet1=&giapet2=&breed=&search=">Dành Cho Mèo</a></li>
+                <li><a href="listshop?category=%search=&gia1=&gia2=&sort=popular">Phụ kiện cho Chó & Mèo</a></li>
+            </ul>
         </div>
-        <script>
-            function showImage(src) {
-                document.getElementById("lightbox-img").src = src;
-                document.getElementById("lightbox").style.display = "flex";
-            }
-        </script>
 
+        <div class="about-column">
+            <h3>PETFPT Shop</h3>
+            <ul>
+                <li><a href="menu_about.jsp">Giới Thiệu</a></li>
+                <li><a href="footer_policy.jsp">Chính sách</a></li>
+                <li><a href="footer_paymentmethod.jsp">Phương Thức Thanh Toán</a></li>
+                <li><a href="footer_termofuse.jsp">Điều Khoản Sử Dụng</a></li>
+            </ul>
+        </div>
 
+        <div class="about-column">
+            <h3>Liên Hệ</h3>
+            <p class="contactpet">PETFPT Shop</p>
+            <p><i class="fas fa-phone"></i>0767676770</p>
+            <p><i class="fas fa-map-marker-alt"></i>Khu Công nghệ cao Hòa Lạc <br>
+                Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
+            <p><i class="fas fa-envelope email"></i>
+                <a href="mailto:hoangnhhe181051@fpt.edu.vn">hoangnhhe181051@fpt.edu.vn</a>
+            </p>
 
+            <div class="social-container">
+                <a href="https://www.facebook.com/petfptshop" target="_blank" class="social-icon">
+                    <i class="fab fa-facebook fa-2x"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <footer>
+        © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
+    </footer>
+    <script src="js/scroll_chat.js"></script>
+    <div id="lightbox" class="lightbox" onclick="this.style.display = 'none'">
+        <img id="lightbox-img" src="" />
+    </div>
+    <script>
+        function showImage(src) {
+            document.getElementById("lightbox-img").src = src;
+            document.getElementById("lightbox").style.display = "flex";
+        }
+    </script>
 
 </body>
 </html>

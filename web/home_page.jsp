@@ -19,18 +19,28 @@
         <!-- header -->
         <div class="header">
             <div class="header1">
-                
+
                 <div>
                     <a href="homepage">
                         <img src="images/logo_banner/logo2.png" alt=""/>
                     </a>
                 </div>
-                
-                <form action="">
+
+                <form action="listshoppet" method="get">
+
+                    <input type="hidden" name="species" value="${param.species}" />
+                    <input type="hidden" name="breed" value="${param.breed}" />
+                    <input type="hidden" name="gender" value="${param.gender}" />
+                    <input type="hidden" name="color" value="${param.color}" />
+                    <input type="hidden" name="origin" value="${param.origin}" />
+                    <input type="hidden" name="dobFrom" value="${param.dobFrom}" />
+                    <input type="hidden" name="dobTo" value="${param.dobTo}" />
+                    <input type="hidden" name="priceRange" value="${param.priceRange}" />
+                    <input type="hidden" name="vaccination" value="${param.vaccination}" />
                     <div class="search">
-                        <input type="text" name="search" value="" placeholder="Tìm kiếm thú cưng ..."/>
+                        <input type="text" name="search" value="${param.search}" placeholder="Tìm kiếm thú cưng ..." />
                         <button type="submit" class="search-button">
-                            <img src="images/support button/search.png" width="512" height="512" alt="search" />
+                            <img src="images/support button/search.png" width="20" height="20" alt="search" />
                         </button>
                     </div>
                 </form>
@@ -66,10 +76,10 @@
                                             </a>
                                         </c:when>
 
-                                        <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
                                             <a href="displayorder" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
-                                                <span>Quản lý Saler</span>
+                                                <span>Quản lý Seller</span>
                                             </a>
                                         </c:when>
 
@@ -143,7 +153,7 @@
 
         <!-- banner -->
         <div class="banner">
-            <a href="index.html">
+            <a href="homepage">
                 <img src="images/logo_banner/banner.png" alt=""/>
             </a>
         </div>
@@ -153,15 +163,15 @@
             <!-- dog-product -->
             <h2 class="text-item">Thú Cưng Nổi Bật</h2>
             <div class="view-all-item">
-                <a href="">Xem Tất Cả</a>
+                <a href="listshoppet?species=&sort=popular">Xem Tất Cả</a>
             </div>
 
             <div class="detail-item-product">
-                <c:forEach items="${listDogBreed}" var="x">
+                <c:forEach items="${listBreed}" var="b">
                     <div class="detail-item">
-                        <a href="listshoppet?species=Chó&sort=popular&giapet1=&giapet2=&breed=${x.breedId}&search=">
-                            <img src="${x.breedImageBase64}" width="800" height="800" alt="${x.breedName}"/>
-                            <p class="item-name">${x.breedName}</p>
+                        <a href="listshoppet?species=${b.breedSpecies}&breed=${b.breedId}&gender=&color=&origin=&priceRange=&dobFrom=&dobTo=&vaccination=">
+                            <img src="${b.breedImageBase64}" width="800" height="800" alt="${b.breedName}"/>
+                            <p class="item-name">${b.breedName}</p>
                         </a>
                     </div>
                 </c:forEach>
@@ -172,15 +182,15 @@
 
             <h2 class="text-item">Thành Viên Mới</h2>
             <div class="view-all-item">
-                <a href="">Xem Tất Cả</a>
+                <a href="listshoppet">Xem Tất Cả</a>
             </div>
 
             <div class="detail-item-product">
-                <c:forEach items="${listCatBreed}" var="x">
+                <c:forEach items="${listPet}" var="x">
                     <div class="detail-item">
-                        <a href="listshoppet?species=Mèo&sort=popular&giapet1=&giapet2=&breed=${x.breedId}&search=">
-                            <img src="${x.breedImageBase64}" width="800" height="800" alt="${x.breedName}"/>
-                            <p class="item-name">${x.breedName}</p>
+                        <a href="displaypet?id=${x.petId}">
+                            <img src="${x.getFirstImage()}" alt="${x.petName}" class="main-image" />
+                            <p class="item-name">${x.petName}</p>
                         </a>
                     </div>
                 </c:forEach>
@@ -190,7 +200,7 @@
             <div class="blog-container">
                 <div class="blog-card">
                     <div class="blog-image">
-                        <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/3.0.1/placeholder.svg" alt="Chăm sóc thú cưng mùa hè">
+                        <img src="images/defaultBlog.jpg" alt="Chăm sóc thú cưng mùa hè">
                         <span class="blog-category">Chăm Sóc</span>
                     </div>
                     <div class="blog-content">
@@ -205,7 +215,7 @@
 
                 <div class="blog-card">
                     <div class="blog-image">
-                        <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/3.0.1/placeholder.svg" alt="Dinh dưỡng cho chó con">
+                        <img src="images/defaultBlog.jpg" alt="Dinh dưỡng cho chó con">
                         <span class="blog-category">Dinh Dưỡng</span>
                     </div>
                     <div class="blog-content">
@@ -220,7 +230,7 @@
 
                 <div class="blog-card">
                     <div class="blog-image">
-                        <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/3.0.1/placeholder.svg" alt="Huấn luyện mèo">
+                        <img src="images/defaultBlog.jpg" alt="Huấn luyện mèo">
                         <span class="blog-category">Huấn Luyện</span>
                     </div>
                     <div class="blog-content">
@@ -233,65 +243,18 @@
                     </div>
                 </div>
             </div>
-            <!--favorite-product-->
-
-            <h2 class="text-favo-item">Bạn Đồng hành tiềm Năng</h2>
-            <div class="view-all-item">
-                <a href="listshop?category=%search=&gia1=&gia2=&sort=popular">Xem Tất Cả</a>
-            </div>
-
-            <c:forEach items="${listProduct}" var="group">
-                <div class="detail-favo-item-product">
-                    <c:forEach items="${group}" var="x">
-                        <div class="detail-favo-item">
-                            <a href="displayproduct?id=${x.getProductId()}">
-                                <div class="image-favo-container">
-                                    <span class="sale-badge">Sale</span>
-                                    <img src="${x.getProductImageBase64()}" width="800" height="800" alt="${x.productName}"/>
-                                </div>
-                                <p class="item-favo-name">${x.productName}</p>
-                            </a>
-                            <div class="tym-item">
-                                <p class="price">${x.productPrice}đ</p>
-                                <c:choose>
-                                    <c:when test="${sessionScope.account == null}">
-                                        <a href="account_login.jsp" class="favorite-icon">&#10084;</a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:url var="favoriteUrl" value="favorite">
-                                            <c:param name="location" value="homepage" />
-                                            <c:param name="id" value="${x.productId}" />
-                                        </c:url>
-                                        <a href="${favoriteUrl}" class="favorite-icon"
-                                           style="color: ${sessionScope.favoriteProducts.contains(x.productId) ? 'orangered' : 'orange'}">
-                                            &#10084;
-                                        </a>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </c:forEach>
 
             <h2 class="text-favo-item">Boss nào hợp với bạn?</h2>
             <div class="pet-match-section">
                 <div class="pet-options-container">
-                    <a href="" class="pet-option">
+                    <a href="listshoppet?species=Cat&sort=popular" class="pet-option">
                         <div class="pet-image">
                             <img src="images/cat.png" alt="Mèo" class="pet-img">
                         </div>
                         <span class="pet-name">Mèo</span>
                     </a>
 
-                    <a href="" class="pet-option">
-                        <div class="pet-image">
-                            <img src="images/hamster.png" alt="Chuột" class="pet-img">
-                        </div>
-                        <span class="pet-name">Chuột</span>
-                    </a>
-
-                    <a href="" class="pet-option">
+                    <a href="listshoppet?species=Dog&sort=popular" class="pet-option">
                         <div class="pet-image">
                             <img src="images/dog.png" alt="Chó" class="pet-img">
                         </div>
@@ -324,9 +287,9 @@
                             </div>
                         </form>
                     </div>
-<!--                    <div class="newsletter-note">
-                        <p>Bằng việc đăng ký, bạn đồng ý với <a href="">chính sách bảo mật</a> của chúng tôi</p>
-                    </div>-->
+                    <!--                    <div class="newsletter-note">
+                                            <p>Bằng việc đăng ký, bạn đồng ý với <a href="">chính sách bảo mật</a> của chúng tôi</p>
+                                        </div>-->
                 </div>
             </div>
 
