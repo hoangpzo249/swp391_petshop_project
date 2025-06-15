@@ -15,25 +15,25 @@ function showToast(message) {
     toast.innerText = message;
     toast.classList.add('show');
 
-    
+
     setTimeout(() => {
         toast.classList.remove('show');
     }, 3000);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    var option="";
-    document.getElementById('checkout').addEventListener('click',function(){
-        option="checkout";
+    var option = "";
+    document.getElementById('checkout').addEventListener('click', function () {
+        option = "checkout";
     })
-    document.getElementById('discount').addEventListener('click',function(){
-        option="discount";
+    document.getElementById('discount').addEventListener('click', function () {
+        option = "discount";
     })
     const checkoutForm = document.getElementById('checkoutForm');
 
     if (checkoutForm) {
         checkoutForm.addEventListener('submit', function (e) {
-            if (option=== "discount"){
+            if (option === "discount") {
                 return;
             }
             const guestName = document.getElementById('guestName');
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const guestEmail = document.getElementById('email');
             const guestAddress = document.getElementById('guestAddress');
 
-            
+
 
             const nameValue = guestName.value.trim();
             const phoneValue = guestPhone.value.trim();
@@ -54,6 +54,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 showToast("Tên người nhận không được chứa số, ký tự lạ hoặc để trống.");
                 return;
             }
+            if (phoneValue.toLowerCase().includes("chưa cập nhật")) {
+                e.preventDefault();
+                showToast("Vui lòng cập nhật lại số điện thoại.");
+                return;
+            }
             const phoneRegex = /^(0\d{9}|\+84\d{9})$/;
             if (!phoneRegex.test(phoneValue)) {
                 e.preventDefault();
@@ -61,11 +66,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             if (!emailRegex.test(emailValue)) {
                 e.preventDefault();
                 showToast("Email phải có dạng 'abc@domain.cde'. Trong đó 'cde' phải có ít nhất 2 ký tự.");
+                return;
+            }
+            
+            if (addressValue.toLowerCase().includes("chưa cập nhật")) {
+                e.preventDefault();
+                showToast("Vui lòng cập nhật lại địa chỉ.");
                 return;
             }
 
@@ -75,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showToast("Địa chỉ không hợp lệ. Phải có ít nhất 2 ký tự, không chứa ký tự lạ.");
                 return;
             }
+
         });
     }
 });

@@ -14,8 +14,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="css/checkout.css?v=8" rel="stylesheet" type="text/css"/>
-        <link href="css/term.css?v=4" rel="stylesheet" type="text/css"/>
-        <script src="js/validate_input.js?v=9" type="text/javascript"></script>
+        <link href="css/term.css?v=5" rel="stylesheet" type="text/css"/>
+        <script src="js/validate_input.js?v=11" type="text/javascript"></script>
 
 
     </head>
@@ -197,22 +197,23 @@
                         <c:choose>
                             <c:when test="${not empty sessionScope.userAccount}">
                                 <p><strong>Tên:</strong> ${name}</p>
-                                <input type="hidden" name="guestName" value="${name}" />
+                                <input type="hidden" id="guestName" name="guestName" value="${name}" />
 
                                 <p><strong>Số điện thoại:</strong> ${phone}</p>
-                                <input type="hidden" name="guestPhone" value="${phone}" />
+                                <input type="hidden" id="guestPhone" name="guestPhone" value="${phone}" />
 
                                 <p><strong>Địa chỉ:</strong> ${address}</p>
-                                <input type="hidden" name="guestAddress" value="${address}" />
+                                <input type="hidden" id="guestAddress" name="guestAddress" value="${address}" />
 
                                 <p><strong>Email:</strong> ${email}</p>
-                                <input type="hidden" name="email" value="${email}" />
+                                <input type="hidden" id="email" name="email" value="${email}" />
 
                                 <div class="new-address-alert">
                                     <p>
                                         <i class="fas fa-exclamation-circle icon-alert"></i>
-                                        <strong>Địa chỉ không đúng?</strong> Vui lòng cập nhật trong 
-                                        <a href="account_profile_user.jsp">Tài khoản của bạn</a>
+                                        <strong>Thông tin không đúng?</strong> Vui lòng cập nhật trong 
+                                       <a href="profile" class="terms-link highlight-red-bold">tài khoản của bạn</a>
+
                                     </p>
                                 </div>
                             </c:when>
@@ -303,8 +304,8 @@
                     setTimeout(() => {
                         warning.style.opacity = '0';
                         warning.style.transform = 'translateY(-10px)';
-                        setTimeout(() => warning.remove(), 500); // remove sau animation
-                    }, 4000); // 4s
+                        setTimeout(() => warning.remove(), 500); 
+                    }, 4000); 
                 }
             });
         </script>

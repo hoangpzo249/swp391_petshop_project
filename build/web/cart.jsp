@@ -140,9 +140,7 @@
                     <li><a href="listshoppet?species=Cat&sort=popular">Mèo Cưng</a></li>
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
                     <li><a href="menu_contact.jsp">Liên Hệ</a></li>
-                        <c:if test="${not empty sessionScope.account and sessionScope.account.accRole eq 'Admin'}">
-                        <li><a href="admin.jsp">Admin Panel</a></li>
-                        </c:if>
+                       
                 </ul>
             </nav>
         </div>

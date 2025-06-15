@@ -106,7 +106,7 @@
                     </c:choose>
 
                     <div class="card">
-                        <a href="">
+                        <a href="displaycart">
                             <img src="images/support button/card.png" width="50" height="50" alt="card"/>
                             <p class="cardtext">
                                 Giỏ Hàng

@@ -54,12 +54,6 @@ public class DisplayCartServlet extends HttpServlet {
 
         if (account != null) {
             petCart = cartDao.getCart(account.getAccId());
-
-            request.setAttribute("name", account.getAccFname() + " " + account.getAccLname());
-            request.setAttribute("phone", account.getAccPhoneNumber());
-            request.setAttribute("address", account.getAccAddress());
-            request.setAttribute("email", account.getAccEmail());
-
         } else {
             List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
 

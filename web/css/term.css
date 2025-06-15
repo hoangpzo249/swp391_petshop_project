@@ -239,4 +239,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
   text-decoration: underline;
 }
 
+.cart-container a.terms-link.highlight-red-bold {
+    color: red !important;
+    font-weight: bold !important;
+}
+
+    
 
