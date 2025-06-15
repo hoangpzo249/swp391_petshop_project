@@ -118,7 +118,7 @@ public class SellerAddPetServlet extends HttpServlet {
             String petDescription = request.getParameter("petDescription");
             double petPrice = Double.parseDouble(request.getParameter("petPrice"));
             int breedId = Integer.parseInt(request.getParameter("breedId"));
-            int creatorid = ((Account) session.getAttribute("account")).getAccId();
+            int creatorid = ((Account) session.getAttribute("userAccount")).getAccId();
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date utilPetDob = sdf.parse(petDobStr);
@@ -171,6 +171,8 @@ public class SellerAddPetServlet extends HttpServlet {
 
                 if (_daoimage.addImage(newPetId, imageURLs)) {
                     session.setAttribute("successMess", "Đăng bán thú cưng thành công!");
+                    response.sendRedirect("displaypet?id="+newPetId);
+                    return;
                 } else {
                     session.setAttribute("errMess", "Thú cưng đã được tạo nhưng có lỗi khi lưu hình ảnh. Vui lòng kiểm tra lại.");
                 }
