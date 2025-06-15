@@ -23,7 +23,10 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +75,14 @@ public class SellerAddPetServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        HttpSession session=request.getSession();
+        Account account=(Account) session.getAttribute("userAccount");
+        if (account==null || !account.getAccRole().equals("Seller")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
         BreedDAO _daobreed = new BreedDAO();
 
         List<Breed> breedList = _daobreed.getAllBreeds();
@@ -98,8 +109,19 @@ public class SellerAddPetServlet extends HttpServlet {
         HttpSession session = request.getSession();
         PetDAO _daopet = new PetDAO();
         PetImagePathDAO _daoimage = new PetImagePathDAO();
+        String referer = request.getHeader("referer");
+        
 
         try {
+            String petDobStr = request.getParameter("petDob");
+
+            String validationError = validatePetDob(petDobStr);
+            if (validationError != null) {
+                session.setAttribute("errMess", validationError);
+                response.sendRedirect(referer != null ? referer : "addpet");
+                return;
+            }
+
             List<Part> imageParts = new ArrayList<>();
             for (Part part : request.getParts()) {
                 if ("images".equals(part.getName()) && part.getSize() > 0) {
@@ -107,15 +129,14 @@ public class SellerAddPetServlet extends HttpServlet {
                 }
             }
 
-            String petName = request.getParameter("petName");
-            String petDobStr = request.getParameter("petDob");
-            String petOrigin = request.getParameter("petOrigin");
+            String petName = request.getParameter("petName").trim();
+            String petOrigin = request.getParameter("petOrigin").trim();
             String petGender = request.getParameter("petGender");
             int petAvailability = Integer.parseInt(request.getParameter("petAvailability"));
-            String petColor = request.getParameter("petColor");
+            String petColor = request.getParameter("petColor").trim();
             int petVaccination = Integer.parseInt(request.getParameter("petVaccination"));
             int petStatus = Integer.parseInt(request.getParameter("petStatus"));
-            String petDescription = request.getParameter("petDescription");
+            String petDescription = request.getParameter("petDescription").trim();
             double petPrice = Double.parseDouble(request.getParameter("petPrice"));
             int breedId = Integer.parseInt(request.getParameter("breedId"));
             int creatorid = ((Account) session.getAttribute("userAccount")).getAccId();
@@ -171,7 +192,7 @@ public class SellerAddPetServlet extends HttpServlet {
 
                 if (_daoimage.addImage(newPetId, imageURLs)) {
                     session.setAttribute("successMess", "Đăng bán thú cưng thành công!");
-                    response.sendRedirect("displaypet?id="+newPetId);
+                    response.sendRedirect("displaypet?id=" + newPetId);
                     return;
                 } else {
                     session.setAttribute("errMess", "Thú cưng đã được tạo nhưng có lỗi khi lưu hình ảnh. Vui lòng kiểm tra lại.");
@@ -186,6 +207,37 @@ public class SellerAddPetServlet extends HttpServlet {
         }
 
         response.sendRedirect("displayallpet");
+    }
+
+    private String validatePetDob(String petDobStr) {
+        if (petDobStr == null || petDobStr.trim().isEmpty()) {
+            return "Ngày sinh không được để trống.";
+        }
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setLenient(false);
+            java.util.Date parsedUtilDate = sdf.parse(petDobStr);
+
+            LocalDate parsedDate = parsedUtilDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            LocalDate today = LocalDate.now();
+            LocalDate fiftyYearsAgo = today.minusYears(50);
+
+            if (parsedDate.isAfter(today)) {
+                return "Ngày sinh không được ở tương lai.";
+            }
+
+            if (parsedDate.isBefore(fiftyYearsAgo)) {
+                return "Ngày sinh không được quá 50 năm.";
+            }
+
+        } catch (ParseException e) {
+            return "Định dạng ngày sinh không hợp lệ. Vui lòng sử dụng yyyy-MM-dd.";
+        }
+
+        return null;
     }
 
     /**

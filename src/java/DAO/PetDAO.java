@@ -139,6 +139,30 @@ public class PetDAO {
         }
     }
 
+    public boolean updatePetStatusById(List<Integer> petIds, int status) {
+        if (petIds == null || petIds.isEmpty()) {
+            return true;
+        }
+
+        String sql = "UPDATE PetTB SET petStatus = ? WHERE petId = ?";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            for (Integer id : petIds) {
+                ps.setInt(1, status);
+                ps.setInt(2, id);
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+            return true;
+
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, "Error during batch pet status update.", ex);
+            return false;
+        }
+    }
+
     public List<String> getImagePathsByPetId(int petId) {
         List<String> imagePaths = new ArrayList<>();
 

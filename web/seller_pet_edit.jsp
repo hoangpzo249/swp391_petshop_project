@@ -23,7 +23,7 @@
                 <a href="homepage">
                     <img src="images/logo_banner/logo2.png" alt="PETFPT Shop Logo"/>
                 </a>
-                <h1 class="seller-title">Quản trị hệ thống</h1>
+                <h1 class="seller-title">SELLER</h1>
             </div>
 
             <div class="seller-profile">
@@ -46,17 +46,19 @@
             </div>
         </div>
 
-        <c:if test="${not empty successMess}">
-            <div class="alert-message">${successMess}</div>
-            <c:remove var="successMess" scope="session" />
-        </c:if>
-        <c:if test="${not empty errMess}">
-            <div class="alert-message error">${errMess}</div>
-            <c:remove var="errMess" scope="session" />
-        </c:if>
+        <div id="alert-container">
+            <c:if test="${not empty sessionScope.successMess}">
+                <div class="alert-message">${sessionScope.successMess}</div>
+                <c:remove var="successMess" scope="session" />
+            </c:if>
+            <c:if test="${not empty sessionScope.errMess}">
+                <div class="alert-message error">${sessionScope.errMess}</div>
+                <c:remove var="errMess" scope="session" />
+            </c:if>
+        </div>
+
 
         <div class="seller-container">
-            <!-- Sidebar -->
             <div class="seller-sidebar">
                 <div class="sidebar-header">
                     <h2 class="sidebar-title">SELLER PANEL</h2>
@@ -65,7 +67,7 @@
                 <div class="sidebar-menu">
                     <div class="menu-category">
                         <h5 class="category-title">Điều hướng</h5>
-                        <a href="sellerpanel" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                        <a href="comingsoon" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
@@ -76,13 +78,12 @@
                         <h5 class="category-title">Thao tác</h5>
                         <a href="addpet" class="sidebar-link"><i class="fas fa-paw"></i> Đăng bán thú cưng</a>
                         <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
-                        <a href="change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
+                        <a href="comingsoon" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
                         <a href="logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
                     </div>
                 </div>
             </div>
 
-            <%-- Main Body --%>
             <div class="seller-content">
                 <div class="page-header">
                     <h1 class="page-title"><i class="fas fa-pencil-alt"></i> Chỉnh sửa thú cưng #${pet.petId}</h1>
@@ -147,18 +148,20 @@
                                 <div class="form-full-width">
                                     <div class="form-group">
                                         <label>Quản lý hình ảnh thú cưng (giới hạn 5 ảnh)</label>
-                                        <div class="image-management-grid">
+                                        <div class="image-management-grid" id="image-grid-container">
                                             <c:forEach items="${imageList}" var="image">
-                                                <div class="image-preview-item">
-                                                    <img src="${image.imagePath}" alt="Pet Image">
+                                                <div class="image-preview-item" id="image-item-${image.imageId}">
+                                                    <img src="${image.imagePath}" alt="Pet Image" id="image-preview-${image.imageId}">
                                                     <div class="image-actions">
+                                                        <input type="file" class="hidden-file-input" id="file-input-${image.imageId}" 
+                                                               onchange="handleImageChange(event, ${image.imageId}, ${pet.petId})" accept="image/*">
                                                         <button type="button" class="btn-image-action btn-change" 
                                                                 onclick="document.getElementById('file-input-${image.imageId}').click();">
                                                             <i class="fas fa-sync-alt"></i> Đổi ảnh
                                                         </button>
 
                                                         <button type="button" class="btn-image-action btn-delete" 
-                                                                onclick="showConfirmationModal(event, 'xóa ảnh này', 'deleteForm-${image.imageId}', 'btn-danger')">
+                                                                onclick="showImageDeleteModal(event, ${image.imageId}, ${pet.petId})">
                                                             <i class="fas fa-trash-alt"></i> Xóa
                                                         </button>
                                                     </div>
@@ -189,25 +192,6 @@
             </div>
         </div>
 
-        <div style="display: none;">
-            <c:forEach items="${imageList}" var="image">
-                <form id="changeForm-${image.imageId}" action="petimageaction" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="action" value="change">
-                    <input type="hidden" name="petId" value="${pet.petId}">
-                    <input type="hidden" name="imageId" value="${image.imageId}">
-                    <input type="file" id="file-input-${image.imageId}" name="newImageFile" accept="image/*" 
-                           onchange="document.getElementById('changeForm-${image.imageId}').submit();">
-                </form>
-
-                <form id="deleteForm-${image.imageId}" action="petimageaction" method="POST">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="petId" value="${pet.petId}">
-                    <input type="hidden" name="imageId" value="${image.imageId}">
-                </form>
-            </c:forEach>
-        </div>
-
-
         <div class="seller-footer">
             © 2025 PETFPT Shop - Hệ thống quản lý
         </div>
@@ -223,7 +207,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-outline" onclick="closeModal()">Hủy bỏ</button>
-                    <button id="modalConfirmButton" class="btn">Xác nhận</button>
+                    <button id="modalConfirmButton" class="btn btn-danger">Xác nhận</button>
                 </div>
             </div>
         </div>

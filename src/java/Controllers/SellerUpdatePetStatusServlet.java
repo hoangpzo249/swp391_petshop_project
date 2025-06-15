@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAO.PetDAO;
+import Models.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -58,7 +59,13 @@ public class SellerUpdatePetStatusServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PetDAO _daopet = new PetDAO();
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
+        Account account=(Account) session.getAttribute("userAccount");
+        if (account==null || !account.getAccRole().equals("Seller")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
 
         int petId = Integer.parseInt(request.getParameter("petId"));
         int targetStatus = Integer.parseInt(request.getParameter("status"));

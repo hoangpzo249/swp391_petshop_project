@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAO.OrderDAO;
+import Models.Account;
 import Models.Order;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -63,6 +64,14 @@ public class SellerDisplayOrderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        
+        HttpSession session=request.getSession();
+        Account account=(Account) session.getAttribute("userAccount");
+        if (account==null || !account.getAccRole().equals("Seller")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
 
         String searchKey = request.getParameter("searchKey");
         String status = request.getParameter("status");
@@ -87,7 +96,6 @@ public class SellerDisplayOrderServlet extends HttpServlet {
             }
         } catch (ParseException e) {
             e.printStackTrace();
-            HttpSession session = request.getSession(false);
             String referer = request.getHeader("referer");
             session.setAttribute("errMess", "Định dạng ngày không hợp lệ.");
             if (referer != null) {

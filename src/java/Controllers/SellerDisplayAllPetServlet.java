@@ -6,6 +6,7 @@ package Controllers;
 
 import DAO.BreedDAO;
 import DAO.PetDAO;
+import Models.Account;
 import Models.Breed;
 import Models.Pet;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -62,6 +64,14 @@ public class SellerDisplayAllPetServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
+        
+        HttpSession session=request.getSession();
+        Account account=(Account) session.getAttribute("userAccount");
+        if (account==null || !account.getAccRole().equals("Seller")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
 
         String searchKey = request.getParameter("searchKey");
         String availability = request.getParameter("availability");
