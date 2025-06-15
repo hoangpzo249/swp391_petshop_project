@@ -6,6 +6,7 @@ package Controllers;
 
 import DAO.OrderDAO;
 import DAO.PetDAO;
+import Models.Account;
 import Models.Pet;
 import Utils.EmailSender;
 import java.io.IOException;
@@ -62,13 +63,25 @@ public class SellerUpdateOrderStatusServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session=request.getSession();
+        Account account=(Account) session.getAttribute("userAccount");
+        if (account==null || !account.getAccRole().equals("Seller")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
         OrderDAO _daoorder = new OrderDAO();
         PetDAO _daopet = new PetDAO();
-        HttpSession session = request.getSession(false);
         String status = request.getParameter("status");
         int id = Integer.parseInt(request.getParameter("orderId"));
         String reason = request.getParameter("reason");
         String referer = request.getHeader("referer");
+
+        if (status.equals("Shipping")) {
+            session.setAttribute("errMess", "Chức năng này chưa được hoàn thiện.");
+            response.sendRedirect(referer);
+            return;
+        }
 
         if (_daoorder.updateOrderStatusById(id, status, reason)) {
             String email = _daoorder.getCustomerEmailByOrderId(id);
@@ -85,8 +98,14 @@ public class SellerUpdateOrderStatusServlet extends HttpServlet {
                     break;
                 case "Rejected":
                     session.setAttribute("successMess", "Từ chối đơn hàng " + id + " thành công.");
+                    String hidePets = request.getParameter("hidePets");
+                    if (hidePets != null && hidePets.equals("true")) {
+                        if (!_daopet.updatePetStatusById(_daoorder.getOrderContentById(id), 0)) {
+                            session.setAttribute("successMess", "Từ chối đơn hàng " + id + " thành công, nhưng xảy ra vấn đề khi cập nhật trạng thái thú cưng.");
+                        }
+                    }
                     if (!_daopet.updatePetAvailabilityById(_daoorder.getOrderContentById(id), 1)) {
-                        session.setAttribute("errMess", "Cập nhật trạng thái thú cưng không thành công.");
+                        session.setAttribute("successMess", "Từ chối đơn hàng " + id + " thành công, nhưng xảy ra vấn đề khi cập nhật trạng thái thú cưng.");
                     }
                     if (email != null) {
                         EmailSender.sendRejectOrder(email, id, listpet, _daoorder.getOrderPriceById(id), reason);

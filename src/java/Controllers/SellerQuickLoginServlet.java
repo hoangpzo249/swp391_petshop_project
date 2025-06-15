@@ -56,11 +56,11 @@ public class SellerQuickLoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        AccountDAO _dao=new AccountDAO();
-        Account account=_dao.quickLogin();
-        HttpSession session=request.getSession();
-        session.setAttribute("userAccount", account);
-        response.sendRedirect("index.jsp");
+//        AccountDAO _dao=new AccountDAO();
+//        Account account=_dao.quickLogin();
+//        HttpSession session=request.getSession();
+//        session.setAttribute("userAccount", account);
+//        response.sendRedirect("index.jsp");
     } 
 
     /** 

@@ -1365,3 +1365,30 @@ textarea.form-control {
     border-top: 1px solid #e9ecef;
     gap: 0.5rem;
 }
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.checkbox-container input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.checkbox-container label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    margin-bottom: 0 !important;
+    line-height: 1.4;
+}
+
+.hidden-file-input {
+        display: none;
+    }

@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const reasonTextarea = document.getElementById('rejectionReason');
     const closeButton = document.querySelector('.modal-close');
     const cancelButton = document.querySelector('.modal-footer .btn-outline');
+    
+    const hidePetsCheckbox = document.getElementById('hidePetsCheckbox');
 
     let urlToRedirect = '';
     let reasonIsRequired = false;
@@ -49,6 +51,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 return;
             }
             finalUrl += '&reason=' + encodeURIComponent(reason);
+            
+            if (hidePetsCheckbox.checked) {
+                finalUrl += '&hidePets=true';
+            }
         }
 
         if (finalUrl) {
@@ -60,6 +66,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
         modal.classList.remove('show');
         urlToRedirect = '';
         reasonIsRequired = false;
+        
+        if (hidePetsCheckbox) {
+            hidePetsCheckbox.checked = false;
+        }
     }
 
     if (modalConfirmButton) {
@@ -73,7 +83,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     if (cancelButton) {
         cancelButton.addEventListener('click', closeModal);
     }
-
 
     window.onclick = function (event) {
         if (event.target === modal) {

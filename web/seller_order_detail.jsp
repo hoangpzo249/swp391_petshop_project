@@ -23,7 +23,7 @@
                 <a href="homepage">
                     <img src="images/logo_banner/logo2.png" alt="PETFPT Shop Logo"/>
                 </a>
-                <h1 class="seller-title">Quản trị hệ thống</h1>
+                <h1 class="seller-title">SELLER</h1>
             </div>
 
             <div class="seller-profile">
@@ -76,7 +76,7 @@
                 <div class="sidebar-menu">
                     <div class="menu-category">
                         <h5 class="category-title">Điều hướng</h5>
-                        <a href="sellerpanel" class="sidebar-link">
+                        <a href="comingsoon" class="sidebar-link">
                             <i class="fas fa-tachometer-alt"></i> Tổng quan
                         </a>
                     </div>
@@ -99,7 +99,7 @@
                         <a href="profile" class="sidebar-link">
                             <i class="fas fa-user-circle"></i> Tài khoản của tôi
                         </a>
-                        <a href="change-password" class="sidebar-link">
+                        <a href="comingsoon" class="sidebar-link">
                             <i class="fas fa-key"></i> Đổi mật khẩu
                         </a>
                         <a href="logout" class="sidebar-link">
@@ -118,7 +118,7 @@
                     </h1>
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
-                        <li><a href="sellerpanel">Seller</a></li>
+                        <li><a href="comingsoon">Seller</a></li>
                         <li><a href="displayorder">Quản lý đơn hàng</a></li>
                         <li>Chi tiết đơn hàng</li>
                     </ul>
@@ -269,6 +269,10 @@
                     <div id="rejectionReasonContainer" style="display: none;">
                         <label for="rejectionReason">Lý do từ chối:</label>
                         <textarea id="rejectionReason" class="form-control" rows="3" placeholder="Nhập lý do từ chối đơn hàng..."></textarea>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="hidePetsCheckbox" name="hidePets">
+                            <label for="hidePetsCheckbox">Đồng thời ẩn các thú cưng trong đơn hàng này.</label>
+                        </div>
                     </div>
 
                 </div>

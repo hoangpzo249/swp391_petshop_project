@@ -6,8 +6,8 @@ package Controllers;
 
 import DAO.BreedDAO;
 import DAO.PetDAO;
-import DAO.PetImageDAO;
 import DAO.PetImagePathDAO;
+import Models.Account;
 import Models.Breed;
 import Models.Pet;
 import Models.PetImage;
@@ -24,7 +24,10 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,21 +122,35 @@ public class SellerUpdatePetServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
+        Account account=(Account) session.getAttribute("userAccount");
+        if (account==null || !account.getAccRole().equals("Seller")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
         PetDAO _daopet = new PetDAO();
         PetImagePathDAO _daoimage = new PetImagePathDAO();
         String referer = request.getHeader("referer");
 
         try {
-            int petId = Integer.parseInt(request.getParameter("petId"));
-            String petName = request.getParameter("petName");
             String petDobStr = request.getParameter("petDob");
-            String petOrigin = request.getParameter("petOrigin");
+
+            String validationError = validatePetDob(petDobStr);
+            if (validationError != null) {
+                session.setAttribute("errMess", validationError);
+                response.sendRedirect(referer);
+                return;
+            }
+
+            int petId = Integer.parseInt(request.getParameter("petId"));
+            String petName = request.getParameter("petName").trim();
+            String petOrigin = request.getParameter("petOrigin").trim();
             String petGender = request.getParameter("petGender");
             int petAvailability = Integer.parseInt(request.getParameter("petAvailability"));
-            String petColor = request.getParameter("petColor");
+            String petColor = request.getParameter("petColor").trim();
             int petVaccination = Integer.parseInt(request.getParameter("petVaccination"));
             int petStatus = Integer.parseInt(request.getParameter("petStatus"));
-            String petDescription = request.getParameter("petDescription");
+            String petDescription = request.getParameter("petDescription").trim();
             double petPrice = Double.parseDouble(request.getParameter("petPrice"));
             int breedId = Integer.parseInt(request.getParameter("breedId"));
 
@@ -202,6 +219,37 @@ public class SellerUpdatePetServlet extends HttpServlet {
         }
 
         response.sendRedirect(referer);
+    }
+
+    private String validatePetDob(String petDobStr) {
+        if (petDobStr == null || petDobStr.trim().isEmpty()) {
+            return "Ngày sinh không được để trống.";
+        }
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setLenient(false);
+            java.util.Date parsedUtilDate = sdf.parse(petDobStr);
+
+            LocalDate parsedDate = parsedUtilDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            LocalDate today = LocalDate.now();
+            LocalDate fiftyYearsAgo = today.minusYears(50);
+
+            if (parsedDate.isAfter(today)) {
+                return "Ngày sinh không được ở tương lai.";
+            }
+
+            if (parsedDate.isBefore(fiftyYearsAgo)) {
+                return "Ngày sinh không được quá 50 năm.";
+            }
+
+        } catch (ParseException e) {
+            return "Định dạng ngày sinh không hợp lệ. Vui lòng sử dụng yyyy-MM-dd.";
+        }
+
+        return null;
     }
 
     /**
