@@ -262,7 +262,7 @@
                             <div class="image-favo-container">
                                 <span class="sale-badge">Sale</span>
                                 <c:choose>
-                                    <c:when test="${not empty x.getFirstImage()}">
+                                    <c:when test="${not empty x.getImages()}">
                                         <img src="${x.getFirstImage()}" width="200" height="200"
                                              alt="${x.petName}"
                                              style="object-fit: cover; border-radius: 8px;" />

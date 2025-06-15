@@ -4,8 +4,10 @@
  */
 package Controllers;
 
+import DAO.CartDAO;
 import DAO.PetDAO;
 import Models.Account;
+import Models.Cart;
 import Models.Pet;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -113,16 +115,25 @@ public class CheckoutServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("userAccount");
-        session.setAttribute("cartcount", selectedPetList.size());
-        
+         CartDAO cartDao = new CartDAO();
+        List<Cart> petCart = new ArrayList<>();
+       
 
         if (account != null) {
+             petCart = cartDao.getCart(account.getAccId());
             request.setAttribute("name", account.getAccFname() + " " + account.getAccLname());
             request.setAttribute("phone", account.getAccPhoneNumber());
             request.setAttribute("address", account.getAccAddress());
             request.setAttribute("email", account.getAccEmail());
         }
-
+        else {
+            List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
+            if (guestCart != null) {
+                petCart = guestCart;
+            }
+        }
+        request.setAttribute("cartcount", petCart.size());
+        
         request.getRequestDispatcher("checkout.jsp").forward(request, response);
     }
 

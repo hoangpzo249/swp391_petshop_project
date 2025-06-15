@@ -165,7 +165,7 @@
                             <tr class="cart-item">
                                 <td class="item-info">
                                     <a href="displaypet?id=${pet.petId}" class="item-link">
-                                        <img src="${pet.petImageBase64}" alt="${pet.petName}" class="cart-img" />
+                                        <img src="${pet.getFirstImage()}" alt="${pet.petName}" class="cart-img" />
                                         <div>
                                             <div class="item-title">${pet.petName}</div>
                                             <div class="item-price">

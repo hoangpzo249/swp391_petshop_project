@@ -185,7 +185,7 @@
 
                                 <td class="item-info">
                                     <a href="displaypet?id=${pet.petId}" class="item-link">
-                                        <img src="${pet.petImageBase64}" alt="${pet.petName}" class="cart-img" />
+                                        <img src="${pet.getFirstImage()}" alt="${pet.petName}" class="cart-img" />
                                         <div>
                                             <div class="item-title">${pet.petName}</div>
                                             <div class="item-price">Giá: <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></div>
@@ -227,7 +227,7 @@
 
 
 
-                    <c:if test="${empty sessionScope.account or sessionScope.account.accRole eq 'Customer'}">
+                    <c:if test="${empty sessionScope.userAccount or sessionScope.userAccount.accRole eq 'Customer'}">
                         <button type="submit" class="checkout-btn">Xác nhận giỏ hàng</button>
                     </c:if>
                 </form>
