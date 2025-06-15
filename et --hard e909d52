@@ -1,0 +1,113 @@
+[33mf6966eb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnghia[m[33m, [m[1;31morigin/nghia[m[33m)[m merge nhầm nên muốn quay lại
+[33meb4af59[m Reapply "up leen xong merge"
+[33m1f3d274[m Revert "up leen xong merge"
+[33m5df0de0[m Merge branch 'main' into nghia
+[33me909d52[m up leen xong merge
+[33me75d73e[m Fixed directories for seller.
+[33m297904b[m Merge branch 'main' of https://github.com/hoangpzo249/swp391_petshop_project
+[33m3649021[m Merge branch 'main' of https://github.com/hoangpzo249/swp391_petshop_project
+[33me23e40a[m edit breedDAO
+[33m792ef4e[m fix display detail pet
+[33mb339068[m Merge branch 'tiendung'
+[33m6b32d4a[m Merge branch 'main' of https://github.com/hoangpzo249/swp391_petshop_project
+[33mb072d9d[m Added image upload/edit/delete to add and edit pet.
+[33m47ac54b[m[33m ([m[1;31morigin/nam[m[33m)[m fix login + info when discount
+[33m5b32ad8[m latest code for full function
+[33m99cb562[m css web + fix search and login
+[33mb44be9b[m css web + fix search
+[33m0537677[m trang điều khoản + css web
+[33m1d7d414[m merge hoang to main
+[33m68288bb[m[33m ([m[1;31morigin/hoang[m[33m)[m test push main and hoang
+[33m78f8f83[m test push main and hoang
+[33mc6d4864[m Changed pet display method.
+[33m3024b09[m Finished image upload and add pet.
+[33mbfbe8a5[m fix để merge
+[33m83de3b4[m Resolve all merge conflicts and merge branch nam into main
+[33mc198dc0[m Working on pet edit for seller.
+[33me89211d[m fix discount + css + warning message for cart
+[33mc673081[m 
+[33mf28f141[m 
+[33m5da49bc[m fix thanh toán + số lượng pet + css discount
+[33m091f6bf[m Merge branch 'main' of https://github.com/hoangpzo249/swp391_petshop_project
+[33m61d539b[m update
+[33md25fdb1[m Merge branch 'main' into hoang
+[33m7fa8978[m Merge branch 'tiendung'
+[33m755bba4[m update
+[33m719697d[m Merge branch 'main' of https://github.com/hoangpzo249/swp391_petshop_project
+[33m07abd64[m Changed DB password.
+[33m44b141e[m Merge branch 'nam'
+[33m11ebd3e[m change name
+[33mc27806f[m Merge branch 'nam'
+[33ma18c1a5[m apply_discount
+[33md49df93[m Working on pet edit screen.
+[33m6dbf3b7[m Added a check for editing/showing/hiding pets. Working on pet edit screen.
+[33m7fe2866[m update
+[33m93e1ff8[m Set status for pet in pet view.
+[33ma01fcdf[m Send email for confirm/reject/shipping order.
+[33m08064a7[m chỉnh lại cấu trúc
+[33m5866f55[m tách trang cart và trang checkout + thêm thông tin pet
+[33me810c98[m Working on pet list and filters.
+[33m55b5422[m update admin panel create acc, role, recover pass
+[33m87f7379[m manage discount
+[33m5ffc68c[m Working on pet list and filters.
+[33mb0502a8[m Pets availability restores when rejecting order.
+[33m5795d44[m Working on pet management. Fixing bug in order management.
+[33m31a8bf8[m Finished order management for seller.
+[33mc58a8f5[m tính tổng tiền + fix addtocart alert
+[33m9e5bd61[m Confirm/Reject/Ship order.
+[33mfcf7525[m update login, regis, create acc by admin
+[33mc6e86cc[m Working on order list and order detail.
+[33m39e8608[m fix cartcount listshoppet +done cart.jsp
+[33m4299064[m Working on order detail list.
+[33mc540a23[m Working on order list.
+[33m2060415[m Working on order list.
+[33mecd8caa[m Working on order list.
+[33m6b9205b[m view detail pet jsp + addtocart
+[33m924b15f[m update fix v1
+[33m82a0ef0[m filter auth
+[33me602741[m manage discount
+[33md20585d[m manager discount
+[33meb5267b[m update admin-panel v2
+[33mc8b34ff[m phân trang hiển thị + css main_typepet.jsp
+[33m3db6bb6[m delete unused
+[33m383bfa9[m Discount Manage
+[33mf1dedd2[m admin panel v1
+[33mf8f9804[m deleteFromCart servlet + test jsp
+[33m8d484df[m update register, login
+[33meca5ebe[m displaycartServlet+test
+[33mcb523c2[m update profile, change pass
+[33m6124f97[m add to cart for customer
+[33md39e3bb[m add to cart for customer
+[33m98996dd[m add to cart for guest
+[33ma40c1d2[m Working on order detail. Working on pet list.
+[33m416433a[m cartDAO
+[33m56b2e13[m login-register update
+[33m46e77c5[m display Similar pet + model Cart
+[33md015c7b[m display Similar pet + model Cart
+[33mf115b52[m Working on order detail.
+[33m49fa347[m login-register-forgotpass
+[33m6f2d97d[m hiển thị thông tin pet
+[33meea626d[m Working on Order view, update and hide. Working on AI customer assistant chat.
+[33m31ae8c1[m FilterServlet
+[33m1ef3906[m css+jsp for filterpet
+[33m420591c[m upgrade login, register
+[33me7c4c09[m Delete QuangAnh2004 directory
+[33m16e79e2[m fix register
+[33maa7b62a[m Merge pull request #1 from hoangpzo249/quanganh
+[33m40e470b[m Add files via upload
+[33m35c8555[m interface for filter pet
+[33m1f7043f[m login-v2
+[33mc88775e[m modelsBreed+BreedDAO
+[33m1a7f392[m forgotpass v1
+[33m890f499[m login v1
+[33m72c8dc9[m register v2
+[33m2af38b0[m fe_login_register
+[33mfb32683[m register v1
+[33me52303e[m FilterPet+fixGetImagesbyPetId
+[33mf05cf99[m order
+[33m191253c[m homepage v1fix
+[33m3e3949f[m homepage
+[33m711a459[m homepage v1
+[33m2c0d326[m modelsPet+PetDAO
+[33m0f8298d[m Initial commit
+[33mb5480cf[m Initial commit
