@@ -79,6 +79,9 @@ public class DiscountCheckServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
+        String agreedTerms = request.getParameter("agreedTerms");
+        request.setAttribute("agreedTerms", agreedTerms);
+
         if ("apply-discount".equals(action)) {
 
             String[] petIds = request.getParameterValues("selectedPets");

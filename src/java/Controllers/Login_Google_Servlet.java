@@ -5,7 +5,9 @@
 package Controllers;
 
 import DAO.AccountDAO;
+import DAO.CartDAO;
 import Models.Account;
+import Models.Cart;
 import Utils.GoogleUser;
 import Utils.GoogleUtils;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -88,7 +91,7 @@ public class Login_Google_Servlet extends HttpServlet {
 
         AccountDAO accDao = new AccountDAO();
 
-//            System.out.println(ggUser.getEmail());
+
         String fullName = ggUser.getGiven_name();
 
         boolean checkEmail = accDao.isEmailExist(ggUser.getEmail());
@@ -102,6 +105,17 @@ public class Login_Google_Servlet extends HttpServlet {
             }
 
             session.setAttribute("userAccount", acc);
+            List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
+            if (guestCart != null && !guestCart.isEmpty()) {
+                CartDAO cartDAO = new CartDAO();
+                for (Cart c : guestCart) {
+                    if (!cartDAO.petInCart(acc.getAccId(), c.getPetId())) {
+                        cartDAO.addToPetCart(acc.getAccId(), c.getPetId());
+                    }
+                }
+                session.removeAttribute("guestCart"); // clear guest cart after merge
+            }
+
             String role = acc.getAccRole();
 
             if ("Admin".equals(role)) {

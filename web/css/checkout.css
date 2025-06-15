@@ -442,3 +442,78 @@ input[type="text"]:focus {
     }
 }
 
+/* Nền trang */
+body {
+  background: linear-gradient(to right, #fffaf4, #fdf6ee); /* Màu sáng ấm, đồng bộ */
+}
+
+/* Vùng chính đơn hàng */
+.cart-container {
+  background: #fffefb;
+  border: 1px solid #ffcc80;
+  box-shadow: 0 4px 16px rgba(255, 153, 0, 0.08);
+}
+
+/* Xoá gạch dưới, chỉnh màu link */
+.cart-container a {
+  text-decoration: none !important;
+  color: #333 !important;
+}
+
+.cart-container a:hover {
+  color: #ff6f00 !important;
+}
+
+/* Giá */
+.cart-container .item-price {
+  color: #ff6f00 !important;
+  font-weight: bold;
+}
+
+/* Tổng tiền cuối */
+.cart-container .summary-row.total {
+  color: #e65100 !important;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Nút thanh toán */
+.cart-container .checkout-btn {
+  background: linear-gradient(to right, #ff9800, #fb8c00);
+  border-radius: 10px;
+  padding: 12px 28px;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cart-container .checkout-btn:hover {
+  background-color: #f57c00;
+}
+
+/* Ô nhập mã giảm giá */
+.discount-input {
+  border: 2px solid #ffb84d !important;
+  background-color: #fffef9;
+}
+
+/* Ghi chú giảm giá */
+.discount-note {
+  color: #ff5722 !important;
+}
+
+/* Cảnh báo & thông báo */
+.discount-message.success {
+  background: linear-gradient(135deg, #e8fce8, #c1f0d1);
+  border-left-color: #27ae60;
+  color: #14532d;
+}
+
+.discount-message.error {
+  background: linear-gradient(135deg, #ffe3e3, #ffc4c4);
+  border-left-color: #e74c3c;
+  color: #721c24;
+}

@@ -5,7 +5,9 @@
 package Controllers;
 
 import DAO.AccountDAO;
+import DAO.CartDAO;
 import Models.Account;
+import Models.Cart;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,6 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  *
@@ -83,23 +86,35 @@ public class Login_Account_Servlet extends HttpServlet {
 
             AccountDAO accDao = new AccountDAO();
             Account acc = accDao.isLoginAcc(emailLogin, passwordLogin);
+            CartDAO cartDAO = new CartDAO();
 
             if (acc != null) {
 
                 session.setAttribute("userAccount", acc);
+                List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
+                if (guestCart != null && !guestCart.isEmpty()) {
+                    
+                    for (Cart c : guestCart) {
+                        if (!cartDAO.petInCart(acc.getAccId(), c.getPetId())) {
+                            cartDAO.addToPetCart(acc.getAccId(), c.getPetId());
+                        }
+                    }
+                    session.removeAttribute("guestCart");
+                }
+                List<Cart> customerCart = cartDAO.getCart(acc.getAccId());
+                session.setAttribute("cartcount", customerCart.size());
+
                 String role = acc.getAccRole();
                 String status = acc.getAccStatus();
 
                 String fname = acc.getAccFname();
-//                String lname = acc.getAccLname();
 
-//                String fullname = fname + lname;
                 if ("Inactive".equals(status)) {
                     request.setAttribute("errMessLogin", "Tài khoản của bạn đã bị vô hiệu hóa.");
                     request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
                     return;
                 }
-                
+
                 if ("on".equals(remember)) {
                     Cookie emailC = new Cookie("email", emailLogin);
                     Cookie passC = new Cookie("password", passwordLogin);

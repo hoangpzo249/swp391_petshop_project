@@ -50,7 +50,7 @@ public class DisplayCartServlet extends HttpServlet {
         List<Pet> pets = new ArrayList<>();
         double totalPrice = 0;
 
-        Account account = (Account) session.getAttribute("account");
+        Account account = (Account) session.getAttribute("userAccount");
 
         if (account != null) {
             petCart = cartDao.getCart(account.getAccId());

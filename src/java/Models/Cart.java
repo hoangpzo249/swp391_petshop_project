@@ -11,18 +11,14 @@ package Models;
 public class Cart {
     private int accountId;
     private Integer petId; 
-    private Integer productId; 
     private int quantity;
     private double price;
-
     public Cart() {
     }
-
     
     public Cart(int accountId, Integer petId, int quantity, double price) {
         this.accountId = accountId;
         this.petId = petId;
-       
         this.quantity = quantity;
         this.price = price;
     }
@@ -66,7 +62,6 @@ public class Cart {
         return "Cart{" +
                "accountId=" + accountId +
                ", petId=" + petId +
-               ", productId=" + productId +
                ", quantity=" + quantity +
                ", price=" + price +
                '}';

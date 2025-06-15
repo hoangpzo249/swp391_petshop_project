@@ -26,7 +26,7 @@ public class DeleteFromCart extends HttpServlet {
         String idParam = request.getParameter("id");
 
         int petId = Integer.parseInt(idParam);
-        Account account = (Account) session.getAttribute("account");
+        Account account = (Account) session.getAttribute("userAccount");
 
         if (account != null) {
 

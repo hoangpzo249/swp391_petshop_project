@@ -5,25 +5,25 @@
 package Models;
 
 import java.time.LocalDateTime;
-import java.util.Base64;
 
 /**
  *
  * @author Lenovo
  */
 public class PetImage {
+
     private Integer imageId;
     private int petId;
-    private byte[] imageData;
+    private String imagePath;
     private LocalDateTime uploadedAt;
 
     public PetImage() {
     }
 
-    public PetImage(Integer imageId, int petId, byte[] imageData, LocalDateTime uploadedAt) {
+    public PetImage(Integer imageId, int petId, String imagePath, LocalDateTime uploadedAt) {
         this.imageId = imageId;
         this.petId = petId;
-        this.imageData = imageData;
+        this.imagePath = imagePath;
         this.uploadedAt = uploadedAt;
     }
 
@@ -43,12 +43,12 @@ public class PetImage {
         this.petId = petId;
     }
 
-    public byte[] getImageData() {
-        return imageData;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImageData(byte[] imageData) {
-        this.imageData = imageData;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public LocalDateTime getUploadedAt() {
@@ -59,15 +59,4 @@ public class PetImage {
         this.uploadedAt = uploadedAt;
     }
 
-    @Override
-    public String toString() {
-        return "PetImage{" + "imageId=" + imageId + ", petId=" + petId + ", imageData=" + imageData + ", uploadedAt=" + uploadedAt + '}';
-    }
-    
-    public String getPetImageBase64() {
-        if (imageData != null) {
-            return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(imageData);
-        }
-        return "images/placeholder.jpg";
-    }
 }

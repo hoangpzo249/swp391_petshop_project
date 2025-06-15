@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author Lenovo
  */
-public class UpdatePetStatus extends HttpServlet {
+public class SellerUpdatePetStatusServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

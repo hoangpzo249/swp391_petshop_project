@@ -4,24 +4,23 @@
  */
 package Controllers;
 
-import DAO.AccountDAO;
-import DAO.CartDAO;
-import Models.Account;
-import Models.Cart;
+import DAO.BreedDAO;
+import DAO.PetDAO;
+import Models.Breed;
+import Models.Pet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
  *
  * @author Lenovo
  */
-public class LoginServlet extends HttpServlet {
+public class SellerDisplayAllPetServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +39,10 @@ public class LoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");
+            out.println("<title>Servlet DisplayAllPetServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DisplayAllPetServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,9 +60,30 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("message", "Tài khoản đã được tạo! Xin vui lòng đăng nhập.");
-        request.getRequestDispatcher("account_login.jsp")
-                .forward(request, response);
+
+        request.setCharacterEncoding("UTF-8");
+
+        String searchKey = request.getParameter("searchKey");
+        String availability = request.getParameter("availability");
+        String species = request.getParameter("species");
+        String breedId = request.getParameter("breedId");
+        String gender = request.getParameter("gender");
+        String vaccination = request.getParameter("vaccination");
+        String petStatus = request.getParameter("petStatus");
+
+        BreedDAO breedDAO = new BreedDAO();
+        List<String> speciesList = breedDAO.getAllSpecies();
+        List<Breed> breedList = breedDAO.getAllBreeds();
+
+        request.setAttribute("speciesList", speciesList);
+        request.setAttribute("breedList", breedList);
+
+        PetDAO petDAO = new PetDAO();
+        List<Pet> petList = petDAO.filterPetsForSeller(searchKey, availability, species, breedId, gender, vaccination, petStatus);
+
+        request.setAttribute("petList", petList);
+
+        request.getRequestDispatcher("seller_pet_view.jsp").forward(request, response);
     }
 
     /**
@@ -77,34 +97,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        AccountDAO _dao = new AccountDAO();
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        if (_dao.LoginUser(username, password)) {
-            HttpSession session = request.getSession();
-            Account account = _dao.FindUserInfo(username);
-            session.setAttribute("account", account);
-            List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
-            if (guestCart != null && !guestCart.isEmpty()) {
-                CartDAO cartDAO = new CartDAO();
-
-                for (Cart c : guestCart) {
-                    if (!cartDAO.petInCart(account.getAccId(), c.getPetId())) {
-                        cartDAO.addToPetCart(account.getAccId(), c.getPetId());
-                    }
-                }
-
-
-               
-            }
-
-            response.sendRedirect("listshoppet");
-        } else {
-            request.setAttribute("username", username);
-            request.setAttribute("password", password);
-            request.setAttribute("errMessage", "Login unsuccessful");
-            request.getRequestDispatcher("account_login.jsp").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**

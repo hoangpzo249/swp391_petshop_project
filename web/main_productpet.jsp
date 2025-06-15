@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
-        <link href="css/main_product.css?v=30" rel="stylesheet" type="text/css"/>
+        <link href="css/main_product.css?v=32" rel="stylesheet" type="text/css"/>
         <script src="js/readmore_product.js" type="text/javascript"></script>
         
 
@@ -29,7 +29,7 @@
             <div class="header1">
 
                 <div>
-                    <a href="listmainmenu">
+                    <a href="homepage">
                         <img src="images/logo2.png" alt="logo"/>
                     </a>
                 </div>
@@ -46,24 +46,64 @@
                 </form>
 
 
-                <div class="accountcard">
+                 <div class="accountcard">
                     <c:choose>
-                        <c:when test="${not empty sessionScope.account}">
+                        <c:when test="${sessionScope.userAccount != null}">
                             <div class="account-dropdown">
                                 <a href="#" class="account-trigger">
-                                    <img src="images/account.png" width="50" height="50" alt="account"/>
+                                    <!-- Cố định kích thước hình ảnh -->
+                                    <img src="images/support button/account.png" width="50" height="50" alt="account"/>
                                     <p class="username">Tài khoản</p>
                                 </a>
                                 <div class="dropdown-content">
-                                    <c:if test="${sessionScope.account.accRole eq 'Admin'}">
-                                        <a href="admin.jsp" class="dropdown-item">
-                                            <i class="fas fa-user-cog"></i> 
-                                            <span>Admin Panel</span>
-                                        </a>
-                                    </c:if>
-                                    <a href="account_profile_user.jsp" class="dropdown-item">
+                                    <c:choose>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Admin'}">
+                                            <a href="admin-panel" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Admin</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Manager'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Manager</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
+                                            <a href="displayorder" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Saler</span>
+                                            </a>
+                                        </c:when>
+                                        
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
+                                            <a href="displayorder" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Seller</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Shipper</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                    <a href="profile" class="dropdown-item">
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
+                                    </a>
+                                    <a href="orders" class="dropdown-item">
+                                        <i class="fas fa-shopping-bag"></i> 
+                                        <span>Đơn hàng đã mua</span>
                                     </a>
                                     <a href="logout" class="dropdown-item logout">
                                         <i class="fas fa-sign-out-alt"></i> 
@@ -75,7 +115,7 @@
 
                         <c:otherwise>
                             <div class="account">
-                                <a href="account_login.jsp">
+                                <a href="login">
                                     <img src="images/account.png" width="50" height="50" alt="account"/>
                                     <p class="logintext">Đăng nhập</p>
                                 </a>
@@ -98,7 +138,7 @@
 
             <nav>
                 <ul class="menu">
-                    <li><a href="listmainmenu">Trang Chủ</a></li>
+                    <li><a href="homepage">Trang Chủ</a></li>
                     <li><a href="listshoppet?species=Dog&sort=popular">Chó Cưng</a></li>
                     <li><a href="listshoppet?species=Cat&sort=popular">Mèo Cưng</a></li>
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
@@ -119,7 +159,7 @@
             <div class="left-column">
                 <div class="main-image-container">
                     <div class="image-box">
-                        <img src="${pet.getPetImageBase64()}" alt="${pet.petName}" class="main-image" />
+                        <img src="${pet.getFirstImage()}" alt="${pet.petName}" class="main-image" />
                     </div>
                 </div>
 
@@ -127,7 +167,7 @@
                     <button class="thumbnail-nav"><i class="fas fa-chevron-left"></i></button>
 
                     <div class="thumbnails">
-                        <c:forEach var="img" items="${pet.imagesBase64List}">
+                        <c:forEach var="img" items="${pet.getImages()}">
                            
                                 <div class="thumbnail-box">
                                     <img src="${img}" alt="Thumbnail" class="thumbnail-img" onclick="showImage('${img}')" />
@@ -163,7 +203,7 @@
                     <div class="action-buttons">
                         <input type="hidden" name="id" value="${pet.petId}">
 
-                        <c:if test="${empty sessionScope.account or sessionScope.account.accRole eq 'Customer'}">
+                        <c:if test="${empty sessionScope.userAccount or sessionScope.userAccount.accRole eq 'Customer'}">
                             <button type="submit" class="add-to-cart">Thêm vào giỏ hàng</button>
                         </c:if>
 
@@ -219,7 +259,7 @@
                     <a href="displaypet?id=${x.getPetId()}">
                         <div class="image-favo-container">
                             <span class="sale-badge">Sale</span>
-                            <img src="${x.getPetImageBase64()}" width="800" height="800" alt="${x.petName}"/>
+                            <img src="${x.getFirstImage()}" width="800" height="800" alt="${x.petName}"/>
                         </div>
                         <div class="item-favo-name">${x.petName}
 

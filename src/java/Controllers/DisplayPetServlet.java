@@ -27,7 +27,7 @@ public class DisplayPetServlet extends HttpServlet {
             PetDAO dao = new PetDAO();
 
             Pet pet = dao.getPetById(petId);
-            List<byte[]> images = dao.getImagesByPetId(petId);
+            List<String> images = dao.getImagePathsByPetId(petId);
             pet.setImages(images);
 
             List<Pet> similarPets = dao.getSimilarPets(pet.getBreedId(), petId);

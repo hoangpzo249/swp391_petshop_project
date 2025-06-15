@@ -254,7 +254,7 @@
                                     </c:when>
                                     <c:otherwise>
                                         <c:url var="favoriteUrl" value="favorite">
-                                            <c:param name="location" value="listmainmenu" />
+                                            <c:param name="location" value="homepage" />
                                             <c:param name="id" value="${x.productId}" />
                                         </c:url>
                                         <a href="${favoriteUrl}" class="favorite-icon"

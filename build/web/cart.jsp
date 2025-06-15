@@ -17,7 +17,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <script src="js/cart_selection.js?v=19" type="text/javascript"></script>
-        <link href="css/cart.css?v=6" rel="stylesheet" type="text/css"/>
+        <link href="css/cart.css?v=9" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 
@@ -33,7 +33,7 @@
             <div class="header1">
                 <!-- Logo -->
                 <div>
-                    <a href="listmainmenu">
+                    <a href="homepage">
                         <img src="images/logo2.png" alt="logo"/>
                     </a>
                 </div>
@@ -50,24 +50,57 @@
                 </form>
 
 
-                <div class="accountcard">
+                 <div class="accountcard">
                     <c:choose>
-                        <c:when test="${not empty sessionScope.account}">
+                        <c:when test="${sessionScope.userAccount != null}">
                             <div class="account-dropdown">
                                 <a href="#" class="account-trigger">
-                                    <img src="images/account.png" width="50" height="50" alt="account"/>
+                                    <!-- Cố định kích thước hình ảnh -->
+                                    <img src="images/support button/account.png" width="50" height="50" alt="account"/>
                                     <p class="username">Tài khoản</p>
                                 </a>
                                 <div class="dropdown-content">
-                                    <c:if test="${sessionScope.account.accRole eq 'Admin'}">
-                                        <a href="admin.jsp" class="dropdown-item">
-                                            <i class="fas fa-user-cog"></i> 
-                                            <span>Admin Panel</span>
-                                        </a>
-                                    </c:if>
-                                    <a href="account_profile_user.jsp" class="dropdown-item">
+                                    <c:choose>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Admin'}">
+                                            <a href="admin-panel" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Admin</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Manager'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Manager</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Saler</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
+                                            <a href="profile" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Shipper</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                    <a href="profile" class="dropdown-item">
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
+                                    </a>
+                                    <a href="orders" class="dropdown-item">
+                                        <i class="fas fa-shopping-bag"></i> 
+                                        <span>Đơn hàng đã mua</span>
                                     </a>
                                     <a href="logout" class="dropdown-item logout">
                                         <i class="fas fa-sign-out-alt"></i> 
@@ -79,7 +112,7 @@
 
                         <c:otherwise>
                             <div class="account">
-                                <a href="account_login.jsp">
+                                <a href="login">
                                     <img src="images/account.png" width="50" height="50" alt="account"/>
                                     <p class="logintext">Đăng nhập</p>
                                 </a>
@@ -102,7 +135,7 @@
 
             <nav>
                 <ul class="menu">
-                    <li><a href="listmainmenu">Trang Chủ</a></li>
+                    <li><a href="homepage">Trang Chủ</a></li>
                     <li><a href="listshoppet?species=Dog&sort=popular">Chó Cưng</a></li>
                     <li><a href="listshoppet?species=Cat&sort=popular">Mèo Cưng</a></li>
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
@@ -138,49 +171,49 @@
                         </tr>
                     </thead>
                     <tbody>
-                       
-
-
-
-                    <c:forEach items="${pets}" var="pet">
-                        <tr class="cart-item">
-                            <td>
-                                <input type="checkbox" class="item-check" data-price="${pet.petPrice}" 
-                                       form="confirmForm" name="selectedPets" value="${pet.petId}" />
-                            </td>
-
-
-                            <td class="item-info">
-                                <a href="displaypet?id=${pet.petId}" class="item-link">
-                                    <img src="${pet.petImageBase64}" alt="${pet.petName}" class="cart-img" />
-                                    <div>
-                                        <div class="item-title">${pet.petName}</div>
-                                        <div class="item-price">Giá: <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></div>
-                                    </div>
-                                </a>
-                            </td>
-                            <td>
-                                <input type="number" name="quantity" value="1" class="qty-input" readonly="readonly" />
-                            </td>
-                            <td> <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></td>
 
 
 
 
+                        <c:forEach items="${pets}" var="pet">
+                            <tr class="cart-item">
+                                <td>
+                                    <input type="checkbox" class="item-check" data-price="${pet.petPrice}" 
+                                           form="confirmForm" name="selectedPets" value="${pet.petId}" />
+                                </td>
 
-                            <td class="item-action">
 
-                                <form action="deletefromcart" method="GET" style="display:inline;">
-                                    <input type="hidden" name="id" value="${pet.petId}" />
+                                <td class="item-info">
+                                    <a href="displaypet?id=${pet.petId}" class="item-link">
+                                        <img src="${pet.getFirstImage()}" alt="${pet.petName}" class="cart-img" />
+                                        <div>
+                                            <div class="item-title">${pet.petName}</div>
+                                            <div class="item-price">Giá: <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></div>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td>
+                                    <input type="number" name="quantity" value="1" class="qty-input" readonly="readonly" />
+                                </td>
+                                <td> <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></td>
 
-                                    <button class="btn-delete" title="Xóa sản phẩm">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
 
-                        </tr>
-                    </c:forEach>
+
+
+
+                                <td class="item-action">
+
+                                    <form action="deletefromcart" method="GET" style="display:inline;">
+                                        <input type="hidden" name="id" value="${pet.petId}" />
+
+                                        <button class="btn-delete" title="Xóa sản phẩm">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+
+                            </tr>
+                        </c:forEach>
                     </tbody>
                 </table>
 
@@ -194,7 +227,7 @@
 
 
 
-                    <c:if test="${empty sessionScope.account or sessionScope.account.accRole eq 'Customer'}">
+                    <c:if test="${empty sessionScope.userAccount or sessionScope.userAccount.accRole eq 'Customer'}">
                         <button type="submit" class="checkout-btn">Xác nhận giỏ hàng</button>
                     </c:if>
                 </form>
@@ -270,7 +303,7 @@
                         }, 3500);
                     }
 
-                    
+
                     <c:if test="${not empty sessionScope.cartMessage}">
                     showToast('${sessionScope.cartMessage}', 'error');
                     </c:if>
@@ -284,6 +317,9 @@
                 <footer>
                     © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
                 </footer>
+               
+
+                
 
                 </body>
                 </html>

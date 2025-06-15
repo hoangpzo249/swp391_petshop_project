@@ -1,0 +1,74 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jun 14, 2025, 4:45:41 PM
+    Author     : ADMIN
+*/
+
+.about-section {
+    padding: 60px 100px;
+    margin-top: 0;
+    display: flex;
+    justify-content: space-between;
+    text-align: start;
+    background: linear-gradient(to right, #fff0e1, #ffe2c4); /* nền be cam nhạt */
+    color: #333;
+    box-shadow: inset 0 4px 8px rgba(0,0,0,0.03);
+}
+
+.about-column {
+    flex: 1;
+    padding: 20px;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.about-column h3 {
+    color: #f26f21;
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.about-column ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.about-column ul li a,
+.about-column p a {
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+    transition: color 0.2s ease;
+}
+
+.about-column ul li a:hover,
+.about-column p a:hover {
+    color: #f26f21;
+}
+
+.about-column p {
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.about-column p i {
+    font-size: 16px;
+    margin-right: 8px;
+    color: #f26f21;
+}
+
+.social-icon {
+    color: #333;
+    transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.social-icon:hover {
+    color: #f26f21;
+    transform: scale(1.1);
+}
