@@ -142,8 +142,8 @@
                                                         ${updateRole.accRole}
                                                     </div>
                                                 </c:when>
-                                                <c:when test="${updateRole.accRole eq 'Saler'}">
-                                                    <div class="account-role-badge saler-role">
+                                                <c:when test="${updateRole.accRole eq 'Seller'}">
+                                                    <div class="account-role-badge Seller-role">
                                                         ${updateRole.accRole}
                                                     </div>
                                                 </c:when>
@@ -197,7 +197,7 @@
                                                 <div class="role-desc">Quản lý cửa hàng, sản phẩm, đơn hàng</div>
                                             </div>
                                             <div class="role-item">
-                                                <div class="role-badge saler-role"><i class="fas fa-user-tag"></i> Saler</div>
+                                                <div class="role-badge Seller-role"><i class="fas fa-user-tag"></i> Seller</div>
                                                 <div class="role-desc">Quản lý đơn hàng, bán hàng và chăm sóc khách hàng</div>
                                             </div>
                                             <div class="role-item">
@@ -231,9 +231,9 @@
                                                     <option value="">-- Chọn vai trò --</option>
                                                     <c:choose>
                                                         <c:when test="${updateRole.accRole eq 'Manager'}">
-                                                            <option value="Saler">Saler</option>
+                                                            <option value="Seller">Seller</option>
                                                         </c:when>
-                                                        <c:when test="${updateRole.accRole eq 'Saler'}">
+                                                        <c:when test="${updateRole.accRole eq 'Seller'}">
 
                                                             <option value="Manager">Manager</option>
                                                         </c:when>
@@ -253,7 +253,7 @@
                                         <div class="confirmation-card">
                                             <h3><i class="fas fa-exclamation-triangle"></i> Lưu ý quan trọng</h3>
                                             <ul class="confirmation-notes">
-                                                <li>Để đảm bảo hệ thống vấn hành tốt, hiện tại bạn chỉ có thể cập nhật vai trò cho Manager và Saler</li>
+                                                <li>Để đảm bảo hệ thống vấn hành tốt, hiện tại bạn chỉ có thể cập nhật vai trò cho Manager và Seller</li>
                                                 <li>Việc thay đổi vai trò sẽ đến khả năng truy cập hệ thống của người dùng</li>
                                                 <li>Người dùng sẽ được thông báo về sự thay đổi vai trò này qua Email*</li>
                                                 <li>Đảm bảo bạn đã kiểm tra kỹ thông tin trước khi xác nhận thay đổi</li>

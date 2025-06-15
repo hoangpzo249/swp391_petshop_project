@@ -409,7 +409,7 @@
                                                     <select name="roleStaff" id="roleStaff" class="form-control" required>
                                                         <option value="">-- Chọn vai trò --</option>
                                                         <option value="Manager">Manager</option>
-                                                        <option value="Saler">Saler</option>
+                                                        <option value="Seller">Seller</option>
                                                         <option value="Shipper">Shipper</option>
                                                     </select>
                                                     <span class="select-arrow"><i class="fas fa-chevron-down"></i></span>

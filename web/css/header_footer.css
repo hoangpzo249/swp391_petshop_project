@@ -888,3 +888,12 @@ footer {
     padding: 20px 10px;
     font-size: 14px;
 }
+
+.cartcount {
+    padding: 5px 10px;
+    background-color: white;
+    color: orange;
+    border-radius: 50%;
+    font-size: 14px;
+    text-align: center;
+}

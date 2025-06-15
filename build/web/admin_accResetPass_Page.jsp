@@ -146,8 +146,8 @@
                                                         ${resetpass.accRole}
                                                     </div>
                                                 </c:when>
-                                                <c:when test="${resetpass.accRole eq 'Saler'}">
-                                                    <div class="account-role-badge saler-role">
+                                                <c:when test="${resetpass.accRole eq 'Seller'}">
+                                                    <div class="account-role-badge Seller-role">
                                                         ${resetpass.accRole}
                                                     </div>
                                                 </c:when>

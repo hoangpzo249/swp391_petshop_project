@@ -79,7 +79,7 @@ request.setAttribute("passwordLogin", password);
                 <button type="submit" class="btn">Đăng nhập</button>
 
                 <div class="social-login">
-                    <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&access_type=online&response_type=code&redirect_uri=http://localhost:8080/swp391_petshop_project/login-google&client_id=406838536003-3dvgsajsk4p6a500vlmaokr7u5q3nsa5.apps.googleusercontent.com" class="custom-google-btn">
+                    <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&access_type=online&response_type=code&redirect_uri=http://localhost:8080/PetShopFPT/login-google&client_id=272169085029-oucd0u94q8i5bcnfrlm4qq2k1r5jdu76.apps.googleusercontent.com" class="custom-google-btn">
                         <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
                         <span>Đăng nhập bằng Google</span>
                     </a>

@@ -91,7 +91,6 @@ public class Login_Google_Servlet extends HttpServlet {
 
         AccountDAO accDao = new AccountDAO();
 
-
         String fullName = ggUser.getGiven_name();
 
         boolean checkEmail = accDao.isEmailExist(ggUser.getEmail());
@@ -113,7 +112,7 @@ public class Login_Google_Servlet extends HttpServlet {
                         cartDAO.addToPetCart(acc.getAccId(), c.getPetId());
                     }
                 }
-                session.removeAttribute("guestCart"); // clear guest cart after merge
+                session.removeAttribute("guestCart");
             }
 
             String role = acc.getAccRole();
@@ -124,8 +123,8 @@ public class Login_Google_Servlet extends HttpServlet {
             } else if ("Manager".equals(role)) {
                 session.setAttribute("loginSuccess", "Chào Manager!");
                 response.sendRedirect("homepage");
-            } else if ("Saler".equals(role)) {
-                session.setAttribute("loginSuccess", "Chào Saler!");
+            } else if ("Seller".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào Seller!");
                 response.sendRedirect("homepage");
             } else if ("Shipper".equals(role)) {
                 session.setAttribute("loginSuccess", "Chào Shipper!");
@@ -146,6 +145,7 @@ public class Login_Google_Servlet extends HttpServlet {
             newAcc.setAccFname(ggUser.getGiven_name());
             newAcc.setAccLname(ggUser.getFamily_name());
             newAcc.setAccPhoneNumber("Chưa cập nhật");
+
             accDao.registerAccByGG(newAcc);
 
             Account acc = accDao.ggByEmail(ggUser.getEmail());
@@ -159,8 +159,8 @@ public class Login_Google_Servlet extends HttpServlet {
             } else if ("Manager".equals(role)) {
                 session.setAttribute("loginSuccess", "Chào Manager!");
                 response.sendRedirect("homepage");
-            } else if ("Saler".equals(role)) {
-                session.setAttribute("loginSuccess", "Chào Saler!");
+            } else if ("Seller".equals(role)) {
+                session.setAttribute("loginSuccess", "Chào Seller!");
                 response.sendRedirect("homepage");
             } else if ("Shipper".equals(role)) {
                 session.setAttribute("loginSuccess", "Chào Shipper!");

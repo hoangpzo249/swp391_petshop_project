@@ -133,7 +133,7 @@
                                     </button>
                                 </c:when>
 
-                                <c:when test="${accDetail.accRole eq 'Saler'}">
+                                <c:when test="${accDetail.accRole eq 'Seller'}">
                                     <button class="btn btn-outline" onclick="location.href = 'admin-panel?action=account&type=${accDetail.accRole}&act=update-role&id=${accDetail.accId}'">
                                         <i class="fas fa-edit"></i> Chỉnh sửa
                                     </button>
@@ -183,8 +183,8 @@
                                                     ${accDetail.accRole}
                                                 </div>
                                             </c:when>
-                                            <c:when test="${accDetail.accRole eq 'Saler'}">
-                                                <div class="account-role-badge saler-role">
+                                            <c:when test="${accDetail.accRole eq 'Seller'}">
+                                                <div class="account-role-badge Seller-role">
                                                     ${accDetail.accRole}
                                                 </div>
                                             </c:when>

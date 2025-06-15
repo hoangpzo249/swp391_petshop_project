@@ -20,10 +20,10 @@ public class BreedDAO {
     public List<Breed> displayDogBreeds() {
         List<Breed> listBreed = new ArrayList<>();
         String sql = ""
-            + "SELECT breedId, breedName, breedSpecies, breedStatus, breedImage "
-            + "FROM BreedTB "
-            + "WHERE breedSpecies = N'Dog' "
-            + "ORDER BY breedName ASC";
+                + "SELECT breedId, breedName, breedSpecies, breedStatus, breedImage "
+                + "FROM BreedTB "
+                + "WHERE breedSpecies = N'Dog' "
+                + "ORDER BY breedName ASC";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
@@ -39,9 +39,24 @@ public class BreedDAO {
         } catch (Exception ex) {
             // handle as needed
         } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return listBreed;
     }
@@ -49,10 +64,10 @@ public class BreedDAO {
     public List<Breed> displayCatBreeds() {
         List<Breed> listBreed = new ArrayList<>();
         String sql = ""
-            + "SELECT breedId, breedName, breedSpecies, breedStatus, breedImage "
-            + "FROM BreedTB "
-            + "WHERE breedSpecies = N'Cat' "
-            + "ORDER BY breedName ASC";
+                + "SELECT breedId, breedName, breedSpecies, breedStatus, breedImage "
+                + "FROM BreedTB "
+                + "WHERE breedSpecies = N'Cat' "
+                + "ORDER BY breedName ASC";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
@@ -68,9 +83,24 @@ public class BreedDAO {
         } catch (Exception ex) {
             // handle as needed
         } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return listBreed;
     }
@@ -91,9 +121,24 @@ public class BreedDAO {
         } catch (Exception ex) {
             // handle as needed
         } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return list;
     }
@@ -109,18 +154,33 @@ public class BreedDAO {
                 list.add(rs.getString("breedSpecies"));
             }
         } catch (Exception ex) {
-            
+
         } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return list;
     }
-    
+
     public List<Breed> getBreedsBySpecies(String species) {
         List<Breed> list = new ArrayList<>();
-        String sql = "SELECT * FROM BreedTB WHERE breedSpecies = ? ";
+        String sql = "SELECT * FROM BreedTB WHERE breedSpecies = ?";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
@@ -137,8 +197,51 @@ public class BreedDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return list;
     }
 
+    public List<Breed> get6BreedHot() {
+        List<Breed> listbreed = new ArrayList<>();
+        String sql = "SELECT TOP 6 b.breedId, b.breedName, b.breedSpecies, b.breedImage, COUNT(p.petId) AS petCount\n"
+                + "FROM BreedTB b\n"
+                + "JOIN PetTB p ON b.breedId = p.breedId\n"
+                + "GROUP BY b.breedId, b.breedName, b.breedSpecies, b.breedImage\n"
+                + "ORDER BY petCount DESC;";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Breed breed = new Breed();
+                breed.setBreedId(rs.getInt("breedId"));
+                breed.setBreedName(rs.getString("breedName"));
+                breed.setBreedSpecies(rs.getString("breedSpecies"));
+                breed.setBreedImage(rs.getBytes("breedImage"));
+
+                listbreed.add(breed);
+            }
+        } catch (Exception e) {
+        }
+        return listbreed;
+    }
 }

@@ -3,28 +3,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Utils/ImgBbUploader.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/DAO/PetDAO.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/DAO/PetImagePathDAO.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/DAO/PetImageDAO.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Controllers/ListShopPetServlet.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Controllers/DisplayCartServlet.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/web/main_productpet.jsp</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Models/Pet.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/web/cart.jsp</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/web/checkout.jsp</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Controllers/CheckoutServlet.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Controllers/DiscountCheckServlet.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/web/main_typepet.jsp</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Models/Cart.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Models/Breed.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Models/Discount.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Models/Account.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Controllers/AddToCartServlet.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Controllers/DisplayPetServlet.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/Controllers/SellerUpdateOrderStatusServlet.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/DAO/CartDAO.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/bản%20156/swp391_petshop_project/src/java/DAO/BreedDAO.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/Controllers/LoginServlet.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/Controllers/Admin_Panel_Servlet.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/web/css/admin_accList_page.css</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/Utils/GoogleUser.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/web/login_account_page.jsp</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/DAO/DBContext.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/web/css/header_footer.css</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/web/home_page.jsp</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/DAO/PetDAO.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/Models/Pet.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/DAO/AccountDAO.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/Utils/EmailSender.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/Utils/GoogleUtils.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/Models/Account.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/Controllers/Login_Google_Servlet.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/swp391_petshop_project/src/java/Controllers/Recover_Account_Servlet.java</file>
         </group>
     </open-files>
 </project-private>

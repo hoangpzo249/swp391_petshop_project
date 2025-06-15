@@ -141,8 +141,8 @@ public class Login_Account_Servlet extends HttpServlet {
                 } else if ("Manager".equals(role)) {
                     session.setAttribute("loginSuccess", "Chào Manager!");
                     response.sendRedirect("homepage");
-                } else if ("Saler".equals(role)) {
-                    session.setAttribute("loginSuccess", "Chào Saler!");
+                } else if ("Seller".equals(role)) {
+                    session.setAttribute("loginSuccess", "Chào Seller!");
                     response.sendRedirect("homepage");
                 } else if ("Shipper".equals(role)) {
                     session.setAttribute("loginSuccess", "Chào Shipper!");

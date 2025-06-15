@@ -22,7 +22,7 @@
     <body>
         <div class="header">
             <div class="header1">
-                <!-- Logo -->
+
                 <div>
                     <a href="homepage">
                         <img src="images/logo2.png" alt="logo"/>
@@ -46,7 +46,7 @@
                         <c:when test="${sessionScope.userAccount != null}">
                             <div class="account-dropdown">
                                 <a href="#" class="account-trigger">
-                                    <!-- Cố định kích thước hình ảnh -->
+
                                     <img src="images/support button/account.png" width="50" height="50" alt="account"/>
                                     <p class="username">Tài khoản</p>
                                 </a>
@@ -67,10 +67,16 @@
                                             </a>
                                         </c:when>
 
-                                        <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
-                                            <a href="profile" class="dropdown-item">
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
+                                            <a href="displayorder" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
-                                                <span>Quản lý Saler</span>
+                                                <span>Quản lý Seller</span>
+                                            </a>
+                                        </c:when>
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
+                                            <a href="displayorder" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Seller</span>
                                             </a>
                                         </c:when>
 
@@ -127,13 +133,12 @@
             <nav>
                 <ul class="menu">
                     <li><a href="homepage">Trang Chủ</a></li>
-                    <li><a href="listshoppet?species=Dog&sort=popular">Chó Cưng</a></li>
-                    <li><a href="listshoppet?species=Cat&sort=popular">Mèo Cưng</a></li>
+                    <li><a href="listshoppet?species=Dog">Chó Cưng</a></li>
+                    <li><a href="listshoppet?species=Cat">Mèo Cưng</a></li>
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
                     <li><a href="menu_contact.jsp">Liên Hệ</a></li>
-                        <c:if test="${not empty sessionScope.account and sessionScope.account.accRole eq 'Admin'}">
-                        <li><a href="admin.jsp">Admin Panel</a></li>
-                        </c:if>
+
+
                 </ul>
             </nav>
         </div>
@@ -212,7 +217,7 @@
                                     <p>
                                         <i class="fas fa-exclamation-circle icon-alert"></i>
                                         <strong>Thông tin không đúng?</strong> Vui lòng cập nhật trong 
-                                       <a href="profile" class="terms-link highlight-red-bold">tài khoản của bạn</a>
+                                        <a href="profile" class="terms-link highlight-red-bold">tài khoản của bạn</a>
 
                                     </p>
                                 </div>
@@ -297,18 +302,7 @@
         </div>
 
         <div id="toast" class="toast"></div>
-        <script>
-            window.addEventListener("DOMContentLoaded", function () {
-                const warning = document.querySelector('.warning-message');
-                if (warning) {
-                    setTimeout(() => {
-                        warning.style.opacity = '0';
-                        warning.style.transform = 'translateY(-10px)';
-                        setTimeout(() => warning.remove(), 500); 
-                    }, 4000); 
-                }
-            });
-        </script>
+
 
 
         <div id="terms" class="modal-overlay" style="display:none;">
@@ -424,6 +418,18 @@
                 </div>
             </div>
         </div>
+        <script>
+            window.addEventListener("DOMContentLoaded", function () {
+                const warning = document.querySelector('.warning-message');
+                if (warning) {
+                    setTimeout(() => {
+                        warning.style.opacity = '0';
+                        warning.style.transform = 'translateY(-10px)';
+                        setTimeout(() => warning.remove(), 500);
+                    }, 4000);
+                }
+            });
+        </script>
 
         <script>
             function openTerms() {

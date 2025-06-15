@@ -31,7 +31,7 @@
 
         <div class="header">
             <div class="header1">
-                <!-- Logo -->
+
                 <div>
                     <a href="homepage">
                         <img src="images/logo2.png" alt="logo"/>
@@ -50,12 +50,12 @@
                 </form>
 
 
-                 <div class="accountcard">
+                <div class="accountcard">
                     <c:choose>
                         <c:when test="${sessionScope.userAccount != null}">
                             <div class="account-dropdown">
                                 <a href="#" class="account-trigger">
-                                    <!-- Cố định kích thước hình ảnh -->
+
                                     <img src="images/support button/account.png" width="50" height="50" alt="account"/>
                                     <p class="username">Tài khoản</p>
                                 </a>
@@ -76,10 +76,17 @@
                                             </a>
                                         </c:when>
 
-                                        <c:when test="${sessionScope.userAccount.accRole eq 'Saler'}">
-                                            <a href="profile" class="dropdown-item">
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
+                                            <a href="displayorder" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
-                                                <span>Quản lý Saler</span>
+                                                <span>Quản lý Seller</span>
+                                            </a>
+                                        </c:when>
+
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
+                                            <a href="displayorder" class="dropdown-item">
+                                                <i class="fas fa-user"></i> 
+                                                <span>Quản lý Seller</span>
                                             </a>
                                         </c:when>
 
@@ -136,11 +143,11 @@
             <nav>
                 <ul class="menu">
                     <li><a href="homepage">Trang Chủ</a></li>
-                    <li><a href="listshoppet?species=Dog&sort=popular">Chó Cưng</a></li>
-                    <li><a href="listshoppet?species=Cat&sort=popular">Mèo Cưng</a></li>
+                    <li><a href="listshoppet?species=Dog">Chó Cưng</a></li>
+                    <li><a href="listshoppet?species=Cat">Mèo Cưng</a></li>
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
                     <li><a href="menu_contact.jsp">Liên Hệ</a></li>
-                       
+
                 </ul>
             </nav>
         </div>
@@ -231,7 +238,7 @@
                 </form>
 
 
-                <!-- about -->
+
                 <div class="about-section">
                     <div class="about-column">
                         <h3>Shop</h3>
@@ -315,9 +322,9 @@
                 <footer>
                     © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
                 </footer>
-               
 
-                
+
+
 
                 </body>
                 </html>

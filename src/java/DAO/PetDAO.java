@@ -668,4 +668,34 @@ public class PetDAO {
         }
         return 0;
     }
+
+    public List<Pet> get6PetNew() {
+        List<Pet> listPet = new ArrayList<>();
+        String sql = "SELECT TOP 6 *\n"
+                + "FROM PetTB\n"
+                + "WHERE petStatus = 1\n"
+                + "ORDER BY petId DESC;";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Pet pet = new Pet();
+                pet.setPetId(rs.getInt("petId"));
+                pet.setPetName(rs.getString("petName"));
+                pet.setPetDob(rs.getDate("petDob"));
+                pet.setPetGender(rs.getString("petGender"));
+                pet.setPetOrigin(rs.getString("petOrigin"));
+                pet.setPetColor(rs.getString("petColor"));
+                pet.setPetDescription(rs.getString("petDescription"));
+                pet.setPetPrice(rs.getDouble("petPrice"));
+                pet.setBreedId(rs.getInt("breedId"));
+                pet.setImages(getImagePathsByPetId(pet.getPetId()));
+
+                listPet.add(pet);
+            }
+        } catch (Exception e) {
+        }
+        return listPet;
+    }
 }

@@ -20,9 +20,9 @@ import com.google.gson.JsonParser;
  */
 public class GoogleUtils {
 
-    private static final String CLIENT_ID = "406838536003-3dvgsajsk4p6a500vlmaokr7u5q3nsa5.apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "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";
-    private static final String REDIRECT_URI = "http://localhost:8080/swp391_petshop_project/login-google";
+    private static final String CLIENT_ID = "272169085029-oucd0u94q8i5bcnfrlm4qq2k1r5jdu76.apps.googleusercontent.com";
+    private static final String CLIENT_SECRET = "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";
+    private static final String REDIRECT_URI = "http://localhost:8080/PetShopFPT/login-google";
 
     public static String getToken(String code) throws IOException {
         String url = "https://oauth2.googleapis.com/token";

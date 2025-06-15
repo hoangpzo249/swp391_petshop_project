@@ -53,17 +53,17 @@
 ////                "Active"
 ////        );
 ////
-////        // Create Saler account
-////        Account saler = new Account(
-////                "salerUser",
-////                "saler@example.com",
-////                "salerPass789",
-////                "Saler",
+////        // Create Seller account
+////        Account Seller = new Account(
+////                "SellerUser",
+////                "Seller@example.com",
+////                "SellerPass789",
+////                "Seller",
 ////                "User",
 ////                LocalDate.of(1988, 7, 20),
-////                "Saler Address",
+////                "Seller Address",
 ////                "0112233445",
-////                "Saler",
+////                "Seller",
 ////                "Sales representative",
 ////                null,
 ////                "Active"
@@ -104,7 +104,7 @@
 ////        // Insert accounts into database
 ////        createAccount(admin);
 ////        createAccount(customer);
-////        createAccount(saler);
+////        createAccount(Seller);
 ////        createAccount(manager);
 ////        createAccount(shipper);
 ////    }

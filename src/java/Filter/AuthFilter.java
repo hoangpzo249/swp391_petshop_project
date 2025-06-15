@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author HuyHoang
  */
-@WebFilter(filterName="AuthFilter", urlPatterns={"/profile", "/admin-panel", "/manager-panel", "/saler-panel",  "/shipper-panel"})
+@WebFilter(filterName="AuthFilter", urlPatterns={"/profile", "/admin-panel", "/manager-panel", "/Seller-panel",  "/shipper-panel"})
 public class AuthFilter implements Filter {
 
     private static final boolean debug = true;
