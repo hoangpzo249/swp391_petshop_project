@@ -122,18 +122,21 @@
                             </div>
                         </c:otherwise>
                     </c:choose>
+                    <c:if test="${empty sessionScope.userAccount or sessionScope.userAccount.accRole eq 'Customer'}">
 
-                    <div class="card">
-                        <a href="displaycart">
-                            <img src="images/card.png" width="50" height="50" alt="card"/>
-                            <p class="cardtext">
-                                Giỏ Hàng
-                                <span id="cart-count" class="cartcount">${sessionScope.cartcount}</span>
-                            </p>
-                        </a>
-                    </div>
+                        <div class="card">
+                            <a href="displaycart">
+                                <img src="images/card.png" width="50" height="50" alt="card"/>
+                                <p class="cardtext">
+                                    Giỏ Hàng
+                                    <span id="cart-count" class="cartcount">${sessionScope.cartcount}</span>
+                                </p>
+                            </a>
+                        </div>
+                    </c:if>
                 </div>
             </div>
+
 
 
             <nav>

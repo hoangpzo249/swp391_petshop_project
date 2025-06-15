@@ -44,7 +44,7 @@ public class ListShopPetServlet extends HttpServlet {
             for (Cart c : carts) {
                 if (c.getPetId() != null) {
                     Pet pet = petDAO.getPetById(c.getPetId());
-                    if (pet != null && pet.getPetAvailability() == 1) {
+                   if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
                         filtered.add(c);
                     }
                 }
@@ -60,7 +60,7 @@ public class ListShopPetServlet extends HttpServlet {
                 for (Cart c : guestCart) {
                     if (c.getPetId() != null) {
                         Pet pet = petDAO.getPetById(c.getPetId());
-                        if (pet != null && pet.getPetAvailability() == 1) {
+                        if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
                             guestCount++;
                         }
                     }

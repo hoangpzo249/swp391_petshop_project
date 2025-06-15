@@ -88,7 +88,7 @@ public class CheckoutServlet extends HttpServlet {
             try {
                 int petId = Integer.parseInt(id);
                 Pet pet = petDao.getPetById(petId);
-                if (pet != null && pet.getPetAvailability() == 1) {
+                if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
                     selectedPetList.add(pet);
                     total += pet.getPetPrice();
                 }
