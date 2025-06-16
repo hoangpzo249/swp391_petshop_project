@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -75,10 +76,10 @@ public class SellerAddPetServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        HttpSession session=request.getSession();
-        Account account=(Account) session.getAttribute("userAccount");
-        if (account==null || !account.getAccRole().equals("Seller")) {
+
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Seller")) {
             session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
             response.sendRedirect("homepage");
             return;
@@ -110,7 +111,12 @@ public class SellerAddPetServlet extends HttpServlet {
         PetDAO _daopet = new PetDAO();
         PetImagePathDAO _daoimage = new PetImagePathDAO();
         String referer = request.getHeader("referer");
-        
+
+        BreedDAO _daobreed = new BreedDAO();
+
+        List<Breed> breedList = _daobreed.getAllBreeds();
+
+        request.setAttribute("breedList", breedList);
 
         try {
             String petDobStr = request.getParameter("petDob");
@@ -144,6 +150,25 @@ public class SellerAddPetServlet extends HttpServlet {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date utilPetDob = sdf.parse(petDobStr);
             java.sql.Date sqlPetDob = new java.sql.Date(utilPetDob.getTime());
+
+            request.setAttribute("petName", petName);
+            request.setAttribute("petOrigin", petOrigin);
+            request.setAttribute("petGender", petGender);
+            request.setAttribute("petAvailability", petAvailability);
+            request.setAttribute("petColor", petColor);
+            request.setAttribute("petVaccination", petVaccination);
+            request.setAttribute("petStatus", petStatus);
+            request.setAttribute("petDescription", petDescription);
+            request.setAttribute("petPrice",  new BigDecimal(request.getParameter("petPrice")));
+            request.setAttribute("breedId", breedId);
+            request.setAttribute("petDob", petDobStr);
+
+            if (petPrice > 99999999) {
+                session.setAttribute("errMess", "Giá thú cưng không được vươt quá 99.999.999₫");
+                request.getRequestDispatcher("seller_pet_add.jsp")
+                        .forward(request, response);
+                return;
+            }
 
             Pet pet = new Pet();
             pet.setPetName(petName);
@@ -182,10 +207,6 @@ public class SellerAddPetServlet extends HttpServlet {
                             }
                         });
 
-                if (imageParts.size() > 5) {
-                    session.setAttribute("infoMess", "Chỉ 5 ảnh đầu tiên được tải lên vì đã đạt giới hạn.");
-                }
-
                 if (imageURLs.isEmpty()) {
                     imageURLs.add("https://i.ibb.co/NggxZvb7/defaultcatdog.png");
                 }
@@ -199,13 +220,18 @@ public class SellerAddPetServlet extends HttpServlet {
                 }
             } else {
                 session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình đăng bán. Vui lòng thử lại.");
+                request.getRequestDispatcher("seller_pet_add.jsp")
+                        .forward(request, response);
+                return;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("errMess", "Lỗi: Dữ liệu không hợp lệ hoặc đã xảy ra sự cố máy chủ.");
+            request.getRequestDispatcher("seller_pet_add.jsp")
+                    .forward(request, response);
+            return;
         }
-
         response.sendRedirect("displayallpet");
     }
 

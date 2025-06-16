@@ -100,17 +100,18 @@
                                 <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="petName">Tên thú cưng</label>
-                                    <input type="text" id="petName" name="petName" class="form-control" placeholder="Ví dụ: Lạp Xưởng Vàng" required>
+                                    <input type="text" id="petName" name="petName" class="form-control" placeholder="Ví dụ: Lạp Xưởng Vàng" value="${petName}" required>
                                 </div>
 
                                 <%-- Right Column --%>
                                 <div class="form-group">
                                     <label for="petGender">Giới tính</label>
                                     <select id="petGender" name="petGender" class="form-control">
-                                        <option value="Male">Đực</option>
-                                        <option value="Female">Cái</option>
+                                        <option value="Male" ${petGender == 'Male' ? 'selected' : ''}>Đực</option>
+                                        <option value="Female" ${petGender == 'Female' ? 'selected' : ''}>Cái</option>
                                     </select>
                                 </div>
+
 
                                 <%-- Left Column --%>
                                 <div class="form-group">
@@ -118,33 +119,33 @@
                                     <select id="breedId" name="breedId" class="form-control" required>
                                         <option value="" disabled selected>-- Chọn giống --</option>
                                         <c:forEach items="${breedList}" var="b">
-                                            <option value="${b.breedId}">${b.breedName}</option>
-                                        </c:forEach>
+                                            <option value="${b.breedId}" ${breedId == b.breedId ? 'selected' : ''}>${b.breedName}</option>
+                                        </c:forEach> 
                                     </select>
                                 </div>
 
                                 <%-- Right Column --%>
                                 <div class="form-group">
                                     <label for="petColor">Màu sắc</label>
-                                    <input type="text" id="petColor" name="petColor" class="form-control" placeholder="Ví dụ: Vàng, Trắng">
+                                    <input type="text" id="petColor" name="petColor" class="form-control" placeholder="Ví dụ: Vàng, Trắng" value="${petColor}">
                                 </div>
 
                                 <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="petDob">Ngày sinh</label>
-                                    <input type="date" id="petDob" name="petDob" class="form-control" required>
+                                    <input type="date" id="petDob" name="petDob" class="form-control" value="${petDob}" required>
                                 </div>
 
                                 <%-- Right Column --%>
                                 <div class="form-group">
                                     <label for="petOrigin">Nguồn gốc</label>
-                                    <input type="text" id="petOrigin" name="petOrigin" class="form-control" placeholder="Ví dụ: Việt Nam">
+                                    <input type="text" id="petOrigin" name="petOrigin" class="form-control" placeholder="Ví dụ: Việt Nam" value="${petOrigin}">
                                 </div>
 
                                 <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="petPrice">Giá bán (₫)</label>
-                                    <input type="number" id="petPrice" name="petPrice" class="form-control" placeholder="Nhập giá bán" required min="0" step="1000">
+                                    <input type="number" id="petPrice" name="petPrice" class="form-control" placeholder="Nhập giá bán" min="0" required step="1000" value="${petPrice}">
                                 </div>
 
                                 <%-- Right Column (empty for alignment, or add another field here) --%>
@@ -160,8 +161,8 @@
                                         <div class="form-group">
                                             <label for="petAvailability">Trạng thái bán</label>
                                             <select id="petAvailability" name="petAvailability" class="form-control">
-                                                <option value="1" selected>Còn hàng</option>
-                                                <option value="0">Đã bán</option>
+                                                <option value="1" ${petAvailability == '1' ?'selected':''}>Còn hàng</option>
+                                                <option value="0" ${petAvailability == '0' ?'selected':''}>Đã bán</option>
                                             </select>
                                         </div>
 
@@ -169,8 +170,8 @@
                                         <div class="form-group">
                                             <label for="petStatus">Trạng thái đăng</label>
                                             <select id="petStatus" name="petStatus" class="form-control">
-                                                <option value="1" selected>Hiển thị</option>
-                                                <option value="0">Ẩn</option>
+                                                <option value="1" ${petStatus == '1' ?'selected':''}>Hiển thị</option>
+                                                <option value="0" ${petStatus == '0' ?'selected':''}>Ẩn</option>
                                             </select>
                                         </div>
 
@@ -178,8 +179,8 @@
                                         <div class="form-group">
                                             <label for="petVaccination">Tiêm phòng</label>
                                             <select id="petVaccination" name="petVaccination" class="form-control">
-                                                <option value="1" selected>Đã tiêm</option>
-                                                <option value="0">Chưa tiêm</option>
+                                                <option value="1" ${petVaccination == '1' ?'selected':''}>Đã tiêm</option>
+                                                <option value="0" ${petVaccination == '0' ?'selected':''}>Chưa tiêm</option>
                                             </select>
                                         </div>
 
@@ -196,7 +197,7 @@
                                 <div class="form-full-width">
                                     <div class="form-group">
                                         <label for="petDescription">Mô tả</label>
-                                        <textarea id="petDescription" name="petDescription" class="form-control" rows="5" placeholder="Nhập mô tả chi tiết về thú cưng..."></textarea>
+                                        <textarea id="petDescription" name="petDescription" class="form-control" rows="5" placeholder="Nhập mô tả chi tiết về thú cưng...">${petDescription}</textarea>
                                     </div>
                                 </div>
                             </div>
