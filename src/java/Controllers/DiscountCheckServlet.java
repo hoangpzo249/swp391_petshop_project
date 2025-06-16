@@ -116,20 +116,32 @@ public class DiscountCheckServlet extends HttpServlet {
             if (d == null || !d.isActive()) {
                 message = "Mã giảm giá không tồn tại hoặc đã bị khóa.";
             } else if (!d.isValidNow()) {
-                message = "Mã giảm giá đã hết hạn hoặc chưa đến thời gian sử dụng.";
+                message = "Mã giảm giá đã hết hạn hoặc chưa đến thời gian sử dụng.\n";
+                message += "Thời gian áp dụng: từ " + d.getValidFrom() + " đến " + d.getValidTo();
             } else if (total < d.getMinOrderAmount()) {
-                message = "Đơn hàng chưa đạt mức tối thiểu để dùng mã này.";
+                message = "Đơn hàng chưa đạt mức tối thiểu để dùng mã này.\n";
+                message += "Bạn cần mua từ " + String.format("%,.0f", d.getMinOrderAmount()) + "₫ để áp dụng mã.";
+
             } else if (!d.isUsageAvailable()) {
                 message = "Mã đã hết lượt sử dụng";
             } else {
                 if (d.getDiscountType().equalsIgnoreCase("percent")) {
                     discountAmount = total * d.getDiscountValue() / 100.0;
+                    if (d.getMaxValue() != 0 && discountAmount > d.getMaxValue()) {
+                        discountAmount = d.getMaxValue();
+                    }
                 } else if (d.getDiscountType().equalsIgnoreCase("fixed")) {
                     discountAmount = d.getDiscountValue();
+                    if (d.getMaxValue() != 0 && discountAmount > d.getMaxValue()) {
+                        discountAmount = d.getMaxValue();
+                    }
                 }
                 isValid = true;
                 message = "Áp dụng mã thành công!";
                 request.setAttribute("discountCode", d.getDiscountCode());
+                if (d.getDescription() != null || !d.getDescription().isEmpty()) {
+                    message = message + " " + d.getDescription();
+                }
             }
 
             double finalTotal = total - discountAmount;

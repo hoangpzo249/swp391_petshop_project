@@ -78,10 +78,18 @@ public class ListShopPetServlet extends HttpServlet {
 
         
         String species = request.getParameter("species");
+        String previousSpecies = (String) session.getAttribute("previousSpecies");
+        String breed = request.getParameter("breed");
         if (species != null && !species.isEmpty()) {
             listBreed = breedDAO.getBreedsBySpecies(species);
+            if (previousSpecies!=null&&!species.matches(previousSpecies)){
+                breed=null;
+            }
         }
-        String breed = request.getParameter("breed");
+        session.setAttribute("previousSpecies", species);
+        
+        
+        
         String search = request.getParameter("search");
         search = (search != null) ? search.trim() : "";
 
