@@ -8,6 +8,7 @@ import DAO.AccountDAO;
 import DAO.CartDAO;
 import Models.Account;
 import Models.Cart;
+import Utils.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -62,7 +64,49 @@ public class Login_Account_Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+        String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+
+        if (action == null || action.trim().isEmpty()) {
+            request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+        } else if ("resend-otp".equals(action)) {
+            String emailLogin = (String) session.getAttribute("emailLogin");
+            String roleLogin = (String) session.getAttribute("roleLogin");
+
+            if (emailLogin != null) {
+                String otpResendLogin = otp();
+
+                long curTimeSendOtp = (long) session.getAttribute("curTimeSendOtp");
+                long nowTime = System.currentTimeMillis();
+
+                long resendOtp = 60 * 1000;
+
+                if (nowTime - curTimeSendOtp < resendOtp) {
+                    long countTimeResend = (resendOtp - (nowTime - curTimeSendOtp)) / 1000;
+                    request.setAttribute("errMessLoginOtp", "Bạn cần chờ " + countTimeResend + " GIÂY để gửi lại OTP");
+                    request.setAttribute("sendOTP2FA", "true");
+                    request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+                    return;
+                }
+
+                try {
+                    request.setAttribute("sendOTP2FA", "true");
+                    EmailSender.sendOTP2FALogin(emailLogin, otpResendLogin, roleLogin);
+
+                    session.setAttribute("otplogin", otpResendLogin);
+
+                    session.setAttribute("curTimeSendOtp", nowTime);
+
+                    request.setAttribute("successMessLogin", "Gửi lại OTP thành công");
+                } catch (Exception e) {
+                    request.setAttribute("errMessLoginOtp", "Bạn cần thực hiện lại");
+                }
+                request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+            } else {
+                session.invalidate();
+                response.sendRedirect("login");
+            }
+        }
     }
 
     /**
@@ -76,13 +120,57 @@ public class Login_Account_Servlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        String action = request.getParameter("action");
+
+        HttpSession session = request.getSession();
+
+        if ("otp".equals(action)) {
+            String inputotpLogin = request.getParameter("inputotpLogin");
+            String otplogin = (String) session.getAttribute("otplogin");
+            long curTimeSendOtp = (long) session.getAttribute("curTimeSendOtp");
+
+            long nowTime = System.currentTimeMillis();
+            long time = 5 * 60 * 1000;
+
+            if (nowTime - curTimeSendOtp > time) {
+                request.setAttribute("errMessLogin", "OTP hết hạn sau 5 phút, bạn cần thực hiện lại.");
+                request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+                return;
+            }
+
+            if (otplogin == null || otplogin.trim().isEmpty()) {
+                session.invalidate();
+                request.setAttribute("errMessLogin", "Hết thời gian chờ, bạn cần thực hiện lại.");
+                request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+                return;
+            }
+
+            if (inputotpLogin != null && !inputotpLogin.trim().isEmpty() && otplogin.equals(inputotpLogin)) {
+                session.removeAttribute("otplogin");
+                session.removeAttribute("curTimeSendOtp");
+                session.removeAttribute("roleLogin");
+                session.removeAttribute("emailLogin");
+
+                Account acc = (Account) session.getAttribute("tempAcc");
+                String role = acc.getAccRole();
+                
+                session.setAttribute("userAccount", acc);
+                
+                session.setAttribute("loginSuccess", "Chào " + role + " !");
+                response.sendRedirect("homepage");
+            } else {
+                request.setAttribute("errMessLoginOtp", "Mã OTP không hợp lệ");
+                request.setAttribute("sendOTP2FA", "true");
+                request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+            }
+            return;
+        }
+
         try {
             String emailLogin = request.getParameter("emailLogin");
             String passwordLogin = request.getParameter("passwordLogin");
-
             String remember = request.getParameter("remember");
-
-            HttpSession session = request.getSession();
 
             AccountDAO accDao = new AccountDAO();
             Account acc = accDao.isLoginAcc(emailLogin, passwordLogin);
@@ -90,10 +178,9 @@ public class Login_Account_Servlet extends HttpServlet {
 
             if (acc != null) {
 
-                session.setAttribute("userAccount", acc);
                 List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
                 if (guestCart != null && !guestCart.isEmpty()) {
-                    
+
                     for (Cart c : guestCart) {
                         if (!cartDAO.petInCart(acc.getAccId(), c.getPetId())) {
                             cartDAO.addToPetCart(acc.getAccId(), c.getPetId());
@@ -135,26 +222,32 @@ public class Login_Account_Servlet extends HttpServlet {
                     response.addCookie(passC);
                 }
 
-                if ("Admin".equals(role)) {
-                    session.setAttribute("loginSuccess", "Chào Admin!");
-                    response.sendRedirect("homepage");
-                } else if ("Manager".equals(role)) {
-                    session.setAttribute("loginSuccess", "Chào Manager!");
-                    response.sendRedirect("homepage");
-                } else if ("Seller".equals(role)) {
-                    session.setAttribute("loginSuccess", "Chào Seller!");
-                    response.sendRedirect("homepage");
-                } else if ("Shipper".equals(role)) {
-                    session.setAttribute("loginSuccess", "Chào Shipper!");
-                    response.sendRedirect("homepage");
-                } else if ("Customer".equals(role)) {
+//
+                if ("Admin".equals(role) || "Manager".equals(role) || "Seller".equals(role) || "Shipper".equals(role)) {
+                    String otplogin = otp();
+                    long curTimeSendOtp = System.currentTimeMillis();
+                    try {
+                        EmailSender.sendOTP2FALogin(emailLogin, otplogin, role);
+
+                        request.setAttribute("sendOTP2FA", "true");
+                        session.setAttribute("otplogin", otplogin);
+                        session.setAttribute("sendemailLogin", emailLogin);
+                        session.setAttribute("curTimeSendOtp", curTimeSendOtp);
+                        session.setAttribute("emailLogin", emailLogin);
+                        session.setAttribute("roleLogin", role);
+                        session.setAttribute("tempAcc", acc);
+                    } catch (Exception e) {
+                        request.setAttribute("errMessLogin", "Gửi OTP không thành công, bạn cần thực hiện lại");
+                    }
+
+                    request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
+
+                } else {
+                    session.setAttribute("userAccount", acc);
+
                     session.setAttribute("loginSuccess", "Chào mừng " + fname + " !");
                     response.sendRedirect("homepage");
-                } else {
-                    request.setAttribute("errMess", "Bạn cần có quyền truy cập");
-                    request.getRequestDispatcher("login_account_page.jsp").forward(request, response);
                 }
-
             } else {
                 request.setAttribute("errMessLogin", "Email hoặc mật khẩu của bạn không đúng.");
                 request.setAttribute("emailLogin", emailLogin);
@@ -164,6 +257,12 @@ public class Login_Account_Servlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String otp() {
+        Random random = new Random();
+        int otp = random.nextInt(1000000);
+        return String.format("%06d", otp);
     }
 
     /**

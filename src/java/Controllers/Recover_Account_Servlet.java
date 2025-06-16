@@ -160,7 +160,7 @@ public class Recover_Account_Servlet extends HttpServlet {
             String otpRecover = (String) session.getAttribute("otpRecover");
             long curTime = (long) session.getAttribute("curTime");
             long nowTime = System.currentTimeMillis();
-            long time = 3 * 60 * 1000;
+            long time = 5 * 60 * 1000;
 
             String emailRecoverSendOtp = (String) session.getAttribute("emailRecoverSendOtp");
             if (nowTime - curTime > time) {

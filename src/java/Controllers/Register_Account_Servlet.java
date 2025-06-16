@@ -206,7 +206,7 @@ public class Register_Account_Servlet extends HttpServlet {
                 session.setAttribute("fullNameRegis", fullNameRegis);
                 session.setAttribute("passRegister", passRegister);
                 session.setAttribute("emailRegister", emailRegister);
-                session.setAttribute("sendOtpSuccess", "true");
+                session.setAttribute("sendOtpSuccessRegister", "true");
 
                 request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
             } catch (Exception e) {
@@ -229,10 +229,10 @@ public class Register_Account_Servlet extends HttpServlet {
             Account account = (Account) session.getAttribute("tempAccount");
 
             long nowTime = System.currentTimeMillis();
-            long time = 3 * 60 * 1000;
+            long time = 5 * 60 * 1000;
 
             if (nowTime - curTime > time) {
-                request.setAttribute("errMessRegisOtp", "OTP hết hạn, bạn cần thực hiện lại.");
+                request.setAttribute("errMessRegisOtp", "OTP hết hạn sau 5 phút, bạn cần thực hiện lại.");
                 request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
                 return;
             }

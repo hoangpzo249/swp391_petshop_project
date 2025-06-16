@@ -25,7 +25,7 @@
 
         <div class="register-container">
 
-            <c:if test="${empty sendOtpSuccess}">
+            <c:if test="${empty sendOtpSuccessRegister}">
                 <h2>Tạo tài khoản</h2>
                 <form action="register" method="post">
                     <div class="input-group">
@@ -74,7 +74,7 @@
                 </form>
             </c:if>
 
-            <c:if test="${not empty sendOtpSuccess}">
+            <c:if test="${not empty sendOtpSuccessRegister}">
                 <form action="register?action=otp" method="post">
 
                     <div class="otp-header1">
