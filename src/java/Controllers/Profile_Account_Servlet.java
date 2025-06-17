@@ -140,8 +140,8 @@ public class Profile_Account_Servlet extends HttpServlet {
 //            int id = acc.getAccId();
 //            System.out.println(id);
             AccountDAO accDao = new AccountDAO();
-            boolean checkEmail = accDao.isUsernameExist(username);
-            if (checkEmail) {
+            boolean checkUsernameExist = accDao.isUsernameExist(username);
+            if (checkUsernameExist) {
                 request.setAttribute("errMess", "Tên đăng nhập đã tồn tại");
                 request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
                 return;
@@ -193,9 +193,9 @@ public class Profile_Account_Servlet extends HttpServlet {
                 }
 
             }
-//            if (phone == null || phone.trim().isEmpty()) {
-//                phone = acc.getAccPhoneNumber();
-//            }
+            if (phone == null || phone.trim().isEmpty()) {
+                phone = acc.getAccPhoneNumber();
+            }
 
             boolean checkPhone = isValidPhone(phone);
             if (!checkPhone) {
@@ -241,12 +241,15 @@ public class Profile_Account_Servlet extends HttpServlet {
                 return;
             }
 
-//            if (password == null || password.trim().isEmpty()
-//                    || comfirm_password == null || comfirm_password.trim().isEmpty()) {
-//                request.setAttribute("errMess", "Bạn cần điền đủ thông tin");
-//                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
-//                return;
-//            }
+            if (password == null || password.trim().isEmpty()
+                    || comfirm_password == null || comfirm_password.trim().isEmpty()) {
+                request.setAttribute("errMess", "Bạn cần điền đủ thông tin (không để trống hoặc chỉ chứa khoảng trắng)");
+                request.setAttribute("password", password);
+                request.setAttribute("comfirm_password", comfirm_password);
+                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+                return;
+            }
+            
             if (!password.equals(comfirm_password)) {
                 request.setAttribute("errMess", "Mật khẩu không khớp");
                 request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);

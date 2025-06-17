@@ -518,6 +518,31 @@ public class Admin_Panel_Servlet extends HttpServlet {
 
                 String addressCus = request.getParameter("addressCus");
 
+                if (usernameCus == null || usernameCus.trim().isEmpty()
+                        || emailCus == null || emailCus.trim().isEmpty()
+                        || passCus == null || passCus.trim().isEmpty()
+                        || comfirmPassCus == null || comfirmPassCus.trim().isEmpty()
+                        || fNameCus == null || fNameCus.trim().isEmpty()
+                        || lNameCus == null || lNameCus.trim().isEmpty()
+                        || phoneCus == null || phoneCus.trim().isEmpty()
+                        || dobCus == null || dobCus.trim().isEmpty()) {
+                    session.setAttribute("errMess", "Bạn cần điền đủ thông tin (không để trống hoặc chỉ chứa khoảng trắng)");
+
+                    session.setAttribute("usernameCus", usernameCus);
+                    session.setAttribute("emailCus", emailCus);
+                    session.setAttribute("passCus", passCus);
+                    session.setAttribute("comfirmPassCus", comfirmPassCus);
+                    session.setAttribute("fNameCus", fNameCus);
+                    session.setAttribute("lNameCus", lNameCus);
+                    session.setAttribute("phoneCus", phoneCus);
+                    session.setAttribute("dobCus", dobCus);
+                    session.setAttribute("addressCus", addressCus);
+
+                    String url = "admin-panel?action=create-account&type=customer";
+                    response.sendRedirect(url);
+                    return;
+                }
+
                 boolean checkUsernameCusExist = accDao.isUsernameExist(usernameCus);
                 if (checkUsernameCusExist) {
                     session.setAttribute("errMess", "Tên tài khoản của bạn đã tồn tại.");
@@ -769,6 +794,35 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 String dobStaff = request.getParameter("dobStaff");
 
                 String addressStaff = request.getParameter("addressStaff");
+
+                if (usernameStaff == null || usernameStaff.trim().isEmpty()
+                        || emailStaff == null || emailStaff.trim().isEmpty()
+                        || passStaff == null || passStaff.trim().isEmpty()
+                        || comfirmPassStaff == null || comfirmPassStaff.trim().isEmpty()
+                        || roleStaff == null || roleStaff.trim().isEmpty()
+                        || statusStaff == null || statusStaff.trim().isEmpty()
+                        || fNameStaff == null || fNameStaff.trim().isEmpty()
+                        || lNameStaff == null || lNameStaff.trim().isEmpty()
+                        || phoneStaff == null || phoneStaff.trim().isEmpty()
+                        || dobStaff == null || dobStaff.trim().isEmpty()) {
+                    session.setAttribute("errMess", "Bạn cần điền đủ thông tin (không để trống hoặc chỉ chứa khoảng trắng)");
+
+                    session.setAttribute("usernameStaff", usernameStaff);
+                    session.setAttribute("emailStaff", emailStaff);
+                    session.setAttribute("passStaff", passStaff);
+                    session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                    session.setAttribute("fNameStaff", fNameStaff);
+                    session.setAttribute("lNameStaff", lNameStaff);
+                    session.setAttribute("phoneStaff", phoneStaff);
+                    session.setAttribute("dobStaff", dobStaff);
+                    session.setAttribute("addressStaff", addressStaff);
+                    session.setAttribute("roleStaff", roleStaff);
+                    session.setAttribute("statusStaff", statusStaff);
+
+                    String url = "admin-panel?action=create-account&type=staff";
+                    response.sendRedirect(url);
+                    return;
+                }
 
                 boolean checkUsernameStaffExist = accDao.isUsernameExist(usernameStaff);
                 if (checkUsernameStaffExist) {
@@ -1037,6 +1091,15 @@ public class Admin_Panel_Servlet extends HttpServlet {
             String currentPassword = request.getParameter("currentPassword");
             String newPassword = request.getParameter("newPassword");
             String confirmPassword = request.getParameter("confirmPassword");
+
+            if (currentPassword == null || currentPassword.trim().isEmpty()
+                    || newPassword == null || newPassword.trim().isEmpty()
+                    || confirmPassword == null || confirmPassword.trim().isEmpty()) {
+                session.setAttribute("errMess", "Bạn cần điền đủ thông tin (không để trống hoặc chỉ chứa khoảng trắng)");
+                String url = "admin-panel?action=change-password";
+                response.sendRedirect(url);
+                return;
+            }
 
             boolean checkPass = isValidPassword(newPassword);
             if (!checkPass) {

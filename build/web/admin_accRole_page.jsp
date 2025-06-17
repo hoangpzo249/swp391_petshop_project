@@ -246,7 +246,7 @@
                                         <div class="form-group">
                                             <label for="adminPassword">Mật khẩu Admin (Xác nhận hành động)</label>
                                             <div class="password-input-group">
-                                                <input type="password" name="adminPassword" class="form-control">
+                                                <input type="password" name="adminPassword" class="form-control" required>
                                             </div>
                                         </div>
 

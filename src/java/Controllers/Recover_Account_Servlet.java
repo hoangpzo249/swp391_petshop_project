@@ -75,7 +75,7 @@ public class Recover_Account_Servlet extends HttpServlet {
                 request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
                 return;
             }
-            
+
             String otpResendRecover = otp();
 
             long curTimeSendOtp = (long) session.getAttribute("curTime");
@@ -190,6 +190,14 @@ public class Recover_Account_Servlet extends HttpServlet {
             String comfirm_passwordRecover = request.getParameter("comfirm_passwordRecover");
             String emailRecoverSuccess = (String) session.getAttribute("emailRecoverSendOtp");
 
+            if (passwordRecover == null || passwordRecover.trim().isEmpty()
+                    || comfirm_passwordRecover == null || comfirm_passwordRecover.trim().isEmpty()) {
+
+                request.setAttribute("errMessPassRecover", "Bạn cần điền đủ thông tin (không để trống hoặc chỉ chứa khoảng trắng)");
+                request.getRequestDispatcher("recover_account_page.jsp").forward(request, response);
+                return;
+            }
+            
             boolean checkPass = isValidPassword(passwordRecover);
             if (!checkPass) {
                 request.setAttribute("errMessPassRecover", "Mật khẩu phải nhiều hơn 8 kí tự bao gồm chữ thường, chữ hoa, số, kí tự đặc biệt và không chứa dấu cách");
