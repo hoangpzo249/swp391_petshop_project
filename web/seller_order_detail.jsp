@@ -99,7 +99,7 @@
                         <a href="profile" class="sidebar-link">
                             <i class="fas fa-user-circle"></i> Tài khoản của tôi
                         </a>
-                        <a href="comingsoon" class="sidebar-link">
+                        <a href="profile?action=change-password" class="sidebar-link">
                             <i class="fas fa-key"></i> Đổi mật khẩu
                         </a>
                         <a href="logout" class="sidebar-link">
@@ -199,6 +199,11 @@
                                         <div class="detail-label">Tổng giá trị</div>
                                         <div class="detail-value" style="font-weight: bold; color: #f26f21; font-size: 1.1rem;">
                                             <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                        </div>
+                                        
+                                        <div class="detail-label">Mã giảm giá</div>
+                                        <div class="detail-value">
+                                            <c:out value="${empty order.discountId or order.discountId == 0 ? 'Không sử dụng' : order.discountId}"/>
                                         </div>
                                     </div>
                                 </div>

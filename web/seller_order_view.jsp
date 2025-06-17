@@ -99,7 +99,7 @@
                         <a href="profile" class="sidebar-link">
                             <i class="fas fa-user-circle"></i> Tài khoản của tôi
                         </a>
-                        <a href="comingsoon" class="sidebar-link">
+                        <a href="profile?action=change-password" class="sidebar-link">
                             <i class="fas fa-key"></i> Đổi mật khẩu
                         </a>
                         <a href="logout" class="sidebar-link">

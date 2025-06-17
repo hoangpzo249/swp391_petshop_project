@@ -72,10 +72,6 @@ public class SellerDisplayOrderDetailServlet extends HttpServlet {
         }
 
         String id = request.getParameter("orderId");
-        if (id == null || id.isEmpty()) {
-            response.sendRedirect("seller-order-management");
-            return;
-        }
 
         OrderDAO _daoorder = new OrderDAO();
         PetDAO _daopet = new PetDAO();
