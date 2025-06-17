@@ -81,6 +81,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
         PetDAO _daopet = new PetDAO();
         BreedDAO _daobreed = new BreedDAO();
         PetImagePathDAO _daoimage = new PetImagePathDAO();
+        HttpSession session = request.getSession();
 
         int petId = Integer.parseInt(request.getParameter("id"));
 
@@ -90,7 +91,10 @@ public class SellerUpdatePetServlet extends HttpServlet {
             Pet pet = _daopet.getPetById(petId);
             List<Breed> breedList = _daobreed.getAllBreeds();
             List<PetImage> imageList = _daoimage.getPetImagesById(petId);
-
+            if (request.getParameter("done") == null && pet.getPetStatus() == 1) {
+                _daopet.updatePetStatusById(petId, 0);
+                session.setAttribute("successMess", "Thú cưng đã được ẩn cho quá trình chỉnh sửa thông tin.");
+            }
             request.setAttribute("pet", pet);
             request.setAttribute("breedList", breedList);
             request.setAttribute("imageList", imageList);
@@ -98,7 +102,6 @@ public class SellerUpdatePetServlet extends HttpServlet {
             request.getRequestDispatcher("seller_pet_edit.jsp")
                     .forward(request, response);
         } else {
-            HttpSession session = request.getSession(false);
             String referer = request.getHeader("referer");
             session.setAttribute("errMess", "Không thể chỉnh sửa thú cưng #" + petId + ". Thú cưng ở trong đơn hàng chờ xác nhận #" + pendingOrderId);
 
@@ -156,7 +159,6 @@ public class SellerUpdatePetServlet extends HttpServlet {
             java.util.Date utilPetDob = sdf.parse(petDobStr);
             java.sql.Date sqlPetDob = new java.sql.Date(utilPetDob.getTime());
 
-            Pet pet = _daopet.getPetById(petId);
             List<Breed> breedList = _daobreed.getAllBreeds();
             List<PetImage> imageList = _daoimage.getPetImagesById(petId);
 
@@ -208,7 +210,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
 
             if (errMess.length() != 0) {
                 session.setAttribute("errMess", errMess.toString());
-                request.getRequestDispatcher("seller_pet_edit.jsp")
+                request.getRequestDispatcher("updatepet?id=" + petId)
                         .forward(request, response);
                 return;
             }
@@ -250,11 +252,11 @@ public class SellerUpdatePetServlet extends HttpServlet {
                     _daoimage.addImage(petId, imageURLs);
                 }
                 session.setAttribute("successMess", "Cập nhật thông tin thú cưng #" + petId + " thành công!");
-                response.sendRedirect("updatepet?id=" + petId);
+                response.sendRedirect("updatepet?id=" + petId + "&done=done");
                 return;
             } else {
                 session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình cập nhật. Vui lòng thử lại.");
-                request.getRequestDispatcher("seller_pet_edit.jsp")
+                request.getRequestDispatcher("updatepet?id=" + petId)
                         .forward(request, response);
                 return;
             }

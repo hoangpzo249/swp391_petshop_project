@@ -212,6 +212,16 @@
 
                     </div>
                 </form>
+                <form action="updatepet" method="GET" class="cartForm">
+
+                    <div class="action-buttons">
+                        <input type="hidden" name="id" value="${pet.petId}">
+
+                        <c:if test="${sessionScope.userAccount.accRole eq 'Seller'}">
+                            <button type="submit" class="add-to-cart">Chỉnh sửa thông tin thú cưng</button>
+                        </c:if>
+                    </div>
+                </form>
                 <div class="pet-info">
                     <p><strong>Giống:</strong> ${pet.breedName}</p>
                     <p><strong>Ngày sinh:</strong> <fmt:formatDate value="${pet.petDob}" pattern="dd/MM/yyyy"/></p>
