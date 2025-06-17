@@ -4,7 +4,7 @@
  */
 package Models;
 
-import java.sql.Timestamp; 
+import java.sql.Timestamp;
 
 /**
  *
@@ -25,11 +25,12 @@ public class Order {
     private String paymentStatus;
     private double totalPrice;
     private String rejectionReason;
+    private int discountId;
 
     public Order() {
     }
 
-    public Order(int orderId, Integer accId, Timestamp orderDate, String orderStatus, String customerName, String customerEmail, String customerPhone, String customerAddress, Integer shipperId, String paymentMethod, String paymentStatus, double totalPrice) {
+    public Order(int orderId, Integer accId, Timestamp orderDate, String orderStatus, String customerName, String customerEmail, String customerPhone, String customerAddress, Integer shipperId, String paymentMethod, String paymentStatus, double totalPrice, String rejectionReason, int discountId) {
         this.orderId = orderId;
         this.accId = accId;
         this.orderDate = orderDate;
@@ -42,6 +43,8 @@ public class Order {
         this.paymentMethod = paymentMethod;
         this.paymentStatus = paymentStatus;
         this.totalPrice = totalPrice;
+        this.rejectionReason = rejectionReason;
+        this.discountId = discountId;
     }
 
     public String getRejectionReason() {
@@ -51,8 +54,6 @@ public class Order {
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
     }
-    
-    
 
     public int getOrderId() {
         return orderId;
@@ -150,9 +151,17 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
+    public int getDiscountId() {
+        return discountId;
+    }
+
+    public void setDiscountId(int discountId) {
+        this.discountId = discountId;
+    }
+
     @Override
     public String toString() {
-        return "Order{" + "orderId=" + orderId + ", accId=" + accId + ", orderDate=" + orderDate + ", orderStatus=" + orderStatus + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", customerPhone=" + customerPhone + ", customerAddress=" + customerAddress + ", shipperId=" + shipperId + ", paymentMethod=" + paymentMethod + ", paymentStatus=" + paymentStatus + ", totalPrice=" + totalPrice + '}';
+        return "Order{" + "orderId=" + orderId + ", accId=" + accId + ", orderDate=" + orderDate + ", orderStatus=" + orderStatus + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", customerPhone=" + customerPhone + ", customerAddress=" + customerAddress + ", shipperId=" + shipperId + ", paymentMethod=" + paymentMethod + ", paymentStatus=" + paymentStatus + ", totalPrice=" + totalPrice + ", rejectionReason=" + rejectionReason + ", discountId=" + discountId + '}';
     }
 
 }

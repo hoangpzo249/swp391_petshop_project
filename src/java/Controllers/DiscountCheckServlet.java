@@ -6,6 +6,7 @@ package Controllers;
 
 import DAO.DiscountDAO;
 import DAO.PetDAO;
+import Models.Account;
 import Models.Discount;
 import Models.Pet;
 import java.io.IOException;
@@ -151,6 +152,15 @@ public class DiscountCheckServlet extends HttpServlet {
             request.setAttribute("total", total);
             request.setAttribute("finalTotal", finalTotal);
             request.setAttribute("selectedPets", selectedPetList);
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute("userAccount");
+            if (account != null) {
+
+                request.setAttribute("name", account.getAccFname() + " " + account.getAccLname());
+                request.setAttribute("phone", account.getAccPhoneNumber());
+                request.setAttribute("address", account.getAccAddress());
+                request.setAttribute("email", account.getAccEmail());
+            }
             request.setAttribute("guestName", request.getParameter("guestName"));
             request.setAttribute("guestPhone", request.getParameter("guestPhone"));
             request.setAttribute("guestAddress", request.getParameter("guestAddress"));
