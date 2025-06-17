@@ -129,8 +129,7 @@
                 <nav>
                     <ul class="menu">
                         <li><a href="homepage">Trang Chủ</a></li>
-                        <li><a href="listshoppet?species=Dog">Chó Cưng</a></li>
-                        <li><a href="listshoppet?species=Cat">Mèo Cưng</a></li>
+                        <li><a href="listshoppet">Thú Cưng</a></li>
                         <li><a href="">Giới Thiệu</a></li>
                         <li><a href="">Liên Hệ</a></li>
                     </ul>
