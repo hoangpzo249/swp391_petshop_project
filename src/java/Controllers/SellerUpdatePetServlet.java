@@ -164,6 +164,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
 
             request.setAttribute("breedList", breedList);
             request.setAttribute("imageList", imageList);
+            request.setAttribute("done", "done");
 
             Pet petToUpdate = _daopet.getPetById(petId);
             petToUpdate.setPetId(petId);
@@ -210,7 +211,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
 
             if (errMess.length() != 0) {
                 session.setAttribute("errMess", errMess.toString());
-                request.getRequestDispatcher("updatepet?id=" + petId)
+                request.getRequestDispatcher("seller_pet_edit.jsp")
                         .forward(request, response);
                 return;
             }
@@ -256,7 +257,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
                 return;
             } else {
                 session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình cập nhật. Vui lòng thử lại.");
-                request.getRequestDispatcher("updatepet?id=" + petId)
+                request.getRequestDispatcher("seller_pet_edit.jsp")
                         .forward(request, response);
                 return;
             }

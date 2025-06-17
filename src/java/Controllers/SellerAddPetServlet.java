@@ -263,7 +263,7 @@ public class SellerAddPetServlet extends HttpServlet {
             stringCheck.append("tên, ");
         }
 
-        if (color.isEmpty() || color.length() > 50 || !color.matches("^[a-zA-Z\\s\\-]+$")) {
+        if (color.isEmpty() || color.length() > 50 || !color.matches("^[\\p{L}\\s\\-]+$")) {
             stringCheck.append("màu sắc, ");
         }
 
