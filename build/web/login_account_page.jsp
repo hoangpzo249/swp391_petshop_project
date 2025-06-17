@@ -87,6 +87,9 @@ request.setAttribute("passwordLogin", password);
 
             </form>
             <p class="login-link">Bạn chưa có tài khoản? <a href="register">Tạo tài khoản</a></p>
+            <p class="login-link">
+                <a href="login"><i class="fas fa-arrow-left"></i> Quay lại trang chủ</a>
+            </p>
         </div>
     </body>
 </html>

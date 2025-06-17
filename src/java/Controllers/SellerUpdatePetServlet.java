@@ -4,6 +4,7 @@
  */
 package Controllers;
 
+import static Controllers.SellerAddPetServlet.validatePetInput;
 import DAO.BreedDAO;
 import DAO.PetDAO;
 import DAO.PetImagePathDAO;
@@ -23,6 +24,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -122,25 +124,21 @@ public class SellerUpdatePetServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
-        Account account=(Account) session.getAttribute("userAccount");
-        if (account==null || !account.getAccRole().equals("Seller")) {
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Seller")) {
             session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
             response.sendRedirect("homepage");
             return;
         }
         PetDAO _daopet = new PetDAO();
+        BreedDAO _daobreed = new BreedDAO();
         PetImagePathDAO _daoimage = new PetImagePathDAO();
-        String referer = request.getHeader("referer");
+        StringBuilder errMess = new StringBuilder();
 
         try {
             String petDobStr = request.getParameter("petDob");
 
-            String validationError = validatePetDob(petDobStr);
-            if (validationError != null) {
-                session.setAttribute("errMess", validationError);
-                response.sendRedirect(referer);
-                return;
-            }
+            String dateValidation = validatePetDob(petDobStr);
 
             int petId = Integer.parseInt(request.getParameter("petId"));
             String petName = request.getParameter("petName").trim();
@@ -158,6 +156,13 @@ public class SellerUpdatePetServlet extends HttpServlet {
             java.util.Date utilPetDob = sdf.parse(petDobStr);
             java.sql.Date sqlPetDob = new java.sql.Date(utilPetDob.getTime());
 
+            Pet pet = _daopet.getPetById(petId);
+            List<Breed> breedList = _daobreed.getAllBreeds();
+            List<PetImage> imageList = _daoimage.getPetImagesById(petId);
+
+            request.setAttribute("breedList", breedList);
+            request.setAttribute("imageList", imageList);
+
             Pet petToUpdate = _daopet.getPetById(petId);
             petToUpdate.setPetId(petId);
             petToUpdate.setPetName(petName);
@@ -171,6 +176,42 @@ public class SellerUpdatePetServlet extends HttpServlet {
             petToUpdate.setPetDescription(petDescription);
             petToUpdate.setPetPrice(petPrice);
             petToUpdate.setBreedId(breedId);
+
+            request.setAttribute("pet", petToUpdate);
+
+            String infoValidation = validatePetInput(petName, petColor, petOrigin, petDescription);
+
+            if (infoValidation.length() != 0) {
+                errMess.append(infoValidation);
+            }
+
+            if (petPrice < 0) {
+                if (errMess.length() != 0) {
+                    errMess.append("<br>");
+                }
+                errMess.append("Giá thú cưng không được dưới 0₫");
+            }
+
+            if (petPrice > 99999000) {
+                if (errMess.length() != 0) {
+                    errMess.append("<br>");
+                }
+                errMess.append("Giá thú cưng không được vươt quá 99.999.000₫");
+            }
+
+            if (dateValidation != null) {
+                if (errMess.length() != 0) {
+                    errMess.append("<br>");
+                }
+                errMess.append(dateValidation);
+            }
+
+            if (errMess.length() != 0) {
+                session.setAttribute("errMess", errMess.toString());
+                request.getRequestDispatcher("seller_pet_edit.jsp")
+                        .forward(request, response);
+                return;
+            }
 
             List<String> imageURLs = new ArrayList<>();
             int availableSlots = 5 - _daoimage.countImagesById(petId);
@@ -209,16 +250,52 @@ public class SellerUpdatePetServlet extends HttpServlet {
                     _daoimage.addImage(petId, imageURLs);
                 }
                 session.setAttribute("successMess", "Cập nhật thông tin thú cưng #" + petId + " thành công!");
+                response.sendRedirect("updatepet?id=" + petId);
+                return;
             } else {
                 session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình cập nhật. Vui lòng thử lại.");
+                request.getRequestDispatcher("seller_pet_edit.jsp")
+                        .forward(request, response);
+                return;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("errMess", "Lỗi: Dữ liệu không hợp lệ hoặc đã xảy ra sự cố máy chủ.");
+            request.getRequestDispatcher("seller_pet_edit.jsp")
+                    .forward(request, response);
+            return;
+        }
+    }
+
+    public static String validatePetInput(String name, String color, String origin, String description) {
+        StringBuilder stringCheck = new StringBuilder();
+
+        if (name.isEmpty() || name.length() > 100 || !name.matches("^[\\p{L}\\p{N}\\s\\-']+$")) {
+            stringCheck.append("tên, ");
         }
 
-        response.sendRedirect(referer);
+        if (color.isEmpty() || color.length() > 50 || !color.matches("^[\\p{L}\\s\\-]+$")) {
+            stringCheck.append("màu sắc, ");
+        }
+
+        if (origin.isEmpty() || origin.length() > 100 || !origin.matches("^[\\p{L}\\s,.'-]+$")) {
+            stringCheck.append("nguồn gốc, ");
+        }
+
+        if (description.isEmpty() || description.length() > 2000 || description.contains("\0")) {
+            stringCheck.append("mô tả, ");
+        }
+
+        if (stringCheck.length() > 0) {
+            stringCheck.setLength(stringCheck.length() - 2);
+            stringCheck.append(" của thú cưng không hợp lệ");
+
+            String result = stringCheck.toString();
+            return result.substring(0, 1).toUpperCase() + result.substring(1);
+        }
+
+        return "";
     }
 
     private String validatePetDob(String petDobStr) {

@@ -44,7 +44,7 @@ public class ListShopPetServlet extends HttpServlet {
             for (Cart c : carts) {
                 if (c.getPetId() != null) {
                     Pet pet = petDAO.getPetById(c.getPetId());
-                    if (pet != null && pet.getPetAvailability() == 1) {
+                   if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
                         filtered.add(c);
                     }
                 }
@@ -60,7 +60,7 @@ public class ListShopPetServlet extends HttpServlet {
                 for (Cart c : guestCart) {
                     if (c.getPetId() != null) {
                         Pet pet = petDAO.getPetById(c.getPetId());
-                        if (pet != null && pet.getPetAvailability() == 1) {
+                        if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
                             guestCount++;
                         }
                     }
@@ -78,10 +78,18 @@ public class ListShopPetServlet extends HttpServlet {
 
         
         String species = request.getParameter("species");
+        String previousSpecies = (String) session.getAttribute("previousSpecies");
+        String breed = request.getParameter("breed");
         if (species != null && !species.isEmpty()) {
             listBreed = breedDAO.getBreedsBySpecies(species);
+            if (previousSpecies!=null&&!species.matches(previousSpecies)){
+                breed=null;
+            }
         }
-        String breed = request.getParameter("breed");
+        session.setAttribute("previousSpecies", species);
+        
+        
+        
         String search = request.getParameter("search");
         search = (search != null) ? search.trim() : "";
 

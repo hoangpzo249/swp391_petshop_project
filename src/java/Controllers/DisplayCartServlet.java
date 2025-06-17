@@ -65,7 +65,7 @@ public class DisplayCartServlet extends HttpServlet {
         for (Cart c : petCart) {
             if (c.getPetId() != null) {
                 Pet pet = petDao.getPetById(c.getPetId());
-                if (pet != null && pet.getPetAvailability() == 1) {
+                if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
                     pets.add(pet);
                     updatedPetCart.add(c);
 

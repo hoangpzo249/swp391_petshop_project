@@ -112,23 +112,26 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <div class="card">
-                        <a href="displaycart">
-                            <img src="images/card.png" width="50" height="50" alt="card"/>
-                            <p class="cardtext">
-                                Giỏ Hàng
-                                <span id="cart-count" class="cartcount">${sessionScope.cartcount}</span>
-                            </p>
-                        </a>
+                    <c:if test="${empty sessionScope.userAccount or sessionScope.userAccount.accRole eq 'Customer'}">
+
+                        <div class="card">
+                            <a href="displaycart">
+                                <img src="images/card.png" width="50" height="50" alt="card"/>
+                                <p class="cardtext">
+                                    Giỏ Hàng
+                                    <span id="cart-count" class="cartcount">${sessionScope.cartcount}</span>
+                                </p>
+                            </a>
+                        </div>
+            </c:if>
                     </div>
                 </div>
-            </div>
 
             <nav>
                 <ul class="menu">
                     <li><a href="homepage">Trang Chủ</a></li>
                     <li><a href="listshoppet?species=Dog">Chó Cưng</a></li>
-                        <li><a href="listshoppet?species=Cat">Mèo Cưng</a></li>
+                    <li><a href="listshoppet?species=Cat">Mèo Cưng</a></li>
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
                     <li><a href="menu_contact.jsp">Liên Hệ</a></li>
                 </ul>
@@ -315,7 +318,7 @@
                     <li><a href="">Dành Cho Chuột</a></li>
                 </ul>
 
-                
+
                 <div class="newsletter-block">
                     <h3>Đăng Ký Nhận Tin</h3>
                     <p>Cập nhật thông tin về thú cưng và ưu đãi hấp dẫn</p>
@@ -327,7 +330,7 @@
                             </div>
                         </form>
                     </div>
-                   
+
                 </div>
             </div>
 

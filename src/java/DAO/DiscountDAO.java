@@ -41,6 +41,7 @@ public class DiscountDAO extends DBContext {
                 d.setMaxUsage(rs.getInt("maxUsage"));
                 d.setUsageCount(rs.getInt("usageCount"));
                 d.setActive(rs.getBoolean("isActive"));
+                d.setMaxValue(rs.getDouble("maxValue"));
             }
         } catch (Exception e) {
 

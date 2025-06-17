@@ -561,7 +561,7 @@ public class PetDAO {
         try {
             conn = new DBContext().getConnection();
             String sql = "SELECT p.*, b.breedName FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
-                    + "WHERE p.petAvailability = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?)";
+                    + "WHERE p.petAvailability = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?) AND p.petStatus=1";
 
             if (breed != null && !breed.isEmpty()) {
                 sql += " AND b.breedId = ?";

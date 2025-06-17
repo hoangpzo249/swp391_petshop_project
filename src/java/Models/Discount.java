@@ -19,8 +19,27 @@ public class Discount {
     private int maxUsage;
     private int usageCount;
     private boolean isActive;
+    private double maxValue;
 
+    public Discount() {
+    }
+
+    public Discount(int discountId, String discountCode, String discountType, double discountValue, String description, Date validFrom, Date validTo, double minOrderAmount, int maxUsage, int usageCount, boolean isActive, double maxValue) {
+        this.discountId = discountId;
+        this.discountCode = discountCode;
+        this.discountType = discountType;
+        this.discountValue = discountValue;
+        this.description = description;
+        this.validFrom = validFrom;
+        this.validTo = validTo;
+        this.minOrderAmount = minOrderAmount;
+        this.maxUsage = maxUsage;
+        this.usageCount = usageCount;
+        this.isActive = isActive;
+        this.maxValue = maxValue;
+    }
     
+
     public int getDiscountId() {
         return discountId;
     }
@@ -109,6 +128,13 @@ public class Discount {
         this.isActive = isActive;
     }
     
+    public double getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(double maxValue) {
+        this.maxValue = maxValue;
+    }
     public boolean isValidNow() {
     Date today = new Date();
     return (validFrom == null || !today.before(validFrom)) &&

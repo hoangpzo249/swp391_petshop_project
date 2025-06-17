@@ -145,7 +145,7 @@
                                 <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="petPrice">Giá bán (₫)</label>
-                                    <input type="number" id="petPrice" name="petPrice" class="form-control" placeholder="Nhập giá bán" min="0" required step="1000" value="${petPrice}">
+                                    <input type="number" id="petPrice" name="petPrice" class="form-control" placeholder="Nhập giá bán" required step="1000" value="${petPrice}">
                                 </div>
 
                                 <%-- Right Column (empty for alignment, or add another field here) --%>

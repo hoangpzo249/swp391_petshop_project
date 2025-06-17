@@ -200,6 +200,11 @@
                                         <div class="detail-value" style="font-weight: bold; color: #f26f21; font-size: 1.1rem;">
                                             <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                         </div>
+                                        
+                                        <div class="detail-label">Mã giảm giá</div>
+                                        <div class="detail-value">
+                                            <c:out value="${empty order.discountId or order.discountId == 0 ? 'Không sử dụng' : order.discountId}"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

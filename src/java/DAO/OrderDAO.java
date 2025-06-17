@@ -39,6 +39,7 @@ public class OrderDAO {
         order.setPaymentStatus(rs.getString("paymentStatus"));
         order.setTotalPrice(rs.getDouble("totalPrice"));
         order.setRejectionReason(rs.getString("rejectionReason"));
+        order.setDiscountId(rs.getInt("discountId"));
         return order;
     }
 
@@ -96,7 +97,7 @@ public class OrderDAO {
             conn = db.getConnection();
             String sql = "SELECT \n"
                     + "    o.*,\n"
-                    + "    SUM(oc.priceAtOrder) AS totalPrice\n"
+                    + "    ISNULL(SUM(oc.priceAtOrder), 0) AS totalPrice\n"
                     + "FROM \n"
                     + "    OrderTB o\n"
                     + "LEFT JOIN \n"
@@ -105,7 +106,7 @@ public class OrderDAO {
                     + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
                     + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus, \n"
-                    + "    o.rejectionReason;";
+                    + "    o.rejectionReason, o.discountId;";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -217,7 +218,7 @@ public class OrderDAO {
             conn = db.getConnection();
             String sql = "SELECT \n"
                     + "    o.*, \n"
-                    + "    SUM(oc.priceAtOrder) AS totalPrice \n"
+                    + "    ISNULL(SUM(oc.priceAtOrder), 0) AS totalPrice \n"
                     + "FROM \n"
                     + "    OrderTB o \n"
                     + "LEFT JOIN \n"
@@ -227,10 +228,11 @@ public class OrderDAO {
                     + "GROUP BY \n"
                     + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
-                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus,  o.rejectionReason;";
+                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus, o.rejectionReason, \n"
+                    + "    o.discountId;";
 
             ps = conn.prepareStatement(sql);
-            ps.setString(1, id);
+            ps.setInt(1, Integer.parseInt(id));
             rs = ps.executeQuery();
 
             if (rs.next()) {

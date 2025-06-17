@@ -184,6 +184,7 @@
                             </div>
                         </div>
                         <div class="card-footer">
+                            <a href="displaypet?id=${pet.petId}" class="btn btn-outline">Chuyển đến trang của thú cưng</a>
                             <a href="displayallpet" class="btn btn-outline">Hủy bỏ</a>
                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                         </div>
