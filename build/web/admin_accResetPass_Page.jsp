@@ -208,21 +208,21 @@
                                         <div class="form-group">
                                             <label for="newPassword">Mật khẩu mới</label>
                                             <div class="password-input-group">
-                                                <input type="password" name="password" class="form-control" value="${password}">
+                                                <input type="password" name="password" class="form-control" value="${password}" required>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="confirmPassword">Xác nhận mật khẩu</label>
                                             <div class="password-input-group">
-                                                <input type="password" name="confirm_Password" class="form-control" value="${confirm_Password}">
+                                                <input type="password" name="confirm_Password" class="form-control" value="${confirm_Password}" required>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="adminPassword">Mật khẩu Admin (Xác nhận hành động)</label>
                                             <div class="password-input-group">
-                                                <input type="password" name="adminPassword" class="form-control" >
+                                                <input type="password" name="adminPassword" class="form-control" required>
                                             </div>
                                         </div>
 

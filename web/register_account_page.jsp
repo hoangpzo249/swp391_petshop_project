@@ -61,7 +61,6 @@
                         <div class="errMess">
                             <p>${errMessRegister}</p>
                         </div>
-                        <c:remove var="errMessRegister" scope="session" />
                     </c:if>
 
                     <button type="submit" class="btn">Tạo tài khoản</button>
@@ -72,6 +71,10 @@
                         </a>
                     </div>
                 </form>
+                <p class="login-link">Đã có tài khoản? <a href="login">Đăng nhập</a></p>
+                <p class="login-link">
+                    <a href="homepage"><i class="fas fa-arrow-left"></i> Quay lại trang chủ</a>
+                </p>
             </c:if>
 
             <c:if test="${not empty sendOtpSuccessRegister}">
@@ -92,7 +95,7 @@
 
                     <div class="input-group1">
                         <label for="otp">Mã OTP (6 số) *</label>
-                        <input type="text" id="inputotpRegis" name="inputotpRegis" maxlength="6" placeholder="Nhập mã OTP 6 số">
+                        <input type="text" name="inputotpRegis" maxlength="6" placeholder="Nhập mã OTP 6 số" required>
                     </div>
 
                     <button type="submit" class="btnotp">Xác thực</button>
@@ -101,7 +104,6 @@
                         <div class="errMess">
                             <p>${errMessRegisOtp}</p>
                         </div>
-                        <c:remove var="errMessRegisOtp" scope="session" />
                     </c:if>
 
                     <div class="action-links1">
@@ -110,10 +112,11 @@
                             <a href="register?action=resend-otp">Gửi lại OTP</a>
                         </p>
                     </div>
+                    <p class="login-link">Đã có tài khoản? <a href="login">Đăng nhập</a></p>
                 </form>
             </c:if>
 
-            <p class="login-link">Đã có tài khoản? <a href="login">Đăng nhập</a></p>
+
         </div>
 
     </body>

@@ -103,8 +103,6 @@ public class Register_Account_Servlet extends HttpServlet {
                 request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
             }
 
-        } else {
-            request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
         }
     }
 
@@ -128,6 +126,22 @@ public class Register_Account_Servlet extends HttpServlet {
             String emailRegister = request.getParameter("emailRegister");
             String passRegister = request.getParameter("passRegister");
             String confirm_passwordRegister = request.getParameter("confirm_passwordRegister");
+
+            if (fNameRegister == null || fNameRegister.trim().isEmpty()
+                    || lNameRegister == null || lNameRegister.trim().isEmpty()
+                    || emailRegister == null || emailRegister.trim().isEmpty()
+                    || passRegister == null || passRegister.trim().isEmpty()
+                    || confirm_passwordRegister == null || confirm_passwordRegister.trim().isEmpty()) {
+
+                request.setAttribute("errMessRegister", "Bạn cần điền đủ thông tin (không để trống hoặc chỉ chứa khoảng trắng)");
+                request.setAttribute("fNameRegister", fNameRegister);
+                request.setAttribute("lNameRegister", lNameRegister);
+                request.setAttribute("emailRegister", emailRegister);
+                request.setAttribute("passRegister", passRegister);
+                request.setAttribute("confirm_passwordRegister", confirm_passwordRegister);
+                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+                return;
+            }
 
             String fullNameRegis = fNameRegister + " " + lNameRegister;
 
@@ -278,7 +292,9 @@ public class Register_Account_Servlet extends HttpServlet {
                 }
 
             } else {
+                session.setAttribute("sendOtpSuccessRegister", "true");
                 request.setAttribute("errMessRegisOtp", "Mã OTP không hợp lệ");
+                
                 request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
             }
         } else {

@@ -268,7 +268,7 @@
                                     <div class="form-group">
                                         <label for="password">Mật khẩu mới</label>
                                         <div class="input-with-icon">
-                                            <input type="password" id="password" name="password" class="form-control" 
+                                            <input type="password" id="password" name="password" class="form-control" required
                                                    placeholder="Nhập mật khẩu mới"/>
                                             <i class="fas fa-lock"></i>
                                         </div>
@@ -277,14 +277,11 @@
                                     <div class="form-group">
                                         <label for="confirm_password">Xác nhận mật khẩu</label>
                                         <div class="input-with-icon">
-                                            <input type="password" id="comfirm_password" name="comfirm_password" class="form-control" 
+                                            <input type="password" id="comfirm_password" name="comfirm_password" class="form-control" required
                                                    placeholder="Nhập lại mật khẩu"> 
                                             <i class="fas fa-lock-open"></i>
                                         </div>
                                     </div>
-
-
-
 
                                     <div class="form-actions">
                                         <p class="login-link"><a href="profile">Quay lại</a></p>
