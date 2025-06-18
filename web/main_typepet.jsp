@@ -161,10 +161,7 @@
                         <select name="breed" onchange="this.form.submit()">
                             <option value="">Tất cả</option>
                             <c:forEach var="b" items="${listBreedBySpecies}">
-                                <option value="${b.breedId}"
-                                        <c:if test="${breed != null and breed eq b.breedId}">selected</c:if>>
-                                    ${b.breedName}
-                                </option>
+                                 <option value="${b.breedId}" ${param.breed == b.breedId ? 'selected' : ''}>${b.breedName}</option>
                             </c:forEach>
                         </select>
                     </div>
