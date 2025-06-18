@@ -238,13 +238,13 @@
                                                         <c:when test="${pet.petStatus == 1}">
                                                             <a class="action-btn block-btn" title="Ẩn thú cưng" 
                                                                href="updatepetstatus?petId=${pet.petId}&status=0">
-                                                                <i class="fas fa-eye-slash"></i>
+                                                                <i class="fas fa-toggle-off"></i>
                                                             </a>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <a class="action-btn unhide-btn" title="Hiện thú cưng" 
                                                                href="updatepetstatus?petId=${pet.petId}&status=1">
-                                                                <i class="fas fa-eye"></i>
+                                                                <i class="fas fa-toggle-on"></i>
                                                             </a>
                                                         </c:otherwise>
                                                     </c:choose>

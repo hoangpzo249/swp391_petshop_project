@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,29 +35,32 @@ public class BreedDAO {
                 String name = rs.getString("breedName");
                 String species = rs.getString("breedSpecies");
                 boolean status = rs.getBoolean("breedStatus");
-                byte[] imageBytes = rs.getBytes("breedImage");
-                listBreed.add(new Breed(id, name, species, status, imageBytes));
+                String image = rs.getString("breedImage");
+                listBreed.add(new Breed(id, name, species, status, image));
             }
         } catch (Exception ex) {
-            // handle as needed
+            ex.printStackTrace();
         } finally {
             try {
                 if (rs != null) {
                     rs.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 if (ps != null) {
                     ps.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return listBreed;
@@ -77,29 +82,32 @@ public class BreedDAO {
                 String name = rs.getString("breedName");
                 String species = rs.getString("breedSpecies");
                 boolean status = rs.getBoolean("breedStatus");
-                byte[] imageBytes = rs.getBytes("breedImage");
-                listBreed.add(new Breed(id, name, species, status, imageBytes));
+                String image = rs.getString("breedImage");
+                listBreed.add(new Breed(id, name, species, status, image));
             }
         } catch (Exception ex) {
-            // handle as needed
+            ex.printStackTrace();
         } finally {
             try {
                 if (rs != null) {
                     rs.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 if (ps != null) {
                     ps.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return listBreed;
@@ -119,25 +127,28 @@ public class BreedDAO {
                 list.add(breed);
             }
         } catch (Exception ex) {
-            // handle as needed
+            ex.printStackTrace();
         } finally {
             try {
                 if (rs != null) {
                     rs.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 if (ps != null) {
                     ps.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return list;
@@ -154,25 +165,28 @@ public class BreedDAO {
                 list.add(rs.getString("breedSpecies"));
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         } finally {
             try {
                 if (rs != null) {
                     rs.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 if (ps != null) {
                     ps.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return list;
@@ -192,7 +206,7 @@ public class BreedDAO {
                         rs.getString("breedName"),
                         rs.getString("breedSpecies"),
                         rs.getBoolean("breedStatus"),
-                        rs.getBytes("breedImage")
+                        rs.getString("breedImage")
                 ));
             }
         } catch (Exception e) {
@@ -203,18 +217,21 @@ public class BreedDAO {
                     rs.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 if (ps != null) {
                     ps.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return list;
@@ -236,12 +253,82 @@ public class BreedDAO {
                 breed.setBreedId(rs.getInt("breedId"));
                 breed.setBreedName(rs.getString("breedName"));
                 breed.setBreedSpecies(rs.getString("breedSpecies"));
-                breed.setBreedImage(rs.getBytes("breedImage"));
-
+                breed.setBreedImage(rs.getString("breedImage"));
                 listbreed.add(breed);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return listbreed;
+    }
+
+    public List<Breed> getAllBreedsForManager() {
+        DBContext db = new DBContext();
+        List<Breed> listbreed=new ArrayList<>();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT \n"
+                    + "    b.breedId,\n"
+                    + "    b.breedName,\n"
+                    + "    b.breedSpecies,\n"
+                    + "    b.breedImage,\n"
+                    + "    b.breedStatus,\n"
+                    + "    COUNT(o.orderId) AS totalPurchases\n"
+                    + "FROM \n"
+                    + "    BreedTB b\n"
+                    + "LEFT JOIN \n"
+                    + "    PetTB p \n"
+                    + "      ON p.breedId = b.breedId\n"
+                    + "LEFT JOIN \n"
+                    + "    OrderContentTB oc \n"
+                    + "      ON oc.petId = p.petId\n"
+                    + "LEFT JOIN \n"
+                    + "    OrderTB o \n"
+                    + "      ON o.orderId = oc.orderId \n"
+                    + "     AND o.orderStatus = 'Delivered'\n"
+                    + "GROUP BY \n"
+                    + "    b.breedId,\n"
+                    + "    b.breedName,\n"
+                    + "    b.breedSpecies,\n"
+                    + "    b.breedImage,\n"
+                    + "    b.breedStatus";
+            ps=conn.prepareStatement(sql);
+            rs=ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("breedId");
+                String name = rs.getString("breedName");
+                String species = rs.getString("breedSpecies");
+                boolean status = rs.getBoolean("breedStatus");
+                String image = rs.getString("breedImage");
+                int purchases=rs.getInt("totalPurchases");
+                listbreed.add(new Breed(id, name, species, status, image, purchases));
+            }
+            return listbreed;
+        } catch (Exception ex) {
+            Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }
