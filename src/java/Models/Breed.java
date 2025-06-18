@@ -11,21 +11,32 @@ import java.util.Base64;
  * @author Lenovo
  */
 public class Breed {
+
     private int breedId;
     private String breedName;
     private String breedSpecies;
     private boolean breedStatus;
-    private byte[] breedImage;
+    private String breedImage;
+    private int totalPurchases;
 
     public Breed() {
     }
 
-    public Breed(int breedId, String breedName, String breedSpecies, boolean breedStatus, byte[] breedImage) {
+    public Breed(int breedId, String breedName, String breedSpecies, boolean breedStatus, String breedImage) {
         this.breedId = breedId;
         this.breedName = breedName;
         this.breedSpecies = breedSpecies;
         this.breedStatus = breedStatus;
         this.breedImage = breedImage;
+    }
+
+    public Breed(int breedId, String breedName, String breedSpecies, boolean breedStatus, String breedImage, int totalPurchases) {
+        this.breedId = breedId;
+        this.breedName = breedName;
+        this.breedSpecies = breedSpecies;
+        this.breedStatus = breedStatus;
+        this.breedImage = breedImage;
+        this.totalPurchases = totalPurchases;
     }
 
     public int getBreedId() {
@@ -60,32 +71,39 @@ public class Breed {
         this.breedStatus = breedStatus;
     }
 
-    public byte[] getBreedImage() {
+    public String getBreedImage() {
         return breedImage;
     }
 
-    public void setBreedImage(byte[] breedImage) {
+    public void setBreedImage(String breedImage) {
         this.breedImage = breedImage;
     }
 
-    public String getBreedImageBase64() {
-        if (breedImage != null) {
-            return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(breedImage);
-        }
-        if (breedSpecies != null && breedSpecies.equals("Chó")) {
-            return "images/defaultdog.jpg";
-        } else {
-            return "images/defaultcat.jpg";
-        }
+    public int getTotalPurchases() {
+        return totalPurchases;
     }
 
+    public void setTotalPurchases(int totalPurchases) {
+        this.totalPurchases = totalPurchases;
+    }
+
+//    public String getBreedImageBase64() {
+//        if (breedImage != null) {
+//            return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(breedImage);
+//        }
+//        if (breedSpecies != null && breedSpecies.equals("Chó")) {
+//            return "images/defaultdog.jpg";
+//        } else {
+//            return "images/defaultcat.jpg";
+//        }
+//    }
     @Override
     public String toString() {
-        return "Breed{" +
-               "breedId=" + breedId +
-               ", breedName=" + breedName +
-               ", breedSpecies=" + breedSpecies +
-               ", breedStatus=" + breedStatus +
-               '}';
+        return "Breed{"
+                + "breedId=" + breedId
+                + ", breedName=" + breedName
+                + ", breedSpecies=" + breedSpecies
+                + ", breedStatus=" + breedStatus
+                + '}';
     }
 }
