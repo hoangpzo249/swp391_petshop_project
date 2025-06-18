@@ -87,7 +87,7 @@ public class ListShopPetServlet extends HttpServlet {
             breed=null;
         }
         
-        request.setAttribute("breed", breed == null ? "" : breed);
+        
 
         session.setAttribute("previousSpecies", species);
         

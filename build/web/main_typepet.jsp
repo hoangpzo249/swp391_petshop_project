@@ -161,7 +161,11 @@
                         <select name="breed" onchange="this.form.submit()">
                             <option value="">Tất cả</option>
                             <c:forEach var="b" items="${listBreedBySpecies}">
+<<<<<<< HEAD
                                  <option value="${b}" ${param.breed == b ? 'selected' : ''}>${b}</option>
+=======
+                                 <option value="${b.breedId}" ${param.breed == b.breedId ? 'selected' : ''}>${b.breedName}</option>
+>>>>>>> nam
                             </c:forEach>
                         </select>
                     </div>
