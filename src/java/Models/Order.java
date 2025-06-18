@@ -25,12 +25,12 @@ public class Order {
     private String paymentStatus;
     private double totalPrice;
     private String rejectionReason;
-    private int discountId;
+    private Integer discountId;
 
     public Order() {
     }
 
-    public Order(int orderId, Integer accId, Timestamp orderDate, String orderStatus, String customerName, String customerEmail, String customerPhone, String customerAddress, Integer shipperId, String paymentMethod, String paymentStatus, double totalPrice, String rejectionReason, int discountId) {
+    public Order(int orderId, Integer accId, Timestamp orderDate, String orderStatus, String customerName, String customerEmail, String customerPhone, String customerAddress, Integer shipperId, String paymentMethod, String paymentStatus, double totalPrice, String rejectionReason, Integer discountId) {
         this.orderId = orderId;
         this.accId = accId;
         this.orderDate = orderDate;
@@ -151,11 +151,11 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public int getDiscountId() {
+    public Integer getDiscountId() {
         return discountId;
     }
 
-    public void setDiscountId(int discountId) {
+    public void setDiscountId(Integer discountId) {
         this.discountId = discountId;
     }
 

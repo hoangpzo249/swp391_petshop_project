@@ -8,6 +8,8 @@ import Models.Order;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -327,5 +329,102 @@ public class OrderDAO {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
+    }
+     public int addOrder(Order order) {
+        int orderId = -1;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = new DBContext().getConnection();
+
+            String sql = "INSERT INTO OrderTB (accId, orderDate, orderStatus, customerName, customerEmail, customerPhone, customerAddress, shipperId, paymentMethod, paymentStatus, discountId) "
+                    + "VALUES (?, GETDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            if (order.getAccId() == null) {
+                ps.setNull(1, Types.INTEGER);
+            } else {
+                ps.setInt(1, order.getAccId());
+            }
+
+            ps.setString(2, order.getOrderStatus());
+            ps.setString(3, order.getCustomerName());
+            ps.setString(4, order.getCustomerEmail());
+            ps.setString(5, order.getCustomerPhone());
+            ps.setString(6, order.getCustomerAddress());
+            ps.setInt(7, order.getShipperId());
+            ps.setString(8, order.getPaymentMethod());
+            ps.setString(9, order.getPaymentStatus());
+
+            if (order.getDiscountId()==null) {
+                ps.setNull(10, Types.INTEGER);
+            } else {
+                ps.setInt(10, order.getDiscountId());
+            }
+
+            ps.executeUpdate();
+
+            rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                orderId = rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+        }
+
+        return orderId;
+    }
+
+    public void addOrderContent(int orderId, int petId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        PetDAO petDAO = new PetDAO();
+
+        try {
+            conn = new DBContext().getConnection();
+            String sql = "INSERT INTO OrderContentTB (orderId, petId,priceAtOrder) VALUES (?, ?,?)";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            ps.setInt(2, petId);
+            ps.setDouble(3,petDAO.getPetById(petId).getPetPrice());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+        }
+
     }
 }
