@@ -30,7 +30,7 @@
                 <form action="listshoppet" method="get">
 
                     <input type="hidden" name="species" value="${param.species}" />
-                    <input type="hidden" name="breed" value="${param.breed}" />
+                    <input type="hidden" name="breed" value="${breed}" />
                     <input type="hidden" name="gender" value="${param.gender}" />
                     <input type="hidden" name="color" value="${param.color}" />
                     <input type="hidden" name="origin" value="${param.origin}" />
@@ -123,9 +123,9 @@
                                 </p>
                             </a>
                         </div>
-            </c:if>
-                    </div>
+                    </c:if>
                 </div>
+            </div>
 
             <nav>
                 <ul class="menu">
@@ -161,7 +161,10 @@
                         <select name="breed" onchange="this.form.submit()">
                             <option value="">Tất cả</option>
                             <c:forEach var="b" items="${listBreedBySpecies}">
-                                <option value="${b.breedId}" ${param.breed == b.breedId ? 'selected' : ''}>${b.breedName}</option>
+                                <option value="${b.breedId}"
+                                        <c:if test="${breed != null and breed eq b.breedId}">selected</c:if>>
+                                    ${b.breedName}
+                                </option>
                             </c:forEach>
                         </select>
                     </div>
@@ -222,7 +225,7 @@
                     </div>
                     <div class="form-group">
                         <div class="loc">
-                            <a href="listshoppet?reset=true" class="reset-button">Reset bộ lọc</a>
+                            <a href="listshoppet" class="reset-button">Reset bộ lọc</a>
                         </div>
                     </div>
                 </form>
@@ -235,7 +238,7 @@
                         <form action="listshoppet" method="get">
 
                             <input type="hidden" name="species" value="${param.species}" />
-                            <input type="hidden" name="breed" value="${param.breed}" />
+                            <input type="hidden" name="breed" value="${breed}" />
                             <input type="hidden" name="search" value="${param.search}" />
                             <input type="hidden" name="gender" value="${param.gender}" />
                             <input type="hidden" name="color" value="${param.color}" />

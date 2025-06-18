@@ -552,17 +552,16 @@ public class PetDAO {
             String gender, String color, String origin, String dobFrom, String dobTo, String vaccinationStatus) {
 
         List<Pet> listPet = new ArrayList<>();
-        if (search == null || search.isEmpty()) {
-            search = "%";
-        } else {
-            search = "%" + search + "%";
-        }
 
         try {
             conn = new DBContext().getConnection();
             String sql = "SELECT p.*, b.breedName FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
-                    + "WHERE p.petAvailability = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?) AND p.petStatus=1";
+                    + "WHERE p.petAvailability = 1 AND p.petStatus=1";
 
+            if (search != null && !search.isEmpty()) {
+                sql += "AND (p.petName LIKE ? OR b.breedName LIKE ?)";
+                search = "%" + search + "%";
+            }
             if (breed != null && !breed.isEmpty()) {
                 sql += " AND b.breedId = ?";
             }
@@ -603,6 +602,7 @@ public class PetDAO {
                         sql += " ORDER BY p.petPrice ASC";
                     case "price-desc" ->
                         sql += " ORDER BY p.petPrice DESC";
+
                     default ->
                         sql += " ORDER BY p.petName ASC";
                 }
@@ -610,8 +610,10 @@ public class PetDAO {
 
             ps = conn.prepareStatement(sql);
             int i = 1;
+            if (search != null &&!search.isEmpty()) {
             ps.setString(i++, search);
             ps.setString(i++, search);
+            }
             if (breed != null && !breed.isEmpty()) {
                 ps.setInt(i++, Integer.parseInt(breed));
             }
