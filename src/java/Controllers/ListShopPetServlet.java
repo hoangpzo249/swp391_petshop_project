@@ -26,10 +26,7 @@ public class ListShopPetServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        if (request.getParameter("reset") != null) {
-            response.sendRedirect("listshoppet");
-            return;
-        }
+        
 
         HttpSession session = request.getSession();
         CartDAO _daoCart = new CartDAO();
@@ -90,6 +87,8 @@ public class ListShopPetServlet extends HttpServlet {
             breed=null;
         }
         
+        request.setAttribute("breed", breed == null ? "" : breed);
+
         session.setAttribute("previousSpecies", species);
         
         
