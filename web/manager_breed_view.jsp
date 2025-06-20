@@ -206,11 +206,11 @@
                             <div class="pagination-container">
                                 <ul class="pagination">
                                     <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                        <c:url value="displayallpet" var="prevUrl">
+                                        <c:url value="displaybreed" var="prevUrl">
                                             <c:param name="page" value="${currentPage - 1}"/>
                                             <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                             <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
-                                            <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
                                             <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
                                             <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
                                             <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
@@ -220,11 +220,11 @@
                                     </li>
 
                                     <c:if test="${startPage > 1}">
-                                        <c:url value="displayallpet" var="firstPageUrl" scope="page">
+                                        <c:url value="displaybreed" var="firstPageUrl" scope="page">
                                             <c:param name="page" value="1"/>
                                             <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                             <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
-                                            <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
                                             <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
                                             <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
                                             <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
@@ -237,11 +237,11 @@
                                         </c:if>
 
                                     <c:forEach begin="${startPage}" end="${endPage}" var="i">
-                                        <c:url value="displayallpet" var="pageUrl" scope="page">
+                                        <c:url value="displaybreed" var="pageUrl" scope="page">
                                             <c:param name="page" value="${i}"/>
                                             <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                             <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
-                                            <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
                                             <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
                                             <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
                                             <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
@@ -256,11 +256,11 @@
                                         <c:if test="${endPage < totalPages - 1}">
                                             <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
                                             </c:if>
-                                            <c:url value="displayallpet" var="lastPageUrl" scope="page">
+                                            <c:url value="displaybreed" var="lastPageUrl" scope="page">
                                                 <c:param name="page" value="${totalPages}"/>
                                                 <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                                 <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
-                                                <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
+                                                <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
                                                 <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
                                                 <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
                                                 <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
@@ -270,11 +270,11 @@
                                         </c:if>
 
                                     <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                        <c:url value="displayallpet" var="nextUrl">
+                                        <c:url value="displaybreed" var="nextUrl">
                                             <c:param name="page" value="${currentPage + 1}"/>
                                             <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                             <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
-                                            <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
                                             <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
                                             <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
                                             <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
