@@ -284,13 +284,9 @@ public class BreedDAO {
         return listbreed;
     }
 
-    public List<Breed> filterBreedsForManager(String searchKey, String species, String status) {
-        List<Breed> list = new ArrayList<>();
-        List<Object> params = new ArrayList<>();
+    private StringBuilder buildFilterQuery(String searchKey, String species, String status, List<Object> params) {
         StringBuilder sql = new StringBuilder(
-                "SELECT b.breedId, b.breedName, b.breedSpecies, b.breedImage, b.breedStatus,"
-                + " COUNT(o.orderId) AS totalPurchases"
-                + " FROM BreedTB b"
+                " FROM BreedTB b"
                 + " LEFT JOIN PetTB p ON p.breedId = b.breedId"
                 + " LEFT JOIN OrderContentTB oc ON oc.petId = p.petId"
                 + " LEFT JOIN OrderTB o ON o.orderId = oc.orderId AND o.orderStatus = 'Delivered'"
@@ -298,16 +294,12 @@ public class BreedDAO {
         );
 
         if (searchKey != null && !searchKey.trim().isEmpty()) {
-            if (searchKey.matches(".*[a-zA-Z].*")) {
+            if (searchKey.matches("\\d+")) {
+                sql.append(" AND b.breedId = ?");
+                params.add(Integer.parseInt(searchKey.trim()));
+            } else {
                 sql.append(" AND b.breedName LIKE ?");
                 params.add("%" + searchKey.trim() + "%");
-            } else {
-                try {
-                    Integer.parseInt(searchKey.trim());
-                    sql.append(" AND b.breedId = ?");
-                    params.add(Integer.parseInt(searchKey.trim()));
-                } catch (NumberFormatException ignored) {
-                }
             }
         }
 
@@ -318,17 +310,54 @@ public class BreedDAO {
 
         if (status != null && !status.isEmpty()) {
             sql.append(" AND b.breedStatus = ?");
-            if (status.equalsIgnoreCase("true") || status.equals("1")) {
-                params.add(true);
-            } else {
-                params.add(false);
-            }
+            params.add("1".equals(status));
         }
+        return sql;
+    }
+
+    public int countFilteredBreeds(String searchKey, String species, String status) {
+        List<Object> params = new ArrayList<>();
+        StringBuilder sqlBase = new StringBuilder("SELECT COUNT(DISTINCT b.breedId) ");
+
+        sqlBase.append(buildFilterQuery(searchKey, species, status, params));
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sqlBase.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Breed> filterBreedsForManager(String searchKey, String species, String status, int pageNumber, int pageSize) {
+        List<Breed> list = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT b.breedId, b.breedName, b.breedSpecies, b.breedImage, b.breedStatus,"
+                + " COUNT(o.orderId) AS totalPurchases"
+        );
+
+        sql.append(buildFilterQuery(searchKey, species, status, params));
 
         sql.append(" GROUP BY b.breedId, b.breedName, b.breedSpecies, b.breedImage, b.breedStatus");
         sql.append(" ORDER BY b.breedId ASC");
 
+        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        int offset = (pageNumber - 1) * pageSize;
+        params.add(offset);
+        params.add(pageSize);
+
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }

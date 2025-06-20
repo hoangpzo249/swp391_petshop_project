@@ -59,18 +59,62 @@ public class ManagerDisplayBreedServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         BreedDAO _dao = new BreedDAO();
-        
-        String searchKey=request.getParameter("searchKey");
-        String species=request.getParameter("species");
-        String status=request.getParameter("status");
-        
-        List<Breed> breedList = _dao.filterBreedsForManager(searchKey, species, status);
+        final int PAGE_SIZE = 8;
+        final int MAX_PAGE_NUMBERS_TO_SHOW = 5;
+
+        String searchKey = request.getParameter("searchKey");
+        String species = request.getParameter("species");
+        String status = request.getParameter("status");
+        String pageStr = request.getParameter("page");
+
+        int currentPage = 1;
+        int startPage;
+        int endPage;
+        if (pageStr != null && pageStr.matches("\\d+")) {
+            currentPage = Integer.parseInt(pageStr);
+        }
+
+        int totalRecords = _dao.countFilteredBreeds(searchKey, species, status);
+
+        int totalPages = (int) Math.ceil((double) totalRecords / PAGE_SIZE);
+
+        if (totalPages <= MAX_PAGE_NUMBERS_TO_SHOW) {
+            startPage = 1;
+            endPage = totalPages;
+        } else {
+            int maxPagesBeforeCurrent = (int) Math.floor(MAX_PAGE_NUMBERS_TO_SHOW / 2.0);
+            int maxPagesAfterCurrent = (int) Math.ceil(MAX_PAGE_NUMBERS_TO_SHOW / 2.0) - 1;
+
+            if (currentPage <= maxPagesBeforeCurrent) {
+                startPage = 1;
+                endPage = MAX_PAGE_NUMBERS_TO_SHOW;
+            } else if (currentPage + maxPagesAfterCurrent >= totalPages) {
+                startPage = totalPages - MAX_PAGE_NUMBERS_TO_SHOW + 1;
+                endPage = totalPages;
+            } else {
+                startPage = currentPage - maxPagesBeforeCurrent;
+                endPage = currentPage + maxPagesAfterCurrent;
+            }
+        }
+
+        if (currentPage > totalPages && totalPages > 0) {
+            currentPage = totalPages;
+        }
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+
+        List<Breed> breedList = _dao.filterBreedsForManager(searchKey, species, status, currentPage, PAGE_SIZE);
+
         List<String> speciesList = _dao.getAllSpecies();
-        
-        
 
         request.setAttribute("breedList", breedList);
         request.setAttribute("speciesList", speciesList);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("startPage", startPage);
+        request.setAttribute("endPage", endPage);
+
         request.getRequestDispatcher("manager_breed_view.jsp")
                 .forward(request, response);
     }

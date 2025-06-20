@@ -64,14 +64,17 @@ public class SellerDisplayAllPetServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
-        
-        HttpSession session=request.getSession();
-        Account account=(Account) session.getAttribute("userAccount");
-        if (account==null || !account.getAccRole().equals("Seller")) {
+
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Seller")) {
             session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
             response.sendRedirect("homepage");
             return;
         }
+
+        final int PAGE_SIZE = 8;
+        final int MAX_PAGE_NUMBERS_TO_SHOW = 5;
 
         String searchKey = request.getParameter("searchKey");
         String availability = request.getParameter("availability");
@@ -80,18 +83,51 @@ public class SellerDisplayAllPetServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         String vaccination = request.getParameter("vaccination");
         String petStatus = request.getParameter("petStatus");
+        String pageStr = request.getParameter("page");
+
+        int currentPage = 1;
+        if (pageStr != null && pageStr.matches("\\d+")) {
+            currentPage = Integer.parseInt(pageStr);
+        }
+
+        PetDAO petDAO = new PetDAO();
+        int totalRecords = petDAO.countFilteredPetsForSeller(searchKey, availability, species, breedId, gender, vaccination, petStatus);
+
+        int totalPages = (int) Math.ceil((double) totalRecords / PAGE_SIZE);
+
+        int startPage, endPage;
+        if (totalPages <= MAX_PAGE_NUMBERS_TO_SHOW) {
+            startPage = 1;
+            endPage = totalPages;
+        } else {
+            int maxPagesBeforeCurrent = (int) Math.floor(MAX_PAGE_NUMBERS_TO_SHOW / 2.0);
+            int maxPagesAfterCurrent = (int) Math.ceil(MAX_PAGE_NUMBERS_TO_SHOW / 2.0) - 1;
+            if (currentPage <= maxPagesBeforeCurrent) {
+                startPage = 1;
+                endPage = MAX_PAGE_NUMBERS_TO_SHOW;
+            } else if (currentPage + maxPagesAfterCurrent >= totalPages) {
+                startPage = totalPages - MAX_PAGE_NUMBERS_TO_SHOW + 1;
+                endPage = totalPages;
+            } else {
+                startPage = currentPage - maxPagesBeforeCurrent;
+                endPage = currentPage + maxPagesAfterCurrent;
+            }
+        }
+
+        List<Pet> petList = petDAO.filterPetsForSeller(searchKey, availability, species, breedId, gender, vaccination, petStatus, currentPage, PAGE_SIZE);
 
         BreedDAO breedDAO = new BreedDAO();
         List<String> speciesList = breedDAO.getAllSpecies();
         List<Breed> breedList = breedDAO.getAllBreeds();
 
+        request.setAttribute("petList", petList);
         request.setAttribute("speciesList", speciesList);
         request.setAttribute("breedList", breedList);
 
-        PetDAO petDAO = new PetDAO();
-        List<Pet> petList = petDAO.filterPetsForSeller(searchKey, availability, species, breedId, gender, vaccination, petStatus);
-
-        request.setAttribute("petList", petList);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("startPage", startPage);
+        request.setAttribute("endPage", endPage);
 
         request.getRequestDispatcher("seller_pet_view.jsp").forward(request, response);
     }
