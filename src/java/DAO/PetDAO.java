@@ -254,7 +254,7 @@ public class PetDAO {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return list;
     }
@@ -277,7 +277,7 @@ public class PetDAO {
             conn.commit();
             return true;
         } catch (Exception ex) {
-
+            ex.printStackTrace();
             return false;
         }
     }
@@ -304,7 +304,7 @@ public class PetDAO {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return list;
     }
@@ -610,9 +610,9 @@ public class PetDAO {
 
             ps = conn.prepareStatement(sql);
             int i = 1;
-            if (search != null &&!search.isEmpty()) {
-            ps.setString(i++, search);
-            ps.setString(i++, search);
+            if (search != null && !search.isEmpty()) {
+                ps.setString(i++, search);
+                ps.setString(i++, search);
             }
             if (breed != null && !breed.isEmpty()) {
                 ps.setInt(i++, Integer.parseInt(breed));

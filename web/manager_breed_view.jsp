@@ -106,7 +106,7 @@
                     </div>
                     <div class="card-body">
 
-                        <form action="displayallbreed" method="GET" id="filterForm">
+                        <form action="displaybreed" method="GET" id="filterForm">
                             <div class="filter-controls">
                                 <div class="input-group" style="flex-grow: 1;">
                                     <i class="fas fa-search"></i>
@@ -123,8 +123,8 @@
                                 <div class="select-group">
                                     <select name="status">
                                         <option value="">Tất cả trạng thái</option>
-                                        <option value="1" ${param.status == '1' ? 'selected' : ''}>Hoạt động</option>
-                                        <option value="0" ${param.status == '0' ? 'selected' : ''}>Ngừng hoạt động</option>
+                                        <option value="1" ${param.status == '1' ? 'selected' : ''}>Hiển thị</option>
+                                        <option value="0" ${param.status == '0' ? 'selected' : ''}>Đã ẩn</option>
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
@@ -160,10 +160,10 @@
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${b.breedStatus}">
-                                                        <span class="status-badge status-active">Hoạt động</span>
+                                                        <span class="status-badge status-active">Hiển thị</span>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <span class="status-badge status-blocked">Ngừng hoạt động</span>
+                                                        <span class="status-badge status-blocked">Đã ẩn</span>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>

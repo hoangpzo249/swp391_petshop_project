@@ -59,8 +59,15 @@ public class ManagerDisplayBreedServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         BreedDAO _dao = new BreedDAO();
-        List<Breed> breedList = _dao.getAllBreedsForManager();
+        
+        String searchKey=request.getParameter("searchKey");
+        String species=request.getParameter("species");
+        String status=request.getParameter("status");
+        
+        List<Breed> breedList = _dao.filterBreedsForManager(searchKey, species, status);
         List<String> speciesList = _dao.getAllSpecies();
+        
+        
 
         request.setAttribute("breedList", breedList);
         request.setAttribute("speciesList", speciesList);
