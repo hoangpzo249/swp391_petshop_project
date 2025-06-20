@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var checkboxes = document.querySelectorAll('.item-check');
     var subTotalDisplay = document.getElementById("subtotal-display");
     var confirmForm = document.getElementById('confirmForm');
+    var selectAllCheckbox = document.getElementById("select-all");
 
     function calculateTotal() {
         var total = 0;
@@ -33,13 +34,37 @@ document.addEventListener('DOMContentLoaded', function () {
         subTotalDisplay.innerText = total.toLocaleString('vi-VN') + '₫';
     }
 
-
+    
     for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].addEventListener('change', updateTotal);
     }
 
-    confirmForm.addEventListener('submit', function (e) {
+    
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener("change", function () {
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = this.checked;
+            }
+            updateTotal();
+        });
 
+        
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener("change", function () {
+                var allChecked = true;
+                for (var j = 0; j < checkboxes.length; j++) {
+                    if (!checkboxes[j].checked) {
+                        allChecked = false;
+                        break;
+                    }
+                }
+                selectAllCheckbox.checked = allChecked;
+            });
+        }
+    }
+
+    
+    confirmForm.addEventListener('submit', function (e) {
         var hasChecked = false;
         var countCheck = 0;
         for (var i = 0; i < checkboxes.length; i++) {
@@ -48,19 +73,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 countCheck++;
             }
         }
+
         if (countCheck > 10) {
             e.preventDefault();
-            showToast("Bạn chỉ được chọn tối đa 10 đơn hàng để thanh toán.Nếu muốn mua số lượng lớn hơn vui lòng liên hệ trực tiếp qua hotline của chúng tôi.");
+            showToast("Bạn chỉ được chọn tối đa 10 đơn hàng để thanh toán. Nếu muốn mua số lượng lớn hơn vui lòng liên hệ trực tiếp qua hotline của chúng tôi.");
             return;
         }
+
         if (!hasChecked) {
             e.preventDefault();
             showToast("Vui lòng chọn ít nhất một đơn hàng để thanh toán.");
             return;
         }
-
-
-
-
     });
 });
+

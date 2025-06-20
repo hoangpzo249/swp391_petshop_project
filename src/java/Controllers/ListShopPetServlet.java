@@ -26,22 +26,19 @@ public class ListShopPetServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        
-
         HttpSession session = request.getSession();
         CartDAO _daoCart = new CartDAO();
-         PetDAO petDAO = new PetDAO();
-         BreedDAO breedDAO = new BreedDAO();
+        PetDAO petDAO = new PetDAO();
+        BreedDAO breedDAO = new BreedDAO();
         if (session.getAttribute("userAccount") != null) {
             int accountId = ((Account) session.getAttribute("userAccount")).getAccId();
             List<Cart> carts = _daoCart.getCart(accountId);
             List<Cart> filtered = new ArrayList<>();
-            
 
             for (Cart c : carts) {
                 if (c.getPetId() != null) {
                     Pet pet = petDAO.getPetById(c.getPetId());
-                   if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
+                    if (pet != null && pet.getPetAvailability() == 1 && pet.getPetStatus() == 1) {
                         filtered.add(c);
                     }
                 }
@@ -53,11 +50,11 @@ public class ListShopPetServlet extends HttpServlet {
             List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
             int guestCount = 0;
             if (guestCart != null) {
-               
+
                 for (Cart c : guestCart) {
                     if (c.getPetId() != null) {
                         Pet pet = petDAO.getPetById(c.getPetId());
-                        if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
+                        if (pet != null && pet.getPetAvailability() == 1 && pet.getPetStatus() == 1) {
                             guestCount++;
                         }
                     }
@@ -67,26 +64,23 @@ public class ListShopPetServlet extends HttpServlet {
 
         }
 
-       
         int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
         int pageSize = 12;
+
         List<String> listSpecies = breedDAO.getAllSpecies();
         List<Breed> listBreed = null;
-
-        
         String species = request.getParameter("species");
-        String previousSpecies = (String) session.getAttribute("previousSpecies");
-        String breed = request.getParameter("breed");
         
+        String breed = request.getParameter("breed");
+       
+        if ((species == null || species.isEmpty()) && breed != null && !breed.isEmpty()) {
+            species = breedDAO.getSpeciesByBreed(breed);
+        }
         if (species != null && !species.isEmpty()) {
             listBreed = breedDAO.getBreedsBySpecies(species);
-            if (previousSpecies!=null&&!species.matches(previousSpecies)){
-                breed="";
-            }
-        } else{
-            breed="";
+        } else {
+            listBreed = breedDAO.getAllBreeds();
         }
-        session.setAttribute("previousSpecies", species);
         String search = request.getParameter("search");
         search = (search != null) ? search.trim() : "";
         String sort = request.getParameter("sortpet");
@@ -129,6 +123,8 @@ public class ListShopPetServlet extends HttpServlet {
         request.setAttribute("listPet", petList);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("species", species);
+        request.setAttribute("breed", breed);
 
         request.setAttribute("listSpecies", listSpecies);
         request.setAttribute("listBreedBySpecies", listBreed);

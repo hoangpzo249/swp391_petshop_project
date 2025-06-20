@@ -16,6 +16,7 @@
         <link href="css/advance_footer.css?v=3" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script src="js/resetBreed.js"></script>
     </head>
     <body>
 
@@ -29,7 +30,7 @@
 
                 <form action="listshoppet" method="get">
 
-                    <input type="hidden" name="species" value="${param.species}" />
+                    <input type="hidden" name="species" value="${species}" />
                     <input type="hidden" name="breed" value="${breed}" />
                     <input type="hidden" name="gender" value="${param.gender}" />
                     <input type="hidden" name="color" value="${param.color}" />
@@ -149,19 +150,19 @@
                     </div>
                     <div class="form-group">
                         <label>Loài</label>
-                        <select name="species" onchange="this.form.submit()">
+                        <select name="species" id ="species">
                             <option value="">Tất cả</option>
                             <c:forEach var="s" items="${listSpecies}">
-                                <option value="${s}" ${param.species == s ? 'selected' : ''}>${s}</option>
+                                <option value="${s}" ${species == s ? 'selected' : ''}>${s}</option>
                             </c:forEach>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Giống</label>
-                        <select name="breed" onchange="this.form.submit()">
+                        <select name="breed" onchange="this.form.submit()" id="breed">
                             <option value="">Tất cả</option>
                             <c:forEach var="b" items="${listBreedBySpecies}">
-                                <option value="${b.breedId}" ${param.breed == b.breedId ? 'selected' : ''}>${b.breedName}</option>
+                                <option value="${b.breedId}" ${breed == b.breedId ? 'selected' : ''}>${b.breedName}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -234,7 +235,7 @@
                     <div class="custom-select">
                         <form action="listshoppet" method="get">
 
-                            <input type="hidden" name="species" value="${param.species}" />
+                            <input type="hidden" name="species" value="${species}" />
                             <input type="hidden" name="breed" value="${breed}" />
                             <input type="hidden" name="search" value="${param.search}" />
                             <input type="hidden" name="gender" value="${param.gender}" />
