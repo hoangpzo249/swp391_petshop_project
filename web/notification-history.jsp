@@ -4,59 +4,80 @@
     Author     : QuangAnh
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="model.Notification" %>
-<!--
-    Integer accId = (Integer) session.getAttribute("accId");
-    if(accId == null){
-        response.sendRedirect("login_account_page.jsp");
-        return;
-    }
--->
+<%@ page import="Model.Notification" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
+<html>
 <head>
-    <link rel="stylesheet" type="text/CSS" href="CSS/notification-history.css">
+    <title>Lịch sử thông báo</title>
+    <style>
+        .notification-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .notification-table th, .notification-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+        .notification-table th {
+            background-color: #f2f2f2;
+        }
+        .notification-unread {
+            background-color: #ffecec;
+        }
+        .filter-form {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
+<body>
+
+<h2>Lịch sử thông báo</h2>
 
 <%
     List<Notification> notifications = (List<Notification>) request.getAttribute("notifications");
     String selectedType = (String) request.getAttribute("selectedType");
 %>
 
-<h2>Notification History</h2>
-
-<form method="get" action="notification-history">
-    <label>Filter by Type:</label>
+<form class="filter-form" method="get" action="notification">
+    <label>Lọc theo loại:</label>
     <select name="type">
-        <option value="">-- All --</option>
-        <option value="system" <%= "system".equals(selectedType) ? "selected" : "" %>>System</option>
-        <option value="order" <%= "order".equals(selectedType) ? "selected" : "" %>>Order</option>
+        <option value="" <%= (selectedType == null || selectedType.isEmpty()) ? "selected" : "" %>>-- Tất cả --</option>
+        <option value="system" <%= "system".equals(selectedType) ? "selected" : "" %>>Hệ thống</option>
+        <option value="order" <%= "order".equals(selectedType) ? "selected" : "" %>>Đơn hàng</option>
     </select>
-    <input type="submit" value="Filter">
+    <input type="submit" value="Lọc">
 </form>
 
-<table border="1">
+<table class="notification-table">
     <tr>
-        <th>Title</th>
-        <th>Message</th>
-        <th>Type</th>
-        <th>Date</th>
-        <th>Read</th>
+        <th>Tiêu đề</th>
+        <th>Nội dung</th>
+        <th>Loại</th>
+        <th>Ngày</th>
+        <th>Trạng thái</th>
     </tr>
-    <%
-        if (notifications != null) {
-            for (Notification n : notifications) {
-    %>
-    <tr>
-        <td><%= n.getTitle() %></td>
-        <td><%= n.getMessage() %></td>
-        <td><%= n.getNotifType() %></td>
-        <td><%= n.getCreatedAt() %></td>
-        <td><%= n.isIsRead() ? "Yes" : "No" %></td>
-    </tr>
-    <%
-            }
-        }
-    %>
+
+    <c:if test="${empty notifications}">
+        <tr>
+            <td colspan="5">Không có thông báo nào.</td>
+        </tr>
+    </c:if>
+
+    <c:forEach var="n" items="${requestScopenotifications}">
+        <tr class="${!n.isRead ? 'notification-unread' : ''}">
+            <td>${n.title}</td>
+            <td>${n.message}</td>
+            <td>${n.notifType}</td>
+            <td><fmt:formatDate value="${n.createdAt}" pattern="dd-MM-yyyy HH:mm"/></td>
+            <td>${n.isRead ? "Đã đọc" : "Chưa đọc"}</td>
+        </tr>
+    </c:forEach>
 </table>
+
+    <a href="viewOrder">Quay ve trang hoa don</a>
+</body>
+</html>

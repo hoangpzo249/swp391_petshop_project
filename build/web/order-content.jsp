@@ -24,18 +24,20 @@
                 <th>Mã chi tiết đơn hàng</th>
                 <th>Mã đơn hàng</th>
                 <th>Mã thú cưng</th>
+                <th>Giá tại thời điểm đặt</th>
             </tr>
             <c:forEach var="oc" items="${orderContents}">
                 <tr>
                     <td>${oc.orderContentId}</td>
                     <td>${oc.orderId}</td>
                     <td>${oc.petId}</td>
+                    <td>${oc.priceAtOrder}</td>
                 </tr>
             </c:forEach>
         </table>
     </c:if>
 
     <br/>
-    <a href="order.jsp">Quay lại danh sách đơn</a>
+    <a href="viewOrder">Quay lại danh sách đơn</a>
 </body>
 </html>

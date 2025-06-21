@@ -7,7 +7,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Author     : QuangAnh
 */
 
-body {
+/*body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #fffefc;
     margin: 0;
@@ -15,14 +15,14 @@ body {
     color: #333;
 }
 
-/* Header chính */
+ Header chính 
 h2 {
     text-align: center;
     color: #ff6f69;
     margin-bottom: 30px;
 }
 
-/* Thanh điều hướng */
+ Thanh điều hướng 
 table {
     width: 100%;
     border-collapse: collapse;
@@ -46,18 +46,18 @@ table td {
     font-size: 15px;
 }
 
-/* Khối nội dung */
-/* Dòng xen kẽ màu */
+ Khối nội dung 
+ Dòng xen kẽ màu 
 tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-/* Dòng khi hover */
+ Dòng khi hover 
 tr:hover {
     background-color: #ffeaea;
 }
 
-/* Nút bấm */
+ Nút bấm 
 input[type="submit"] {
     background-color: #ff6f69;
     color: white;
@@ -73,14 +73,14 @@ input[type="submit"]:hover {
     background-color: #ff3d3d;
 }
 
-/* Form nằm gọn trong ô */
+ Form nằm gọn trong ô 
 form {
     display: inline;
 }
 
-/* Trạng thái không thể hủy */
+ Trạng thái không thể hủy 
     td:has(form) + td,
     td:has(form) + td + td {
     font-style: italic;
     color: #888;
-}
+}*/

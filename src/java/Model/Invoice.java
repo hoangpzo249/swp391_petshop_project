@@ -17,7 +17,7 @@ import java.util.Date;
 public class Invoice {
     private int invoiceId;
     private int orderId;
-    private Date issuaDate;
+    private Date issueDate;
     private double totalAmount;
     private double taxAmount;
     private String paymentMethod;
@@ -25,10 +25,10 @@ public class Invoice {
     public Invoice() {
     }
 
-    public Invoice(int invoiceId, int orderId, Date issuaDate, double totalAmount, double taxAmount, String paymentMethod) {
+    public Invoice(int invoiceId, int orderId, Date issueDate, double totalAmount, double taxAmount, String paymentMethod) {
         this.invoiceId = invoiceId;
         this.orderId = orderId;
-        this.issuaDate = issuaDate;
+        this.issueDate = issueDate;
         this.totalAmount = totalAmount;
         this.taxAmount = taxAmount;
         this.paymentMethod = paymentMethod;
@@ -50,12 +50,12 @@ public class Invoice {
         this.orderId = orderId;
     }
 
-    public Date getIssuaDate() {
-        return issuaDate;
+    public Date getIssueDate() {
+        return issueDate;
     }
 
-    public void setIssuaDate(Date issuaDate) {
-        this.issuaDate = issuaDate;
+    public void setIssueDate(Date issueDate) {
+        this.issueDate = issueDate;
     }
 
     public double getTotalAmount() {
@@ -84,7 +84,7 @@ public class Invoice {
 
     @Override
     public String toString() {
-        return "Invoice{" + "invoiceId=" + invoiceId + ", orderId=" + orderId + ", issuaDate=" + issuaDate + ", totalAmount=" + totalAmount + ", taxAmount=" + taxAmount + ", paymentMethod=" + paymentMethod + '}';
+        return "Invoice{" + "invoiceId=" + invoiceId + ", orderId=" + orderId + ", issueDate=" + issueDate + ", totalAmount=" + totalAmount + ", taxAmount=" + taxAmount + ", paymentMethod=" + paymentMethod + '}';
     }
 
     

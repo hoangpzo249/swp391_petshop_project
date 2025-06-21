@@ -17,51 +17,59 @@
         <servlet-class>Controller.OrderContentServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>RequestCancelServlet</servlet-name>
-        <servlet-class>Controller.RequestCancelServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ReviewServlet</servlet-name>
         <servlet-class>Controller.ReviewServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ReviewOrderServlet</servlet-name>
-        <servlet-class>Controller.ReviewOrderServlet</servlet-class>
+        <servlet-name>ViewOrderServlet</servlet-name>
+        <servlet-class>Controller.ViewOrderServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ExportInvoiceServlet</servlet-name>
         <servlet-class>Controller.ExportInvoiceServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RequestCancelServlet</servlet-name>
+        <servlet-class>Controller.RequestCancelServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteOrderServlet</servlet-name>
+        <servlet-class>Controller.DeleteOrderServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>CancelOrderServlet</servlet-name>
-        <url-pattern>/CancelOrderServlet</url-pattern>
+        <url-pattern>/cancelOrder</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>InvoiceServlet</servlet-name>
-        <url-pattern>/InvoiceServlet</url-pattern>
+        <url-pattern>/invoice</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>NotificationServlet</servlet-name>
-        <url-pattern>/NotificationServlet</url-pattern>
+        <url-pattern>/notification</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>OrderContentServlet</servlet-name>
-        <url-pattern>/OrderContentServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>RequestCancelServlet</servlet-name>
-        <url-pattern>/RequestCancelServlet</url-pattern>
+        <url-pattern>/orderContent</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ReviewServlet</servlet-name>
-        <url-pattern>/ReviewServlet</url-pattern>
+        <url-pattern>/review</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ReviewOrderServlet</servlet-name>
-        <url-pattern>/ReviewOrderServlet</url-pattern>
+        <servlet-name>ViewOrderServlet</servlet-name>
+        <url-pattern>/viewOrder</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ExportInvoiceServlet</servlet-name>
         <url-pattern>/exportInvoice</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequestCancelServlet</servlet-name>
+        <url-pattern>/requestCancel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteOrderServlet</servlet-name>
+        <url-pattern>/deleteOrder</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -22,32 +22,29 @@ import Model.Invoice;
  */
 public class InvoiceDAO extends DBContext{
 
-   public List<Invoice> getInvoiceById(int invoiceId) {
-    List<Invoice> list = new ArrayList<>();
-    String sql = "SELECT invoiceId, orderId, issueDate, totalAmount, taxAmount, paymentMethod " +
-                 "FROM InvoiceTB WHERE invoiceId = ?";
-    try (Connection conn = getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
+    public Invoice getInvoiceByOrderId(int orderId) {
+        String sql = "SELECT * FROM InvoiceTB WHERE orderId = ?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        ps.setInt(1, invoiceId);
-        ResultSet rs = ps.executeQuery();
+            ps.setInt(2, orderId);
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            Invoice inv = new Invoice();
-            inv.setInvoiceId(rs.getInt("invoiceId"));
-            inv.setOrderId(rs.getInt("orderId"));
-            inv.setIssuaDate(rs.getDate("issueDate"));
-            inv.setTotalAmount(rs.getDouble("totalAmount"));
-            inv.setTaxAmount(rs.getDouble("taxAmount"));
-            inv.setPaymentMethod(rs.getString("paymentMethod"));
-            list.add(inv);
+            if (rs.next()) {
+                Invoice invoice = new Invoice();
+                invoice.setInvoiceId(rs.getInt("invoiceId"));
+                invoice.setOrderId(rs.getInt("orderId"));
+                invoice.setIssueDate(rs.getDate("issueDate"));
+                invoice.setTotalAmount(rs.getDouble("totalAmount"));
+                invoice.setPaymentMethod(rs.getString("paymentMethod"));
+                return invoice;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        return null;
     }
-    return null;
-}
 
 
     
