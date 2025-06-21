@@ -24,7 +24,14 @@
             </div>
 
             <div class="admin-profile">
-                <img src="images/support button/account.png" alt="Admin Avatar"/>
+                                <c:choose>
+                    <c:when test="${not empty sessionScope.userAccount.accImage}">
+                        <img src="${sessionScope.userAccount.accImage}" alt="Admin Avatar"/>
+                    </c:when>
+                    <c:otherwise>
+                        <img src="images/support button/account.png" alt="Admin Avatar"/>
+                    </c:otherwise>
+                </c:choose>
                 <div class="admin-info">
                     <span class="admin-name">${sessionScope.userAccount.accFname} ${sessionScope.userAccount.accLname}</span>
                     <span class="admin-role">Admin</span>
@@ -187,7 +194,14 @@
                                             <td>${acc.getAccId()}</td>
                                             <td>
                                                 <div class="user-info">
-                                                    <img src="images/support button/account.png" class="table-avatar" alt="User">
+                                                    <c:choose>
+                                                        <c:when test="${not empty acc.accImage}">
+                                                            <img src="${acc.accImage}" alt="Avatar" width="45" height="45" class="table-avatar"/>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <img src="images/support button/account.png" class="table-avatar" alt="User">
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                     <div>
                                                         <div class="user-name">${acc.getAccUsername()}</div>
                                                         <div class="user-email">${acc.getAccEmail()}</div>

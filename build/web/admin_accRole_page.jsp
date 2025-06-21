@@ -24,7 +24,14 @@
             </div>
 
             <div class="admin-profile">
-                <img src="images/support button/account.png" alt="Admin Avatar"/>
+                                <c:choose>
+                    <c:when test="${not empty sessionScope.userAccount.accImage}">
+                        <img src="${sessionScope.userAccount.accImage}" alt="Admin Avatar"/>
+                    </c:when>
+                    <c:otherwise>
+                        <img src="images/support button/account.png" alt="Admin Avatar"/>
+                    </c:otherwise>
+                </c:choose>
                 <div class="admin-info">
                     <span class="admin-name">${sessionScope.userAccount.accFname} ${sessionScope.userAccount.accLname}</span>
                     <span class="admin-role1">Admin</span>
@@ -128,7 +135,14 @@
                                 <div class="account-info-section">
                                     <div class="account-info-card">
                                         <div class="account-profile">
-                                            <img src="images/support button/account.png" alt="User Avatar" class="account-avatar">
+                                                                                    <c:choose>
+                                            <c:when test="${not empty updateRole.accImage}">
+                                                <img src="${updateRole.accImage}" alt="Avatar" width="45" height="45" class="account-avatar"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="images/support button/account.png" alt="User Avatar" class="account-avatar">
+                                            </c:otherwise>
+                                        </c:choose>
                                             <h2 class="account-name">${updateRole.accFname} ${updateRole.accLname}</h2>
                                             <p class="account-username">@${updateRole.accUsername}</p>
                                             <c:choose>

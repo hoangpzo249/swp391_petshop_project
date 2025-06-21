@@ -19,7 +19,14 @@
             </div>
 
             <div class="admin-profile">
-                <img src="images/support button/account.png" alt="Admin Avatar"/>
+                                <c:choose>
+                    <c:when test="${not empty sessionScope.userAccount.accImage}">
+                        <img src="${sessionScope.userAccount.accImage}" alt="Admin Avatar"/>
+                    </c:when>
+                    <c:otherwise>
+                        <img src="images/support button/account.png" alt="Admin Avatar"/>
+                    </c:otherwise>
+                </c:choose>
                 <div class="admin-info">
                     <span class="admin-name">${sessionScope.userAccount.accFname} ${sessionScope.userAccount.accLname}</span>
                     <span class="admin-role">Admin</span>
@@ -206,7 +213,15 @@
                                         <tr>
                                             <td>
                                                 <div class="user-info">
-                                                    <img src="images/support button/account.png" class="table-avatar" alt="User">
+                                                    <c:choose>
+                                                        <c:when test="${not empty accnew.accImage}">
+                                                            <img src="${accnew.accImage}" alt="Avatar" width="45" height="45" class="table-avatar"/>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <img src="images/support button/account.png" class="table-avatar" alt="User">
+                                                        </c:otherwise>
+                                                    </c:choose>
+
                                                     <div>
                                                         <div class="user-name">${accnew.accUsername}</div>
                                                         <div class="user-email">${accnew.accEmail}</div>
@@ -258,9 +273,9 @@
 
                                                     </c:when>
                                                     <c:when test="${accnew.getAccRole() eq 'Shipper'}">
-<!--                                                        <a class="action-btn edit-btn" title="Sửa" href = 'admin-panel?action=account&type=all&act=update-role&id=${accnew.accId}'>
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>-->
+                                                    <!--                                                        <a class="action-btn edit-btn" title="Sửa" href = 'admin-panel?action=account&type=all&act=update-role&id=${accnew.accId}'>
+                                                    <i class="fas fa-edit"></i>
+                                                    </a>-->
                                                         <a class="action-btn block-btn" title="Khóa" href = 'admin-panel?action=account&type=${accnew.accRole}&act=ban-acc&id=${accnew.accId}&check=${accnew.accStatus}'>
                                                             <i class="fas fa-lock"></i>
                                                         </a>

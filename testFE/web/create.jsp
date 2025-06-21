@@ -24,7 +24,14 @@
             </div>
 
             <div class="admin-profile">
-                <img src="images/support button/account.png" alt="Admin Avatar"/>
+                                <c:choose>
+                    <c:when test="${not empty sessionScope.userAccount.accImage}">
+                        <img src="${sessionScope.userAccount.accImage}" alt="Admin Avatar"/>
+                    </c:when>
+                    <c:otherwise>
+                        <img src="images/support button/account.png" alt="Admin Avatar"/>
+                    </c:otherwise>
+                </c:choose>
                 <div class="admin-info">
                     <span class="admin-name">${sessionScope.userAccount.accFname} ${sessionScope.userAccount.accLname}</span>
                     <span class="admin-role">Admin</span>
