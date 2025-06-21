@@ -86,11 +86,7 @@ public class BlogServlet extends HttpServlet {
                 dao.deleteBlog(id);
                 response.sendRedirect("blog");
 
-            } else if ("toggle".equals(action)) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                String status = request.getParameter("status");
-                dao.updateStatus(id, status);
-                response.sendRedirect("blog");
+             
             } else if ("view".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 BlogPost blog = dao.getBlogById(id);

@@ -1,6 +1,7 @@
 /* blogForm.css - giao diện đồng bộ PETFPT */
 
 @import url('https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap');
 
 body {
     font-family: 'Asap', sans-serif;
@@ -97,7 +98,8 @@ select:focus {
 }
 
 .image-preview-vertical img {
-    max-width: 100%;
+    width: 300px;
+    height: 280px;
     border-radius: 12px;
     border: 1px solid #eee;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -501,17 +503,7 @@ input[name="title"]:focus {
     text-shadow: 0 1px 1px rgba(255, 180, 120, 0.3);
 }
 
-.section-label::before {
-    content: '\f0a4';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: #f26f21;
-    animation: glow 1.5s infinite ease-in-out;
-    font-size: 16px;
-}
+
 
 @keyframes glow {
     0%, 100% { filter: drop-shadow(0 0 1px #ff9966); }
@@ -588,4 +580,315 @@ button.save-button:hover {
 
 #preview:hover {
     transform: scale(1.03);
+}
+
+.image-preview-vertical img {
+    width: 400px !important;
+    height: 350px !important;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    object-fit: cover;
+}
+
+
+
+body {
+    font-family: 'Asap', sans-serif;
+    background: linear-gradient(to bottom right, #fff3e0, #ffe0c2);
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.form-container {
+    max-width: 1200px;
+    margin: 60px auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 40px;
+}
+
+/* === TIÊU ĐỀ === */
+input[name="title"] {
+    background: linear-gradient(to right, #fffefc, #fff5e9);
+    font-size: 16px;
+    padding: 14px 16px;
+    border: 2px solid #ffd8a4;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(255, 174, 73, 0.15);
+    transition: all 0.3s ease;
+}
+
+input[name="title"]:focus {
+    border-color: #ffa94d;
+    box-shadow: 0 0 12px rgba(255, 140, 0, 0.4);
+}
+
+/* === LABEL CHUNG === */
+.section-label {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff6600;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    position: relative;
+    padding-left: 30px;
+}
+
+
+
+@keyframes glow {
+    0%, 100% { filter: drop-shadow(0 0 1px #ff9966); }
+    50% { filter: drop-shadow(0 0 6px #ff6600); }
+}
+
+/* === TRẠNG THÁI HIỂN THỊ === */
+.radio-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: 8px;
+}
+
+.radio-option input[type="radio"] {
+    display: none;
+}
+
+.radio-option label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 22px;
+    border-radius: 16px;
+    border: 2px solid #ffdca8;
+    background: #fffdf8;
+    font-weight: bold;
+    color: #444;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 110px;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.radio-option input[type="radio"]:checked + label {
+    background: linear-gradient(to right, #fda085, #f6d365);
+    color: #fff;
+    border-color: #ffb347;
+    box-shadow: 0 0 10px rgba(255, 183, 94, 0.5);
+}
+
+.radio-option label:hover {
+    background: #fff5e9;
+    border-color: #ffc080;
+}
+
+/* === THUMBNAIL === */
+#preview {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    object-fit: contain;
+    display: block;
+    margin-bottom: 20px;
+}
+
+#preview:hover {
+    transform: scale(1.02);
+}
+
+/* === IMAGE UPLOAD === */
+input[name="imageUpload"] {
+    border: 2px dashed #ffc080;
+    border-radius: 10px;
+    padding: 14px;
+    background: #fff9f2;
+    transition: 0.3s;
+}
+
+input[name="imageUpload"]:hover {
+    background: #fff3e6;
+    border-color: #ffa94d;
+}
+
+.image-preview-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 12px;
+}
+
+.image-preview-vertical img {
+    width: 400px;
+    height: 350px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    object-fit: cover;
+}
+
+/* === TEXTAREA (NỘI DUNG BÀI VIẾT) === */
+textarea#editor {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 15px;
+    background: #fefefe;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    min-height: 250px;
+}
+
+/* === BUTTONS === */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+button {
+    font-weight: bold;
+    padding: 12px 28px;
+    font-size: 15px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #ffa726, #fb8c00);
+    color: white;
+    box-shadow: 0 4px 14px rgba(255, 138, 0, 0.4);
+    letter-spacing: 1px;
+}
+
+.btn-back {
+    background: #f26f21;
+    color: white;
+    box-shadow: 0 4px 14px rgba(255, 111, 33, 0.25);
+}
+
+.btn-save:hover,
+.btn-back:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+}
+
+/* === OTHER === */
+.required {
+    color: red;
+}
+
+.card-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 24px;
+    color: #f26f21;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-group {
+    margin-bottom: 28px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ffe0b2;
+}
+
+.form-group small {
+    color: #999;
+    font-size: 13px;
+    margin-top: 6px;
+    display: block;
+}
+
+.form-container {
+    max-width: 800px; /* nhỏ hơn để gọn hơn */
+    margin: 60px auto;
+    padding: 40px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.form-group {
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.form-group label,
+.section-label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #f26f21;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+input[type="text"],
+textarea,
+select {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 14px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    background: #fff;
+    transition: border 0.3s ease;
+}
+
+input[type="file"] {
+    margin-top: 6px;
+}
+
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 6px;
+}
+
+.image-preview-vertical {
+    margin-top: 12px;
+}
+
+.form-actions {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+button {
+    padding: 12px 28px;
+    font-size: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Highlight area upload image */
+.card:last-child {
+    border-top: 1px dashed #ffcc99;
+    padding-top: 30px;
+    margin-top: 30px;
+}
+
+.card-title {
+    font-size: 20px;
+    margin-bottom: 18px;
+    color: #f26f21;
 }
