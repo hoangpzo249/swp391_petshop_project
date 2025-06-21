@@ -164,10 +164,9 @@
                         <div class="current-info-card">
                             <div class="profile-avatar-container">
                                 <div class="default-avatar">
-
                                     <c:choose>
                                         <c:when test="${not empty sessionScope.userAccount.accImage}">
-                                            <img src="avatar?id=${sessionScope.userAccount.accId}" alt="Avatar" width="150" height="150"/>
+                                            <img src="${sessionScope.userAccount.accImage}" alt="Avatar" width="150" height="150" class="avatar-img"/>
                                         </c:when>
                                         <c:otherwise>
                                             <i class="fas fa-user"></i>
@@ -379,9 +378,10 @@
                                             </div>
                                             <div class="image-upload-text">Nhấp để tải ảnh lên</div>
                                         </label>
-                                        <input type="file" id="profile-image" name="avatar" class="file-input" accept="image/*">
+                                        <input type="file" id="profile-image" name="avatar" class="file-input" accept="image/png, image/jpg" required />
+
                                         <div class="save-btn-avatar1">
-                                            <button type="submit" class="save-btn-avatar" id="submitButton">Cập nhật ảnh đại diện</button>
+                                            <button type="submit" class="save-btn-avatar">Cập nhật ảnh đại diện</button>
                                         </div>
                                     </div>
                                 </form>

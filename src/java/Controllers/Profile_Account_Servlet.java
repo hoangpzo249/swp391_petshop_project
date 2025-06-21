@@ -6,21 +6,27 @@ package Controllers;
 
 import DAO.AccountDAO;
 import Models.Account;
-import Utils.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Base64;
 import java.util.Random;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -28,6 +34,7 @@ import org.mindrot.jbcrypt.BCrypt;
  *
  * @author HuyHoang
  */
+@MultipartConfig
 public class Profile_Account_Servlet extends HttpServlet {
 
     /**
@@ -249,7 +256,7 @@ public class Profile_Account_Servlet extends HttpServlet {
                 request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
                 return;
             }
-            
+
             if (!password.equals(comfirm_password)) {
                 request.setAttribute("errMess", "Mật khẩu không khớp");
                 request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
@@ -361,6 +368,61 @@ public class Profile_Account_Servlet extends HttpServlet {
 //            }
 //            request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
         } else if ("upload-avatar".equals(action)) {
+            Part filePart = request.getPart("avatar");
+            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String contentType = filePart.getContentType();
+
+            if (!contentType.startsWith("image/")) {
+                request.setAttribute("errMess", "Chỉ được phép upload file ảnh (PNG, JPG)");
+                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+                return;
+            }
+
+            long maxFileSize = 1024 * 1024;
+            if (filePart.getSize() > maxFileSize) {
+                request.setAttribute("errMess", "Ảnh tải lên vượt quá giới hạn 1MB");
+                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+                return;
+            }
+
+            InputStream fileContent = filePart.getInputStream();
+            byte[] imageBytes = fileContent.readAllBytes();
+            String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
+
+            URL url = new URL("https://api.imgbb.com/1/upload?expiration=600&key=" + "9d883d96b50c81c2f4987106aa3e8054");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+
+            String data = "image=" + URLEncoder.encode(encodedImage, "UTF-8");
+            try (OutputStream os = conn.getOutputStream()) {
+                os.write(data.getBytes());
+            }
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) {
+                result.append(line);
+            }
+            in.close();
+
+            String json = result.toString();
+            String imageUrl = json.split("\"url\":\"")[1].split("\"")[0].replace("\\/", "/");
+
+            AccountDAO accDao = new AccountDAO();
+
+            boolean updateAvatar = accDao.uploadAvatar(acc.getAccId(), imageUrl);
+            if (updateAvatar) {
+                acc.setAccImage(imageUrl);
+                session.setAttribute("userAccount", acc);
+
+                request.setAttribute("updateSucess", "Cập nhật Avatar thành công");
+                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+            } else {
+                request.setAttribute("errMess", "Cập nhật Avatar không thành công");
+                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+            }
 
         } else {
             request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);

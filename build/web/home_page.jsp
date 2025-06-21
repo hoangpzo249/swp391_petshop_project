@@ -172,7 +172,7 @@
                 <c:forEach items="${listBreed}" var="b">
                     <div class="detail-item">
                         <a href="listshoppet?species=${b.breedSpecies}&breed=${b.breedId}&gender=&color=&origin=&priceRange=&dobFrom=&dobTo=&vaccination=">
-                            <img src="${b.breedImageBase64}" width="800" height="800" alt="${b.breedName}"/>
+                            <img src="${b.breedImage}" width="800" height="800" alt="${b.breedName}"/>
                             <p class="item-name">${b.breedName}</p>
                         </a>
                     </div>

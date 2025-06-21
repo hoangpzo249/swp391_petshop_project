@@ -26,13 +26,13 @@ public class Account {
     private String accDescription;
 
     private String accCreateDate;
-    private byte[] accImage;
+    private String accImage;
     private String accStatus;
 
     public Account() {
     }
 
-    public Account(int accId, String accUsername, String accEmail, String accPassword, String accFname, String accLname, Date accDob, String accAddress, String accPhoneNumber, String accRole, String accDescription, String accCreateDate, byte[] accImage, String accStatus) {
+    public Account(int accId, String accUsername, String accEmail, String accPassword, String accFname, String accLname, Date accDob, String accAddress, String accPhoneNumber, String accRole, String accDescription, String accCreateDate, String accImage, String accStatus) {
         this.accId = accId;
         this.accUsername = accUsername;
         this.accEmail = accEmail;
@@ -145,11 +145,11 @@ public class Account {
         this.accCreateDate = accCreateDate;
     }
 
-    public byte[] getAccImage() {
+    public String getAccImage() {
         return accImage;
     }
 
-    public void setAccImage(byte[] accImage) {
+    public void setAccImage(String accImage) {
         this.accImage = accImage;
     }
 
@@ -165,6 +165,4 @@ public class Account {
     public String toString() {
         return "Account{" + "accId=" + accId + ", accUsername=" + accUsername + ", accEmail=" + accEmail + ", accPassword=" + accPassword + ", accFname=" + accFname + ", accLname=" + accLname + ", accDob=" + accDob + ", accAddress=" + accAddress + ", accPhoneNumber=" + accPhoneNumber + ", accRole=" + accRole + ", accDescription=" + accDescription + ", accCreateDate=" + accCreateDate + ", accImage=" + accImage + ", accStatus=" + accStatus + '}';
     }
-
-    
 }

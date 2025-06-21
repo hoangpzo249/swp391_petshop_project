@@ -73,6 +73,7 @@ public class CartDAO {
             if (rs.next() && rs.getInt("total") > 0) {
                 return true;
             }
+            
         } catch (Exception ex) {
             
         } 
