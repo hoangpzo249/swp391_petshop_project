@@ -896,6 +896,8 @@ textarea.form-control {
     content: '\f057';
 }
 
+
+
 @keyframes slideIn {
     from {
         transform: translateX(100%);

@@ -71,7 +71,7 @@ public class AccountDAO extends DBContext {
                 account.setAccRole(rs.getString("accRole"));
                 account.setAccDescription(rs.getString("accDescription"));
                 account.setAccCreateDate(rs.getString("accCreateDate"));
-                account.setAccImage(rs.getBytes("accImage"));
+                account.setAccImage(rs.getString("accImage"));
                 account.setAccStatus(rs.getString("accStatus"));
             }
         } catch (Exception ex) {
@@ -242,7 +242,7 @@ public class AccountDAO extends DBContext {
                     acc.setAccRole(rs.getString("accRole"));
                     acc.setAccDescription(rs.getString("accDescription"));
                     acc.setAccCreateDate(rs.getString("accCreateDate"));
-                    acc.setAccImage(rs.getBytes("accImage"));
+                    acc.setAccImage(rs.getString("accImage"));
                     acc.setAccStatus(rs.getString("accStatus"));
 
                     return acc;
@@ -358,7 +358,7 @@ public class AccountDAO extends DBContext {
                 acc.setAccRole(rs.getString("accRole"));
                 acc.setAccDescription(rs.getString("accDescription"));
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
-                acc.setAccImage(rs.getBytes("accImage"));
+                acc.setAccImage(rs.getString("accImage"));
                 acc.setAccStatus(rs.getString("accStatus"));
 
                 return acc;
@@ -431,13 +431,13 @@ public class AccountDAO extends DBContext {
         }
     }
 
-    public boolean uploadAvatar(int accId, String avatarPath) {
+    public boolean uploadAvatar(int accId, String avatar) {
         try {
             con = db.getConnection();
             String sql = "UPDATE AccountTB SET accImage = ? WHERE accId = ?";
             ps = con.prepareStatement(sql);
 
-            ps.setString(1, avatarPath);
+            ps.setString(1, avatar);
             ps.setInt(2, accId);
 
             int row = ps.executeUpdate();
@@ -468,7 +468,7 @@ public class AccountDAO extends DBContext {
                 String accRole = rs.getString("accRole");
                 String accDescription = rs.getString("accDescription");
                 String accCreateDate = rs.getString("accCreateDate");
-                byte[] accImage = rs.getBytes("accImage");
+                String accImage = rs.getString("accImage");
                 String accStatus = rs.getString("accStatus");
                 Account acc = new Account(accId, accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRole, accDescription, accCreateDate, accImage, accStatus);
                 accList.add(acc);
@@ -499,7 +499,7 @@ public class AccountDAO extends DBContext {
                 String accRole = rs.getString("accRole");
                 String accDescription = rs.getString("accDescription");
                 String accCreateDate = rs.getString("accCreateDate");
-                byte[] accImage = rs.getBytes("accImage");
+                String accImage = rs.getString("accImage");
                 String accStatus = rs.getString("accStatus");
                 Account acc = new Account(accId, accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRole, accDescription, accCreateDate, accImage, accStatus);
                 accList.add(acc);
@@ -533,7 +533,7 @@ public class AccountDAO extends DBContext {
                 acc.setAccRole(rs.getString("accRole"));
                 acc.setAccDescription(rs.getString("accDescription"));
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
-                acc.setAccImage(rs.getBytes("accImage"));
+                acc.setAccImage(rs.getString("accImage"));
                 acc.setAccStatus(rs.getString("accStatus"));
                 return acc;
             }
@@ -565,7 +565,7 @@ public class AccountDAO extends DBContext {
                 acc.setAccRole(rs.getString("accRole"));
                 acc.setAccDescription(rs.getString("accDescription"));
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
-                acc.setAccImage(rs.getBytes("accImage"));
+                acc.setAccImage(rs.getString("accImage"));
                 acc.setAccStatus(rs.getString("accStatus"));
                 return acc;
             }
@@ -597,7 +597,7 @@ public class AccountDAO extends DBContext {
                 String accRoleRes = rs.getString("accRole");
                 String accDescription = rs.getString("accDescription");
                 String accCreateDate = rs.getString("accCreateDate");
-                byte[] accImage = rs.getBytes("accImage");
+                String accImage = rs.getString("accImage");
                 String accStatus = rs.getString("accStatus");
                 Account acc = new Account(accId, accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRoleRes, accDescription, accCreateDate, accImage, accStatus);
                 accList.add(acc);
@@ -632,7 +632,7 @@ public class AccountDAO extends DBContext {
                 acc.setAccRole(rs.getString("accRole"));
                 acc.setAccDescription(rs.getString("accDescription"));
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
-                acc.setAccImage(rs.getBytes("accImage"));
+                acc.setAccImage(rs.getString("accImage"));
                 acc.setAccStatus(rs.getString("accStatus"));
                 return acc;
             }
@@ -719,7 +719,7 @@ public class AccountDAO extends DBContext {
                 acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
                 acc.setAccDescription(rs.getString("accDescription"));
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
-                acc.setAccImage(rs.getBytes("accImage"));
+                acc.setAccImage(rs.getString("accImage"));
 
                 list.add(acc);
             }
@@ -754,7 +754,7 @@ public class AccountDAO extends DBContext {
                 acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
                 acc.setAccDescription(rs.getString("accDescription"));
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
-                acc.setAccImage(rs.getBytes("accImage"));
+                acc.setAccImage(rs.getString("accImage"));
 
                 list.add(acc);
             }
@@ -789,7 +789,7 @@ public class AccountDAO extends DBContext {
                 acc.setAccPhoneNumber(rs.getString("accPhoneNumber"));
                 acc.setAccDescription(rs.getString("accDescription"));
                 acc.setAccCreateDate(rs.getString("accCreateDate"));
-                acc.setAccImage(rs.getBytes("accImage"));
+                acc.setAccImage(rs.getString("accImage"));
 
                 list.add(acc);
             }
@@ -819,7 +819,7 @@ public class AccountDAO extends DBContext {
                 String accRole = rs.getString("accRole");
                 String accDescription = rs.getString("accDescription");
                 String accCreateDate = rs.getString("accCreateDate");
-                byte[] accImage = rs.getBytes("accImage");
+                String accImage = rs.getString("accImage");
                 String accStatus = rs.getString("accStatus");
                 acc = new Account(accId, accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRole, accDescription, accCreateDate, accImage, accStatus);
             }

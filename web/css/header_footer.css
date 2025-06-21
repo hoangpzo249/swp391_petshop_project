@@ -194,6 +194,8 @@
     transform: scale(1.1);
 }
 
+
+
 /* Account không đăng nhập */
 .account {
     display: flex;
@@ -249,6 +251,14 @@
     margin-top: 3px;
     font-size: 12px;
     transition: transform 0.3s;
+}
+
+.table-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
 }
 
 /* Nội dung dropdown */
@@ -896,4 +906,12 @@ footer {
     border-radius: 50%;
     font-size: 14px;
     text-align: center;
+}
+
+.avatar-circle {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    display: block;
 }
