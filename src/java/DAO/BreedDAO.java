@@ -211,30 +211,68 @@ public class BreedDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return list;
+    }
+
+    public String getSpeciesByBreed(String breedId) {
+        
+        String sql = "SELECT breedSpecies FROM BreedTB WHERE breedId = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, breedId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+              return rs.getString("breedSpecies");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<Breed> get6BreedHot() {
@@ -286,7 +324,7 @@ public class BreedDAO {
 
     public List<Breed> getAllBreedsForManager() {
         DBContext db = new DBContext();
-        List<Breed> listbreed=new ArrayList<>();
+        List<Breed> listbreed = new ArrayList<>();
         try {
             conn = db.getConnection();
             String sql = "SELECT \n"
@@ -314,15 +352,15 @@ public class BreedDAO {
                     + "    b.breedSpecies,\n"
                     + "    b.breedImage,\n"
                     + "    b.breedStatus";
-            ps=conn.prepareStatement(sql);
-            rs=ps.executeQuery();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("breedId");
                 String name = rs.getString("breedName");
                 String species = rs.getString("breedSpecies");
                 boolean status = rs.getBoolean("breedStatus");
                 String image = rs.getString("breedImage");
-                int purchases=rs.getInt("totalPurchases");
+                int purchases = rs.getInt("totalPurchases");
                 listbreed.add(new Breed(id, name, species, status, image, purchases));
             }
             return listbreed;

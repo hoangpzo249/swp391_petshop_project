@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -82,6 +81,11 @@ public class DiscountCheckServlet extends HttpServlet {
         String action = request.getParameter("action");
         String agreedTerms = request.getParameter("agreedTerms");
         request.setAttribute("agreedTerms", agreedTerms);
+        String paymentMethod = request.getParameter("payment-method");
+        if (paymentMethod == null) {
+            paymentMethod = "bank"; 
+        }
+        request.setAttribute("paymentMethod", paymentMethod);
 
         if ("apply-discount".equals(action)) {
 
@@ -155,7 +159,6 @@ public class DiscountCheckServlet extends HttpServlet {
             HttpSession session = request.getSession();
             Account account = (Account) session.getAttribute("userAccount");
             if (account != null) {
-
                 request.setAttribute("name", account.getAccFname() + " " + account.getAccLname());
                 request.setAttribute("phone", account.getAccPhoneNumber());
                 request.setAttribute("address", account.getAccAddress());
@@ -167,7 +170,7 @@ public class DiscountCheckServlet extends HttpServlet {
             request.setAttribute("email", request.getParameter("email"));
 
         } else if ("checkout".equals(action)) {
-            response.sendRedirect("ajaxServlet");
+            request.getRequestDispatcher("/purchase").forward(request, response);
             return;
         }
 

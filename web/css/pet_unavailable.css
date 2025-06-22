@@ -1,0 +1,104 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jun 20, 2025, 11:33:56 AM
+    Author     : ADMIN
+*/
+
+body {
+    background: linear-gradient(to right, #fffaf4, #fef5ea);
+    font-family: 'Asap', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    animation: bgPulse 10s infinite alternate;
+}
+
+.error-content {
+    background: #fffaf6;
+    border: 2px solid #ffcdd2;
+    border-radius: 20px;
+    padding: 50px;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 15px 45px rgba(244, 67, 54, 0.1);
+    animation: fadeIn 0.8s ease;
+}
+
+.error-icon i {
+    font-size: 90px;
+    color: #e53935;
+    animation: bounceIn 0.7s ease;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #c62828;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 17px;
+    color: #444;
+    margin-bottom: 12px;
+}
+
+.error-message {
+    background-color: #ffebee;
+    border-left: 6px solid #e53935;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-size: 15px;
+    color: #b71c1c;
+}
+
+.btn-container {
+    margin-top: 30px;
+}
+
+.btn-back {
+    padding: 14px 36px;
+    background: linear-gradient(to right, #f44336, #e53935);
+    border-radius: 9999px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 17px;
+    box-shadow: 0 6px 20px rgba(255, 82, 82, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-back:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(244, 67, 54, 0.4);
+}
+
+/* Animations */
+@keyframes bgPulse {
+    0% { background-color: #fffaf4; }
+    100% { background-color: #ffeaea; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.6); opacity: 0; }
+    60% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); }
+}

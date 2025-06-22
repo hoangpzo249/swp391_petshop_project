@@ -60,67 +60,67 @@ public class AddToCartServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         CartDAO dao = new CartDAO();
+        PetDAO petDAO = new PetDAO();
         HttpSession session = request.getSession();
 
         String idStr = request.getParameter("id");
 
         if (idStr != null) {
-          
+            int petId = Integer.parseInt(idStr);
+            Account acc = (Account) session.getAttribute("userAccount");
 
-                int petId = Integer.parseInt(idStr);
-
-                Account acc = (Account) session.getAttribute("userAccount");
-
-                if (acc != null) {
-                    int accId = acc.getAccId();
-                    if (dao.petInCart(accId, petId)) {
-                        session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
-                    } else {
-
-                        dao.addToPetCart(accId, petId);
-                        session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
-
+            if (acc != null) {
+                int accId = acc.getAccId();
+                List<Cart> userCart = dao.getCart(accId);
+                for (Cart c : userCart) {
+                    if (petDAO.getPetById(c.getPetId()).getPetAvailability() == 0 || petDAO.getPetById(c.getPetId()).getPetStatus() == 0) {
+                        dao.deleteFromPetCart(accId, c.getPetId());
                     }
-
-                    session.setAttribute("cartcount", dao.getTotalCartItems(accId));
-                } else {
-                    // Guest
-                    List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
-                    if (guestCart == null) {
-                        guestCart = new ArrayList<>();
-                    }
-
-                    boolean exists = false;
-                    for (Cart c : guestCart) {
-                        if (c.getPetId() == petId) {
-                            exists = true;
-                            break;
-                        }
-                    }
-
-                    if (exists) {
-                        session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
-                    } else {
-                        PetDAO p = new PetDAO();
-                        guestCart.add(new Cart(-1, petId, 1, p.getPetById(petId).getPetPrice()));
-                        session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
-                    }
-
-                    session.setAttribute("guestCart", guestCart);
-                    session.setAttribute("cartcount", guestCart.size());
                 }
+                session.setAttribute("cartcount", dao.getTotalCartItems(accId));
+                if (dao.petInCart(accId, petId)) {
+                    session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
+                } else {
+                    dao.addToPetCart(accId, petId);
+                    session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
+                }
+                session.setAttribute("cartcount", dao.getTotalCartItems(accId));
 
-                
-
-               response.sendRedirect("displaypet?id=" + idStr);
-
-
-           
+            } else {
+                List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
+                if (guestCart == null) {
+                    guestCart = new ArrayList<>();
+                }
+                List<Cart> validCart = new ArrayList<>();
+                for (Cart c : guestCart) {
+                    if (petDAO.getPetById(c.getPetId()).getPetAvailability() != 0 || petDAO.getPetById(c.getPetId()).getPetStatus() != 0) {
+                        validCart.add(c);
+                    }
+                }
+                session.setAttribute("guestCart", validCart);
+                session.setAttribute("cartcount", validCart.size());
+                boolean exists = false;
+                for (Cart c : validCart) {
+                    if (c.getPetId() == petId) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (exists) {
+                    session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
+                } else {
+                    validCart.add(new Cart(-1, petId, 1, petDAO.getPetById(petId).getPetPrice()));
+                    session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
+                }
+                session.setAttribute("guestCart", validCart);
+                session.setAttribute("cartcount", validCart.size());
+            }
         }
+        response.sendRedirect("displaypet?id=" + idStr);
+
     }
 
     /**
@@ -136,7 +136,8 @@ public class AddToCartServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-/*
+
+    /*
     /**
      * Returns a short description of the servlet.
      *

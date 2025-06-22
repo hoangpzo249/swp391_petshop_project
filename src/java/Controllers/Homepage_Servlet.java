@@ -92,6 +92,22 @@ public class Homepage_Servlet extends HttpServlet {
             }
 
             session.setAttribute("cartcount", filtered.size());
+        }else {
+            List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
+            int guestCount = 0;
+            if (guestCart != null) {
+               
+                for (Cart c : guestCart) {
+                    if (c.getPetId() != null) {
+                        Pet pet = petDao.getPetById(c.getPetId());
+                        if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
+                            guestCount++;
+                        }
+                    }
+                }
+            }
+            session.setAttribute("cartcount", guestCount);
+
         }
 
             request.getRequestDispatcher("home_page.jsp").forward(request, response);

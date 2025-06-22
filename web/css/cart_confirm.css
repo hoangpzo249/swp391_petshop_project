@@ -1,0 +1,279 @@
+/* === General body === */
+body {
+    background-color: #f9fafb;
+    font-family: 'Asap', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* === Container wrap === */
+.confirmation-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* === Main content === */
+.confirmation-content {
+    background-color: #ffffff;
+    padding: 40px 50px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    transition: transform 0.3s ease;
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Checkmark icon === */
+.checkmark i {
+    font-size: 80px;
+    color: #22c55e;
+    margin-bottom: 20px;
+    animation: pop 0.6s ease;
+}
+
+@keyframes pop {
+    0% { transform: scale(0); opacity: 0; }
+    80% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+/* === Heading and text === */
+h1 {
+    font-size: 28px;
+    color: #111827;
+    margin-bottom: 16px;
+}
+
+p {
+    font-size: 16px;
+    color: #374151;
+    margin-bottom: 12px;
+}
+
+/* === Order details box === */
+.order-details {
+    margin: 24px 0;
+    background-color: #f3f4f6;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    border: 1px solid #e5e7eb;
+}
+
+.order-details p {
+    margin: 8px 0;
+    font-size: 15px;
+    color: #374151;
+}
+
+/* === Alert box for phone notice === */
+.alert-box {
+    margin-top: 20px;
+    background-color: #fff7e6;
+    border-left: 6px solid #f59e0b;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: #333;
+    font-size: 15px;
+}
+
+.alert-box i {
+    font-size: 22px;
+    color: #f59e0b;
+    margin-top: 4px;
+}
+
+/* === Support info === */
+.support-info {
+    margin-top: 24px;
+    font-size: 14px;
+    color: #374151;
+}
+
+.support-info p {
+    margin: 8px 0;
+}
+
+.support-info i {
+    margin-right: 8px;
+    color: #2563eb;
+}
+
+.support-info a {
+    color: #ef4444;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.support-info a:hover {
+    color: #dc2626;
+}
+
+/* === Button container === */
+.btn-container {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+/* === Button styles === */
+.btn-home {
+    padding: 14px 32px;
+    font-size: 16px;
+    border-radius: 9999px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    background-color: orange;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-home:hover {
+    background-color: orangered;
+    transform: translateY(-3px);
+}
+
+/* Nền tổng thể */
+body {
+    background: linear-gradient(to right, #fffaf4, #fef5ea); /* màu sáng ấm đồng bộ */
+    font-family: 'Asap', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* Khung xác nhận */
+.confirmation-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    animation: bgPulse 10s infinite alternate;
+}
+
+/* Card nội dung */
+.confirmation-content {
+    background: #fffefb;
+    border: 2px solid #ffe0b2;
+    border-radius: 20px;
+    padding: 50px;
+    max-width: 600px;
+    box-shadow: 0 15px 45px rgba(255, 153, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 0.8s ease;
+}
+
+/* Icon đánh dấu */
+.checkmark i {
+    font-size: 90px;
+    color: #27ae60;
+    animation: bounceIn 0.7s ease;
+    margin-bottom: 20px;
+}
+
+/* Tiêu đề */
+h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #e65100;
+    margin-bottom: 10px;
+}
+
+/* Đoạn văn */
+p {
+    font-size: 17px;
+    color: #444;
+    margin-bottom: 12px;
+}
+
+/* Thông tin đơn hàng */
+.order-details {
+    background-color: #fffdf5;
+    border: 1px dashed #ffcc80;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 25px 0;
+    text-align: left;
+    font-size: 15px;
+    color: #555;
+}
+
+.order-details strong {
+    color: #e65100;
+}
+
+/* Hộp cảnh báo */
+.alert-box {
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    border-left: 6px solid #f39c12;
+    padding: 16px;
+    border-radius: 10px;
+    margin: 20px 0;
+    color: #333;
+    font-size: 15px;
+}
+
+/* Thông tin hỗ trợ */
+.support-info i {
+    margin-right: 8px;
+    color: #ff7043;
+}
+.support-info a {
+    color: #d84315;
+    text-decoration: none;
+}
+.support-info a:hover {
+    color: #bf360c;
+}
+
+/* Nút quay về */
+.btn-home {
+    padding: 14px 36px;
+    background: linear-gradient(to right, #ff9800, #fb8c00);
+    border-radius: 9999px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 17px;
+    box-shadow: 0 6px 20px rgba(255, 153, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-home:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(255, 140, 0, 0.4);
+}
+
+/* =================== Animation =================== */
+@keyframes bgPulse {
+    0% { background-color: #fffaf4; }
+    100% { background-color: #fff3e0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.6); opacity: 0; }
+    60% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); }
+}

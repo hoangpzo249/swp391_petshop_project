@@ -86,11 +86,7 @@ public class BlogServlet extends HttpServlet {
                 dao.deleteBlog(id);
                 response.sendRedirect("blog");
 
-            } else if ("toggle".equals(action)) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                String status = request.getParameter("status");
-                dao.updateStatus(id, status);
-                response.sendRedirect("blog");
+             
             } else if ("view".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 BlogPost blog = dao.getBlogById(id);
@@ -119,39 +115,99 @@ public class BlogServlet extends HttpServlet {
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         String status = request.getParameter("status");
-        
-        
+
         String action = request.getParameter("action");
         if ("upload-only-image".equals(action)) {
+
             request.setAttribute("blogId", blogIdStr);
             request.setAttribute("title", title);
             request.setAttribute("content", content);
             request.setAttribute("featuredImage", request.getParameter("featuredImage"));
             request.setAttribute("status", status);
 
-            Part imagePart = request.getPart("imageUpload");
-            String imageUrl = null;
+            Part imagePart = request.getPart("featuredImageFile");
+            String featuredImage = request.getParameter("featuredImage");
 
             if (imagePart != null && imagePart.getSize() > 0) {
                 File tempFile = File.createTempFile("upload-", ".tmp");
                 try (InputStream is = imagePart.getInputStream()) {
                     Files.copy(is, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    featuredImage = ImgBbUploader.uploadImage(tempFile);
                 }
-
-                imageUrl = ImgBbUploader.uploadImage(tempFile);
                 tempFile.delete();
+
+                if (featuredImage != null) {
+                    request.setAttribute("featuredImage", featuredImage);
+                }
             }
 
-            if (imageUrl != null) {
-                request.setAttribute("imageUploadResult", imageUrl);
+            StringBuilder result = new StringBuilder();
+            for (Part part : request.getParts()) {
+                if ("imageUpload".equals(part.getName()) && part.getSize() > 0) {
+                    File tempFile = File.createTempFile("upload-", ".tmp");
+                    try (InputStream is = part.getInputStream()) {
+                        Files.copy(is, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                        String url = ImgBbUploader.uploadImage(tempFile);
+                        if (url != null) {
+                            result.append(url).append("\n");
+                        }
+                    }
+                    tempFile.delete();
+                }
+            }
+
+            if (result.length() > 0) {
+                String resultStr = result.toString().trim();
+                request.setAttribute("imageUploadResult", resultStr);
+
+                String[] links = resultStr.split("\\n");
+                request.setAttribute("imageUploadResultList", java.util.Arrays.asList(links));
             }
 
             request.getRequestDispatcher("blog_form.jsp").forward(request, response);
             return;
         }
-        String featuredImage=null;
+        if ("save-draft".equals(action)) {
+            BlogPost blog = new BlogPost();
+            blog.setTitle(title != null ? title : "(Không tiêu đề)");
+            blog.setContent(content != null ? content : "");
+            blog.setStatus("Draft");
+            blog.setAuthorId(1);
 
-        // 👉 Nếu là thêm mới thì xử lý ảnh upload từ form
+            String featuredImage = null;
+            Part imagePart = request.getPart("featuredImageFile");
+
+            if (imagePart != null && imagePart.getSize() > 0) {
+                File tempFile = File.createTempFile("upload-", ".tmp");
+                try (InputStream is = imagePart.getInputStream()) {
+                    Files.copy(is, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    featuredImage = ImgBbUploader.uploadImage(tempFile);
+                    request.getSession().setAttribute("featuredImage", featuredImage);
+
+                }
+                tempFile.delete();
+            }
+
+            if (featuredImage == null || featuredImage.isEmpty()) {
+                featuredImage = "https://i.ibb.co/NggxZvb7/defaultcatdog.png";
+            }
+
+            blog.setFeaturedImage(featuredImage);
+
+            if (blogIdStr != null && !blogIdStr.isEmpty()) {
+                blog.setBlogId(Integer.parseInt(blogIdStr));
+                dao.updateBlog(blog);
+            } else {
+                dao.addBlog(blog);
+            }
+            request.getSession().removeAttribute("featuredImage");
+
+            response.sendRedirect("blog");
+            return;
+        }
+
+        String featuredImage = null;
+
         if (blogIdStr == null || blogIdStr.isEmpty()) {
             Part imagePart = request.getPart("featuredImageFile");
 
@@ -163,6 +219,8 @@ public class BlogServlet extends HttpServlet {
                     }
 
                     featuredImage = ImgBbUploader.uploadImage(tempFile);
+                    request.getSession().setAttribute("featuredImage", featuredImage);
+
                     if (featuredImage == null) {
                         featuredImage = "https://i.ibb.co/NggxZvb7/defaultcatdog.png";
                     }
@@ -176,7 +234,7 @@ public class BlogServlet extends HttpServlet {
                 featuredImage = "https://i.ibb.co/NggxZvb7/defaultcatdog.png";
             }
         } else {
-            // Nếu là cập nhật, lấy link ảnh cũ từ form
+
             featuredImage = request.getParameter("featuredImage");
         }
 
@@ -185,7 +243,7 @@ public class BlogServlet extends HttpServlet {
         blog.setContent(content);
         blog.setFeaturedImage(featuredImage);
         blog.setStatus(status);
-        blog.setAuthorId(1); // hardcode
+        blog.setAuthorId(1);
 
         if (blogIdStr != null && !blogIdStr.isEmpty()) {
             blog.setBlogId(Integer.parseInt(blogIdStr));

@@ -119,6 +119,18 @@
         <servlet-name>BlogServlet</servlet-name>
         <servlet-class>Controllers.BlogServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemoveThumbnailServlet</servlet-name>
+        <servlet-class>Controllers.RemoveThumbnailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>purchaseServlet</servlet-name>
+        <servlet-class>Controllers.purchaseServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VnPayReturnServlet</servlet-name>
+        <servlet-class>Controllers.VnPayReturnServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -234,6 +246,18 @@
     <servlet-mapping>
         <servlet-name>BlogServlet</servlet-name>
         <url-pattern>/blog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveThumbnailServlet</servlet-name>
+        <url-pattern>/removeImage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>purchaseServlet</servlet-name>
+        <url-pattern>/purchase</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VnPayReturnServlet</servlet-name>
+        <url-pattern>/vnpay_return</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>

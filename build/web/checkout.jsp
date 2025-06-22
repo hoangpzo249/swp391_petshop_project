@@ -243,12 +243,18 @@
                     </div>
 
                     <h3>Phương thức thanh toán</h3>
-                    <label><input type="radio" name="payment-method" value="bank" checked /> Chuyển khoản ngân hàng</label>
-                    <label><input type="radio" name="payment-method" value="cod" /> Trả tiền mặt khi nhận hàng</label>
+                    <label>
+                        <input type="radio" name="payment-method" value="bank"
+                               <c:if test="${paymentMethod == 'bank'}">checked</c:if> /> Chuyển khoản ngân hàng
+                        </label>
+                        <label>
+                            <input type="radio" name="payment-method" value="cod"
+                            <c:if test="${paymentMethod == 'cod'}">checked</c:if> /> Trả tiền mặt khi nhận hàng
+                        </label>
 
-                    <div class="summary-row">
-                        <div>Tạm tính:</div>
-                        <div><fmt:formatNumber value="${total}" type="currency" currencySymbol="₫" groupingUsed="true" /></div>
+                        <div class="summary-row">
+                            <div>Tạm tính:</div>
+                            <div><fmt:formatNumber value="${total}" type="currency" currencySymbol="₫" groupingUsed="true" /></div>
                     </div>
                     <div class="summary-row">
                         <div>Giảm giá:</div>
@@ -260,7 +266,7 @@
                         <div>Tổng cộng:</div>
                         <fmt:formatNumber value="${finalTotal}" type="currency" currencySymbol="₫" groupingUsed="true" />
                     </div>
-                    <input type="hidden" name="totalprice" value="${total}" />
+
 
 
 
@@ -270,6 +276,8 @@
                     </label>
 
 
+                    <input type="hidden" name="amount" value="${finalTotal != null ? finalTotal : total}" />
+                    <input type="hidden" name="discountAmount" value="${discountAmount != null ? discountAmount : 0}" />
 
                     <button type="submit" id="checkout" name="action" value="checkout" class="checkout-btn">Tiến hành thanh toán</button>
 
@@ -293,7 +301,7 @@
                         ${discountMessage}
                     </div>
                 </c:if>
-                
+
 
 
 

@@ -79,6 +79,7 @@ public class CheckoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String[] selectedPets = request.getParameterValues("selectedPets");
+        request.setAttribute("paymentMethod", "bank");
 
         PetDAO petDao = new PetDAO();
         List<Pet> selectedPetList = new ArrayList<>();
@@ -114,26 +115,41 @@ public class CheckoutServlet extends HttpServlet {
         
 
         HttpSession session = request.getSession();
-        Account account = (Account) session.getAttribute("userAccount");
-         CartDAO cartDao = new CartDAO();
-        List<Cart> petCart = new ArrayList<>();
-       
-
+        Account account = (Account) session.getAttribute("userAccount");      
+        CartDAO _daoCart = new CartDAO();
         if (account != null) {
-             petCart = cartDao.getCart(account.getAccId());
+            int accountId = account.getAccId();
+            List<Cart> carts = _daoCart.getCart(accountId);
+            List<Cart> filtered = new ArrayList<>();
+
+            for (Cart c : carts) {
+                if (c.getPetId() != null) {
+                    Pet pet = petDao.getPetById(c.getPetId());
+                    if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
+                        filtered.add(c);
+                    }
+                }
+            }
             request.setAttribute("name", account.getAccFname() + " " + account.getAccLname());
             request.setAttribute("phone", account.getAccPhoneNumber());
             request.setAttribute("address", account.getAccAddress());
             request.setAttribute("email", account.getAccEmail());
-        }
-        else {
+            session.setAttribute("cartcount", filtered.size());
+        }else {
             List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
+            int guestCount = 0;
             if (guestCart != null) {
-                petCart = guestCart;
+                for (Cart c : guestCart) {
+                    if (c.getPetId() != null) {
+                        Pet pet = petDao.getPetById(c.getPetId());
+                        if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
+                            guestCount++;
+                        }
+                    }
+                }
             }
+            session.setAttribute("cartcount", guestCount);
         }
-        request.setAttribute("cartcount", petCart.size());
-        
         request.getRequestDispatcher("checkout.jsp").forward(request, response);
     }
 

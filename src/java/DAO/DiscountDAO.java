@@ -68,5 +68,28 @@ public class DiscountDAO extends DBContext {
         return d;
     }
 
-   
+    public void increaseUsageCount(String discountCode) {
+        String sql = "UPDATE DiscountTB SET usageCount = usageCount + 1 WHERE discountCode = ?";
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, discountCode.trim().toUpperCase());
+            ps.executeUpdate();
+        } catch (Exception e) {
+           
+        }
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+        }
+
+    }
 }
