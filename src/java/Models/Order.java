@@ -4,7 +4,7 @@
  */
 package Models;
 
-import java.sql.Timestamp;
+import java.sql.Timestamp; 
 
 /**
  *
@@ -45,14 +45,6 @@ public class Order {
         this.totalPrice = totalPrice;
         this.rejectionReason = rejectionReason;
         this.discountId = discountId;
-    }
-
-    public String getRejectionReason() {
-        return rejectionReason;
-    }
-
-    public void setRejectionReason(String rejectionReason) {
-        this.rejectionReason = rejectionReason;
     }
 
     public int getOrderId() {
@@ -151,6 +143,14 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
+
     public Integer getDiscountId() {
         return discountId;
     }
@@ -163,5 +163,6 @@ public class Order {
     public String toString() {
         return "Order{" + "orderId=" + orderId + ", accId=" + accId + ", orderDate=" + orderDate + ", orderStatus=" + orderStatus + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", customerPhone=" + customerPhone + ", customerAddress=" + customerAddress + ", shipperId=" + shipperId + ", paymentMethod=" + paymentMethod + ", paymentStatus=" + paymentStatus + ", totalPrice=" + totalPrice + ", rejectionReason=" + rejectionReason + ", discountId=" + discountId + '}';
     }
-
+ 
 }
+   

@@ -12,6 +12,26 @@
             <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/DAO/BreedDAO.java</file>
             <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/web/blog_view.jsp</file>
             <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/web/blog_list.jsp</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/web/js/blogPreview.js</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/web/css/blogForm.css</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/web/js/blogValidation.js</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/web/js/validate_input.js</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/Utils/Config.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/Controllers/CheckoutServlet.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/Controllers/DiscountCheckServlet.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/Controllers/Homepage_Servlet.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/Controllers/purchaseServlet.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/Controllers/VnPayReturnServlet.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/DAO/DiscountDAO.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/DAO/OrderDAO.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/DAO/PetDAO.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/DAO/DBContext.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/Models/Order.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/Utils/EmailSender.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/Controllers/Login_Account_Servlet.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/web/checkout.jsp</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/web/home_page.jsp</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project/src/java/Controllers/AddToCartServlet.java</file>
         </group>
     </open-files>
 </project-private>

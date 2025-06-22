@@ -548,4 +548,123 @@ public class EmailSender {
 
         Transport.send(mess);
     }
+    public static void sendConfirmOrderCustomer(String receiveEmail, int orderId, List<Pet> listpet, double discountAmount, double totalPrice) {
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
+
+        Properties pro = new Properties();
+        pro.put("mail.smtp.auth", "true");
+        pro.put("mail.smtp.starttls.enable", "true");
+        pro.put("mail.smtp.host", "smtp.gmail.com");
+        pro.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(pro, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+        try {
+            MimeMessage mess = new MimeMessage(session);
+            mess.setFrom(new InternetAddress(senderEmail));
+            mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiveEmail));
+            mess.setSubject("Xác nhận đơn hàng #" + orderId + " - Cảm ơn bạn đã mua sắm tại PETFPT Shop!", "UTF-8");
+
+            StringBuilder htmlContent = new StringBuilder();
+            htmlContent.append("<html><body style='font-family: Arial, sans-serif; color: #333;'>");
+            htmlContent.append("<h2 style='color: #f26f21;'>Cảm ơn bạn đã đặt hàng tại PETFPT Shop!</h2>");
+            htmlContent.append("<p>Xin chào,</p>");
+            htmlContent.append("<p>Chúng tôi đã nhận được đơn hàng của bạn và đang tiến hành xử lý. Dưới đây là thông tin chi tiết về đơn hàng của bạn:</p>");
+            htmlContent.append("<h3>Thông tin đơn hàng: #" + orderId + "</h3>");
+            htmlContent.append("<table border='1' cellpadding='10' cellspacing='0' style='width: 100%; border-collapse: collapse;'>");
+            htmlContent.append("<tr style='background-color: #f2f2f2;'><th>Tên thú cưng</th><th>Giống</th><th>Giá</th></tr>");
+
+            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            for (Pet pet : listpet) {
+                htmlContent.append("<tr>");
+                htmlContent.append("<td>").append(pet.getPetName()).append("</td>");
+                htmlContent.append("<td>").append(pet.getBreed().getBreedName()).append("</td>");
+                double price = (pet.getPriceAtOrder() > 0) ? pet.getPriceAtOrder() : pet.getPetPrice();
+                htmlContent.append("<td style='text-align: right;'>").append(currencyFormatter.format(price)).append("</td>");
+                htmlContent.append("</tr>");
+            }
+            htmlContent.append("</table>");
+            if (discountAmount > 0) {
+                htmlContent.append("<h3 style='text-align: right;'>Giảm giá: <span style='color: green;'>")
+                        .append(currencyFormatter.format(discountAmount))
+                        .append("</span></h3>");
+            }
+            htmlContent.append("<h3 style='text-align: right; margin-top: 10px;'>Tổng cộng: <span style='color: #f26f21;'>")
+                    .append(currencyFormatter.format(totalPrice))
+                    .append("</span></h3>");
+
+            htmlContent.append("<p>Chúng tôi sẽ thông báo cho bạn khi đơn hàng được vận chuyển. Bạn có thể theo dõi trạng thái đơn hàng trong mục 'Lịch sử mua hàng' trên website của chúng tôi.</p>");
+            htmlContent.append("<p>Cảm ơn bạn một lần nữa!</p>");
+            htmlContent.append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>");
+            htmlContent.append("</body></html>");
+
+            mess.setContent(htmlContent.toString(), "text/html; charset=utf-8");
+            Transport.send(mess);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void sendRejectOrderRefund(String receiveEmail, int orderId, double totalPrice) {
+    final String senderEmail = "fptpet@gmail.com";
+    final String senderPassword = "mfjm zfut ledv svkn";
+
+    Properties pro = new Properties();
+    pro.put("mail.smtp.auth", "true");
+    pro.put("mail.smtp.starttls.enable", "true");
+    pro.put("mail.smtp.host", "smtp.gmail.com");
+    pro.put("mail.smtp.port", "587");
+
+    Session session = Session.getInstance(pro, new Authenticator() {
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(senderEmail, senderPassword);
+        }
+    });
+
+    try {
+        MimeMessage mess = new MimeMessage(session);
+        mess.setFrom(new InternetAddress(senderEmail));
+        mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiveEmail));
+        mess.setSubject("Thông báo về đơn hàng #" + orderId + " tại PETFPT Shop", "UTF-8");
+
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+        StringBuilder htmlContent = new StringBuilder();
+        htmlContent.append("<html><body style='font-family: Arial, sans-serif; color: #333;'>");
+
+        htmlContent.append("<h2 style='color: #e74c3c;'>Thông báo: Đơn hàng của bạn đã bị từ chối</h2>");
+        htmlContent.append("<p>Xin chào,</p>");
+        htmlContent.append("<p>Chúng tôi rất tiếc phải thông báo rằng đơn hàng #")
+                .append(orderId)
+                .append(" của bạn không thể được xử lý vì <strong>thú cưng không còn khả dụng</strong>.</p>");
+
+        htmlContent.append("<div style='background-color: #f9eaea; border-left: 4px solid #e74c3c; padding: 10px 15px; margin: 15px 0;'>");
+        htmlContent.append("<p style='margin: 0;'><strong>Lý do từ chối:</strong> Thú cưng không còn khả dụng</p>");
+        htmlContent.append("</div>");
+
+        htmlContent.append("<h3 style='text-align: right; margin-top: 20px;'>Tổng giá trị đơn hàng: <span style='color: #333;'>")
+                .append(currencyFormatter.format(totalPrice))
+                .append("</span></h3>");
+
+        htmlContent.append("<p>Vì bạn đã thanh toán cho đơn hàng này, chúng tôi sẽ tiến hành hoàn tiền trong thời gian sớm nhất.</p>");
+        htmlContent.append("<p>Để quá trình hoàn tiền diễn ra chính xác, vui lòng điền thông tin vào biểu mẫu dưới đây và gửi kèm ảnh bằng chứng thanh toán:</p>");
+        htmlContent.append("<p style='margin: 20px 0;'><a href='https://docs.google.com/forms/d/e/1FAIpQLSelI0Ic97jVlEEvtDBADrbjvGHW4vkjT369P8KjQgCT5mvKkw/viewform?usp=sharing&ouid=110330081905382109968' target='_blank' ")
+                .append("style='display: inline-block; background-color: #f26f21; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;'>")
+                .append("Gửi thông tin hoàn tiền tại đây</a></p>");
+
+        htmlContent.append("<p>Chúng tôi xin lỗi vì sự bất tiện này và mong được phục vụ bạn trong tương lai gần.</p>");
+        htmlContent.append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>");
+        htmlContent.append("</body></html>");
+
+        mess.setContent(htmlContent.toString(), "text/html; charset=utf-8");
+        Transport.send(mess);
+
+    } catch (MessagingException e) {
+        e.printStackTrace();
+    }
+}
 }

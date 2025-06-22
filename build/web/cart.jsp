@@ -16,7 +16,7 @@
         <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <script src="js/cart_selection.js?v=21" type="text/javascript"></script>
+        <script src="js/cart_selection.js?v=22" type="text/javascript"></script>
         <link href="css/cart.css?v=9" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -144,6 +144,7 @@
                 <ul class="menu">
                     <li><a href="homepage">Trang Chủ</a></li>
                     <li><a href="listshoppet">Thú Cưng</a></li>
+                    
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
                     <li><a href="menu_contact.jsp">Liên Hệ</a></li>
 
@@ -162,10 +163,6 @@
 
 
 
-                <div style="margin-bottom: 10px;">
-                    <input type="checkbox" id="select-all" />
-                    <label for="select-all">Chọn tất cả sản phẩm</label>
-                </div>
 
 
                 <table class="cart-table">

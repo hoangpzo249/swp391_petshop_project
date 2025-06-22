@@ -8,13 +8,13 @@ import Models.Order;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Statement;
+import java.sql.Types;
 
 /**
  *
@@ -41,7 +41,6 @@ public class OrderDAO {
         order.setPaymentStatus(rs.getString("paymentStatus"));
         order.setTotalPrice(rs.getDouble("totalPrice"));
         order.setRejectionReason(rs.getString("rejectionReason"));
-        order.setDiscountId(rs.getInt("discountId"));
         return order;
     }
 
@@ -99,7 +98,7 @@ public class OrderDAO {
             conn = db.getConnection();
             String sql = "SELECT \n"
                     + "    o.*,\n"
-                    + "    ISNULL(SUM(oc.priceAtOrder), 0) AS totalPrice\n"
+                    + "    SUM(oc.priceAtOrder) AS totalPrice\n"
                     + "FROM \n"
                     + "    OrderTB o\n"
                     + "LEFT JOIN \n"
@@ -108,7 +107,7 @@ public class OrderDAO {
                     + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
                     + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus, \n"
-                    + "    o.rejectionReason, o.discountId;";
+                    + "    o.rejectionReason;";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -220,7 +219,7 @@ public class OrderDAO {
             conn = db.getConnection();
             String sql = "SELECT \n"
                     + "    o.*, \n"
-                    + "    ISNULL(SUM(oc.priceAtOrder), 0) AS totalPrice \n"
+                    + "    SUM(oc.priceAtOrder) AS totalPrice \n"
                     + "FROM \n"
                     + "    OrderTB o \n"
                     + "LEFT JOIN \n"
@@ -230,11 +229,10 @@ public class OrderDAO {
                     + "GROUP BY \n"
                     + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
-                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus, o.rejectionReason, \n"
-                    + "    o.discountId;";
+                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus,  o.rejectionReason;";
 
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, Integer.parseInt(id));
+            ps.setString(1, id);
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -330,7 +328,8 @@ public class OrderDAO {
         }
         return list;
     }
-     public int addOrder(Order order) {
+
+    public int addOrder(Order order) {
         int orderId = -1;
         Connection conn = null;
         PreparedStatement ps = null;
@@ -359,7 +358,7 @@ public class OrderDAO {
             ps.setString(8, order.getPaymentMethod());
             ps.setString(9, order.getPaymentStatus());
 
-            if (order.getDiscountId()==null) {
+            if (order.getDiscountId() == null) {
                 ps.setNull(10, Types.INTEGER);
             } else {
                 ps.setInt(10, order.getDiscountId());
