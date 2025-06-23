@@ -145,7 +145,7 @@ public class Register_Account_Servlet extends HttpServlet {
 
             String fullNameRegis = fNameRegister + " " + lNameRegister;
 
-            String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
+            String checkName = "^[a-zA-ZÀ-Ỵà-ỵĐđ\\s]+$";
             if (!fNameRegister.matches(checkName) || !lNameRegister.matches(checkName)) {
                 request.setAttribute("errMessRegister", "Họ và Tên của bạn không được chứa kí tự đặc biệt và số");
                 request.setAttribute("emailRegister", emailRegister);

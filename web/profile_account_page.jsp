@@ -89,10 +89,17 @@
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="orders" class="dropdown-item">
-                                        <i class="fas fa-shopping-bag"></i> 
-                                        <span>Đơn hàng đã mua</span>
-                                    </a>
+                                    
+                                    <c:choose>
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Customer'}">
+                                            <a href="orders" class="dropdown-item">
+                                                <i class="fas fa-shopping-bag"></i> 
+                                                <span>Đơn hàng đã mua</span>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                    
                                     <a href="logout" class="dropdown-item logout">
                                         <i class="fas fa-sign-out-alt"></i> 
                                         <span>Đăng xuất</span>
@@ -381,17 +388,17 @@
                                         <input type="file" id="profile-image" name="avatar" class="file-input" accept="image/png, image/jpg" required />
 
                                         <div class="save-btn-avatar1">
-                                            <button type="submit" class="save-btn-avatar">Cập nhật ảnh đại diện</button>
+                                            <button type="submit" name="submitA" class="save-btn-avatar">Cập nhật ảnh đại diện</button>
                                         </div>
                                     </div>
                                 </form>
 
-                                <form action="profile?action=update" id="profile-form" method="POST" style="width: 100%;">
+                                <form action="profile?action=update" method="POST" style="width: 100%;">
                                     <div class="form-group">
                                         <label for="username">Tên đăng nhập</label>
                                         <div class="input-with-icon">
                                             <input type="text" id="username" name="username" class="form-control" 
-                                                   placeholder="Nhập tên đăng nhập mới" value=""/>
+                                                   placeholder="Nhập tên đăng nhập mới"/>
 
                                             <i class="fas fa-user"></i>
                                         </div>
@@ -451,7 +458,7 @@
 
 
                                     <div class="form-actions">
-                                        <button type="submit" class="save-btn">
+                                        <button type="submit" name="submitB" class="save-btn">
                                             Lưu thay đổi
                                         </button>
                                     </div>

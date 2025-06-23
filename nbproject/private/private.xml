@@ -2,6 +2,7 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+<<<<<<< HEAD
         <group>
             <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/test/Test/Main.java</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/src/java/Controllers/AddDiscountServlet.java</file>
@@ -16,5 +17,8 @@
             <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/web/manager_discount_view.jsp</file>
             <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/web/home_page.jsp</file>
         </group>
+=======
+        <group/>
+>>>>>>> hoang
     </open-files>
 </project-private>

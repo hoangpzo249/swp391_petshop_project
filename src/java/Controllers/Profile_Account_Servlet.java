@@ -119,7 +119,6 @@ public class Profile_Account_Servlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String action = request.getParameter("action");
 //        String act = request.getParameter("act");
 //        String taget = request.getParameter("taget");
@@ -142,7 +141,7 @@ public class Profile_Account_Servlet extends HttpServlet {
             String address = request.getParameter("address");
             String description = request.getParameter("description");
 
-            String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
+            
 
 //            int id = acc.getAccId();
 //            System.out.println(id);
@@ -157,6 +156,7 @@ public class Profile_Account_Servlet extends HttpServlet {
             if (username == null || username.trim().isEmpty()) {
                 username = acc.getAccUsername();
             }
+            
             if (fName == null || fName.trim().isEmpty()) {
                 fName = acc.getAccFname();
             }
@@ -166,13 +166,12 @@ public class Profile_Account_Servlet extends HttpServlet {
 
             String checkUsername = "^[a-z0-9_]{5,30}$";
             if (!username.matches(checkUsername)) {
-                session.setAttribute("errMess", "Tên tài khoản chỉ cho phép chữ cái thường, số và dấu gạch dưới. Tối thiểu 5 kí tự và tối đa 30 kí tự");
-
-                String url = "admin-panel?action=create-account&type=customer";
-                response.sendRedirect(url);
+                request.setAttribute("errMess", "Tên tài khoản chỉ cho phép chữ cái thường, số và dấu gạch dưới. Tối thiểu 5 kí tự và tối đa 30 kí tự");
+                request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
                 return;
             }
 
+            String checkName = "^[a-zA-ZÀ-Ỵà-ỵĐđ\\s]+$";
             if (!fName.matches(checkName) || !lName.matches(checkName)) {
                 request.setAttribute("errMess", "Tên của bạn không được chứa kí tự đặc biệt và số");
                 request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
@@ -198,8 +197,8 @@ public class Profile_Account_Servlet extends HttpServlet {
                     request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
                     return;
                 }
-
             }
+            
             if (phone == null || phone.trim().isEmpty()) {
                 phone = acc.getAccPhoneNumber();
             }
@@ -217,6 +216,7 @@ public class Profile_Account_Servlet extends HttpServlet {
             if (description == null || description.trim().isEmpty()) {
                 description = acc.getAccDescription();
             }
+            
             acc.setAccUsername(username);
             acc.setAccFname(fName);
             acc.setAccLname(lName);
@@ -232,6 +232,7 @@ public class Profile_Account_Servlet extends HttpServlet {
 
             request.setAttribute("updateSucess", "Cập nhật thông tin thành công");
             request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
+            
         } else if ("change-password".equals(action)) {
             String password = request.getParameter("password");
             String comfirm_password = request.getParameter("comfirm_password");
@@ -423,7 +424,6 @@ public class Profile_Account_Servlet extends HttpServlet {
                 request.setAttribute("errMess", "Cập nhật Avatar không thành công");
                 request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
             }
-
         } else {
             request.getRequestDispatcher("profile_account_page.jsp").forward(request, response);
         }

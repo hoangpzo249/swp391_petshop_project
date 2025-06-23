@@ -637,7 +637,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     return;
                 }
 
-                String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
+                String checkName = "^[a-zA-ZÀ-Ỵà-ỵĐđ\\s]+$";
                 if (!fNameCus.matches(checkName) || !lNameCus.matches(checkName)) {
 
                     session.setAttribute("usernameCus", usernameCus);
@@ -928,7 +928,7 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     return;
                 }
 
-                String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
+                String checkName = "^[a-zA-ZÀ-Ỵà-ỵĐđ\\s]+$";
                 if (!fNameStaff.matches(checkName) || !lNameStaff.matches(checkName)) {
 
                     session.setAttribute("errMess", "Họ và Tên của bạn không được chứa kí tự đặc biệt và số");

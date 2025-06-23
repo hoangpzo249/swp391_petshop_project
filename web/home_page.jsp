@@ -98,10 +98,17 @@
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="orders" class="dropdown-item">
-                                        <i class="fas fa-shopping-bag"></i> 
-                                        <span>Đơn hàng đã mua</span>
-                                    </a>
+                                    <c:choose>
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Customer'}">
+                                            <a href="orders" class="dropdown-item">
+                                                <i class="fas fa-shopping-bag"></i> 
+                                                <span>Đơn hàng đã mua</span>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+
+
                                     <a href="logout" class="dropdown-item logout">
                                         <i class="fas fa-sign-out-alt"></i> 
                                         <span>Đăng xuất</span>
@@ -198,54 +205,6 @@
                 </c:forEach>
             </div>
 
-            <h2 class="text-favo-item">Chăm BOSS cùng FPTPet</h2>
-            <div class="blog-container">
-                <div class="blog-card">
-                    <div class="blog-image">
-                        <img src="images/defaultBlog.jpg" alt="Chăm sóc thú cưng mùa hè">
-                        <span class="blog-category">Chăm Sóc</span>
-                    </div>
-                    <div class="blog-content">
-                        <h3>Cách chăm sóc thú cưng mùa hè nóng bức</h3>
-                        <p class="blog-excerpt">Những lưu ý quan trọng giúp Boss vượt qua mùa hè một cách khỏe mạnh và thoải mái...</p>
-                        <div class="blog-meta">
-                            <span><i class="fas fa-calendar"></i> 10/06/2025</span>
-                            <a href="blog/cham-soc-thu-cung-mua-he" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="blog-card">
-                    <div class="blog-image">
-                        <img src="images/defaultBlog.jpg" alt="Dinh dưỡng cho chó con">
-                        <span class="blog-category">Dinh Dưỡng</span>
-                    </div>
-                    <div class="blog-content">
-                        <h3>Dinh dưỡng cho chó con dưới 6 tháng tuổi</h3>
-                        <p class="blog-excerpt">Chế độ ăn uống khoa học giúp cún cưng phát triển toàn diện trong giai đoạn đầu đời...</p>
-                        <div class="blog-meta">
-                            <span><i class="fas fa-calendar"></i> 05/06/2025</span>
-                            <a href="blog/dinh-duong-cho-con" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="blog-card">
-                    <div class="blog-image">
-                        <img src="images/defaultBlog.jpg" alt="Huấn luyện mèo">
-                        <span class="blog-category">Huấn Luyện</span>
-                    </div>
-                    <div class="blog-content">
-                        <h3>5 bước huấn luyện mèo đi vệ sinh đúng chỗ</h3>
-                        <p class="blog-excerpt">Phương pháp hiệu quả giúp Boss mèo nhanh chóng hình thành thói quen tốt...</p>
-                        <div class="blog-meta">
-                            <span><i class="fas fa-calendar"></i> 01/06/2025</span>
-                            <a href="blog/huan-luyen-meo-di-ve-sinh" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <h2 class="text-favo-item">Boss nào hợp với bạn?</h2>
             <div class="pet-match-section">
                 <div class="pet-options-container">
@@ -265,7 +224,6 @@
                 </div>
             </div>
         </div>
-
 
 
         <div class="about-section">
