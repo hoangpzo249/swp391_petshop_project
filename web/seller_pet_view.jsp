@@ -114,58 +114,48 @@
                                     <input type="text" name="searchKey" placeholder="Tìm theo Mã, Tên thú cưng..." value="${param.searchKey}">
                                 </div>
                                 <div class="select-group">
-                                    <select name="availability">
+                                    <select name="availability" onchange="this.form.submit()">
                                         <option value="">Tất cả trạng thái</option>
                                         <option value="1" ${param.availability == '1' ? 'selected' : ''}>Còn hàng</option>
                                         <option value="0" ${param.availability == '0' ? 'selected' : ''}>Đã bán</option>
                                     </select>
                                 </div>
                                 <div class="select-group">
-                                    <select name="petStatus">
+                                    <select name="petStatus" onchange="this.form.submit()">
                                         <option value="">Trạng thái đăng</option>
                                         <option value="1" ${param.petStatus == '1' ? 'selected' : ''}>Đang hiển thị</option>
                                         <option value="0" ${param.petStatus == '0' ? 'selected' : ''}>Đã ẩn</option>
                                     </select>
                                 </div>
-                                <button type="button" class="btn btn-outline" onclick="toggleAdvancedFilters()">
-                                    <i class="fas fa-sliders-h"></i> Nâng cao
-                                </button>
-                            </div>
-
-                            <c:set var="isAdvancedFilterActive" value="${not empty param.species or not empty param.breedId or not empty param.gender or not empty param.vaccination}" />
-
-                            <div class="advanced-filters-container" id="advancedFilters" style="${isAdvancedFilterActive ? 'display: block;' : 'display: none;'} margin-bottom: 15px;">
-                                <div class="advanced-filters-grid">
-                                    <div class="select-group">
-                                        <select name="species">
-                                            <option value="">Tất cả loài</option>
-                                            <c:forEach items="${speciesList}" var="s">
-                                                <option value="${s}" ${param.species == s ? 'selected' : ''}>${s}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="select-group">
-                                        <select name="breedId">
-                                            <option value="">Tất cả giống</option>
-                                            <c:forEach items="${breedList}" var="b">
-                                                <option value="${b.breedId}" ${param.breedId == b.breedId ? 'selected' : ''}>${b.breedName}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="select-group">
-                                        <select name="gender">
-                                            <option value="">Tất cả giới tính</option>
-                                            <option value="Male" ${param.gender == 'Male' ? 'selected' : ''}>Đực</option>
-                                            <option value="Female" ${param.gender == 'Female' ? 'selected' : ''}>Cái</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-group">
-                                        <select name="vaccination">
-                                            <option value="">Tiêm phòng</option>
-                                            <option value="1" ${param.vaccination == '1' ? 'selected' : ''}>Đã tiêm</option>
-                                            <option value="0" ${param.vaccination == '0' ? 'selected' : ''}>Chưa tiêm</option>
-                                        </select>
-                                    </div>
+                                <div class="select-group">
+                                    <select name="species" onchange="this.form.submit()">
+                                        <option value="">Tất cả loài</option>
+                                        <c:forEach items="${speciesList}" var="s">
+                                            <option value="${s}" ${param.species == s ? 'selected' : ''}>${s}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="select-group">
+                                    <select name="breedId" onchange="this.form.submit()">
+                                        <option value="">Tất cả giống</option>
+                                        <c:forEach items="${breedList}" var="b">
+                                            <option value="${b.breedId}" ${param.breedId == b.breedId ? 'selected' : ''}>${b.breedName}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="select-group">
+                                    <select name="gender" onchange="this.form.submit()">
+                                        <option value="">Tất cả giới tính</option>
+                                        <option value="Male" ${param.gender == 'Male' ? 'selected' : ''}>Đực</option>
+                                        <option value="Female" ${param.gender == 'Female' ? 'selected' : ''}>Cái</option>
+                                    </select>
+                                </div>
+                                <div class="select-group">
+                                    <select name="vaccination" onchange="this.form.submit()">
+                                        <option value="">Tiêm phòng</option>
+                                        <option value="1" ${param.vaccination == '1' ? 'selected' : ''}>Đã tiêm</option>
+                                        <option value="0" ${param.vaccination == '0' ? 'selected' : ''}>Chưa tiêm</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -173,7 +163,6 @@
                                 <button type="button" class="btn btn-outline" onclick="location.href = 'displayallpet'">
                                     <i class="fas fa-times"></i> Xóa bộ lọc
                                 </button>
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
                             </div>
                         </form>
 
@@ -354,15 +343,5 @@
         <div class="seller-footer">
             © 2025 PETFPT Shop - Hệ thống quản lý
         </div>
-        <script>
-            function toggleAdvancedFilters() {
-                const advancedFilters = document.getElementById('advancedFilters');
-                if (window.getComputedStyle(advancedFilters).display === 'none') {
-                    advancedFilters.style.display = 'block';
-                } else {
-                    advancedFilters.style.display = 'none';
-                }
-            }
-        </script>
     </body>
 </html>

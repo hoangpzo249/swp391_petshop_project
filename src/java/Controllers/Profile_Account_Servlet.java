@@ -135,7 +135,7 @@ public class Profile_Account_Servlet extends HttpServlet {
             String address = request.getParameter("address");
             String description = request.getParameter("description");
 
-            String checkName = "^[a-zA-ZÀ-ỹ\\s]+$";
+            String checkName = "^[a-zA-ZÀ-ỹĐd\\s]+$";
 
 //            int id = acc.getAccId();
 //            System.out.println(id);

@@ -155,13 +155,13 @@
                                 </div>
 
                                 <div class="date-range-group">
-                                    <input type="date" name="startDate" value="${param.startDate}">
+                                    <input type="date" name="startDate" value="${param.startDate}" onchange="this.form.submit()">
                                     <span>đến</span>
-                                    <input type="date" name="endDate" value="${param.endDate}">
+                                    <input type="date" name="endDate" value="${param.endDate}" onchange="this.form.submit()">
                                 </div>
 
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-filter"></i> Lọc
+                                <button type="button" class="btn btn-outline" onclick="location.href = 'displayorder'">
+                                    <i class="fas fa-times"></i> Xóa bộ lọc
                                 </button>
                             </div>
                         </form>
@@ -243,7 +243,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <!-- Pagination -->
                         <c:if test="${totalPages > 1}">
                             <div class="pagination-container">

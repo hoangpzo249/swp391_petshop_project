@@ -379,4 +379,25 @@ public class BreedDAO {
         return list;
     }
 
+    public boolean breedNameExists(String breedName) {
+        DBContext db = new DBContext();
+        List<String> names = new ArrayList<>();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT breedName FROM BreedTB";
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                names.add(rs.getString(1));
+            }
+            if (names.contains(breedName)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+    }
 }

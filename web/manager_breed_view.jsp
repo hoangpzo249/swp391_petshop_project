@@ -113,7 +113,7 @@
                                     <input type="text" name="searchKey" placeholder="Tìm theo Mã, Tên giống..." value="${param.searchKey}">
                                 </div>
                                 <div class="select-group">
-                                    <select name="species">
+                                    <select name="species" onchange="this.form.submit()">
                                         <option value="">Tất cả loài</option>
                                         <c:forEach items="${speciesList}" var="s">
                                             <option value="${s}" ${param.species == s ? 'selected' : ''}>${s}</option>
@@ -121,14 +121,13 @@
                                     </select>
                                 </div>
                                 <div class="select-group">
-                                    <select name="status">
+                                    <select name="status" onchange="this.form.submit()">
                                         <option value="">Tất cả trạng thái</option>
                                         <option value="1" ${param.status == '1' ? 'selected' : ''}>Hiển thị</option>
                                         <option value="0" ${param.status == '0' ? 'selected' : ''}>Đã ẩn</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
-                                <button type="button" class="btn btn-outline" onclick="location.href = 'displayallbreed'">
+                                <button type="button" class="btn btn-outline" onclick="location.href = 'displaybreed'">
                                     <i class="fas fa-times"></i> Xóa bộ lọc
                                 </button>
                             </div>

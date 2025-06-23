@@ -115,6 +115,10 @@
         <servlet-name>ManagerDisplayBreedServlet</servlet-name>
         <servlet-class>Controllers.ManagerDisplayBreedServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ManagerAddBreedServlet</servlet-name>
+        <servlet-class>Controllers.ManagerAddBreedServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -226,6 +230,10 @@
     <servlet-mapping>
         <servlet-name>ManagerDisplayBreedServlet</servlet-name>
         <url-pattern>/displaybreed</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManagerAddBreedServlet</servlet-name>
+        <url-pattern>/addbreed</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>
