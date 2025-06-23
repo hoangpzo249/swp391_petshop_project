@@ -23,16 +23,18 @@
 }
 
 .detail-item-product {
-
     display: flex;
+    flex-wrap: wrap;             
     justify-content: center;
-    gap: 50px;
+    gap: 30px;               
     padding: 20px 0;
     margin: 0 auto;
+    max-width: 1300px;        
 }
 
 .detail-item {
-    width: 200px;
+    width: calc(100% / 6 - 30px);  
+    max-width: 180px;
     height: 250px;
     text-align: center;
     background-color: #f9f9f9;
@@ -40,7 +42,6 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
-    width: 200px;
 }
 
 .detail-item:hover {
@@ -408,6 +409,10 @@
     font-weight: 600;
     color: #333;
     text-align: center;
+}
+
+.text-favo-item {
+    margin-top: 10px;
 }
 
 .pet-option {

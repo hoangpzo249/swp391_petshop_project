@@ -697,7 +697,7 @@ public class PetDAO {
 
     public List<Pet> get6PetNew() {
         List<Pet> listPet = new ArrayList<>();
-        String sql = "SELECT TOP 6 *\n"
+        String sql = "SELECT TOP 18 *\n"
                 + "FROM PetTB\n"
                 + "WHERE petStatus = 1\n"
                 + "ORDER BY petId DESC;";
