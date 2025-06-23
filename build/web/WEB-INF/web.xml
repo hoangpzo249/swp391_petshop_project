@@ -131,6 +131,14 @@
         <servlet-name>VnPayReturnServlet</servlet-name>
         <servlet-class>Controllers.VnPayReturnServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DiscountManagerServlet</servlet-name>
+        <servlet-class>Controllers.DiscountManagerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddDiscountServlet</servlet-name>
+        <servlet-class>Controllers.AddDiscountServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -258,6 +266,14 @@
     <servlet-mapping>
         <servlet-name>VnPayReturnServlet</servlet-name>
         <url-pattern>/vnpay_return</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DiscountManagerServlet</servlet-name>
+        <url-pattern>/discountmanager</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddDiscountServlet</servlet-name>
+        <url-pattern>/adddiscount</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>

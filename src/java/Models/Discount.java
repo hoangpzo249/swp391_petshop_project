@@ -1,30 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Models;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Discount {
 
     private int discountId;
     private String discountCode;
-    private String discountType; 
-    private double discountValue;
+    private String discountType;
+    private Double discountValue;
     private String description;
     private Date validFrom;
     private Date validTo;
-    private double minOrderAmount;
-    private int maxUsage;
+    private Double minOrderAmount;
+    private Integer maxUsage;
     private int usageCount;
     private boolean isActive;
-    private double maxValue;
+    private Double maxValue;
 
-    public Discount() {
-    }
+    public Discount() {}
 
-    public Discount(int discountId, String discountCode, String discountType, double discountValue, String description, Date validFrom, Date validTo, double minOrderAmount, int maxUsage, int usageCount, boolean isActive, double maxValue) {
+    public Discount(int discountId, String discountCode, String discountType, Double discountValue, String description,
+                    Date validFrom, Date validTo, Double minOrderAmount, Integer maxUsage, int usageCount,
+                    boolean isActive, Double maxValue) {
         this.discountId = discountId;
         this.discountCode = discountCode;
         this.discountType = discountType;
@@ -38,6 +35,7 @@ public class Discount {
         this.isActive = isActive;
         this.maxValue = maxValue;
     }
+
     
 
     public int getDiscountId() {
@@ -64,11 +62,11 @@ public class Discount {
         this.discountType = discountType;
     }
 
-    public double getDiscountValue() {
+    public Double getDiscountValue() {
         return discountValue;
     }
 
-    public void setDiscountValue(double discountValue) {
+    public void setDiscountValue(Double discountValue) {
         this.discountValue = discountValue;
     }
 
@@ -96,19 +94,19 @@ public class Discount {
         this.validTo = validTo;
     }
 
-    public double getMinOrderAmount() {
+    public Double getMinOrderAmount() {
         return minOrderAmount;
     }
 
-    public void setMinOrderAmount(double minOrderAmount) {
+    public void setMinOrderAmount(Double minOrderAmount) {
         this.minOrderAmount = minOrderAmount;
     }
 
-    public int getMaxUsage() {
+    public Integer getMaxUsage() {
         return maxUsage;
     }
 
-    public void setMaxUsage(int maxUsage) {
+    public void setMaxUsage(Integer maxUsage) {
         this.maxUsage = maxUsage;
     }
 
@@ -127,22 +125,22 @@ public class Discount {
     public void setActive(boolean isActive) {
         this.isActive = isActive;
     }
-    
-    public double getMaxValue() {
+
+    public Double getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(double maxValue) {
+    public void setMaxValue(Double maxValue) {
         this.maxValue = maxValue;
     }
+
     public boolean isValidNow() {
-    Date today = new Date();
-    return (validFrom == null || !today.before(validFrom)) &&
-           (validTo == null || !today.after(validTo));
-}
+        Date today = new Date(System.currentTimeMillis());
+        return (validFrom == null || !today.before(validFrom)) &&
+               (validTo == null || !today.after(validTo));
+    }
 
-public boolean isUsageAvailable() {
-    return usageCount < maxUsage;
-}
-
+    public boolean isUsageAvailable() {
+        return maxUsage == null || usageCount < maxUsage;
+    }
 }
