@@ -126,10 +126,13 @@
 
                                 <%-- Right Column --%>
                                 <div class="form-group">
-                                    <label for="petColor">Màu sắc</label>
-                                    <input type="text" id="petColor" name="petColor" class="form-control" placeholder="Ví dụ: Vàng, Trắng" value="${petColor}">
+                                    <label for="colorInput">Màu sắc</label>
+                                    <div class="autocomplete-container">
+                                        <input type="text" id="colorInput" class="form-control" placeholder="Ví dụ: Vàng, Trắng" value="${petColor}" autocomplete="off">
+                                        <input type="hidden" id="petColor" name="petColor" value="${petColor}">
+                                        <div id="color-autocomplete-list" class="autocomplete-items"></div>
+                                    </div>
                                 </div>
-
                                 <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="petDob">Ngày sinh</label>
@@ -138,8 +141,12 @@
 
                                 <%-- Right Column --%>
                                 <div class="form-group">
-                                    <label for="petOrigin">Nguồn gốc</label>
-                                    <input type="text" id="petOrigin" name="petOrigin" class="form-control" placeholder="Ví dụ: Việt Nam" value="${petOrigin}">
+                                    <label for="originInput">Nguồn gốc</label>
+                                    <div class="autocomplete-container">
+                                        <input type="text" id="originInput" class="form-control" placeholder="Ví dụ: Việt Nam" value="${petOrigin}" autocomplete="off">
+                                        <input type="hidden" id="petOrigin" name="petOrigin" value="${petOrigin}">
+                                        <div id="origin-autocomplete-list" class="autocomplete-items"></div>
+                                    </div>
                                 </div>
 
                                 <%-- Left Column --%>
@@ -213,5 +220,18 @@
         <div class="seller-footer">
             © 2025 PETFPT Shop - Hệ thống quản lý
         </div>
+        <script>
+            const colorData = [
+            <c:forEach var="c" items="${colorList}" varStatus="loop">
+            '${c}'<c:if test="${!loop.last}">,</c:if>
+            </c:forEach>
+            ];
+            const originData = [
+            <c:forEach var="o" items="${originList}" varStatus="loop">
+            '${o}'<c:if test="${!loop.last}">,</c:if>
+            </c:forEach>
+            ];
+        </script>
+        <script src="js/pet_autocomplete.js"></script>
     </body>
 </html>

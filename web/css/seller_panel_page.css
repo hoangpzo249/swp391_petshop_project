@@ -1409,7 +1409,7 @@ textarea.form-control {
     margin: 0;
 }
 
-.page-item .page-link, 
+.page-item .page-link,
 .page-ellipsis {
     position: relative;
     display: block;
@@ -1464,4 +1464,31 @@ textarea.form-control {
     cursor: not-allowed;
     background-color: #f9f9f9;
     border-color: #eee;
+}
+
+.autocomplete-container {
+    position: relative;
+}
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #ced4da; /* Match your form-control border */
+    border-top: none;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: #ffffff;
+}
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #dee2e6; /* Lighter border for items */
+}
+.autocomplete-items div:last-child {
+    border-bottom: none;
+}
+.autocomplete-items div:hover {
+    background-color: #e9ecef; /* A nice hover effect */
 }

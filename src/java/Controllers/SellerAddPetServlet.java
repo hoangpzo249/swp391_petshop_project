@@ -10,7 +10,7 @@ import DAO.PetImagePathDAO;
 import Models.Account;
 import Models.Breed;
 import Models.Pet;
-import Utils.ImgBbUploader;
+import Utils.ImageUploader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -20,16 +20,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-import java.io.File;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -85,10 +83,15 @@ public class SellerAddPetServlet extends HttpServlet {
             return;
         }
         BreedDAO _daobreed = new BreedDAO();
+        PetDAO _daopet = new PetDAO();
 
         List<Breed> breedList = _daobreed.getAllBreeds();
+        List<String> colorList = _daopet.getAllColors();
+        List<String> originList = _daopet.getAllOrigins();
 
         request.setAttribute("breedList", breedList);
+        request.setAttribute("colorList", colorList);
+        request.setAttribute("originList", originList);
 
         request.getRequestDispatcher("seller_pet_add.jsp")
                 .forward(request, response);
@@ -120,8 +123,10 @@ public class SellerAddPetServlet extends HttpServlet {
         request.setAttribute("breedList", breedList);
 
         try {
+            final String PET_IMAGE_SUB_DIR = "images/pet_images";
+            final String DEFAULT_IMAGE_PATH = "images/defaultcatdog.png";
+            
             String petDobStr = request.getParameter("petDob");
-
             String dateValidation = validatePetDob(petDobStr);
 
             String petName = request.getParameter("petName").trim();
@@ -203,37 +208,28 @@ public class SellerAddPetServlet extends HttpServlet {
             int newPetId = _daopet.addPet(pet);
 
             if (newPetId != -1) {
-                List<String> imageURLs = new ArrayList<>();
-                List<Part> imageParts = new ArrayList<>();
-                for (Part part : request.getParts()) {
-                    if ("images".equals(part.getName()) && part.getSize() > 0) {
-                        imageParts.add(part);
+                List<String> imagePaths = new ArrayList<>();
+                List<Part> imageParts = request.getParts().stream()
+                        .filter(part -> "images".equals(part.getName()) && part.getSize() > 0)
+                        .limit(5)
+                        .collect(Collectors.toList());
+
+                for (Part part : imageParts) {
+                    try {
+                        String savedPath = ImageUploader.saveImage(part, PET_IMAGE_SUB_DIR, request);
+                        if (savedPath != null) {
+                            imagePaths.add(savedPath);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
 
-                imageParts.stream()
-                        .limit(5)
-                        .forEach(part -> {
-                            try {
-                                File tempFile = File.createTempFile("upload-", ".tmp");
-                                try (InputStream is = part.getInputStream()) {
-                                    Files.copy(is, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                                }
-                                String url = ImgBbUploader.uploadImage(tempFile);
-                                if (url != null) {
-                                    imageURLs.add(url);
-                                }
-                                tempFile.delete();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
-
-                if (imageURLs.isEmpty()) {
-                    imageURLs.add("https://i.ibb.co/NggxZvb7/defaultcatdog.png");
+                if (imagePaths.isEmpty()) {
+                    imagePaths.add(DEFAULT_IMAGE_PATH);
                 }
 
-                if (_daoimage.addImage(newPetId, imageURLs)) {
+                if (_daoimage.addImage(newPetId, imagePaths)) {
                     session.setAttribute("successMess", "Đăng bán thú cưng thành công!");
                     response.sendRedirect("displaypet?id=" + newPetId);
                 } else {

@@ -107,13 +107,14 @@
 
                                 <%-- Right Column --%>
                                 <div class="form-group">
-                                    <label for="breedSpecies">Loài</label>
-                                    <select id="breedSpecies" name="breedSpecies" class="form-control" required>
-                                        <option value="" disabled ${empty breedSpecies ? 'selected' : ''}>-- Chọn loài --</option>
-                                        <c:forEach items="${speciesList}" var="s">
-                                            <option value="${s}" ${breedSpecies == s ? 'selected' : ''}>${s}</option>
-                                        </c:forEach>
-                                    </select>
+                                    <label for="speciesInput">Loài</label>
+                                    <div class="autocomplete-container">
+                                        <input type="text" id="speciesInput" class="form-control" placeholder="Ví dụ: Chó" value="${breedSpecies}" autocomplete="off" required>
+
+                                        <input type="hidden" id="breedSpecies" name="breedSpecies" value="${breedSpecies}">
+
+                                        <div id="species-autocomplete-list" class="autocomplete-items"></div>
+                                    </div>
                                 </div>
 
                                 <%-- Full Width Section for Status and Image --%>
@@ -146,5 +147,13 @@
         <div class="manager-footer">
             © 2025 PETFPT Shop - Hệ thống quản lý
         </div>
+        <script>
+            const speciesData = [
+            <c:forEach var="s" items="${speciesList}" varStatus="loop">
+            '${s}'<c:if test="${!loop.last}">,</c:if>
+            </c:forEach>
+            ];
+        </script>
+        <script src="js/breed_autocomplete.js"></script>
     </body>
 </html>
