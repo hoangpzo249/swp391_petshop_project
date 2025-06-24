@@ -120,29 +120,16 @@ public class OrderDAO {
         return null;
     }
 
-    public List<Order> filterOrders(String searchKey, String status, Date startDate, Date endDate) {
-        DBContext db = new DBContext();
-        List<Order> list = new ArrayList<>();
-
-        List<Object> params = new ArrayList<>();
-
-        String baseSql = "SELECT o.*, ISNULL(oc.totalPrice, 0) AS totalPrice FROM OrderTB o "
-                + "LEFT JOIN (SELECT orderId, SUM(priceAtOrder) as totalPrice FROM OrderContentTB GROUP BY orderId) oc "
-                + "ON o.orderId = oc.orderId ";
-
+    private StringBuilder buildFilterWhereClause(String searchKey, String status, Date startDate, Date endDate, List<Object> params) {
         StringBuilder whereClause = new StringBuilder();
 
         if (searchKey != null && !searchKey.trim().isEmpty()) {
-            if (searchKey.matches(".*[a-zA-Z].*")) {
-                whereClause.append("customerName LIKE ? ");
-                params.add("%" + searchKey + "%");
+            if (searchKey.matches("\\d+")) {
+                whereClause.append("o.orderId = ? ");
+                params.add(Integer.parseInt(searchKey.trim()));
             } else {
-                try {
-                    Integer.parseInt(searchKey);
-                    whereClause.append("o.orderId = ? ");
-                    params.add(searchKey);
-                } catch (NumberFormatException e) {
-                }
+                whereClause.append("o.customerName LIKE ? ");
+                params.add("%" + searchKey.trim() + "%");
             }
         }
 
@@ -150,7 +137,7 @@ public class OrderDAO {
             if (whereClause.length() > 0) {
                 whereClause.append("AND ");
             }
-            whereClause.append("orderStatus = ? ");
+            whereClause.append("o.orderStatus = ? ");
             params.add(status);
         }
 
@@ -158,7 +145,7 @@ public class OrderDAO {
             if (whereClause.length() > 0) {
                 whereClause.append("AND ");
             }
-            whereClause.append("CAST(orderDate AS DATE) >= ? ");
+            whereClause.append("CAST(o.orderDate AS DATE) >= ? ");
             params.add(startDate);
         }
 
@@ -166,45 +153,75 @@ public class OrderDAO {
             if (whereClause.length() > 0) {
                 whereClause.append("AND ");
             }
-            whereClause.append("CAST(orderDate AS DATE) <= ? ");
+            whereClause.append("CAST(o.orderDate AS DATE) <= ? ");
             params.add(endDate);
         }
 
-        String finalSql = baseSql;
         if (whereClause.length() > 0) {
-            finalSql += "WHERE " + whereClause.toString();
+            return new StringBuilder("WHERE ").append(whereClause);
         }
-        finalSql += "ORDER BY o.orderId ASC";
 
-        try {
-            conn = db.getConnection();
-            ps = conn.prepareStatement(finalSql);
+        return new StringBuilder();
+    }
+
+    public int countFilteredOrders(String searchKey, String status, Date startDate, Date endDate) {
+        DBContext db = new DBContext();
+        List<Object> params = new ArrayList<>();
+        String baseSql = "SELECT COUNT(o.orderId) FROM OrderTB o ";
+        StringBuilder whereClause = buildFilterWhereClause(searchKey, status, startDate, endDate, params);
+        String finalSql = baseSql + whereClause.toString();
+
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(finalSql)) {
 
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }
 
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(orderInfo(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-                Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return 0;
+    }
+
+    public List<Order> filterOrderForSeller(String searchKey, String status, Date startDate, Date endDate, int pageNumber, int pageSize) {
+        DBContext db = new DBContext();
+        List<Order> list = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+
+        String baseSql = "SELECT o.*, ISNULL(oc.totalPrice, 0) AS totalPrice FROM OrderTB o "
+                + "LEFT JOIN (SELECT orderId, SUM(priceAtOrder) as totalPrice FROM OrderContentTB GROUP BY orderId) oc "
+                + "ON o.orderId = oc.orderId ";
+
+        StringBuilder whereClause = buildFilterWhereClause(searchKey, status, startDate, endDate, params);
+
+        String finalSql = baseSql + whereClause.toString()
+                + "ORDER BY o.orderId DESC "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        int offset = (pageNumber - 1) * pageSize;
+        params.add(offset);
+        params.add(pageSize);
+
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(finalSql)) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
             }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(orderInfo(rs));
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }

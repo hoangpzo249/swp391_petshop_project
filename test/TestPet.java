@@ -54,9 +54,9 @@ public class TestPet {
         return _dao.updatePetAvailabilityById(list, 1);
     }
     
-    private static List<Pet> getPets() {
-        return _dao.filterPetsForSeller(null, null, null, null, null, null, null);
-    }
+//    private static List<Pet> getPets() {
+//        return _dao.filterPetsForSeller(null, null, null, null, null, null, null);
+//    }
 //    private static List<Pet> getAllPets() {
 //        return _dao.getAllPets();
 //    }

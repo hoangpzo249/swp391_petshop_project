@@ -184,32 +184,19 @@ public class PetDAO {
         return imagePaths;
     }
 
-    public List<Pet> filterPetsForSeller(String searchKey,
-            String availability,
-            String species,
-            String breedId,
-            String gender,
-            String vaccination,
-            String petStatus) {
-        List<Pet> list = new ArrayList<>();
-        List<Object> params = new ArrayList<>();
+    private StringBuilder buildFilterQuery(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus, List<Object> params) {
         StringBuilder sql = new StringBuilder(
-                "SELECT p.*, b.breedName "
-                + "FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
-                + "WHERE 1=1 "
+                " FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
+                + " WHERE 1=1 "
         );
 
         if (searchKey != null && !searchKey.trim().isEmpty()) {
-            if (searchKey.matches(".*[a-zA-Z].*")) {
-                sql.append("AND p.petName LIKE ? ");
-                params.add("%" + searchKey + "%");
+            if (searchKey.matches("\\d+")) {
+                sql.append("AND p.petId = ? ");
+                params.add(Integer.parseInt(searchKey.trim()));
             } else {
-                try {
-                    Integer.parseInt(searchKey);
-                    sql.append("AND p.petId = ? ");
-                    params.add(searchKey);
-                } catch (NumberFormatException ignored) {
-                }
+                sql.append("AND p.petName LIKE ? ");
+                params.add("%" + searchKey.trim() + "%");
             }
         }
         if (availability != null && !availability.isEmpty()) {
@@ -236,7 +223,43 @@ public class PetDAO {
             sql.append("AND p.petStatus = ? ");
             params.add(petStatus);
         }
-        sql.append("ORDER BY p.petId ASC");
+        return sql;
+    }
+
+    public int countFilteredPetsForSeller(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus) {
+        List<Object> params = new ArrayList<>();
+        StringBuilder sqlBase = new StringBuilder("SELECT COUNT(p.petId) ");
+
+        sqlBase.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus, params));
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sqlBase.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Pet> filterPetsForSeller(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus, int pageNumber, int pageSize) {
+        List<Pet> list = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT p.*, b.breedName ");
+
+        sql.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus, params));
+
+        sql.append("ORDER BY p.petId DESC ");
+        sql.append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        int offset = (pageNumber - 1) * pageSize;
+        params.add(offset);
+        params.add(pageSize);
 
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
@@ -254,7 +277,7 @@ public class PetDAO {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return list;
     }
@@ -277,7 +300,7 @@ public class PetDAO {
             conn.commit();
             return true;
         } catch (Exception ex) {
-
+            ex.printStackTrace();
             return false;
         }
     }
@@ -304,7 +327,7 @@ public class PetDAO {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return list;
     }
@@ -610,8 +633,10 @@ public class PetDAO {
 
             ps = conn.prepareStatement(sql);
             int i = 1;
-            ps.setString(i++, search);
-            ps.setString(i++, search);
+            if (search != null && !search.isEmpty()) {
+                ps.setString(i++, search);
+                ps.setString(i++, search);
+            }
             if (breed != null && !breed.isEmpty()) {
                 ps.setInt(i++, Integer.parseInt(breed));
             }

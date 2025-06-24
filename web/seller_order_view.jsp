@@ -155,13 +155,13 @@
                                 </div>
 
                                 <div class="date-range-group">
-                                    <input type="date" name="startDate" value="${param.startDate}">
+                                    <input type="date" name="startDate" value="${param.startDate}" onchange="this.form.submit()">
                                     <span>đến</span>
-                                    <input type="date" name="endDate" value="${param.endDate}">
+                                    <input type="date" name="endDate" value="${param.endDate}" onchange="this.form.submit()">
                                 </div>
 
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-filter"></i> Lọc
+                                <button type="button" class="btn btn-outline" onclick="location.href = 'displayorder'">
+                                    <i class="fas fa-times"></i> Xóa bộ lọc
                                 </button>
                             </div>
                         </form>
@@ -243,6 +243,76 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Pagination -->
+                        <c:if test="${totalPages > 1}">
+                            <div class="pagination-container">
+                                <ul class="pagination">
+                                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                        <c:url value="displayorder" var="prevUrl">
+                                            <c:param name="page" value="${currentPage - 1}"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
+                                            <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
+                                            <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                        </c:url>
+                                        <a class="page-link" href="${currentPage > 1 ? prevUrl : '#'}">«</a>
+                                    </li>
+
+                                    <c:if test="${startPage > 1}">
+                                        <c:url value="displayorder" var="firstPageUrl" scope="page">
+                                            <c:param name="page" value="1"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
+                                            <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
+                                            <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                        </c:url>
+                                        <li class="page-item"><a class="page-link" href="${firstPageUrl}">1</a></li>
+                                            <c:if test="${startPage > 2}">
+                                            <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                            </c:if>
+                                        </c:if>
+
+                                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                                        <c:url value="displayorder" var="pageUrl" scope="page">
+                                            <c:param name="page" value="${i}"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
+                                            <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
+                                            <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                        </c:url>
+                                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                            <a class="page-link" href="${pageUrl}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+
+                                    <c:if test="${endPage < totalPages}">
+                                        <c:if test="${endPage < totalPages - 1}">
+                                            <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                            </c:if>
+                                            <c:url value="displayorder" var="lastPageUrl" scope="page">
+                                                <c:param name="page" value="${totalPages}"/>
+                                                <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                                <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
+                                                <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
+                                                <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                            </c:url>
+                                        <li class="page-item"><a class="page-link" href="${lastPageUrl}">${totalPages}</a></li>
+                                        </c:if>
+
+                                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                        <c:url value="displayorder" var="nextUrl">
+                                            <c:param name="page" value="${currentPage + 1}"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
+                                            <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
+                                            <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                        </c:url>
+                                        <a class="page-link" href="${currentPage < totalPages ? nextUrl : '#'}">»</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </c:if>
                     </div>
                 </div>
             </div>

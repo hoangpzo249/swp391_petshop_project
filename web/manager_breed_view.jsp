@@ -106,14 +106,14 @@
                     </div>
                     <div class="card-body">
 
-                        <form action="displayallbreed" method="GET" id="filterForm">
+                        <form action="displaybreed" method="GET" id="filterForm">
                             <div class="filter-controls">
                                 <div class="input-group" style="flex-grow: 1;">
                                     <i class="fas fa-search"></i>
                                     <input type="text" name="searchKey" placeholder="Tìm theo Mã, Tên giống..." value="${param.searchKey}">
                                 </div>
                                 <div class="select-group">
-                                    <select name="species">
+                                    <select name="species" onchange="this.form.submit()">
                                         <option value="">Tất cả loài</option>
                                         <c:forEach items="${speciesList}" var="s">
                                             <option value="${s}" ${param.species == s ? 'selected' : ''}>${s}</option>
@@ -121,14 +121,13 @@
                                     </select>
                                 </div>
                                 <div class="select-group">
-                                    <select name="status">
+                                    <select name="status" onchange="this.form.submit()">
                                         <option value="">Tất cả trạng thái</option>
-                                        <option value="1" ${param.status == '1' ? 'selected' : ''}>Hoạt động</option>
-                                        <option value="0" ${param.status == '0' ? 'selected' : ''}>Ngừng hoạt động</option>
+                                        <option value="1" ${param.status == '1' ? 'selected' : ''}>Hiển thị</option>
+                                        <option value="0" ${param.status == '0' ? 'selected' : ''}>Đã ẩn</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
-                                <button type="button" class="btn btn-outline" onclick="location.href = 'displayallbreed'">
+                                <button type="button" class="btn btn-outline" onclick="location.href = 'displaybreed'">
                                     <i class="fas fa-times"></i> Xóa bộ lọc
                                 </button>
                             </div>
@@ -160,10 +159,10 @@
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${b.breedStatus}">
-                                                        <span class="status-badge status-active">Hoạt động</span>
+                                                        <span class="status-badge status-active">Hiển thị</span>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <span class="status-badge status-blocked">Ngừng hoạt động</span>
+                                                        <span class="status-badge status-blocked">Đã ẩn</span>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
@@ -200,6 +199,91 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Pagination -->
+                        <c:if test="${totalPages > 1}">
+                            <div class="pagination-container">
+                                <ul class="pagination">
+                                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                        <c:url value="displaybreed" var="prevUrl">
+                                            <c:param name="page" value="${currentPage - 1}"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
+                                            <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
+                                            <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
+                                            <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                            <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                        </c:url>
+                                        <a class="page-link" href="${currentPage > 1 ? prevUrl : '#'}">«</a>
+                                    </li>
+
+                                    <c:if test="${startPage > 1}">
+                                        <c:url value="displaybreed" var="firstPageUrl" scope="page">
+                                            <c:param name="page" value="1"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
+                                            <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
+                                            <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
+                                            <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                            <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                        </c:url>
+                                        <li class="page-item"><a class="page-link" href="${firstPageUrl}">1</a></li>
+                                            <c:if test="${startPage > 2}">
+                                            <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                            </c:if>
+                                        </c:if>
+
+                                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                                        <c:url value="displaybreed" var="pageUrl" scope="page">
+                                            <c:param name="page" value="${i}"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
+                                            <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
+                                            <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
+                                            <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                            <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                        </c:url>
+                                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                            <a class="page-link" href="${pageUrl}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+
+                                    <c:if test="${endPage < totalPages}">
+                                        <c:if test="${endPage < totalPages - 1}">
+                                            <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                            </c:if>
+                                            <c:url value="displaybreed" var="lastPageUrl" scope="page">
+                                                <c:param name="page" value="${totalPages}"/>
+                                                <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                                <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
+                                                <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
+                                                <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
+                                                <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
+                                                <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                                <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                            </c:url>
+                                        <li class="page-item"><a class="page-link" href="${lastPageUrl}">${totalPages}</a></li>
+                                        </c:if>
+
+                                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                        <c:url value="displaybreed" var="nextUrl">
+                                            <c:param name="page" value="${currentPage + 1}"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
+                                            <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
+                                            <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
+                                            <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
+                                            <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                            <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                        </c:url>
+                                        <a class="page-link" href="${currentPage < totalPages ? nextUrl : '#'}">»</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </c:if>
                     </div>
                 </div>
             </div>

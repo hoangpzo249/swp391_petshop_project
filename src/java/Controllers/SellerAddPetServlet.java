@@ -124,13 +124,6 @@ public class SellerAddPetServlet extends HttpServlet {
 
             String dateValidation = validatePetDob(petDobStr);
 
-            List<Part> imageParts = new ArrayList<>();
-            for (Part part : request.getParts()) {
-                if ("images".equals(part.getName()) && part.getSize() > 0) {
-                    imageParts.add(part);
-                }
-            }
-
             String petName = request.getParameter("petName").trim();
             String petOrigin = request.getParameter("petOrigin").trim();
             String petGender = request.getParameter("petGender");
@@ -211,6 +204,12 @@ public class SellerAddPetServlet extends HttpServlet {
 
             if (newPetId != -1) {
                 List<String> imageURLs = new ArrayList<>();
+                List<Part> imageParts = new ArrayList<>();
+                for (Part part : request.getParts()) {
+                    if ("images".equals(part.getName()) && part.getSize() > 0) {
+                        imageParts.add(part);
+                    }
+                }
 
                 imageParts.stream()
                         .limit(5)

@@ -5,7 +5,6 @@
 package Controllers;
 
 import DAO.BreedDAO;
-import Models.Breed;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -18,7 +17,7 @@ import java.util.List;
  *
  * @author Lenovo
  */
-public class ManagerDisplayBreedServlet extends HttpServlet {
+public class ManagerAddBreedServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,10 +36,10 @@ public class ManagerDisplayBreedServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ManagerDisplayBreedServlet</title>");
+            out.println("<title>Servlet ManagerAddBreedServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ManagerDisplayBreedServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ManagerAddBreedServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,63 +58,9 @@ public class ManagerDisplayBreedServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         BreedDAO _dao = new BreedDAO();
-        final int PAGE_SIZE = 8;
-        final int MAX_PAGE_NUMBERS_TO_SHOW = 5;
-
-        String searchKey = request.getParameter("searchKey");
-        String species = request.getParameter("species");
-        String status = request.getParameter("status");
-        String pageStr = request.getParameter("page");
-
-        int currentPage = 1;
-        int startPage;
-        int endPage;
-        if (pageStr != null && pageStr.matches("\\d+")) {
-            currentPage = Integer.parseInt(pageStr);
-        }
-
-        int totalRecords = _dao.countFilteredBreeds(searchKey, species, status);
-
-        int totalPages = (int) Math.ceil((double) totalRecords / PAGE_SIZE);
-
-        if (totalPages <= MAX_PAGE_NUMBERS_TO_SHOW) {
-            startPage = 1;
-            endPage = totalPages;
-        } else {
-            int maxPagesBeforeCurrent = (int) Math.floor(MAX_PAGE_NUMBERS_TO_SHOW / 2.0);
-            int maxPagesAfterCurrent = (int) Math.ceil(MAX_PAGE_NUMBERS_TO_SHOW / 2.0) - 1;
-
-            if (currentPage <= maxPagesBeforeCurrent) {
-                startPage = 1;
-                endPage = MAX_PAGE_NUMBERS_TO_SHOW;
-            } else if (currentPage + maxPagesAfterCurrent >= totalPages) {
-                startPage = totalPages - MAX_PAGE_NUMBERS_TO_SHOW + 1;
-                endPage = totalPages;
-            } else {
-                startPage = currentPage - maxPagesBeforeCurrent;
-                endPage = currentPage + maxPagesAfterCurrent;
-            }
-        }
-
-        if (currentPage > totalPages && totalPages > 0) {
-            currentPage = totalPages;
-        }
-        if (currentPage < 1) {
-            currentPage = 1;
-        }
-
-        List<Breed> breedList = _dao.filterBreedsForManager(searchKey, species, status, currentPage, PAGE_SIZE);
-
         List<String> speciesList = _dao.getAllSpecies();
-
-        request.setAttribute("breedList", breedList);
         request.setAttribute("speciesList", speciesList);
-        request.setAttribute("currentPage", currentPage);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("startPage", startPage);
-        request.setAttribute("endPage", endPage);
-
-        request.getRequestDispatcher("manager_breed_view.jsp")
+        request.getRequestDispatcher("manager_breed_add.jsp")
                 .forward(request, response);
     }
 
@@ -130,7 +75,47 @@ public class ManagerDisplayBreedServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        BreedDAO _dao = new BreedDAO();
+        String breedName = request.getParameter("breedName");
+        String breedSpecies=request.getParameter("breedSpecies");
+        String breedStatus=request.getParameter("breedStatus");
+        
+        
+        if (breedName != null && !_dao.breedNameExists(breedName)) {
+            List<String> speciesList = _dao.getAllSpecies();
+            request.setAttribute("speciesList", speciesList);
+            
+        }
+    }
+    
+    public static String validateBreedInput(String name, String species, String status) {
+        StringBuilder stringCheck = new StringBuilder();
+
+        if (name.isEmpty() || name.length() > 100 || !name.matches("^[\\p{L}\\s\\-']+$")) {
+            stringCheck.append("tên, ");
+        }
+
+//        if (color.isEmpty() || color.length() > 50 || !color.matches("^[\\p{L}\\s\\-]+$")) {
+//            stringCheck.append("màu sắc, ");
+//        }
+//
+//        if (origin.isEmpty() || origin.length() > 100 || !origin.matches("^[\\p{L}\\s,.'-]+$")) {
+//            stringCheck.append("nguồn gốc, ");
+//        }
+//
+//        if (description.isEmpty() || description.length() > 2000 || description.contains("\0")) {
+//            stringCheck.append("mô tả, ");
+//        }
+
+        if (stringCheck.length() > 0) {
+            stringCheck.setLength(stringCheck.length() - 2);
+            stringCheck.append(" của giống thú cưng không hợp lệ");
+
+            String result = stringCheck.toString();
+            return result.substring(0, 1).toUpperCase() + result.substring(1);
+        }
+
+        return "";
     }
 
     /**

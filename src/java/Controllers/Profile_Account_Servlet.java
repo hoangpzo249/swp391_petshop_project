@@ -141,8 +141,6 @@ public class Profile_Account_Servlet extends HttpServlet {
             String address = request.getParameter("address");
             String description = request.getParameter("description");
 
-            
-
 //            int id = acc.getAccId();
 //            System.out.println(id);
             AccountDAO accDao = new AccountDAO();

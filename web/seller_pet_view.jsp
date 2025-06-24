@@ -114,58 +114,48 @@
                                     <input type="text" name="searchKey" placeholder="Tìm theo Mã, Tên thú cưng..." value="${param.searchKey}">
                                 </div>
                                 <div class="select-group">
-                                    <select name="availability">
+                                    <select name="availability" onchange="this.form.submit()">
                                         <option value="">Tất cả trạng thái</option>
                                         <option value="1" ${param.availability == '1' ? 'selected' : ''}>Còn hàng</option>
                                         <option value="0" ${param.availability == '0' ? 'selected' : ''}>Đã bán</option>
                                     </select>
                                 </div>
                                 <div class="select-group">
-                                    <select name="petStatus">
+                                    <select name="petStatus" onchange="this.form.submit()">
                                         <option value="">Trạng thái đăng</option>
                                         <option value="1" ${param.petStatus == '1' ? 'selected' : ''}>Đang hiển thị</option>
                                         <option value="0" ${param.petStatus == '0' ? 'selected' : ''}>Đã ẩn</option>
                                     </select>
                                 </div>
-                                <button type="button" class="btn btn-outline" onclick="toggleAdvancedFilters()">
-                                    <i class="fas fa-sliders-h"></i> Nâng cao
-                                </button>
-                            </div>
-
-                            <c:set var="isAdvancedFilterActive" value="${not empty param.species or not empty param.breedId or not empty param.gender or not empty param.vaccination}" />
-
-                            <div class="advanced-filters-container" id="advancedFilters" style="${isAdvancedFilterActive ? 'display: block;' : 'display: none;'} margin-bottom: 15px;">
-                                <div class="advanced-filters-grid">
-                                    <div class="select-group">
-                                        <select name="species">
-                                            <option value="">Tất cả loài</option>
-                                            <c:forEach items="${speciesList}" var="s">
-                                                <option value="${s}" ${param.species == s ? 'selected' : ''}>${s}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="select-group">
-                                        <select name="breedId">
-                                            <option value="">Tất cả giống</option>
-                                            <c:forEach items="${breedList}" var="b">
-                                                <option value="${b.breedId}" ${param.breedId == b.breedId ? 'selected' : ''}>${b.breedName}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="select-group">
-                                        <select name="gender">
-                                            <option value="">Tất cả giới tính</option>
-                                            <option value="Male" ${param.gender == 'Male' ? 'selected' : ''}>Đực</option>
-                                            <option value="Female" ${param.gender == 'Female' ? 'selected' : ''}>Cái</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-group">
-                                        <select name="vaccination">
-                                            <option value="">Tiêm phòng</option>
-                                            <option value="1" ${param.vaccination == '1' ? 'selected' : ''}>Đã tiêm</option>
-                                            <option value="0" ${param.vaccination == '0' ? 'selected' : ''}>Chưa tiêm</option>
-                                        </select>
-                                    </div>
+                                <div class="select-group">
+                                    <select name="species" onchange="this.form.submit()">
+                                        <option value="">Tất cả loài</option>
+                                        <c:forEach items="${speciesList}" var="s">
+                                            <option value="${s}" ${param.species == s ? 'selected' : ''}>${s}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="select-group">
+                                    <select name="breedId" onchange="this.form.submit()">
+                                        <option value="">Tất cả giống</option>
+                                        <c:forEach items="${breedList}" var="b">
+                                            <option value="${b.breedId}" ${param.breedId == b.breedId ? 'selected' : ''}>${b.breedName}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="select-group">
+                                    <select name="gender" onchange="this.form.submit()">
+                                        <option value="">Tất cả giới tính</option>
+                                        <option value="Male" ${param.gender == 'Male' ? 'selected' : ''}>Đực</option>
+                                        <option value="Female" ${param.gender == 'Female' ? 'selected' : ''}>Cái</option>
+                                    </select>
+                                </div>
+                                <div class="select-group">
+                                    <select name="vaccination" onchange="this.form.submit()">
+                                        <option value="">Tiêm phòng</option>
+                                        <option value="1" ${param.vaccination == '1' ? 'selected' : ''}>Đã tiêm</option>
+                                        <option value="0" ${param.vaccination == '0' ? 'selected' : ''}>Chưa tiêm</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -173,7 +163,6 @@
                                 <button type="button" class="btn btn-outline" onclick="location.href = 'displayallpet'">
                                     <i class="fas fa-times"></i> Xóa bộ lọc
                                 </button>
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
                             </div>
                         </form>
 
@@ -262,6 +251,91 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Pagination -->
+                        <c:if test="${totalPages > 1}">
+                            <div class="pagination-container">
+                                <ul class="pagination">
+                                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                        <c:url value="displayallpet" var="prevUrl">
+                                            <c:param name="page" value="${currentPage - 1}"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
+                                            <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
+                                            <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
+                                            <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
+                                            <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                            <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                        </c:url>
+                                        <a class="page-link" href="${currentPage > 1 ? prevUrl : '#'}">«</a>
+                                    </li>
+
+                                    <c:if test="${startPage > 1}">
+                                        <c:url value="displayallpet" var="firstPageUrl" scope="page">
+                                            <c:param name="page" value="1"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
+                                            <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
+                                            <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
+                                            <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
+                                            <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                            <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                        </c:url>
+                                        <li class="page-item"><a class="page-link" href="${firstPageUrl}">1</a></li>
+                                            <c:if test="${startPage > 2}">
+                                            <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                            </c:if>
+                                        </c:if>
+
+                                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                                        <c:url value="displayallpet" var="pageUrl" scope="page">
+                                            <c:param name="page" value="${i}"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
+                                            <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
+                                            <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
+                                            <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
+                                            <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                            <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                        </c:url>
+                                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                            <a class="page-link" href="${pageUrl}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+
+                                    <c:if test="${endPage < totalPages}">
+                                        <c:if test="${endPage < totalPages - 1}">
+                                            <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                            </c:if>
+                                            <c:url value="displayallpet" var="lastPageUrl" scope="page">
+                                                <c:param name="page" value="${totalPages}"/>
+                                                <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                                <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
+                                                <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
+                                                <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
+                                                <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
+                                                <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                                <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                            </c:url>
+                                        <li class="page-item"><a class="page-link" href="${lastPageUrl}">${totalPages}</a></li>
+                                        </c:if>
+
+                                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                        <c:url value="displayallpet" var="nextUrl">
+                                            <c:param name="page" value="${currentPage + 1}"/>
+                                            <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                            <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
+                                            <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
+                                            <c:if test="${not empty param.species}"><c:param name="species" value="${param.species}"/></c:if>
+                                            <c:if test="${not empty param.breedId}"><c:param name="breedId" value="${param.breedId}"/></c:if>
+                                            <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                            <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                        </c:url>
+                                        <a class="page-link" href="${currentPage < totalPages ? nextUrl : '#'}">»</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -269,15 +343,5 @@
         <div class="seller-footer">
             © 2025 PETFPT Shop - Hệ thống quản lý
         </div>
-        <script>
-            function toggleAdvancedFilters() {
-                const advancedFilters = document.getElementById('advancedFilters');
-                if (window.getComputedStyle(advancedFilters).display === 'none') {
-                    advancedFilters.style.display = 'block';
-                } else {
-                    advancedFilters.style.display = 'none';
-                }
-            }
-        </script>
     </body>
 </html>

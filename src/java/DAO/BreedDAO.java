@@ -24,7 +24,7 @@ public class BreedDAO {
         String sql = ""
                 + "SELECT breedId, breedName, breedSpecies, breedStatus, breedImage "
                 + "FROM BreedTB "
-                + "WHERE breedSpecies = N'Dog' "
+                + "WHERE breedSpecies = N'Chó' "
                 + "ORDER BY breedName ASC";
         try {
             conn = new DBContext().getConnection();
@@ -71,7 +71,7 @@ public class BreedDAO {
         String sql = ""
                 + "SELECT breedId, breedName, breedSpecies, breedStatus, breedImage "
                 + "FROM BreedTB "
-                + "WHERE breedSpecies = N'Cat' "
+                + "WHERE breedSpecies = N'Mèo' "
                 + "ORDER BY breedName ASC";
         try {
             conn = new DBContext().getConnection();
@@ -238,7 +238,7 @@ public class BreedDAO {
     }
 
     public String getSpeciesByBreed(String breedId) {
-        
+
         String sql = "SELECT breedSpecies FROM BreedTB WHERE breedId = ?";
         try {
             conn = new DBContext().getConnection();
@@ -246,7 +246,7 @@ public class BreedDAO {
             ps.setString(1, breedId);
             rs = ps.executeQuery();
             if (rs.next()) {
-              return rs.getString("breedSpecies");
+                return rs.getString("breedSpecies");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -322,51 +322,139 @@ public class BreedDAO {
         return listbreed;
     }
 
-    public List<Breed> getAllBreedsForManager() {
+    private StringBuilder buildFilterQuery(String searchKey, String species, String status, List<Object> params) {
+        StringBuilder sql = new StringBuilder(
+                " FROM BreedTB b"
+                + " LEFT JOIN PetTB p ON p.breedId = b.breedId"
+                + " LEFT JOIN OrderContentTB oc ON oc.petId = p.petId"
+                + " LEFT JOIN OrderTB o ON o.orderId = oc.orderId AND o.orderStatus = 'Delivered'"
+                + " WHERE 1=1 "
+        );
+
+        if (searchKey != null && !searchKey.trim().isEmpty()) {
+            if (searchKey.matches("\\d+")) {
+                sql.append(" AND b.breedId = ?");
+                params.add(Integer.parseInt(searchKey.trim()));
+            } else {
+                sql.append(" AND b.breedName LIKE ?");
+                params.add("%" + searchKey.trim() + "%");
+            }
+        }
+
+        if (species != null && !species.isEmpty()) {
+            sql.append(" AND b.breedSpecies = ?");
+            params.add(species);
+        }
+
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND b.breedStatus = ?");
+            params.add("1".equals(status));
+        }
+        return sql;
+    }
+
+    public int countFilteredBreeds(String searchKey, String species, String status) {
+        List<Object> params = new ArrayList<>();
+        StringBuilder sqlBase = new StringBuilder("SELECT COUNT(DISTINCT b.breedId) ");
+
+        sqlBase.append(buildFilterQuery(searchKey, species, status, params));
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sqlBase.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Breed> filterBreedsForManager(String searchKey, String species, String status, int pageNumber, int pageSize) {
+        List<Breed> list = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT b.breedId, b.breedName, b.breedSpecies, b.breedImage, b.breedStatus,"
+                + " COUNT(o.orderId) AS totalPurchases"
+        );
+
+        sql.append(buildFilterQuery(searchKey, species, status, params));
+
+        sql.append(" GROUP BY b.breedId, b.breedName, b.breedSpecies, b.breedImage, b.breedStatus");
+        sql.append(" ORDER BY b.breedId ASC");
+
+        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        int offset = (pageNumber - 1) * pageSize;
+        params.add(offset);
+        params.add(pageSize);
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("breedId");
+                    String name = rs.getString("breedName");
+                    String sp = rs.getString("breedSpecies");
+                    boolean st = rs.getBoolean("breedStatus");
+                    String img = rs.getString("breedImage");
+                    int purchases = rs.getInt("totalPurchases");
+                    list.add(new Breed(id, name, sp, st, img, purchases));
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    public boolean breedNameExists(String breedName) {
         DBContext db = new DBContext();
-        List<Breed> listbreed = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         try {
             conn = db.getConnection();
-            String sql = "SELECT \n"
-                    + "    b.breedId,\n"
-                    + "    b.breedName,\n"
-                    + "    b.breedSpecies,\n"
-                    + "    b.breedImage,\n"
-                    + "    b.breedStatus,\n"
-                    + "    COUNT(o.orderId) AS totalPurchases\n"
-                    + "FROM \n"
-                    + "    BreedTB b\n"
-                    + "LEFT JOIN \n"
-                    + "    PetTB p \n"
-                    + "      ON p.breedId = b.breedId\n"
-                    + "LEFT JOIN \n"
-                    + "    OrderContentTB oc \n"
-                    + "      ON oc.petId = p.petId\n"
-                    + "LEFT JOIN \n"
-                    + "    OrderTB o \n"
-                    + "      ON o.orderId = oc.orderId \n"
-                    + "     AND o.orderStatus = 'Delivered'\n"
-                    + "GROUP BY \n"
-                    + "    b.breedId,\n"
-                    + "    b.breedName,\n"
-                    + "    b.breedSpecies,\n"
-                    + "    b.breedImage,\n"
-                    + "    b.breedStatus";
+            String sql = "SELECT breedName FROM BreedTB";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("breedId");
-                String name = rs.getString("breedName");
-                String species = rs.getString("breedSpecies");
-                boolean status = rs.getBoolean("breedStatus");
-                String image = rs.getString("breedImage");
-                int purchases = rs.getInt("totalPurchases");
-                listbreed.add(new Breed(id, name, species, status, image, purchases));
+                names.add(rs.getString(1));
             }
-            return listbreed;
+            return names.contains(breedName);
         } catch (Exception ex) {
             Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return null;
+        return false;
     }
+
 }
