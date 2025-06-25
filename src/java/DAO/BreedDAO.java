@@ -476,4 +476,38 @@ public class BreedDAO {
         return null;
     }
 
+    public boolean addBreed(Breed breed) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "INSERT INTO BreedTB (breedName, breedSpecies, breedImage, breedStatus)\n"
+                    + "VALUES (?, ?, ?, ?);";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, breed.getBreedName());
+            ps.setString(2, breed.getBreedSpecies());
+            ps.setBytes(3, breed.getBreedImage());
+            ps.setInt(4, breed.isBreedStatus() ? 1 : 0);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean updateBreedStatusById(int breedId, int breedStatus) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "UPDATE BreedTB SET breedStatus=? WHERE breedId=?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, breedStatus);
+            ps.setInt(2, breedId);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 }

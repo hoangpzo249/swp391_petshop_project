@@ -131,7 +131,7 @@
                                 <div class="form-full-width">
                                     <div class="form-group">
                                         <label for="breedImage">Hình ảnh giống</label>
-                                        <input type="file" id="breedImage" name="breedImage" class="form-control" accept="image/*" required>
+                                        <input type="file" id="breedImage" name="breedImage" class="form-control" accept="image/*" >
                                     </div>
                                 </div>
                             </div>

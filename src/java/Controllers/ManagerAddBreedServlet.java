@@ -5,18 +5,25 @@
 package Controllers;
 
 import DAO.BreedDAO;
+import Models.Breed;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 /**
  *
  * @author Lenovo
  */
+@MultipartConfig
 public class ManagerAddBreedServlet extends HttpServlet {
 
     /**
@@ -76,40 +83,88 @@ public class ManagerAddBreedServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         BreedDAO _dao = new BreedDAO();
+        HttpSession session = request.getSession();
+        StringBuilder errMess = new StringBuilder();
+
         String breedName = request.getParameter("breedName");
-        String breedSpecies=request.getParameter("breedSpecies");
-        String breedStatus=request.getParameter("breedStatus");
-        
-        
-        if (breedName != null && !_dao.breedNameExists(breedName)) {
-            List<String> speciesList = _dao.getAllSpecies();
-            request.setAttribute("speciesList", speciesList);
-            
+        String breedSpecies = request.getParameter("breedSpecies");
+        String breedStatus = request.getParameter("breedStatus");
+
+        List<String> speciesList = _dao.getAllSpecies();
+        request.setAttribute("speciesList", speciesList);
+        request.setAttribute("breedName", breedName);
+        request.setAttribute("breedSpecies", breedSpecies);
+        request.setAttribute("breedStatus", breedStatus);
+
+        String infoValidation = validateBreedInput(breedName, breedSpecies, breedStatus);
+
+        if (infoValidation.length() != 0) {
+            errMess.append(infoValidation);
+        }
+
+        if (_dao.breedNameExists(breedName)) {
+            if (errMess.length() > 0) {
+                errMess.append("<br>");
+            }
+            errMess.append(breedName + " đã tồn tại.");
+        }
+
+        if (errMess.length() > 0) {
+            session.setAttribute("errMess", errMess.toString());
+            request.getRequestDispatcher("manager_breed_add.jsp")
+                    .forward(request, response);
+            return;
+        }
+
+        Part image = null;
+        byte[] imageData;
+        for (Part part : request.getParts()) {
+            if ("breedImage".equals(part.getName()) && part.getSize() > 0) {
+                image = part;
+            }
+        }
+        if (image != null) {
+            try (InputStream is = image.getInputStream()) {
+                imageData = is.readAllBytes();
+            }
+        } else {
+            String defaultImagePath = getServletContext().getRealPath("/images/defaultcatdog.png");
+            try (InputStream is = new FileInputStream(defaultImagePath)) {
+                imageData = is.readAllBytes();
+            }
+        }
+
+        Breed newBreed = new Breed();
+        newBreed.setBreedName(breedName);
+        newBreed.setBreedSpecies(breedSpecies);
+        newBreed.setBreedStatus(breedStatus.equals("1"));
+        newBreed.setBreedImage(imageData);
+        if (_dao.addBreed(newBreed)) {
+            session.setAttribute("successMess", "Đã tạo giống thú cưng thành công.");
+            response.sendRedirect("displaybreed");
+        } else {
+            session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình tạo giống thú cưng. Vui lòng thử lại.");
+            request.getRequestDispatcher("manager_breed_add.jsp")
+                    .forward(request, response);
         }
     }
-    
+
     public static String validateBreedInput(String name, String species, String status) {
         StringBuilder stringCheck = new StringBuilder();
 
         if (name.isEmpty() || name.length() > 100 || !name.matches("^[\\p{L}\\s\\-']+$")) {
             stringCheck.append("tên, ");
         }
-
-//        if (color.isEmpty() || color.length() > 50 || !color.matches("^[\\p{L}\\s\\-]+$")) {
-//            stringCheck.append("màu sắc, ");
-//        }
-//
-//        if (origin.isEmpty() || origin.length() > 100 || !origin.matches("^[\\p{L}\\s,.'-]+$")) {
-//            stringCheck.append("nguồn gốc, ");
-//        }
-//
-//        if (description.isEmpty() || description.length() > 2000 || description.contains("\0")) {
-//            stringCheck.append("mô tả, ");
-//        }
+        if (species.isEmpty() || species.length() > 50 || !species.matches("^[\\p{L}\\s\\-']+$")) {
+            stringCheck.append("loài, ");
+        }
+        if (status.isEmpty() || !status.equals("1") && !status.equals("0")) {
+            stringCheck.append("trạng thái, ");
+        }
 
         if (stringCheck.length() > 0) {
             stringCheck.setLength(stringCheck.length() - 2);
-            stringCheck.append(" của giống thú cưng không hợp lệ");
+            stringCheck.append(" của giống thú cưng không hợp lệ.");
 
             String result = stringCheck.toString();
             return result.substring(0, 1).toUpperCase() + result.substring(1);
