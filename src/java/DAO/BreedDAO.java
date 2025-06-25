@@ -35,7 +35,7 @@ public class BreedDAO {
                 String name = rs.getString("breedName");
                 String species = rs.getString("breedSpecies");
                 boolean status = rs.getBoolean("breedStatus");
-                String image = rs.getString("breedImage");
+                byte[] image = rs.getBytes("breedImage");
                 listBreed.add(new Breed(id, name, species, status, image));
             }
         } catch (Exception ex) {
@@ -82,7 +82,7 @@ public class BreedDAO {
                 String name = rs.getString("breedName");
                 String species = rs.getString("breedSpecies");
                 boolean status = rs.getBoolean("breedStatus");
-                String image = rs.getString("breedImage");
+                byte[] image = rs.getBytes("breedImage");
                 listBreed.add(new Breed(id, name, species, status, image));
             }
         } catch (Exception ex) {
@@ -206,7 +206,7 @@ public class BreedDAO {
                         rs.getString("breedName"),
                         rs.getString("breedSpecies"),
                         rs.getBoolean("breedStatus"),
-                        rs.getString("breedImage")
+                        rs.getBytes("breedImage")
                 ));
             }
         } catch (Exception e) {
@@ -291,7 +291,7 @@ public class BreedDAO {
                 breed.setBreedId(rs.getInt("breedId"));
                 breed.setBreedName(rs.getString("breedName"));
                 breed.setBreedSpecies(rs.getString("breedSpecies"));
-                breed.setBreedImage(rs.getString("breedImage"));
+                breed.setBreedImage(rs.getBytes("breedImage"));
                 listbreed.add(breed);
             }
         } catch (Exception e) {
@@ -406,7 +406,7 @@ public class BreedDAO {
                     String name = rs.getString("breedName");
                     String sp = rs.getString("breedSpecies");
                     boolean st = rs.getBoolean("breedStatus");
-                    String img = rs.getString("breedImage");
+                    byte[] img = rs.getBytes("breedImage");
                     int purchases = rs.getInt("totalPurchases");
                     list.add(new Breed(id, name, sp, st, img, purchases));
                 }
@@ -455,6 +455,25 @@ public class BreedDAO {
             }
         }
         return false;
+    }
+
+    public String getBreedNameById(int id) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT breedName\n"
+                    + "FROM BreedTB\n"
+                    + "WHERE breedId=?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getString("breedName");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
 }

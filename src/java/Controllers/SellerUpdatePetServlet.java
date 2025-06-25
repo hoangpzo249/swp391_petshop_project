@@ -4,10 +4,9 @@
  */
 package Controllers;
 
-import static Controllers.SellerAddPetServlet.validatePetInput;
 import DAO.BreedDAO;
 import DAO.PetDAO;
-import DAO.PetImagePathDAO;
+import DAO.PetImageDAO;
 import Models.Account;
 import Models.Breed;
 import Models.Pet;
@@ -24,7 +23,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,7 +78,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
             throws ServletException, IOException {
         PetDAO _daopet = new PetDAO();
         BreedDAO _daobreed = new BreedDAO();
-        PetImagePathDAO _daoimage = new PetImagePathDAO();
+        PetImageDAO _daoimage = new PetImageDAO();
         HttpSession session = request.getSession();
 
         int petId = Integer.parseInt(request.getParameter("id"));
@@ -91,6 +89,9 @@ public class SellerUpdatePetServlet extends HttpServlet {
             Pet pet = _daopet.getPetById(petId);
             List<Breed> breedList = _daobreed.getAllBreeds();
             List<PetImage> imageList = _daoimage.getPetImagesById(petId);
+            List<String> colorList = _daopet.getAllColors();
+            List<String> originList = _daopet.getAllOrigins();
+
             if (request.getParameter("done") == null && pet.getPetStatus() == 1) {
                 _daopet.updatePetStatusById(petId, 0);
                 session.setAttribute("successMess", "Thú cưng đã được ẩn cho quá trình chỉnh sửa thông tin.");
@@ -98,6 +99,8 @@ public class SellerUpdatePetServlet extends HttpServlet {
             request.setAttribute("pet", pet);
             request.setAttribute("breedList", breedList);
             request.setAttribute("imageList", imageList);
+            request.setAttribute("colorList", colorList);
+            request.setAttribute("originList", originList);
 
             request.getRequestDispatcher("seller_pet_edit.jsp")
                     .forward(request, response);
@@ -135,12 +138,11 @@ public class SellerUpdatePetServlet extends HttpServlet {
         }
         PetDAO _daopet = new PetDAO();
         BreedDAO _daobreed = new BreedDAO();
-        PetImagePathDAO _daoimage = new PetImagePathDAO();
+        PetImageDAO _daoimage = new PetImageDAO();
         StringBuilder errMess = new StringBuilder();
 
         try {
             String petDobStr = request.getParameter("petDob");
-
             String dateValidation = validatePetDob(petDobStr);
 
             int petId = Integer.parseInt(request.getParameter("petId"));
@@ -183,11 +185,9 @@ public class SellerUpdatePetServlet extends HttpServlet {
             request.setAttribute("pet", petToUpdate);
 
             String infoValidation = validatePetInput(petName, petColor, petOrigin, petDescription);
-
             if (infoValidation.length() != 0) {
                 errMess.append(infoValidation);
             }
-
             if (petPrice < 0) {
                 if (errMess.length() != 0) {
                     errMess.append("<br>");
@@ -208,7 +208,6 @@ public class SellerUpdatePetServlet extends HttpServlet {
                 }
                 errMess.append(dateValidation);
             }
-
             if (errMess.length() != 0) {
                 session.setAttribute("errMess", errMess.toString());
                 request.getRequestDispatcher("seller_pet_edit.jsp")
@@ -216,7 +215,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
                 return;
             }
 
-            List<String> imageURLs = new ArrayList<>();
+            List<byte[]> imageDatas = new ArrayList<>();
             int availableSlots = 5 - _daoimage.countImagesById(petId);
 
             if (availableSlots > 0) {
@@ -230,18 +229,8 @@ public class SellerUpdatePetServlet extends HttpServlet {
                 imageParts.stream()
                         .limit(availableSlots)
                         .forEach(part -> {
-                            try {
-                                File tempFile = File.createTempFile("upload-", ".tmp");
-                                try (InputStream is = part.getInputStream()) {
-                                    Files.copy(is, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                                }
-
-                                String url = ImgBbUploader.uploadImage(tempFile);
-                                if (url != null) {
-                                    imageURLs.add(url);
-                                }
-
-                                tempFile.delete();
+                            try (InputStream is = part.getInputStream()) {
+                                imageDatas.add(is.readAllBytes());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -249,17 +238,15 @@ public class SellerUpdatePetServlet extends HttpServlet {
             }
 
             if (_daopet.updatePetById(petId, petToUpdate)) {
-                if (!imageURLs.isEmpty()) {
-                    _daoimage.addImage(petId, imageURLs);
+                if (!imageDatas.isEmpty()) {
+                    _daoimage.addImage(petId, imageDatas);
                 }
                 session.setAttribute("successMess", "Cập nhật thông tin thú cưng #" + petId + " thành công!");
                 response.sendRedirect("updatepet?id=" + petId + "&done=done");
-                return;
             } else {
                 session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình cập nhật. Vui lòng thử lại.");
                 request.getRequestDispatcher("seller_pet_edit.jsp")
                         .forward(request, response);
-                return;
             }
 
         } catch (Exception e) {
@@ -267,7 +254,6 @@ public class SellerUpdatePetServlet extends HttpServlet {
             session.setAttribute("errMess", "Lỗi: Dữ liệu không hợp lệ hoặc đã xảy ra sự cố máy chủ.");
             request.getRequestDispatcher("seller_pet_edit.jsp")
                     .forward(request, response);
-            return;
         }
     }
 

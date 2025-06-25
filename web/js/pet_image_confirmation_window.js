@@ -59,15 +59,9 @@ async function handleImageDelete(imageId, petId) {
         showAlert(result.message, result.success ? 'success' : 'error');
 
         if (result.success) {
-            if (result.isDefault) {
-                const imagePreview = document.getElementById(`image-preview-${imageId}`);
-                if (imagePreview)
-                    imagePreview.src = result.newUrl;
-            } else {
-                const imageItem = document.getElementById(`image-item-${imageId}`);
-                if (imageItem)
-                    imageItem.remove();
-            }
+            const imageItem = document.getElementById(`image-item-${imageId}`);
+            if (imageItem)
+                imageItem.remove();
         }
     } catch (error) {
         showAlert('Lỗi kết nối đến máy chủ.', 'error');
@@ -96,15 +90,18 @@ async function handleImageChange(event, imageId, petId) {
 
         showAlert(result.message, result.success ? 'success' : 'error');
 
-        if (result.success) {
+        if (result.success && result.newImageData) {
             const imagePreview = document.getElementById(`image-preview-${imageId}`);
             if (imagePreview) {
-                imagePreview.src = result.newUrl + '?t=' + new Date().getTime();
+                imagePreview.src = `data:image/jpeg;base64,${result.newImageData}`;
             }
         }
     } catch (error) {
+        console.error('Error during image change:', error);
         showAlert('Lỗi kết nối đến máy chủ.', 'error');
     }
+
+    event.target.value = '';
 }
 
 function showAlert(message, type = 'success') {

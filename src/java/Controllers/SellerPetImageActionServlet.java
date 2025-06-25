@@ -4,9 +4,8 @@
  */
 package Controllers;
 
-import DAO.PetImagePathDAO;
+import DAO.PetImageDAO;
 import Models.Account;
-import Utils.ImgBbUploader;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,11 +16,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,9 +66,9 @@ public class SellerPetImageActionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session=request.getSession();
-        Account account=(Account) session.getAttribute("userAccount");
-        if (account==null || !account.getAccRole().equals("Seller")) {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Seller")) {
             session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
             response.sendRedirect("homepage");
             return;
@@ -90,11 +86,11 @@ public class SellerPetImageActionServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        PetImagePathDAO _dao = new PetImagePathDAO();
+        PetImageDAO _dao = new PetImageDAO();
         Map<String, Object> jsonResponse = new HashMap<>();
         Gson gson = new Gson();
 
@@ -106,36 +102,34 @@ public class SellerPetImageActionServlet extends HttpServlet {
             switch (action) {
                 case "change":
                     Part filePart = request.getPart("newImageFile");
-                    String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-                    File tempFile = File.createTempFile("upload_", "_" + fileName);
-                    try (InputStream fileContent = filePart.getInputStream()) {
-                        Files.copy(fileContent, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    if (filePart == null || filePart.getSize() == 0) {
+                        jsonResponse.put("success", false);
+                        jsonResponse.put("message", "Không có ảnh nào được tải lên.");
+                        break;
                     }
-                    String imageURL = ImgBbUploader.uploadImage(tempFile);
-                    tempFile.delete();
 
-                    if (imageURL != null && _dao.changeImageById(imageId, imageURL)) {
+                    byte[] imageData;
+                    try (InputStream fileContent = filePart.getInputStream()) {
+                        imageData = fileContent.readAllBytes();
+                    }
+
+                    if (_dao.changeImageById(imageId, imageData)) {
+                        String base64Image = Base64.getEncoder().encodeToString(imageData);
                         jsonResponse.put("success", true);
                         jsonResponse.put("message", "Đã thay đổi ảnh thành công.");
-                        jsonResponse.put("newUrl", imageURL);
+                        jsonResponse.put("newImageData", base64Image); // <-- ADD THIS LINE BACK
                     } else {
                         jsonResponse.put("success", false);
                         jsonResponse.put("message", "Đã xảy ra lỗi khi thay đổi ảnh.");
                     }
                     break;
-
                 case "delete":
                     if (_dao.countImagesById(petId) <= 1) {
-                        String defaultImageUrl = "https://i.ibb.co/NggxZvb7/defaultcatdog.png";
-                        _dao.changeImageById(imageId, defaultImageUrl);
-                        jsonResponse.put("success", true);
-                        jsonResponse.put("isDefault", true);
-                        jsonResponse.put("newUrl", defaultImageUrl);
-                        jsonResponse.put("message", "Chỉ còn 1 ảnh. Đã chuyển về ảnh mặc định.");
+                        jsonResponse.put("success", false);
+                        jsonResponse.put("message", "Không thể xóa ảnh cuối cùng. Thú cưng phải có ít nhất một ảnh.");
                     } else {
                         if (_dao.deleteImageById(petId, imageId)) {
                             jsonResponse.put("success", true);
-                            jsonResponse.put("isDefault", false);
                             jsonResponse.put("message", "Đã xóa ảnh thành công.");
                         } else {
                             jsonResponse.put("success", false);
@@ -149,10 +143,11 @@ public class SellerPetImageActionServlet extends HttpServlet {
                     break;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             jsonResponse.put("success", false);
             jsonResponse.put("message", "Đã xảy ra lỗi hệ thống: " + e.getMessage());
         }
-        
+
         response.getWriter().write(gson.toJson(jsonResponse));
     }
 

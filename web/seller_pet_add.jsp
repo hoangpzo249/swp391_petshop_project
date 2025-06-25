@@ -161,7 +161,6 @@
 
                                 <%-- Full Width Section for the Statuses --%>
                                 <div class="form-full-width">
-                                    <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #555;">Trạng thái & Tiêm phòng</label>
                                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
 
                                         <%-- Trạng thái bán --%>

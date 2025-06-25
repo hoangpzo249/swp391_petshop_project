@@ -177,7 +177,7 @@
                             <c:forEach var="img" items="${pet.getImages()}">
 
                                 <div class="thumbnail-box">
-                                    <img src="${img}" alt="Thumbnail" class="thumbnail-img" onclick="showImage('${img}')" />
+                                    <img src="${pet.getImage(img)}" alt="Thumbnail" class="thumbnail-img" onclick="showImage('${pet.getImage(img)}')" />
                                 </div>
 
                             </c:forEach>

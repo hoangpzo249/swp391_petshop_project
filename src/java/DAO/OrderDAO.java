@@ -246,7 +246,7 @@ public class OrderDAO {
                     + "GROUP BY \n"
                     + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
-                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus,  o.rejectionReason;";
+                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus,  o.rejectionReason, o.discountId;";
 
             ps = conn.prepareStatement(sql);
             ps.setString(1, id);

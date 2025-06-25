@@ -5,6 +5,7 @@
 package Models;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 /**
  *
@@ -14,16 +15,16 @@ public class PetImage {
 
     private Integer imageId;
     private int petId;
-    private String imagePath;
+    private byte[] imageData;
     private LocalDateTime uploadedAt;
 
     public PetImage() {
     }
 
-    public PetImage(Integer imageId, int petId, String imagePath, LocalDateTime uploadedAt) {
+    public PetImage(Integer imageId, int petId, byte[] imageData, LocalDateTime uploadedAt) {
         this.imageId = imageId;
         this.petId = petId;
-        this.imagePath = imagePath;
+        this.imageData = imageData;
         this.uploadedAt = uploadedAt;
     }
 
@@ -43,12 +44,12 @@ public class PetImage {
         this.petId = petId;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public byte[] getImageData() {
+        return imageData;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setImageData(byte[] imageData) {
+        this.imageData = imageData;
     }
 
     public LocalDateTime getUploadedAt() {
@@ -59,4 +60,8 @@ public class PetImage {
         this.uploadedAt = uploadedAt;
     }
 
+    public String getImage() {
+        String base64Image = Base64.getEncoder().encodeToString(imageData);
+        return "data:image/jpeg;base64," + base64Image;
+    }
 }

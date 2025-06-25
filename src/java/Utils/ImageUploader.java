@@ -14,41 +14,57 @@ import java.io.IOException;
  * @author Lenovo
  */
 public class ImageUploader {
-
+    
     public static String saveImage(Part part, String subDirectory, HttpServletRequest request) throws IOException {
-        if (part == null || part.getSize() == 0 || part.getSubmittedFileName() == null || part.getSubmittedFileName().isEmpty()) {
+        // --- 1) Basic validation ---
+        if (part == null || part.getSize() == 0
+            || part.getSubmittedFileName() == null
+            || part.getSubmittedFileName().isEmpty()) {
             return null;
         }
         if (subDirectory == null || subDirectory.trim().isEmpty()) {
-            throw new IllegalArgumentException("Sub-directory for saving the file cannot be null or empty.");
+            throw new IllegalArgumentException("Sub-directory cannot be null or empty.");
         }
 
-        String uniqueFileName = generateUniqueFileName(part);
-        String applicationPath = request.getServletContext().getRealPath("");
-        String uploadFilePath = applicationPath + File.separator + subDirectory;
+        // --- 2) Read the base uploads folder name from web.xml ---
+        String baseDirName = request.getServletContext().getInitParameter("UPLOAD_BASE_DIR");
+        if (baseDirName == null || baseDirName.trim().isEmpty()) {
+            throw new IllegalStateException("UPLOAD_BASE_DIR not set in web.xml");
+        }
 
-        File uploadDir = new File(uploadFilePath);
+        // --- 3) Resolve project root (option 2) ---
+        //    When run from IDE, "." is the project root. In deployed WAR it’ll be the container working dir.
+        File projectRoot = new File(".").getCanonicalFile();
+
+        // --- 4) Build the full upload directory path ---
+        File uploadDir = new File(projectRoot,
+                                  baseDirName + File.separator + subDirectory);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
 
-        part.write(uploadFilePath + File.separator + uniqueFileName);
+        // --- 5) Generate unique filename & write file ---
+        String uniqueFileName = generateUniqueFileName(part);
+        File savedFile = new File(uploadDir, uniqueFileName);
+        part.write(savedFile.getAbsolutePath());
 
-        String relativePath = subDirectory.replace(File.separator, "/") + "/" + uniqueFileName;
-        return relativePath;
+        // --- 6) Return a web‐relative path (use this in <img src="…"> or store in DB) ---
+        //     e.g. "uploads/images/pet_images/163847324324_cat.png"
+        return baseDirName
+             + "/"
+             + subDirectory.replace(File.separator, "/")
+             + "/"
+             + uniqueFileName;
     }
 
     private static String generateUniqueFileName(Part part) {
-        String originalFileName = part.getSubmittedFileName();
-        String sanitizedFileName = originalFileName.replaceAll("[^a-zA-Z0-9.-]", "_");
-
-        String fileExtension = "";
-        int i = sanitizedFileName.lastIndexOf('.');
-        if (i > 0) {
-            fileExtension = sanitizedFileName.substring(i);
-            sanitizedFileName = sanitizedFileName.substring(0, i);
+        String orig = part.getSubmittedFileName().replaceAll("[^a-zA-Z0-9.\\-]", "_");
+        String ext = "";
+        int idx = orig.lastIndexOf('.');
+        if (idx > 0) {
+            ext = orig.substring(idx);
+            orig = orig.substring(0, idx);
         }
-
-        return System.currentTimeMillis() + "_" + sanitizedFileName + fileExtension;
+        return System.currentTimeMillis() + "_" + orig + ext;
     }
 }

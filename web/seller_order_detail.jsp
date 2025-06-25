@@ -253,7 +253,7 @@
                 </div>
 
                 <div class="action-buttons" style="margin-top: 20px;">
-                    <button class="btn btn-outline" onclick="location.href = 'seller-order-management'">
+                    <button class="btn btn-outline" onclick="location.href = 'displayorder'">
                         <i class="fas fa-arrow-left"></i> Quay lại danh sách
                     </button>
                 </div>

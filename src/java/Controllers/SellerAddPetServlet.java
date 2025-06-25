@@ -6,11 +6,10 @@ package Controllers;
 
 import DAO.BreedDAO;
 import DAO.PetDAO;
-import DAO.PetImagePathDAO;
+import DAO.PetImageDAO;
 import Models.Account;
 import Models.Breed;
 import Models.Pet;
-import Utils.ImageUploader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -20,7 +19,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import java.io.File;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -112,20 +114,13 @@ public class SellerAddPetServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         PetDAO _daopet = new PetDAO();
-        PetImagePathDAO _daoimage = new PetImagePathDAO();
-        String referer = request.getHeader("referer");
+        PetImageDAO _daoimage = new PetImageDAO();
         StringBuilder errMess = new StringBuilder();
-
         BreedDAO _daobreed = new BreedDAO();
-
         List<Breed> breedList = _daobreed.getAllBreeds();
-
         request.setAttribute("breedList", breedList);
 
         try {
-            final String PET_IMAGE_SUB_DIR = "images/pet_images";
-            final String DEFAULT_IMAGE_PATH = "images/defaultcatdog.png";
-            
             String petDobStr = request.getParameter("petDob");
             String dateValidation = validatePetDob(petDobStr);
 
@@ -208,38 +203,49 @@ public class SellerAddPetServlet extends HttpServlet {
             int newPetId = _daopet.addPet(pet);
 
             if (newPetId != -1) {
-                List<String> imagePaths = new ArrayList<>();
+                List<byte[]> imageDatas = new ArrayList<>();
                 List<Part> imageParts = request.getParts().stream()
                         .filter(part -> "images".equals(part.getName()) && part.getSize() > 0)
                         .limit(5)
                         .collect(Collectors.toList());
 
                 for (Part part : imageParts) {
+                    try (InputStream is = part.getInputStream()) {
+                        imageDatas.add(is.readAllBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (imageDatas.isEmpty()) {
                     try {
-                        String savedPath = ImageUploader.saveImage(part, PET_IMAGE_SUB_DIR, request);
-                        if (savedPath != null) {
-                            imagePaths.add(savedPath);
+                        String defaultImagePath = getServletContext().getRealPath("/images/defaultcatdog.png");
+                        File defaultImageFile = new File(defaultImagePath);
+
+                        if (defaultImageFile.exists()) {
+                            byte[] defaultImageData = Files.readAllBytes(defaultImageFile.toPath());
+                            imageDatas.add(defaultImageData);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
 
-                if (imagePaths.isEmpty()) {
-                    imagePaths.add(DEFAULT_IMAGE_PATH);
+                boolean imageSuccess = true;
+                if (!imageDatas.isEmpty()) {
+                    imageSuccess = _daoimage.addImage(newPetId, imageDatas);
                 }
 
-                if (_daoimage.addImage(newPetId, imagePaths)) {
+                if (imageSuccess) {
                     session.setAttribute("successMess", "Đăng bán thú cưng thành công!");
                     response.sendRedirect("displaypet?id=" + newPetId);
                 } else {
-                    session.setAttribute("errMess", "Thú cưng đã được tạo nhưng có lỗi khi lưu hình ảnh. Vui lòng kiểm tra lại.");
+                    session.setAttribute("errMess", "Thú cưng đã được tạo nhưng có lỗi khi lưu hình ảnh. Vui lòng thử lại.");
+                    response.sendRedirect("updatepet?id=" + newPetId);
                 }
             } else {
                 session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình đăng bán. Vui lòng thử lại.");
                 request.getRequestDispatcher("seller_pet_add.jsp")
                         .forward(request, response);
-                return;
             }
 
         } catch (Exception e) {
@@ -247,7 +253,6 @@ public class SellerAddPetServlet extends HttpServlet {
             session.setAttribute("errMess", "Lỗi: Dữ liệu không hợp lệ hoặc đã xảy ra sự cố máy chủ.");
             request.getRequestDispatcher("seller_pet_add.jsp")
                     .forward(request, response);
-            return;
         }
     }
 

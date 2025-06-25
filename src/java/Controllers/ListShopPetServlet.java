@@ -118,7 +118,7 @@ public class ListShopPetServlet extends HttpServlet {
         petList = petList.subList(start, end);
 
         for (Pet pet : petList) {
-            pet.setImages(petDAO.getImagePathsByPetId(pet.getPetId()));
+            pet.setImages(petDAO.getImageDataByPetId(pet.getPetId()));
         }
         request.setAttribute("listPet", petList);
         request.setAttribute("currentPage", page);

@@ -150,7 +150,7 @@
                                     <c:forEach items="${breedList}" var="b">
                                         <tr>
                                             <td>
-                                                <img src="${b.breedImage}" alt="${b.breedName}" class="table-avatar"/>
+                                                <img src="${b.displayBreedImage()}" alt="${b.breedName}" class="table-avatar"/>
                                             </td>
                                             <td><strong>#${b.breedId}</strong></td>
                                             <td>${b.breedName}</td>

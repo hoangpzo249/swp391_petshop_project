@@ -1,6 +1,7 @@
 package Test;
 
 import DAO.DiscountDAO;
+import DAO.PetDAO;
 import Models.Discount;
 
 import java.sql.Date;
@@ -9,6 +10,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         DiscountDAO dao = new DiscountDAO();
+        PetDAO deopet=new PetDAO();
 
         // 1. Tạo mới đối tượng Discount để thêm
         Discount newDiscount = new Discount();

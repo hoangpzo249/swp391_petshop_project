@@ -31,7 +31,7 @@ public class Pet {
     private Breed breed;
     private double priceAtOrder;
     private String breedName;
-    private List<String> images;
+    private List<byte[]> images;
 
     public Pet() {
     }
@@ -182,11 +182,11 @@ public class Pet {
         this.breedName = breedName;
     }
 
-    public List<String> getImages() {
+    public List<byte[]> getImages() {
         return images;
     }
 
-    public void setImages(List<String> images) {
+    public void setImages(List<byte[]> images) {
         this.images = images;
     }
 
@@ -209,8 +209,17 @@ public class Pet {
 
     public String getFirstImage() {
         if (images != null && !images.isEmpty()) {
-            return images.get(0);
+            byte[] imageData = images.get(0);
+            if (imageData != null && imageData.length > 0) {
+                String base64Image = Base64.getEncoder().encodeToString(imageData);
+                return "data:image/jpeg;base64," + base64Image;
+            }
         }
         return "images/defaultcatdog.png";
+    }
+
+    public String getImage(byte[] imageData) {
+        String base64Image = Base64.getEncoder().encodeToString(imageData);
+        return "data:image/jpeg;base64," + base64Image;
     }
 }

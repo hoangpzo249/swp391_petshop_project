@@ -4,6 +4,7 @@
  */
 package Models;
 
+import java.util.Base64;
 import java.util.Date;
 
 /**
@@ -26,13 +27,13 @@ public class Account {
     private String accDescription;
 
     private String accCreateDate;
-    private String accImage;
+    private byte[] accImage;
     private String accStatus;
 
     public Account() {
     }
 
-    public Account(int accId, String accUsername, String accEmail, String accPassword, String accFname, String accLname, Date accDob, String accAddress, String accPhoneNumber, String accRole, String accDescription, String accCreateDate, String accImage, String accStatus) {
+    public Account(int accId, String accUsername, String accEmail, String accPassword, String accFname, String accLname, Date accDob, String accAddress, String accPhoneNumber, String accRole, String accDescription, String accCreateDate, byte[] accImage, String accStatus) {
         this.accId = accId;
         this.accUsername = accUsername;
         this.accEmail = accEmail;
@@ -145,11 +146,11 @@ public class Account {
         this.accCreateDate = accCreateDate;
     }
 
-    public String getAccImage() {
+    public byte[] getAccImage() {
         return accImage;
     }
 
-    public void setAccImage(String accImage) {
+    public void setAccImage(byte[] accImage) {
         this.accImage = accImage;
     }
 
@@ -164,5 +165,10 @@ public class Account {
     @Override
     public String toString() {
         return "Account{" + "accId=" + accId + ", accUsername=" + accUsername + ", accEmail=" + accEmail + ", accPassword=" + accPassword + ", accFname=" + accFname + ", accLname=" + accLname + ", accDob=" + accDob + ", accAddress=" + accAddress + ", accPhoneNumber=" + accPhoneNumber + ", accRole=" + accRole + ", accDescription=" + accDescription + ", accCreateDate=" + accCreateDate + ", accImage=" + accImage + ", accStatus=" + accStatus + '}';
+    }
+    
+    public String displayAccImage() {
+        String base64Image = Base64.getEncoder().encodeToString(accImage);
+        return "data:image/jpeg;base64," + base64Image;
     }
 }

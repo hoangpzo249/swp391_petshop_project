@@ -119,16 +119,24 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="petColor">Màu sắc</label>
-                                    <input type="text" id="petColor" name="petColor" class="form-control" value="${pet.petColor}">
+                                    <label for="colorInput">Màu sắc</label>
+                                    <div class="autocomplete-container">
+                                        <input type="text" id="colorInput" class="form-control" placeholder="Ví dụ: Vàng, Trắng" value="${pet.petColor}" autocomplete="off">
+                                        <input type="hidden" id="petColor" name="petColor" value="${pet.petColor}">
+                                        <div id="color-autocomplete-list" class="autocomplete-items"></div>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="petDob">Ngày sinh</label>
                                     <input type="date" id="petDob" name="petDob" class="form-control" value="<fmt:formatDate value='${pet.petDob}' pattern='yyyy-MM-dd'/>" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="petOrigin">Nguồn gốc</label>
-                                    <input type="text" id="petOrigin" name="petOrigin" class="form-control" value="${pet.petOrigin}">
+                                    <label for="originInput">Nguồn gốc</label>
+                                    <div class="autocomplete-container">
+                                        <input type="text" id="originInput" class="form-control" placeholder="Ví dụ: Việt Nam" value="${pet.petOrigin}" autocomplete="off">
+                                        <input type="hidden" id="petOrigin" name="petOrigin" value="${pet.petOrigin}">
+                                        <div id="origin-autocomplete-list" class="autocomplete-items"></div>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="petPrice">Giá bán (₫)</label>
@@ -137,7 +145,6 @@
                                 </div>
                                 <div></div>
                                 <div class="form-full-width">
-                                    <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #555;">Trạng thái & Tiêm phòng</label>
                                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
                                         <div class="form-group"><label for="petAvailability">Trạng thái bán</label><select id="petAvailability" name="petAvailability" class="form-control"><option value="1" ${pet.petAvailability == 1 ? 'selected' : ''}>Còn hàng</option><option value="0" ${pet.petAvailability == 0 ? 'selected' : ''}>Đã bán</option></select></div>
                                         <div class="form-group"><label for="petStatus">Trạng thái đăng</label><select id="petStatus" name="petStatus" class="form-control"><option value="1" ${pet.petStatus == 1 ? 'selected' : ''}>Hiển thị</option><option value="0" ${pet.petStatus == 0 ? 'selected' : ''}>Ẩn</option></select></div>
@@ -151,7 +158,7 @@
                                         <div class="image-management-grid" id="image-grid-container">
                                             <c:forEach items="${imageList}" var="image">
                                                 <div class="image-preview-item" id="image-item-${image.imageId}">
-                                                    <img src="${image.imagePath}" alt="Pet Image" id="image-preview-${image.imageId}">
+                                                    <img src="${image.getImage()}" alt="Pet Image" id="image-preview-${image.imageId}">
                                                     <div class="image-actions">
                                                         <input type="file" class="hidden-file-input" id="file-input-${image.imageId}" 
                                                                onchange="handleImageChange(event, ${image.imageId}, ${pet.petId})" accept="image/*">
@@ -212,7 +219,19 @@
                 </div>
             </div>
         </div>
-
+        <script>
+            const colorData = [
+            <c:forEach var="c" items="${colorList}" varStatus="loop">
+            '${c}'<c:if test="${!loop.last}">,</c:if>
+            </c:forEach>
+            ];
+            const originData = [
+            <c:forEach var="o" items="${originList}" varStatus="loop">
+            '${o}'<c:if test="${!loop.last}">,</c:if>
+            </c:forEach>
+            ];
+        </script>
+        <script src="js/pet_autocomplete.js"></script>
         <script src="js/pet_image_confirmation_window.js"></script>
     </body>
 </html>
