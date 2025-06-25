@@ -642,3 +642,57 @@ tbody tr:hover {
     font-weight: 600;
     color: #f26f21;
 }
+
+.table-actions .action-btn {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    line-height: 36px;
+    border-radius: 8px;
+    color: white;
+    margin: 0 4px;
+}
+
+.edit-btn {
+    background-color: #f6a622; /* cam */
+}
+
+.toggle-btn-active {
+    background-color: #28a745; /* xanh lục */
+}
+
+.toggle-btn-inactive {
+    background-color: #6c757d; /* xám */
+}
+
+.block-btn {
+    background-color: #dc3545; /* đỏ */
+}
+
+.date-group {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.date-group input[type="date"] {
+    appearance: none;
+    background: #f5f7fa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #333;
+    width: 200px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.date-group input[type="date"]:focus {
+    border-color: #f26f21;
+    box-shadow: 0 0 0 3px rgba(242, 111, 33, 0.1);
+}
+
+

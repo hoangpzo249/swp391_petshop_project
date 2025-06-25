@@ -53,14 +53,26 @@ public class DiscountManagerServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-     @Override
+      @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+
+        String searchKey = request.getParameter("searchKey");
+        String type = request.getParameter("type");
+        String status = request.getParameter("status");
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
+        String sortBy = request.getParameter("sortBy");
+
         DiscountDAO dao = new DiscountDAO();
-        List<Discount> discountList = dao.getAllDiscounts();
-        request.setAttribute("discountList", discountList);
+        List<Discount> list = dao.getFilteredDiscounts(searchKey, type, status, fromDate, toDate, sortBy);
+
+        request.setAttribute("discountList", list);
         request.getRequestDispatcher("manager_discount_view.jsp").forward(request, response);
     }
+
 
 
     /** 

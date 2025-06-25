@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package Controllers;
 
 import DAO.DiscountDAO;
@@ -20,34 +19,37 @@ import java.sql.Date;
  * @author AD
  */
 public class AddDiscountServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddDiscountServlet</title>");  
+            out.println("<title>Servlet AddDiscountServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AddDiscountServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet AddDiscountServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -55,18 +57,19 @@ public class AddDiscountServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-     @Override
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -82,7 +85,6 @@ public class AddDiscountServlet extends HttpServlet {
         String maxValue = request.getParameter("maxValue");
         String status = request.getParameter("status");
 
-        
         request.setAttribute("code", code);
         request.setAttribute("type", type);
         request.setAttribute("value", value);
@@ -120,27 +122,28 @@ public class AddDiscountServlet extends HttpServlet {
             d.setActive("1".equals(status));
 
             DiscountDAO dao = new DiscountDAO();
+            
+            Discount existing = dao.getActiveDiscountByCode(code);
+            if (existing != null) {
+                request.setAttribute("errMess", "Mã giảm giá này đã tồn tại. Vui lòng chọn mã khác.");
+                request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                return;
+            }
+
             boolean success = dao.addDiscount(d);
 
             if (success) {
                 request.getSession().setAttribute("successMess", "Thêm mã giảm giá thành công.");
                 response.sendRedirect("discountmanager");
-            } else {
-                request.setAttribute("errMess", "Không thể thêm mã giảm giá. Hãy kiểm tra lại dữ liệu.");
-                request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
-            }
-
+            } 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errMess", "Lỗi nhập dữ liệu: " + e.getMessage());
-            request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
         }
     }
 
-
-
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override
