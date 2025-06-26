@@ -12,7 +12,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Quản Lý Mã Giảm Giá - PETFPT Shop</title>
-        <link href="css/manager_panel_page.css" rel="stylesheet" type="text/css"/>
+        <link href="css/manager_panel_page.css?v=3" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     </head>
@@ -36,6 +36,14 @@
                 </div>
             </div>
         </div>
+        <c:if test="${not empty successMess}">
+            <div class="alert-message">${successMess}</div>
+            <c:remove var="successMess" scope="session" />
+        </c:if>
+        <c:if test="${not empty errMess}">
+            <div class="alert-message error">${errMess}</div>
+            <c:remove var="errMess" scope="session" />
+        </c:if>
 
         <div class="manager-container">
             <div class="manager-sidebar">
@@ -70,6 +78,55 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <form action="discountmanager" method="GET" id="filterForm">
+                            <div class="filter-controls">
+
+                                <div class="input-group" style="flex-grow: 1;">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" name="searchKey" placeholder="Tìm theo mã hoặc mô tả..."
+                                           value="${param.searchKey}">
+                                </div>
+
+                                <div class="select-group">
+                                    <select name="type">
+                                        <option value="">Tất cả loại</option>
+                                        <option value="Percent" ${param.type == 'Percent' ? 'selected' : ''}>Percent</option>
+                                        <option value="Fixed" ${param.type == 'Fixed' ? 'selected' : ''}>Fixed</option>
+                                    </select>
+                                </div>
+
+                                <div class="select-group">
+                                    <select name="status">
+                                        <option value="">Tất cả trạng thái</option>
+                                        <option value="1" ${param.status == '1' ? 'selected' : ''}>Active</option>
+                                        <option value="0" ${param.status == '0' ? 'selected' : ''}>Deactive</option>
+                                    </select>
+                                </div>
+
+                                    <div class="date-group">
+                                    <label for="fromDate">HSD Từ:</label>
+                                    <input type="date" id="fromDate" name="fromDate" value="${param.fromDate}">
+                                    <label for="toDate">HSD Đến:</label>
+                                    <input type="date" id="toDate" name="toDate" value="${param.toDate}">
+                                </div>
+
+                                <div class="select-group">
+                                    <select name="sortBy">
+                                        <option value="">Sắp xếp theo</option>
+                                        <option value="validTo_asc" ${param.sortBy == 'validTo_asc' ? 'selected' : ''}>HSD tăng dần</option>
+                                        <option value="validTo_desc" ${param.sortBy == 'validTo_desc' ? 'selected' : ''}>HSD giảm dần</option>
+                                        <option value="usageCount_asc" ${param.sortBy == 'usageCount_asc' ? 'selected' : ''}>Số lần sử dụng tăng</option>
+                                        <option value="usageCount_desc" ${param.sortBy == 'usageCount_desc' ? 'selected' : ''}>Số lần sử dụng giảm</option>
+                                    </select>
+                                </div>
+                                    
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
+                                <button type="button" class="btn btn-outline" onclick="location.href = 'discountmanager'">
+                                    <i class="fas fa-times"></i> Xóa bộ lọc
+                                </button>
+                            </div>
+                        </form>
+
                         <div class="table-container">
                             <table>
                                 <thead>
@@ -92,7 +149,17 @@
                                             <td>${d.discountId}</td>
                                             <td>${d.discountCode}</td>
                                             <td>${d.discountType}</td>
-                                            <td>${d.discountValue}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${d.discountType == 'Percent'}">
+                                                        ${d.discountValue}%
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <fmt:formatNumber value="${d.discountValue}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+
                                             <td>
                                                 <fmt:formatDate value="${d.validTo}" pattern="dd/MM/yyyy"/>
                                             </td>
@@ -106,14 +173,15 @@
                                                 </c:choose>
                                             </td>
 
-                                            <td>${d.usageCount}/${d.maxUsage != null ? d.maxUsage : '-'}</td>
+                                            <td>${d.usageCount}/${d.maxUsage != null ? d.maxUsage : '∞'}</td>
+
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${d.active}">
-                                                        <span class="status-badge status-active">Kích hoạt</span>
+                                                        <span class="status-badge status-active">Active</span>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <span class="status-badge status-blocked">Tạm ngưng</span>
+                                                        <span class="status-badge status-blocked">Deactive</span>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
@@ -122,8 +190,10 @@
                                                     <a class="action-btn edit-btn" href="updatediscount?id=${d.discountId}" title="Chỉnh sửa">
                                                         <i class="fas fa-pencil-alt"></i>
                                                     </a>
-                                                    <a class="action-btn block-btn" href="deletediscount?id=${d.discountId}" title="Xoá">
-                                                        <i class="fas fa-trash"></i>
+                                                    <a class="action-btn ${d.active ? 'toggle-btn-active' : 'toggle-btn-inactive'}"
+                                                       href="deactivatediscount?id=${d.discountId}"
+                                                       title="${d.active ? 'Tạm ngưng mã' : 'Kích hoạt mã'}">
+                                                        <i class="fas ${d.active ? 'fa-check-square' : 'fa-ban'} fa-fw"></i>
                                                     </a>
                                                 </div>
                                             </td>

@@ -20,7 +20,7 @@ public class DiscountDAO extends DBContext {
 
     public DiscountDAO() {
         try {
-            conn = getConnection(); 
+            conn = getConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,8 +104,8 @@ public class DiscountDAO extends DBContext {
     }
 
     public boolean addDiscount(Discount d) {
-        String sql = "INSERT INTO DiscountTB (discountCode, discountType, discountValue, description, validFrom, validTo, " +
-                     "minOrderAmount, maxUsage, usageCount, isActive, maxValue) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO DiscountTB (discountCode, discountType, discountValue, description, validFrom, validTo, "
+                + "minOrderAmount, maxUsage, usageCount, isActive, maxValue) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -134,8 +134,18 @@ public class DiscountDAO extends DBContext {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return false;
     }
@@ -171,9 +181,24 @@ public class DiscountDAO extends DBContext {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return list;
     }
@@ -209,16 +234,31 @@ public class DiscountDAO extends DBContext {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return null;
     }
 
     public boolean updateDiscount(Discount d) {
-        String sql = "UPDATE DiscountTB SET discountCode=?, discountType=?, discountValue=?, description=?, validFrom=?, validTo=?, " +
-                     "minOrderAmount=?, maxUsage=?, usageCount=?, isActive=?, maxValue=? WHERE discountId=?";
+        String sql = "UPDATE DiscountTB SET discountCode=?, discountType=?, discountValue=?, description=?, validFrom=?, validTo=?, "
+                + "minOrderAmount=?, maxUsage=?, usageCount=?, isActive=?, maxValue=? WHERE discountId=?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -248,29 +288,165 @@ public class DiscountDAO extends DBContext {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return false;
     }
 
-    public boolean deleteDiscount(int id) {
-        String sql = "DELETE FROM DiscountTB WHERE discountId = ?";
+    public boolean updateStatus(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             conn = getConnection();
-            ps = conn.prepareStatement(sql);
+            String selectSql = "SELECT isActive FROM DiscountTB WHERE discountId = ?";
+            ps = conn.prepareStatement(selectSql);
             ps.setInt(1, id);
-            return ps.executeUpdate() == 1;
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                boolean currentStatus = rs.getBoolean("isActive");
+                String updateSql = "UPDATE DiscountTB SET isActive = ? WHERE discountId = ?";
+                ps.close();
+                ps = conn.prepareStatement(updateSql);
+                ps.setBoolean(1, !currentStatus);
+                ps.setInt(2, id);
+                return ps.executeUpdate() == 1;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return false;
     }
-}    
 
+    public List<Discount> getFilteredDiscounts(String searchKey, String type, String status, String fromDate, String toDate, String sortBy) {
+        List<Discount> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
+        String sql = "SELECT * FROM DiscountTB WHERE 1=1 ";
+
+        if (searchKey != null && !searchKey.trim().isEmpty()) {
+            sql += "AND (discountCode LIKE ? OR description LIKE ?) ";
+        }
+        if (type != null && !type.isEmpty()) {
+            sql += "AND discountType = ? ";
+        }
+        if (status != null && !status.isEmpty()) {
+            sql += "AND isActive = ? ";
+        }
+        if (fromDate != null && !fromDate.isEmpty()) {
+            sql += "AND validTo >= ? ";
+        }
+        if (toDate != null && !toDate.isEmpty()) {
+            sql += "AND validTo <= ? ";
+        }
+
+        if ("validTo_asc".equals(sortBy)) {
+            sql += "ORDER BY validTo ASC ";
+        } else if ("validTo_desc".equals(sortBy)) {
+            sql += "ORDER BY validTo DESC ";
+        } else if ("usageCount_asc".equals(sortBy)) {
+            sql += "ORDER BY usageCount ASC ";
+        } else if ("usageCount_desc".equals(sortBy)) {
+            sql += "ORDER BY usageCount DESC ";
+        }
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+
+            int i = 1;
+
+            if (searchKey != null && !searchKey.trim().isEmpty()) {
+                ps.setString(i++, "%" + searchKey.trim() + "%");
+                ps.setString(i++, "%" + searchKey.trim() + "%");
+            }
+            if (type != null && !type.isEmpty()) {
+                ps.setString(i++, type);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setBoolean(i++, "1".equals(status));
+            }
+            if (fromDate != null && !fromDate.isEmpty()) {
+                ps.setDate(i++, java.sql.Date.valueOf(fromDate));
+            }
+            if (toDate != null && !toDate.isEmpty()) {
+                ps.setDate(i++, java.sql.Date.valueOf(toDate));
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Discount d = new Discount();
+                d.setDiscountId(rs.getInt("discountId"));
+                d.setDiscountCode(rs.getString("discountCode"));
+                d.setDiscountType(rs.getString("discountType"));
+                d.setDiscountValue(rs.getDouble("discountValue"));
+                d.setDescription(rs.getString("description"));
+                d.setValidFrom(rs.getDate("validFrom"));
+                d.setValidTo(rs.getDate("validTo"));
+                d.setMinOrderAmount(rs.getDouble("minOrderAmount"));
+                d.setMaxUsage(rs.getObject("maxUsage") != null ? rs.getInt("maxUsage") : null);
+                d.setUsageCount(rs.getInt("usageCount"));
+                d.setActive(rs.getBoolean("isActive"));
+                d.setMaxValue(rs.getObject("maxValue") != null ? rs.getDouble("maxValue") : null);
+                list.add(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return list;
+    }
+
+}

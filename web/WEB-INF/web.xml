@@ -144,6 +144,7 @@
         <servlet-class>Controllers.AddDiscountServlet</servlet-class>
     </servlet>
     <servlet>
+<<<<<<< HEAD
         <servlet-name>ManagerUpdateBreedStatusServlet</servlet-name>
         <servlet-class>Controllers.ManagerUpdateBreedStatusServlet</servlet-class>
     </servlet>
@@ -153,6 +154,19 @@
         <servlet-class>Controllers.Customer_Order_Servlet</servlet-class>
     </servlet>
 
+=======
+        <servlet-name>DeleteDiscountServlet</servlet-name>
+        <servlet-class>Controllers.DeleteDiscountServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeactivateDiscountServlet</servlet-name>
+        <servlet-class>Controllers.DeactivateDiscountServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateDiscountServlet</servlet-name>
+        <servlet-class>Controllers.UpdateDiscountServlet</servlet-class>
+    </servlet>
+>>>>>>> nam
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -294,12 +308,25 @@
         <url-pattern>/adddiscount</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+<<<<<<< HEAD
         <servlet-name>ManagerUpdateBreedStatusServlet</servlet-name>
         <url-pattern>/updatebreedstatus</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Customer_Order_Servlet</servlet-name>
         <url-pattern>/orders</url-pattern>
+=======
+        <servlet-name>DeleteDiscountServlet</servlet-name>
+        <url-pattern>/deletediscount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeactivateDiscountServlet</servlet-name>
+        <url-pattern>/deactivatediscount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateDiscountServlet</servlet-name>
+        <url-pattern>/updatediscount</url-pattern>
+>>>>>>> nam
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>
