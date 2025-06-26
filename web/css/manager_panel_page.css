@@ -827,3 +827,69 @@ textarea.form-control {
 .autocomplete-items div:hover {
     background-color: #e9ecef; /* A nice hover effect */
 }
+
+.image-management-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.image-preview-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+
+.image-preview-item img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+}
+
+
+.btn-image-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 10px;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-image-action i {
+    margin-right: 6px;
+}
+
+/* Specific style for the "Change" button */
+.btn-image-action.btn-change {
+    color: #3498db; /* Blue */
+    border-right: 1px solid #eee; /* Separator line */
+}
+
+.btn-image-action.btn-change:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.image-actions {
+    display: flex;
+    justify-content: space-around;
+    background-color: #fff;
+    border-top: 1px solid #eee;
+}

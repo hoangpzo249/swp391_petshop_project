@@ -26,10 +26,15 @@ public class TestPet {
     public static void main(String[] args) {
 //        System.out.println(getPet(80).getBreedId());
 //        System.out.println(getOrder("1").toString());
-List<Breed> list=getBreed();
-        for (Breed breed : list) {
-            System.out.println(breed.getBreedName()+", "+breed.displayBreedImage());
-        }
+//        List<Breed> list = getBreed();
+//        for (Breed breed : list) {
+//            System.out.println(breed.getBreedName() + ", " + breed.displayBreedImage());
+//        }
+System.out.println(getBreedById(1).toString());
+    }
+    
+    private static Breed getBreedById(int id) {
+        return _daobreed.getBreedById(id);
     }
 
     private static Pet getPet(int id) {
@@ -39,7 +44,7 @@ List<Breed> list=getBreed();
     private static Order getOrder(String id) {
         return _daoorder.getOrderById(id);
     }
-    
+
     private static List<Breed> getBreed() {
         return _daobreed.get6BreedHot();
     }
