@@ -26,11 +26,21 @@
                         <img src="images/logo_banner/logo2.png" alt=""/>
                     </a>
                 </div>
-                <form action="">
+                <form action="listshoppet" method="get">
+
+                    <input type="hidden" name="species" value="${param.species}" />
+                    <input type="hidden" name="breed" value="${param.breed}" />
+                    <input type="hidden" name="gender" value="${param.gender}" />
+                    <input type="hidden" name="color" value="${param.color}" />
+                    <input type="hidden" name="origin" value="${param.origin}" />
+                    <input type="hidden" name="dobFrom" value="${param.dobFrom}" />
+                    <input type="hidden" name="dobTo" value="${param.dobTo}" />
+                    <input type="hidden" name="priceRange" value="${param.priceRange}" />
+                    <input type="hidden" name="vaccination" value="${param.vaccination}" />
                     <div class="search">
-                        <input type="text" name="search" value="" placeholder="Tìm kiếm thú cưng ..."/>
+                        <input type="text" name="search" value="${param.search}" placeholder="Tìm kiếm thú cưng ..." />
                         <button type="submit" class="search-button">
-                            <img src="images/support button/search.png" width="512" height="512" alt="search" />
+                            <img src="images/support button/search.png" width="20" height="20" alt="search" />
                         </button>
                     </div>
                 </form>

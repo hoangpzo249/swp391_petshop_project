@@ -107,8 +107,6 @@
                                         </c:when>
                                         <c:otherwise></c:otherwise>
                                     </c:choose>
-
-
                                     <a href="logout" class="dropdown-item logout">
                                         <i class="fas fa-sign-out-alt"></i> 
                                         <span>Đăng xuất</span>

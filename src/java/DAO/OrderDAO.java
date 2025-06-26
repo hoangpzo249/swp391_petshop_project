@@ -171,8 +171,7 @@ public class OrderDAO {
         StringBuilder whereClause = buildFilterWhereClause(searchKey, status, startDate, endDate, params);
         String finalSql = baseSql + whereClause.toString();
 
-        try (Connection conn = db.getConnection();
-             PreparedStatement ps = conn.prepareStatement(finalSql)) {
+        try (Connection conn = db.getConnection(); PreparedStatement ps = conn.prepareStatement(finalSql)) {
 
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
@@ -208,8 +207,7 @@ public class OrderDAO {
         params.add(offset);
         params.add(pageSize);
 
-        try (Connection conn = db.getConnection();
-             PreparedStatement ps = conn.prepareStatement(finalSql)) {
+        try (Connection conn = db.getConnection(); PreparedStatement ps = conn.prepareStatement(finalSql)) {
 
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
@@ -424,7 +422,7 @@ public class OrderDAO {
             ps = conn.prepareStatement(sql);
             ps.setInt(1, orderId);
             ps.setInt(2, petId);
-            ps.setDouble(3,petDAO.getPetById(petId).getPetPrice());
+            ps.setDouble(3, petDAO.getPetById(petId).getPetPrice());
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -441,6 +439,47 @@ public class OrderDAO {
             }
         } catch (Exception e) {
         }
+    }
 
+    public List<Order> getOrderCus(int accId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        DBContext db = new DBContext();
+        List<Order> list = new ArrayList<>();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT o.orderId, o.accId, o.orderDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
+                    + "o.customerAddress, o.shipperId, o.paymentMethod, o.paymentstatus, SUM(c.priceAtOrder) AS totalPrice, o.rejectionReason,p.petname\n"
+                    + "from ordertb o\n"
+                    + "join OrderContentTB c on o.orderid=c.orderid\n"
+                    + "join pettb p on c.petid=p.petid\n"
+                    + "where accId =?\n"
+                    + "group by o.orderId, o.accId, o.orderDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
+                    + "o.customerAddress, o.shipperId, o.paymentMethod,o.paymentstatus, o.rejectionReason,p.petname";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, accId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Order o = new Order();
+                o.setOrderId(rs.getInt("orderId"));
+                o.setAccId(rs.getInt("accId"));
+                o.setOrderDate(rs.getTimestamp("orderDate"));
+                o.setOrderStatus(rs.getString("orderStatus"));
+                o.setCustomerName(rs.getString("customerName"));
+                o.setCustomerEmail(rs.getString("customerEmail"));
+                o.setCustomerPhone(rs.getString("customerPhone"));
+                o.setCustomerAddress(rs.getString("customerAddress"));
+                o.setShipperId(rs.getInt("shipperId"));
+                o.setPaymentMethod(rs.getString("paymentMethod"));
+                o.setPaymentStatus(rs.getString("paymentStatus"));
+                o.setRejectionReason(rs.getString("rejectionReason"));
+                o.setTotalPrice(rs.getDouble("totalPrice"));
+                o.setPetName(rs.getString("petName"));
+                list.add(o);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 }

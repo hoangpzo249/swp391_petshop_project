@@ -26,6 +26,7 @@ public class Order {
     private double totalPrice;
     private String rejectionReason;
     private Integer discountId;
+    private String petName;
 
     public Order() {
     }
@@ -159,6 +160,15 @@ public class Order {
         this.discountId = discountId;
     }
 
+    public String getPetName() {
+        return petName;
+    }
+
+    public void setPetName(String petName) {
+        this.petName = petName;
+    }
+
+    
     @Override
     public String toString() {
         return "Order{" + "orderId=" + orderId + ", accId=" + accId + ", orderDate=" + orderDate + ", orderStatus=" + orderStatus + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", customerPhone=" + customerPhone + ", customerAddress=" + customerAddress + ", shipperId=" + shipperId + ", paymentMethod=" + paymentMethod + ", paymentStatus=" + paymentStatus + ", totalPrice=" + totalPrice + ", rejectionReason=" + rejectionReason + ", discountId=" + discountId + '}';

@@ -2,23 +2,13 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-<<<<<<< HEAD
         <group>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/test/Test/Main.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/src/java/Controllers/AddDiscountServlet.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/web/WEB-INF/web.xml</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/src/java/Controllers/purchaseServlet.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/web/manager_breed_view.jsp</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/src/java/Controllers/DiscountCheckServlet.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/web/seller_pet_add.jsp</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/src/java/Models/Discount.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/src/java/DAO/DiscountDAO.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/src/java/Controllers/DiscountManagerServlet.java</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/web/manager_discount_view.jsp</file>
-            <file>file:/C:/Users/AD/OneDrive/Desktop/swp391_petshop_project/web/home_page.jsp</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/DAO/OrderDAO.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/admin_accList_page.jsp</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/css/customer_order_page.css</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/customer_order_page.jsp</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Controllers/Customer_Order_Servlet.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Models/Order.java</file>
         </group>
-=======
-        <group/>
->>>>>>> hoang
     </open-files>
 </project-private>
