@@ -354,7 +354,12 @@ public class OrderDAO {
             ps.setString(4, order.getCustomerEmail());
             ps.setString(5, order.getCustomerPhone());
             ps.setString(6, order.getCustomerAddress());
-            ps.setInt(7, order.getShipperId());
+            if (order.getShipperId() != null) {
+                ps.setInt(7, order.getShipperId());
+            } else {
+                ps.setNull(7, java.sql.Types.INTEGER);
+            }
+
             ps.setString(8, order.getPaymentMethod());
             ps.setString(9, order.getPaymentStatus());
 
@@ -407,7 +412,7 @@ public class OrderDAO {
             ps = conn.prepareStatement(sql);
             ps.setInt(1, orderId);
             ps.setInt(2, petId);
-            ps.setDouble(3,petDAO.getPetById(petId).getPetPrice());
+            ps.setDouble(3, petDAO.getPetById(petId).getPetPrice());
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

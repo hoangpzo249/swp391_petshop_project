@@ -88,10 +88,10 @@ public class purchaseServlet extends HttpServlet {
             order.setCustomerEmail(email);
             order.setCustomerPhone(phone);
             order.setCustomerAddress(address);
-            order.setShipperId(1);
-            order.setPaymentMethod("cod");
-            order.setPaymentStatus("Chưa thanh toán");
-            order.setOrderStatus("Chờ xác nhận");
+            order.setShipperId(null);
+            order.setPaymentMethod("Cash on Delivery");
+            order.setPaymentStatus("Unpaid");
+            order.setOrderStatus("Pending");
 
             if (discountCode != null && !discountCode.trim().isEmpty()) {
                 DiscountDAO ddao = new DiscountDAO();

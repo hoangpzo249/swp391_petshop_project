@@ -243,8 +243,16 @@
 
 
                     <div class="status">
-                        <span>Tình trạng: Còn hàng</span>
+                        <c:choose>
+                            <c:when test="${pet.petAvailability == 1}">
+                                <span>Tình trạng: Còn hàng</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span>Tình trạng: Hết hàng</span>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
+
 
 
                     <div class="shipping-info">

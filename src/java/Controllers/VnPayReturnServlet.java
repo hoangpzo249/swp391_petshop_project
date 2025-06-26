@@ -70,10 +70,10 @@ public class VnPayReturnServlet extends HttpServlet {
                 order.setCustomerEmail(email);
                 order.setCustomerPhone(phone);
                 order.setCustomerAddress(address);
-                order.setShipperId(1);
-                order.setPaymentMethod("bank");
-                order.setPaymentStatus("Đã thanh toán");
-                order.setOrderStatus("Chờ hoàn tiền");
+                order.setShipperId(null);
+                order.setPaymentMethod("Credit Card");
+                order.setPaymentStatus("Paid");
+                order.setOrderStatus("Rejected");
 
                 if (discountCode != null && !discountCode.trim().isEmpty()) {
                     DiscountDAO ddao = new DiscountDAO();
@@ -85,7 +85,7 @@ public class VnPayReturnServlet extends HttpServlet {
                 }
 
                 int orderId = dao.addOrder(order);
-               
+
                 if (selectedPetIds != null) {
                     for (int i = 0; i < selectedPetIds.length; i++) {
                         int petId = Integer.parseInt(selectedPetIds[i]);
@@ -93,62 +93,64 @@ public class VnPayReturnServlet extends HttpServlet {
                     }
                 }
 
-                    EmailSender.sendRejectOrderRefund(email, orderId, totalPrice);
-                    session.removeAttribute("discountAmount");
-                    session.removeAttribute("discountCode");
+                EmailSender.sendRejectOrderRefund(email, orderId, totalPrice);
+                session.removeAttribute("discountAmount");
+                session.removeAttribute("discountCode");
 
-                    req.setAttribute("unavailableMessage", "Đơn hàng đã được ghi nhận nhưng thú cưng không còn khả dụng. Chúng tôi sẽ hoàn tiền trong thời gian sớm nhất.");
-                    req.getRequestDispatcher("pet_unavailable.jsp").forward(req, resp);
-                    return;
-                } else {
-                    OrderDAO dao = new OrderDAO();
-                    Order order = new Order();
-                    order.setAccId(accId);
-                    order.setCustomerName(name);
-                    order.setCustomerEmail(email);
-                    order.setCustomerPhone(phone);
-                    order.setCustomerAddress(address);
-                    order.setShipperId(1);
-                    order.setPaymentMethod("bank");
-                    order.setPaymentStatus("Đã thanh toán");
-                    order.setOrderStatus("Chờ xác nhận");
-
-                    if (discountCode != null && !discountCode.trim().isEmpty()) {
-                        DiscountDAO ddao = new DiscountDAO();
-                        Integer discountId = ddao.getActiveDiscountByCode(discountCode).getDiscountId();
-                        order.setDiscountId(discountId);
-                        ddao.increaseUsageCount(discountCode);
-                    } else {
-                        order.setDiscountId(null);
-                    }
-                    int orderId = dao.addOrder(order);
-
-                    List<Pet> orderedPets = new ArrayList<>();
-                    if (selectedPetIds != null) {
-                        for (int i = 0; i < selectedPetIds.length; i++) {
-                            int petId = Integer.parseInt(selectedPetIds[i]);
-                            dao.addOrderContent(orderId, petId);
-                            new PetDAO().updatePetAvailability(petId, 0);
-                            Pet p = petDao.getPetById(petId);
-                            orderedPets.add(p);
-                        }
-                    }
-                    EmailSender.sendConfirmOrderCustomer(email, orderId, orderedPets, discountAmount, totalPrice);
-                    session.removeAttribute("discountAmount");
-                    session.removeAttribute("discountCode");
-                    req.setAttribute("status", "success");
-                    req.setAttribute("orderId", orderId);
-                    req.setAttribute("method", "Chuyển khoản ngân hàng");
-                    Date now = new Date();
-                    String orderDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(now);
-                    req.setAttribute("date", orderDate);
-                    req.getRequestDispatcher("confirm.jsp").forward(req, resp);
-
-                }
+                req.setAttribute("unavailableMessage", "Đơn hàng đã được ghi nhận nhưng thú cưng không còn khả dụng. Chúng tôi sẽ hoàn tiền trong thời gian sớm nhất.");
+                req.getRequestDispatcher("pet_unavailable.jsp").forward(req, resp);
+                return;
             } else {
-                // Không thành công
-                req.setAttribute("status", "fail");
+                OrderDAO dao = new OrderDAO();
+                Order order = new Order();
+                order.setAccId(accId);
+                order.setCustomerName(name);
+                order.setCustomerEmail(email);
+                order.setCustomerPhone(phone);
+                order.setCustomerAddress(address);
+                order.setShipperId(null);
+                order.setPaymentMethod("Credit Card");
+                order.setPaymentStatus("Paid");
+                order.setOrderStatus("Pending");
+
+                if (discountCode != null && !discountCode.trim().isEmpty()) {
+                    DiscountDAO ddao = new DiscountDAO();
+                    Integer discountId = ddao.getActiveDiscountByCode(discountCode).getDiscountId();
+                    order.setDiscountId(discountId);
+                    ddao.increaseUsageCount(discountCode);
+                } else {
+                    order.setDiscountId(null);
+                }
+                int orderId = dao.addOrder(order);
+
+                List<Pet> orderedPets = new ArrayList<>();
+                if (selectedPetIds != null) {
+                    for (int i = 0; i < selectedPetIds.length; i++) {
+                        int petId = Integer.parseInt(selectedPetIds[i]);
+                        dao.addOrderContent(orderId, petId);
+                        new PetDAO().updatePetAvailability(petId, 0);
+                        Pet p = petDao.getPetById(petId);
+                        orderedPets.add(p);
+                    }
+                }
+                EmailSender.sendConfirmOrderCustomer(email, orderId, orderedPets, discountAmount, totalPrice);
+                session.removeAttribute("discountAmount");
+                session.removeAttribute("discountCode");
+                req.setAttribute("status", "success");
+                req.setAttribute("orderId", orderId);
+                req.setAttribute("method", "Chuyển khoản ngân hàng");
+                Date now = new Date();
+                String orderDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(now);
+                req.setAttribute("date", orderDate);
+                req.getRequestDispatcher("confirm.jsp").forward(req, resp);
+
             }
+        } else {
+            // Không thành công
+            req.setAttribute("status", "fail");
+            resp.sendRedirect("homepage");
 
         }
+
     }
+}
