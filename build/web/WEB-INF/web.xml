@@ -144,9 +144,15 @@
         <servlet-class>Controllers.AddDiscountServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>ManagerUpdateBreedStatusServlet</servlet-name>
+        <servlet-class>Controllers.ManagerUpdateBreedStatusServlet</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>Customer_Order_Servlet</servlet-name>
         <servlet-class>Controllers.Customer_Order_Servlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -288,10 +294,18 @@
         <url-pattern>/adddiscount</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>ManagerUpdateBreedStatusServlet</servlet-name>
+        <url-pattern>/updatebreedstatus</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>Customer_Order_Servlet</servlet-name>
         <url-pattern>/orders</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>
     </session-config>
+    <context-param>
+        <param-name>UPLOAD_BASE_DIR</param-name>
+        <param-value>uploads</param-value>
+    </context-param>
 </web-app>
