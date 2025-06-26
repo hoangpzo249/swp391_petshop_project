@@ -1392,7 +1392,6 @@ textarea.form-control {
 .hidden-file-input {
     display: none;
 }
-<<<<<<< HEAD
 /* === UNIFIED PAGINATION STYLES (Use for all pages) === */
 
 .pagination-container {
@@ -1467,9 +1466,11 @@ textarea.form-control {
     border-color: #eee;
 }
 
+/* === AUTOCOMPLETE STYLES === */
 .autocomplete-container {
     position: relative;
 }
+
 .autocomplete-items {
     position: absolute;
     border: 1px solid #ced4da; /* Match your form-control border */
@@ -1482,18 +1483,22 @@ textarea.form-control {
     overflow-y: auto;
     background-color: #ffffff;
 }
+
 .autocomplete-items div {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #dee2e6; /* Lighter border for items */
 }
+
 .autocomplete-items div:last-child {
     border-bottom: none;
 }
+
 .autocomplete-items div:hover {
     background-color: #e9ecef; /* A nice hover effect */
-=======
+}
 
+/* === TOAST NOTIFICATION STYLES === */
 #toast {
     background-color: rgba(46, 204, 113, 0.1);
     color: #2ecc71;
@@ -1551,5 +1556,4 @@ textarea.form-control {
         opacity: 0;
         transform: translateY(-20px);
     }
->>>>>>> nam
 }

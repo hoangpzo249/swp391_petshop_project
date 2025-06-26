@@ -1,6 +1,6 @@
 <%-- 
-    Document   : manager_breed_add
-    Created on : 23 Jun 2025, 08:18:07
+    Document   : manager_breed_edit
+    Created on : 26 Jun 2025, 20:31:09
     Author     : Lenovo
 --%>
 
@@ -12,7 +12,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Thêm Giống Mới - PETFPT Shop</title>
+        <title>Quản Lý Giống Thú Cưng - PETFPT Shop</title>
         <link href="css/manager_panel_page.css" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -71,11 +71,11 @@
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
-                        <a href="displayallbreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
+                        <a href="displayallbreed" class="sidebar-link active"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
-                        <a href="addbreed" class="sidebar-link active"><i class="fas fa-plus-circle"></i> Thêm giống mới</a>
+                        <a href="addbreed" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm giống mới</a>
                         <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
                         <a href="profile?action=change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
                         <a href="logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
@@ -86,11 +86,11 @@
             <%-- Main Body --%>
             <div class="manager-content">
                 <div class="page-header">
-                    <h1 class="page-title"><i class="fas fa-plus-circle"></i> Thêm Giống Mới</h1>
+                    <h1 class="page-title"><i class="fas fa-plus-circle"></i>Chỉnh sửa giống thú cưng #${breed.breedId}</h1>
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
                         <li><a href="displayallbreed">Quản lý giống thú cưng</a></li>
-                        <li>Thêm mới</li>
+                        <li>Chỉnh sửa</li>
                     </ul>
                 </div>
 
@@ -101,7 +101,7 @@
                                 <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="breedName">Tên giống</label>
-                                    <input type="text" id="breedName" name="breedName" class="form-control" placeholder="Ví dụ: Golden Retriever" value="${breedName}" required>
+                                    <input type="text" id="breedName" name="breedName" class="form-control" placeholder="Ví dụ: Golden Retriever" value="${breed.breedName}" required>
                                 </div>
 
                                 <%-- Right Column --%>
@@ -110,7 +110,7 @@
                                     <div class="autocomplete-container">
                                         <input type="text" id="speciesInput" class="form-control" placeholder="Ví dụ: Chó" value="${breedSpecies}" autocomplete="off" required>
 
-                                        <input type="hidden" id="breedSpecies" name="breedSpecies" value="${breedSpecies}">
+                                        <input type="hidden" id="breedSpecies" name="breedSpecies" value="${breed.breedSpecies}">
 
                                         <div id="species-autocomplete-list" class="autocomplete-items"></div>
                                     </div>
@@ -121,23 +121,35 @@
                                     <div class="form-group">
                                         <label for="breedStatus">Trạng thái</label>
                                         <select id="breedStatus" name="breedStatus" class="form-control">
-                                            <option value="1" ${breedStatus != '0' ? 'selected' : ''}>Hiển thị</option>
-                                            <option value="0" ${breedStatus == '0' ? 'selected' : ''}>Ẩn</option>
+                                            <option value="1" ${breed.breedStatus != '0' ? 'selected' : ''}>Hiển thị</option>
+                                            <option value="0" ${breed.breedStatus == '0' ? 'selected' : ''}>Ẩn</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="form-full-width">
                                     <div class="form-group">
-                                        <label for="breedImage">Hình ảnh giống</label>
-                                        <input type="file" id="breedImage" name="breedImage" class="form-control" accept="image/*" >
+                                        <label>Quản lý hình ảnh thú cưng (giới hạn 1 ảnh)</label>
+                                        <div class="image-management-grid" id="image-grid-container">
+                                            <div class="image-preview-item" id="image-item-${image.imageId}">
+                                                <img src="${breed.displayBreedImage()}" alt="Breed Image" id="image-preview-${breed.breedId}">
+                                                <div class="image-actions">
+                                                    <input type="file" class="hidden-file-input" id="file-input-${breed.breedId}" 
+                                                           onchange="handleImageChange(event, ${breed.breedId})" accept="image/*">
+                                                    <button type="button" class="btn-image-action btn-change" 
+                                                            onclick="document.getElementById('file-input-${breed.breedId}').click();">
+                                                        <i class="fas fa-sync-alt"></i> Đổi ảnh
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer">
-                            <a href="displayallbreed" class="btn btn-outline">Hủy bỏ</a>
-                            <button type="submit" class="btn btn-primary">Thêm giống</button>
+                            <a href="displaybreed" class="btn btn-outline">Hủy bỏ</a>
+                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                         </div>
                     </form>
                 </div>

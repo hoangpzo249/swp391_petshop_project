@@ -1,6 +1,6 @@
-projectKey=Test
+projectKey=1921net
 serverUrl=http://localhost:9000
 serverVersion=25.5.0.107428
-dashboardUrl=http://localhost:9000/dashboard?id=Test
-ceTaskId=df42d7c8-6ec0-4373-94c3-e6df2c976ef8
-ceTaskUrl=http://localhost:9000/api/ce/task?id=df42d7c8-6ec0-4373-94c3-e6df2c976ef8
+dashboardUrl=http://localhost:9000/dashboard?id=1921net
+ceTaskId=77a557fe-0095-4f49-b294-785fac0e2222
+ceTaskUrl=http://localhost:9000/api/ce/task?id=77a557fe-0095-4f49-b294-785fac0e2222

@@ -29,6 +29,19 @@
         <servlet-name>DiscountCheckServlet</servlet-name>
         <servlet-class>Controllers.DiscountCheckServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>purchaseServlet</servlet-name>
+        <servlet-class>Controllers.purchaseServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VnPayReturnServlet</servlet-name>
+        <servlet-class>Controllers.VnPayReturnServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Customer_Order_Servlet</servlet-name>
+        <servlet-class>Controllers.Customer_Order_Servlet</servlet-class>
+    </servlet>
+
     <!-- Order & Admin related servlets -->
     <servlet>
         <servlet-name>DisplayOrderServlet</servlet-name>
@@ -71,6 +84,16 @@
         <servlet-class>Controllers.Admin_Panel_Servlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>RemoveThumbnailServlet</servlet-name>
+        <servlet-class>Controllers.RemoveThumbnailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SellerComingSoonServlet</servlet-name>
+        <servlet-class>Controllers.SellerComingSoonServlet</servlet-class>
+    </servlet>
+
+    <!-- Account related servlets -->
+    <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>Controllers.LoginServlet</servlet-class>
     </servlet>
@@ -100,17 +123,10 @@
     </servlet>
     <servlet>
         <servlet-name>Profile_Avatar_Servlet</servlet-name>
-        <servlet-class>Controller.Profile_Avatar_Servlet</servlet-class>
+        <servlet-class>Controllers.Profile_Avatar_Servlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>Homepage_Servlet</servlet-name>
-        <servlet-class>Controllers.Homepage_Servlet</servlet-class>
-    </servlet>
-    <!-- Servlet Mappings -->
-    <servlet>
-        <servlet-name>SellerComingSoonServlet</servlet-name>
-        <servlet-class>Controllers.SellerComingSoonServlet</servlet-class>
-    </servlet>
+
+    <!-- Manager related servlets -->
     <servlet>
         <servlet-name>ManagerDisplayBreedServlet</servlet-name>
         <servlet-class>Controllers.ManagerDisplayBreedServlet</servlet-class>
@@ -120,20 +136,12 @@
         <servlet-class>Controllers.ManagerAddBreedServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>BlogServlet</servlet-name>
-        <servlet-class>Controllers.BlogServlet</servlet-class>
+        <servlet-name>ManagerUpdateBreedStatusServlet</servlet-name>
+        <servlet-class>Controllers.ManagerUpdateBreedStatusServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>RemoveThumbnailServlet</servlet-name>
-        <servlet-class>Controllers.RemoveThumbnailServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>purchaseServlet</servlet-name>
-        <servlet-class>Controllers.purchaseServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>VnPayReturnServlet</servlet-name>
-        <servlet-class>Controllers.VnPayReturnServlet</servlet-class>
+        <servlet-name>ManagerUpdateBreedServlet</servlet-name>
+        <servlet-class>Controllers.ManagerUpdateBreedServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DiscountManagerServlet</servlet-name>
@@ -144,17 +152,6 @@
         <servlet-class>Controllers.AddDiscountServlet</servlet-class>
     </servlet>
     <servlet>
-<<<<<<< HEAD
-        <servlet-name>ManagerUpdateBreedStatusServlet</servlet-name>
-        <servlet-class>Controllers.ManagerUpdateBreedStatusServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>Customer_Order_Servlet</servlet-name>
-        <servlet-class>Controllers.Customer_Order_Servlet</servlet-class>
-    </servlet>
-
-=======
         <servlet-name>DeleteDiscountServlet</servlet-name>
         <servlet-class>Controllers.DeleteDiscountServlet</servlet-class>
     </servlet>
@@ -166,7 +163,18 @@
         <servlet-name>UpdateDiscountServlet</servlet-name>
         <servlet-class>Controllers.UpdateDiscountServlet</servlet-class>
     </servlet>
->>>>>>> nam
+
+    <!-- Other Servlets -->
+    <servlet>
+        <servlet-name>Homepage_Servlet</servlet-name>
+        <servlet-class>Controllers.Homepage_Servlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BlogServlet</servlet-name>
+        <servlet-class>Controllers.BlogServlet</servlet-class>
+    </servlet>
+
+    <!-- Servlet Mappings -->
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -308,14 +316,14 @@
         <url-pattern>/adddiscount</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-<<<<<<< HEAD
         <servlet-name>ManagerUpdateBreedStatusServlet</servlet-name>
         <url-pattern>/updatebreedstatus</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Customer_Order_Servlet</servlet-name>
         <url-pattern>/orders</url-pattern>
-=======
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>DeleteDiscountServlet</servlet-name>
         <url-pattern>/deletediscount</url-pattern>
     </servlet-mapping>
@@ -326,8 +334,12 @@
     <servlet-mapping>
         <servlet-name>UpdateDiscountServlet</servlet-name>
         <url-pattern>/updatediscount</url-pattern>
->>>>>>> nam
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManagerUpdateBreedServlet</servlet-name>
+        <url-pattern>/updatebreeed</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>15</session-timeout>
     </session-config>
