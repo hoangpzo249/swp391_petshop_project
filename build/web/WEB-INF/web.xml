@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee                              https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
-    <!-- Shop & Cart related servlets -->
     <servlet>
         <servlet-name>ListShopPetServlet</servlet-name>
         <servlet-class>Controllers.ListShopPetServlet</servlet-class>
@@ -41,8 +40,6 @@
         <servlet-name>Customer_Order_Servlet</servlet-name>
         <servlet-class>Controllers.Customer_Order_Servlet</servlet-class>
     </servlet>
-
-    <!-- Order & Admin related servlets -->
     <servlet>
         <servlet-name>DisplayOrderServlet</servlet-name>
         <servlet-class>Controllers.SellerDisplayOrderServlet</servlet-class>
@@ -91,8 +88,6 @@
         <servlet-name>SellerComingSoonServlet</servlet-name>
         <servlet-class>Controllers.SellerComingSoonServlet</servlet-class>
     </servlet>
-
-    <!-- Account related servlets -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>Controllers.LoginServlet</servlet-class>
@@ -125,8 +120,6 @@
         <servlet-name>Profile_Avatar_Servlet</servlet-name>
         <servlet-class>Controllers.Profile_Avatar_Servlet</servlet-class>
     </servlet>
-
-    <!-- Manager related servlets -->
     <servlet>
         <servlet-name>ManagerDisplayBreedServlet</servlet-name>
         <servlet-class>Controllers.ManagerDisplayBreedServlet</servlet-class>
@@ -163,8 +156,10 @@
         <servlet-name>UpdateDiscountServlet</servlet-name>
         <servlet-class>Controllers.UpdateDiscountServlet</servlet-class>
     </servlet>
-
-    <!-- Other Servlets -->
+    <servlet>
+        <servlet-name>ManagerBreedImageChangeServlet</servlet-name>
+        <servlet-class>Controllers.ManagerBreedImageChangeServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>Homepage_Servlet</servlet-name>
         <servlet-class>Controllers.Homepage_Servlet</servlet-class>
@@ -173,8 +168,6 @@
         <servlet-name>BlogServlet</servlet-name>
         <servlet-class>Controllers.BlogServlet</servlet-class>
     </servlet>
-
-    <!-- Servlet Mappings -->
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -337,9 +330,12 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ManagerUpdateBreedServlet</servlet-name>
-        <url-pattern>/updatebreeed</url-pattern>
+        <url-pattern>/updatebreed</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>ManagerBreedImageChangeServlet</servlet-name>
+        <url-pattern>/breedimagechange</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>
     </session-config>

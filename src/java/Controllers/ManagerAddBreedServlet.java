@@ -137,7 +137,7 @@ public class ManagerAddBreedServlet extends HttpServlet {
         Breed newBreed = new Breed();
         newBreed.setBreedName(breedName);
         newBreed.setBreedSpecies(breedSpecies);
-        newBreed.setBreedStatus(breedStatus.equals("1"));
+        newBreed.setBreedStatus(Integer.parseInt(breedStatus));
         newBreed.setBreedImage(imageData);
         if (_dao.addBreed(newBreed)) {
             session.setAttribute("successMess", "Đã tạo giống thú cưng thành công.");
@@ -152,13 +152,13 @@ public class ManagerAddBreedServlet extends HttpServlet {
     public static String validateBreedInput(String name, String species, String status) {
         StringBuilder stringCheck = new StringBuilder();
 
-        if (name.isEmpty() || name.length() > 100 || !name.matches("^[\\p{L}\\s\\-']+$")) {
+        if (name==null || name.isEmpty() || name.length() > 100 || !name.matches("^[\\p{L}\\s\\-']+$")) {
             stringCheck.append("tên, ");
         }
-        if (species.isEmpty() || species.length() > 50 || !species.matches("^[\\p{L}\\s\\-']+$")) {
+        if (species==null || species.isEmpty() || species.length() > 50 || !species.matches("^[\\p{L}\\s\\-']+$")) {
             stringCheck.append("loài, ");
         }
-        if (status.isEmpty() || !status.equals("1") && !status.equals("0")) {
+        if (status==null || status.isEmpty() || !status.equals("1") && !status.equals("0")) {
             stringCheck.append("trạng thái, ");
         }
 

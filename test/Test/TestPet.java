@@ -4,6 +4,7 @@
  */
 package Test;
 
+import DAO.AccountDAO;
 import DAO.BreedDAO;
 import DAO.OrderDAO;
 import DAO.PetDAO;
@@ -22,17 +23,20 @@ public class TestPet {
     static PetDAO dao = new PetDAO();
     static OrderDAO _daoorder = new OrderDAO();
     static BreedDAO _daobreed = new BreedDAO();
+    static AccountDAO _daoacc = new AccountDAO();
 
     public static void main(String[] args) {
-//        System.out.println(getPet(80).getBreedId());
-//        System.out.println(getOrder("1").toString());
-//        List<Breed> list = getBreed();
-//        for (Breed breed : list) {
-//            System.out.println(breed.getBreedName() + ", " + breed.displayBreedImage());
-//        }
-System.out.println(getBreedById(1).toString());
+        shipperAcc(13);
     }
-    
+
+    private static void shipperAcc(int id) {
+        _daoacc.shipperAccount(id);
+    }
+
+    private static boolean updateBreed(Breed breed) {
+        return _daobreed.updateBreedById(breed);
+    }
+
     private static Breed getBreedById(int id) {
         return _daobreed.getBreedById(id);
     }

@@ -200,7 +200,7 @@
                                         <div class="detail-value" style="font-weight: bold; color: #f26f21; font-size: 1.1rem;">
                                             <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                         </div>
-                                        
+
                                         <div class="detail-label">Mã giảm giá</div>
                                         <div class="detail-value">
                                             <c:out value="${empty order.discountId or order.discountId == 0 ? 'Không sử dụng' : order.discountId}"/>
@@ -219,6 +219,46 @@
                         </c:if>
                     </div>
                 </div>
+
+                <c:if test="${order.orderStatus == 'Confirmed' && (empty order.shipperId or order.shipperId == 0)}">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-user-tag"></i> Chỉ định Shipper
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <c:choose>
+                                <c:when test="${not empty shipperList}">
+                                    <form action="assignshipper" method="POST" class="shipper-assignment-form">
+                                        <input type="hidden" name="orderId" value="${order.orderId}">
+                                        <div class="form-group">
+                                            <label for="shipperSelect">Chọn shipper để giao hàng:</label>
+                                            <select name="shipperId" id="shipperSelect" class="form-control" required>
+                                                <option value="" disabled selected>-- Vui lòng chọn shipper --</option>
+                                                <c:forEach items="${shipperList}" var="shipper">
+                                                    <option value="${shipper.accId}">
+                                                        ${shipper.accFname} ${shipper.accLname} (@${shipper.accUsername})
+                                                    </option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-check-circle"></i> Chỉ định & Giao hàng
+                                            </button>
+                                        </div>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <p class="text-warning">
+                                        <i class="fas fa-exclamation-triangle"></i> Hiện không có shipper nào sẵn sàng.
+                                    </p>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+                </c:if>
 
                 <!-- Pets in Order Card -->
                 <div class="card">
