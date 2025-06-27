@@ -73,28 +73,28 @@ public class CartDAO {
             if (rs.next() && rs.getInt("total") > 0) {
                 return true;
             }
-            
+
         } catch (Exception ex) {
-            
-        } 
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (Exception e) {
+
+        }
+        try {
+            if (rs != null) {
+                rs.close();
             }
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
+        } catch (Exception e) {
+        }
+        try {
+            if (ps != null) {
+                ps.close();
             }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-            
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+
         }
         return false;
     }
@@ -141,26 +141,26 @@ public class CartDAO {
             ps.executeUpdate();
 
         } catch (Exception ex) {
-            
-        } 
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (Exception e) {
+
+        }
+        try {
+            if (rs != null) {
+                rs.close();
             }
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
+        } catch (Exception e) {
+        }
+        try {
+            if (ps != null) {
+                ps.close();
             }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-            
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+
         }
     }
 
@@ -186,30 +186,30 @@ public class CartDAO {
             }
 
         } catch (Exception ex) {
-            
-        } 
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (Exception e) {
+
+        }
+        try {
+            if (rs != null) {
+                rs.close();
             }
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
+        } catch (Exception e) {
+        }
+        try {
+            if (ps != null) {
+                ps.close();
             }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-            
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+
         }
     }
 
-    public List<Cart> getCart(int accId) {
+   public List<Cart> getCart(int accId) {
         List<Cart> list = new ArrayList<>();
         DBContext db = new DBContext();
         ResultSet rs = null;
@@ -253,4 +253,5 @@ public class CartDAO {
         
         return list;
     }
+
 }
