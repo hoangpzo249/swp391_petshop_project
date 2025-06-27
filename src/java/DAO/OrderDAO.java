@@ -244,9 +244,7 @@ public class OrderDAO {
                     + "GROUP BY \n"
                     + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
-
                     + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus,  o.rejectionReason,o.discountId;";
-
 
             ps = conn.prepareStatement(sql);
             ps.setString(1, id);
@@ -371,7 +369,11 @@ public class OrderDAO {
             ps.setString(4, order.getCustomerEmail());
             ps.setString(5, order.getCustomerPhone());
             ps.setString(6, order.getCustomerAddress());
-            ps.setInt(7, order.getShipperId());
+            if (order.getShipperId() != null) {
+                ps.setInt(7, order.getShipperId());
+            } else {
+                ps.setNull(7, java.sql.Types.INTEGER);
+            }
             ps.setString(8, order.getPaymentMethod());
             ps.setString(9, order.getPaymentStatus());
 
@@ -444,9 +446,6 @@ public class OrderDAO {
 
     }
 
-        
-
-
     public List<Order> getOrderCus(int accId) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -488,6 +487,5 @@ public class OrderDAO {
         }
         return list;
     }
-
 
 }
