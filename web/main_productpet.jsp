@@ -174,7 +174,7 @@
                         <button class="thumbnail-nav"><i class="fas fa-chevron-left"></i></button>
 
                         <div class="thumbnails">
-                            <c:forEach var="img" items="${pet.getImages()}">
+                            <c:forEach var="img" items="${pet.images}">
 
                                 <div class="thumbnail-box">
                                     <img src="${pet.getImage(img)}" alt="Thumbnail" class="thumbnail-img" onclick="showImage('${pet.getImage(img)}')" />

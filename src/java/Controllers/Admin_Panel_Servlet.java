@@ -1051,7 +1051,10 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 acc.setAccDob(dateStaff);
                 acc.setAccAddress(addressStaff);
 
-                accDao.registerAccStaffByAdmin(acc);
+                int newId = accDao.registerAccStaffByAdmin(acc);
+                if (acc.getAccRole().equals("Shipper")) {
+                    accDao.shipperAccount(newId);
+                }
                 try {
                     EmailSender.createAccStaffSuccess(emailStaff, fNameStaff + " " + lNameStaff, emailStaff, passStaff, roleStaff);
                     session.setAttribute("successMess", "Tạo tài khoản cho nhân viên thành công");

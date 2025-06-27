@@ -69,7 +69,7 @@
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
-                        <a href="displayallbreed" class="sidebar-link active"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
+                        <a href="displaybreed" class="sidebar-link active"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
@@ -158,7 +158,7 @@
                                             <td>${b.totalPurchases}</td>
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${b.breedStatus}">
+                                                    <c:when test="${b.getBreedStatus()==1}">
                                                         <span class="status-badge status-active">Hiển thị</span>
                                                     </c:when>
                                                     <c:otherwise>
@@ -172,7 +172,7 @@
                                                         <i class="fas fa-pencil-alt"></i>
                                                     </a>
                                                     <c:choose>
-                                                        <c:when test="${b.breedStatus}">
+                                                        <c:when test="${b.getBreedStatus()==1}">
                                                             <a class="action-btn block-btn" title="Ẩn giống" 
                                                                href="updatebreedstatus?breedId=${b.breedId}&status=0">
                                                                 <i class="fas fa-toggle-off"></i>

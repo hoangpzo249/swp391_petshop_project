@@ -151,6 +151,10 @@
         <servlet-name>ManagerUpdateBreedServlet</servlet-name>
         <servlet-class>Controllers.ManagerUpdateBreedServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ManagerBreedImageChangeServlet</servlet-name>
+        <servlet-class>Controllers.ManagerBreedImageChangeServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -297,7 +301,11 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ManagerUpdateBreedServlet</servlet-name>
-        <url-pattern>/updatebreeed</url-pattern>
+        <url-pattern>/updatebreed</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManagerBreedImageChangeServlet</servlet-name>
+        <url-pattern>/breedimagechange</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>
