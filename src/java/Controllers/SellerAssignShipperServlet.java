@@ -4,13 +4,8 @@
  */
 package Controllers;
 
+import DAO.AccountDAO;
 import DAO.OrderDAO;
-import DAO.PetDAO;
-import DAO.ShipperDAO;
-import Models.Account;
-import Models.Order;
-import Models.Pet;
-import Models.Shipper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -18,13 +13,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  *
  * @author Lenovo
  */
-public class SellerDisplayOrderDetailServlet extends HttpServlet {
+public class SellerAssignShipperServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +37,10 @@ public class SellerDisplayOrderDetailServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DisplayOrderDetail</title>");
+            out.println("<title>Servlet SellerAssignShipperServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DisplayOrderDetail at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SellerAssignShipperServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,35 +58,7 @@ public class SellerDisplayOrderDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        HttpSession session=request.getSession();
-        Account account=(Account) session.getAttribute("userAccount");
-        if (account==null || !account.getAccRole().equals("Seller")) {
-            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
-            response.sendRedirect("homepage");
-            return;
-        }
-
-        String id = request.getParameter("orderId");
-
-        OrderDAO _daoorder = new OrderDAO();
-        PetDAO _daopet = new PetDAO();
-        ShipperDAO _daoshipper=new ShipperDAO();
-
-        Order order = _daoorder.getOrderById(id);
-
-        List<Pet> petList = _daopet.getPetForOrderDetail(Integer.parseInt(id));
-        
-        List<Shipper> shipperList=_daoshipper.getAvailableShippers();
-        
-        request.setAttribute("petList", petList);
-        
-        request.setAttribute("shipperList", shipperList);
-
-        request.setAttribute("order", order);
-
-        request.getRequestDispatcher("seller_order_detail.jsp")
-                .forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -106,7 +72,22 @@ public class SellerDisplayOrderDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        OrderDAO _orderdao = new OrderDAO();
+        AccountDAO _accountdao = new AccountDAO();
+        HttpSession session = request.getSession();
+
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        int shipperId = Integer.parseInt(request.getParameter("shipperId"));
+        String referer = request.getHeader("referer");
+        String fullname = _accountdao.getUserFullnameById(shipperId);
+
+        if (_orderdao.assignShipper(orderId, shipperId)) {
+            session.setAttribute("successMess", "Đã giao đơn hàng #" + orderId + " cho " + fullname);
+            response.sendRedirect(referer == null ? referer : "displayorder");
+        } else {
+            session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình giao đơn hàng");
+            response.sendRedirect(referer == null ? referer : "displayorder");
+        }
     }
 
     /**

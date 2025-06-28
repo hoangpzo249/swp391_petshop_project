@@ -861,11 +861,30 @@ public class AccountDAO extends DBContext {
             con = db.getConnection();
             String sql = "INSERT INTO ShipperTB (shipperId, shipperAvailability)\n"
                     + "VALUES (?, 'Offline');";
-            ps=con.prepareStatement(sql);
+            ps = con.prepareStatement(sql);
             ps.setInt(1, newId);
             ps.executeUpdate();
         } catch (Exception ex) {
             Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public String getUserFullnameById(int accId) {
+        DBContext db = new DBContext();
+        String fullname = "";
+        try {
+            con = db.getConnection();
+            String sql = "SELECT accLname, accFname FROM AccountTB WHERE accId=?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, accId);
+            rs=ps.executeQuery();
+            while (rs.next()) {
+                fullname = rs.getString("accLname") + " " + rs.getString("accFname");
+            }
+            return fullname;
+        } catch (Exception ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

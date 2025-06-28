@@ -4,30 +4,44 @@
  */
 package Models;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author Lenovo
  */
 public class Shipper {
-    private int shipperId;
+
+    private Account shipperAccount;
     private String shipperAvailability;
     private String shipperNote;
+    private Timestamp lastDeliveryTime;
+    private int currentShippingOrders;
 
     public Shipper() {
     }
 
-    public Shipper(int shipperId, String shipperAvailability, String shipperNote) {
-        this.shipperId = shipperId;
+    public Shipper(Account shipperAccount, String shipperAvailability, String shipperNote) {
+        this.shipperAccount = shipperAccount;
         this.shipperAvailability = shipperAvailability;
         this.shipperNote = shipperNote;
     }
 
-    public int getShipperId() {
-        return shipperId;
+    public Shipper(Account shipperAccount, String shipperNote, Timestamp lastDeliveryTime, int currentShippingOrders) {
+        this.shipperAccount = shipperAccount;
+        this.shipperNote = shipperNote;
+        this.lastDeliveryTime = lastDeliveryTime;
+        this.currentShippingOrders = currentShippingOrders;
+    }
+    
+    
+
+    public Account getShipperAccount() {
+        return shipperAccount;
     }
 
-    public void setShipperId(int shipperId) {
-        this.shipperId = shipperId;
+    public void setShipperAccount(Account shipperAccount) {
+        this.shipperAccount = shipperAccount;
     }
 
     public String getShipperAvailability() {
@@ -46,10 +60,27 @@ public class Shipper {
         this.shipperNote = shipperNote;
     }
 
-    @Override
-    public String toString() {
-        return "Shipper{" + "shipperId=" + shipperId + ", shipperAvailability=" + shipperAvailability + ", shipperNote=" + shipperNote + '}';
+    public Timestamp getLastDeliveryTime() {
+        return lastDeliveryTime;
+    }
+
+    public void setLastDeliveryTime(Timestamp lastDeliveryTime) {
+        this.lastDeliveryTime = lastDeliveryTime;
+    }
+
+    public int getCurrentShippingOrders() {
+        return currentShippingOrders;
+    }
+
+    public void setCurrentShippingOrders(int currentShippingOrders) {
+        this.currentShippingOrders = currentShippingOrders;
     }
     
     
+
+    @Override
+    public String toString() {
+        return "Shipper{" + "shipperAvailability=" + shipperAvailability + ", shipperNote=" + shipperNote + '}';
+    }
+
 }

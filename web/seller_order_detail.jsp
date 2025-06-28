@@ -232,17 +232,20 @@
                                 <c:when test="${not empty shipperList}">
                                     <form action="assignshipper" method="POST" class="shipper-assignment-form">
                                         <input type="hidden" name="orderId" value="${order.orderId}">
+
                                         <div class="form-group">
                                             <label for="shipperSelect">Chọn shipper để giao hàng:</label>
                                             <select name="shipperId" id="shipperSelect" class="form-control" required>
                                                 <option value="" disabled selected>-- Vui lòng chọn shipper --</option>
                                                 <c:forEach items="${shipperList}" var="shipper">
-                                                    <option value="${shipper.accId}">
-                                                        ${shipper.accFname} ${shipper.accLname} (@${shipper.accUsername})
+                                                    <option value="${shipper.shipperAccount.accId}">
+                                                        ${shipper.shipperAccount.accLname} ${shipper.shipperAccount.accFname} (@${shipper.shipperAccount.accUsername}) 
+                                                        - Đang giao: ${shipper.currentShippingOrders} đơn
                                                     </option>
                                                 </c:forEach>
                                             </select>
                                         </div>
+
                                         <div class="form-actions">
                                             <button type="submit" class="btn btn-primary">
                                                 <i class="fas fa-check-circle"></i> Chỉ định & Giao hàng
@@ -251,12 +254,14 @@
                                     </form>
                                 </c:when>
                                 <c:otherwise>
-                                    <p class="text-warning">
-                                        <i class="fas fa-exclamation-triangle"></i> Hiện không có shipper nào sẵn sàng.
-                                    </p>
+                                    <div class="notice notice-warning">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span>Hiện không có shipper nào sẵn sàng.</span>
+                                    </div>
                                 </c:otherwise>
                             </c:choose>
                         </div>
+
                     </div>
                 </c:if>
 
