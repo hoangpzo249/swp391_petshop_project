@@ -95,7 +95,7 @@
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="orders" class="dropdown-item">
+                                    <a href="orders?status=pending" class="dropdown-item">
                                         <i class="fas fa-shopping-bag"></i> 
                                         <span>Đơn hàng đã mua</span>
                                     </a>
