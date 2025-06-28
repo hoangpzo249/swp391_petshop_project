@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 public class Shipper {
 
     private Account shipperAccount;
+    private int shipperId;
     private String shipperAvailability;
     private String shipperNote;
     private Timestamp lastDeliveryTime;
@@ -32,6 +33,14 @@ public class Shipper {
         this.shipperNote = shipperNote;
         this.lastDeliveryTime = lastDeliveryTime;
         this.currentShippingOrders = currentShippingOrders;
+    }
+
+    public int getShipperId() {
+        return shipperId;
+    }
+
+    public void setShipperId(int shipperId) {
+        this.shipperId = shipperId;
     }
     
     
@@ -75,8 +84,6 @@ public class Shipper {
     public void setCurrentShippingOrders(int currentShippingOrders) {
         this.currentShippingOrders = currentShippingOrders;
     }
-    
-    
 
     @Override
     public String toString() {

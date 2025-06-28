@@ -79,6 +79,9 @@
                         <a href="comingsoon" class="sidebar-link">
                             <i class="fas fa-tachometer-alt"></i> Tổng quan
                         </a>
+                        <a href="sellerdisplayinvoice" class="sidebar-link">
+                            <i class="fas fa-file-invoice"></i> Danh sách hóa đơn
+                        </a>
                     </div>
 
                     <div class="menu-category">
@@ -140,13 +143,6 @@
                                 <button type="button" class="btn btn-danger" 
                                         onclick="showConfirmationModal(event, 'từ chối đơn hàng này', 'updateorderstatus?action=reject&status=Rejected&orderId=${order.orderId}', 'btn-danger', true)"> <%-- ADD ", true" HERE --%>
                                     <i class="fas fa-times"></i> Từ chối
-                                </button>
-                            </c:if>
-
-                            <c:if test="${order.orderStatus == 'Confirmed'}">
-                                <button type="button" class="btn btn-primary" 
-                                        onclick="showConfirmationModal(event, 'giao hàng cho đơn này', 'updateorderstatus?action=shipping&status=Shipping&orderId=${order.orderId}', 'btn-primary')">
-                                    <i class="fas fa-truck"></i> Giao hàng
                                 </button>
                             </c:if>
 
@@ -220,11 +216,54 @@
                     </div>
                 </div>
 
-                <c:if test="${order.orderStatus == 'Confirmed' && (empty order.shipperId or order.shipperId == 0)}">
+                <c:if test="${order.shipperId != null and order.shipperId != 0}">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-user-tag"></i> Chỉ định Shipper
+                                <i class="fas fa-user-check"></i> Thông tin Shipper đã chỉ định
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <c:if test="${not empty assignedShipper}">
+                                <div class="shipper-details-block">
+                                    <div class="shipper-avatar-container">
+                                        <img src="${assignedShipper.shipperAccount.displayAccImage()}" alt="Shipper Avatar" class="shipper-avatar"/>
+                                    </div>
+                                    <div class="shipper-text-details">
+                                        <div class="details-grid">
+                                            <div class="detail-label">Tên Shipper</div>
+                                            <div class="detail-value">${assignedShipper.shipperAccount.accFname} ${assignedShipper.shipperAccount.accLname}</div>
+                                            <div class="detail-label">Username</div>
+                                            <div class="detail-value">@${assignedShipper.shipperAccount.accUsername}</div>
+                                            <div class="detail-label">Số điện thoại</div>
+                                            <div class="detail-value">
+                                                <c:out value="${not empty assignedShipper.shipperAccount.accPhoneNumber ? assignedShipper.shipperAccount.accPhoneNumber : 'Chưa cập nhật'}" />
+                                            </div>
+                                            <div class="detail-label">Ghi chú</div>
+                                            <div class="detail-value">
+                                                <c:out value="${empty assignedShipper.shipperNote ? 'Không có' : assignedShipper.shipperNote}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <c:if test="${order.orderStatus == 'Pending Shipper'}">
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-danger"
+                                                onclick="showConfirmationModal(event, 'huỷ chỉ định shipper cho đơn hàng này', 'assignshipper?orderId=${order.orderId}&action=unassign', 'btn-danger')">
+                                            <i class="fas fa-user-minus"></i> Huỷ chỉ định & Chọn lại
+                                        </button>
+                                    </div>
+                                </c:if>
+                            </c:if>
+                        </div>
+                    </div>
+                </c:if>
+
+                <c:if test="${order.orderStatus == 'Confirmed' and (order.shipperId == null or order.shipperId == 0)}">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-user-plus"></i> Chỉ định Shipper
                             </h3>
                         </div>
                         <div class="card-body">
@@ -232,23 +271,24 @@
                                 <c:when test="${not empty shipperList}">
                                     <form action="assignshipper" method="POST" class="shipper-assignment-form">
                                         <input type="hidden" name="orderId" value="${order.orderId}">
-
                                         <div class="form-group">
                                             <label for="shipperSelect">Chọn shipper để giao hàng:</label>
-                                            <select name="shipperId" id="shipperSelect" class="form-control" required>
-                                                <option value="" disabled selected>-- Vui lòng chọn shipper --</option>
-                                                <c:forEach items="${shipperList}" var="shipper">
-                                                    <option value="${shipper.shipperAccount.accId}">
-                                                        ${shipper.shipperAccount.accLname} ${shipper.shipperAccount.accFname} (@${shipper.shipperAccount.accUsername}) 
-                                                        - Đang giao: ${shipper.currentShippingOrders} đơn
-                                                    </option>
-                                                </c:forEach>
-                                            </select>
+                                            <div class="select-wrapper">
+                                                <select name="shipperId" id="shipperSelect" class="form-control" required>
+                                                    <option value="" disabled selected>-- Vui lòng chọn shipper --</option>
+                                                    <c:forEach items="${shipperList}" var="shipper">
+                                                        <option value="${shipper.shipperAccount.accId}"
+                                                                title="Ghi chú: ${not empty shipper.shipperNote ? shipper.shipperNote : 'Không có'}">
+                                                            ${shipper.shipperAccount.accLname} ${shipper.shipperAccount.accFname} (@${shipper.shipperAccount.accUsername})
+                                                            - Đang giao: ${shipper.currentShippingOrders} đơn
+                                                        </option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
                                         </div>
-
                                         <div class="form-actions">
                                             <button type="submit" class="btn btn-primary">
-                                                <i class="fas fa-check-circle"></i> Chỉ định & Giao hàng
+                                                <i class="fas fa-check-circle"></i> Chỉ định
                                             </button>
                                         </div>
                                     </form>
@@ -261,9 +301,9 @@
                                 </c:otherwise>
                             </c:choose>
                         </div>
-
                     </div>
                 </c:if>
+
 
                 <!-- Pets in Order Card -->
                 <div class="card">

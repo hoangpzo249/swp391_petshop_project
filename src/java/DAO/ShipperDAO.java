@@ -78,4 +78,63 @@ public class ShipperDAO {
         }
         return null;
     }
+
+    public Shipper getShipperById(int id) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT \n"
+                    + "    a.accId,\n"
+                    + "    a.accUsername,\n"
+                    + "    a.accEmail,\n"
+                    + "    a.accFname,\n"
+                    + "    a.accLname,\n"
+                    + "    a.accDob,\n"
+                    + "    a.accAddress,\n"
+                    + "    a.accPhoneNumber,\n"
+                    + "    a.accRole,\n"
+                    + "    a.accDescription,\n"
+                    + "    a.accCreateDate,\n"
+                    + "    a.accImage,\n"
+                    + "    a.accStatus,\n"
+                    + "    s.shipperAvailability,\n"
+                    + "    s.shipperNote\n"
+                    + "FROM \n"
+                    + "    AccountTB a\n"
+                    + "JOIN \n"
+                    + "    ShipperTB s ON a.accId = s.shipperId\n"
+                    + "WHERE \n"
+                    + "    a.accRole = 'Shipper' AND a.accId=?;";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Account account = new Account();
+                account.setAccId(rs.getInt("accId"));
+                account.setAccUsername(rs.getString("accUsername"));
+                account.setAccEmail(rs.getString("accEmail"));
+                account.setAccFname(rs.getString("accFname"));
+                account.setAccLname(rs.getString("accLname"));
+                account.setAccDob(rs.getDate("accDob"));
+                account.setAccPhoneNumber(rs.getString("accPhoneNumber"));
+                account.setAccRole(rs.getString("accRole"));
+                account.setAccDescription(rs.getString("accDescription"));
+                account.setAccCreateDate(rs.getString("accCreateDate"));
+                account.setAccImage(rs.getBytes("accImage"));
+                account.setAccStatus(rs.getString("accStatus"));
+
+                Shipper shipper = new Shipper();
+
+                shipper.setShipperId(rs.getInt("accId"));
+                shipper.setShipperAvailability(rs.getString("shipperAvailability"));
+                shipper.setShipperNote(rs.getString("shipperNote"));
+                shipper.setShipperAccount(account);
+
+                return shipper;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ShipperDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

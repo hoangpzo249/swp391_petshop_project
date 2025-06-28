@@ -231,7 +231,7 @@ public class OrderDAO {
         return list;
     }
 
-    public Order getOrderById(String id) {
+    public Order getOrderById(int id) {
         DBContext db = new DBContext();
         Connection conn = null;
         PreparedStatement ps = null;
@@ -254,7 +254,7 @@ public class OrderDAO {
                     + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus, o.rejectionReason, o.discountId;";
 
             ps = conn.prepareStatement(sql);
-            ps.setString(1, id);
+            ps.setInt(1, id);
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -496,10 +496,25 @@ public class OrderDAO {
         DBContext db = new DBContext();
         try {
             conn = db.getConnection();
-            String sql = "UPDATE OrderTB SET shipperId = ?, orderStatus = 'Pending Acceptance' WHERE orderId = ?;";
+            String sql = "UPDATE OrderTB SET shipperId = ?, orderStatus = 'Pending Shipper' WHERE orderId = ?;";
             ps=conn.prepareStatement(sql);
             ps.setInt(1, shipperId);
             ps.setInt(2, orderId);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean unassignShipper(int orderId) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "UPDATE OrderTB SET shipperId = NULL, orderStatus = 'Confirmed' WHERE orderId = ?;";
+            ps=conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
             ps.executeUpdate();
             return true;
         } catch (Exception ex) {

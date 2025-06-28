@@ -58,7 +58,25 @@ public class SellerAssignShipperServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        OrderDAO _orderdao = new OrderDAO();
+        AccountDAO _accountdao = new AccountDAO();
+        HttpSession session = request.getSession();
+        String action = request.getParameter("action");
+
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        String referer = request.getHeader("referer");
+        if (!_orderdao.getOrderById(orderId).getOrderStatus().equals("Pending Shipper")) {
+            session.setAttribute("errMess", "Không thể hủy chỉ định Shipper cho đơn hàng này.");
+            response.sendRedirect(referer != null ? referer : "displayorder");
+        } else {
+            if (_orderdao.unassignShipper(orderId)) {
+                session.setAttribute("successMess", "Đã hủy chỉ định Shipper cho đơn hàng #" + orderId);
+                response.sendRedirect(referer != null ? referer : "displayorder");
+            } else {
+                session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình hủy chỉ định đơn hàng");
+                response.sendRedirect(referer != null ? referer : "displayorder");
+            }
+        }
     }
 
     /**
@@ -75,18 +93,29 @@ public class SellerAssignShipperServlet extends HttpServlet {
         OrderDAO _orderdao = new OrderDAO();
         AccountDAO _accountdao = new AccountDAO();
         HttpSession session = request.getSession();
+        String action = request.getParameter("action");
 
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         int shipperId = Integer.parseInt(request.getParameter("shipperId"));
         String referer = request.getHeader("referer");
         String fullname = _accountdao.getUserFullnameById(shipperId);
 
-        if (_orderdao.assignShipper(orderId, shipperId)) {
-            session.setAttribute("successMess", "Đã giao đơn hàng #" + orderId + " cho " + fullname);
-            response.sendRedirect(referer == null ? referer : "displayorder");
+        if (action != null && action.equals("unassign")) {
+            if (_orderdao.unassignShipper(orderId)) {
+                session.setAttribute("successMess", "Đã hủy chỉ định Shipper cho đơn hàng #" + orderId);
+                response.sendRedirect(referer != null ? referer : "displayorder");
+            } else {
+                session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình hủy chỉ định đơn hàng");
+                response.sendRedirect(referer != null ? referer : "displayorder");
+            }
         } else {
-            session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình giao đơn hàng");
-            response.sendRedirect(referer == null ? referer : "displayorder");
+            if (_orderdao.assignShipper(orderId, shipperId)) {
+                session.setAttribute("successMess", "Đã chỉ định đơn hàng #" + orderId + " cho " + fullname);
+                response.sendRedirect(referer != null ? referer : "displayorder");
+            } else {
+                session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình chỉ định đơn hàng");
+                response.sendRedirect(referer != null ? referer : "displayorder");
+            }
         }
     }
 

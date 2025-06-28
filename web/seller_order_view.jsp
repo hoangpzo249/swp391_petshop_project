@@ -79,6 +79,9 @@
                         <a href="comingsoon" class="sidebar-link">
                             <i class="fas fa-tachometer-alt"></i> Tổng quan
                         </a>
+                        <a href="sellerdisplayinvoice" class="sidebar-link">
+                            <i class="fas fa-file-invoice"></i> Danh sách hóa đơn
+                        </a>
                     </div>
 
                     <div class="menu-category">
@@ -147,6 +150,7 @@
                                         <option value="" ${empty param.status ? 'selected' : ''}>Tất cả trạng thái</option>
                                         <option value="Pending" ${param.status == 'Pending' ? 'selected' : ''}>Chờ xử lý</option>
                                         <option value="Confirmed" ${param.status == 'Confirmed' ? 'selected' : ''}>Đã xác nhận</option>
+                                        <option value="Pending Shipper" ${param.status == 'Pending Shipper' ? 'selected' : ''}>Chờ Shipper xác nhận</option>
                                         <option value="Rejected" ${param.status == 'Rejected' ? 'selected' : ''}>Bị từ chối</option>
                                         <option value="Shipping" ${param.status == 'Shipping' ? 'selected' : ''}>Đang giao</option>
                                         <option value="Delivered" ${param.status == 'Delivered' ? 'selected' : ''}>Đã giao</option>
@@ -223,9 +227,8 @@
                                                         </a>
                                                     </c:if>
                                                     <c:if test="${order.orderStatus == 'Confirmed'}">
-                                                        <a class="action-btn shipping-btn" title="Giao hàng"
-                                                           href="#"
-                                                           onclick="showConfirmationModal(event, 'giao hàng cho đơn này', 'updateorderstatus?action=shipping&status=Shipping&orderId=${order.orderId}', 'btn-primary')">
+                                                        <a class="action-btn shipping-btn" title="Chỉ định Shipper"
+                                                           href="displayorderdetail?orderId=${order.orderId}">
                                                             <i class="fas fa-truck"></i>
                                                         </a>
                                                     </c:if>
