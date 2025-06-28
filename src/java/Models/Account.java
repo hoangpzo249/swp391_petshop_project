@@ -12,6 +12,7 @@ import java.util.Date;
  * @author HuyHoang
  */
 public class Account {
+
     private int accId;
     private String accUsername;
     private String accEmail;
@@ -20,7 +21,7 @@ public class Account {
     private String accLname;
 
     private Date accDob;
-    
+
     private String accAddress;
     private String accPhoneNumber;
     private String accRole;
@@ -166,9 +167,12 @@ public class Account {
     public String toString() {
         return "Account{" + "accId=" + accId + ", accUsername=" + accUsername + ", accEmail=" + accEmail + ", accPassword=" + accPassword + ", accFname=" + accFname + ", accLname=" + accLname + ", accDob=" + accDob + ", accAddress=" + accAddress + ", accPhoneNumber=" + accPhoneNumber + ", accRole=" + accRole + ", accDescription=" + accDescription + ", accCreateDate=" + accCreateDate + ", accImage=" + accImage + ", accStatus=" + accStatus + '}';
     }
-    
+
     public String displayAccImage() {
-        String base64Image = Base64.getEncoder().encodeToString(accImage);
-        return "data:image/jpeg;base64," + base64Image;
+        if (accImage != null) {
+            String base64Image = Base64.getEncoder().encodeToString(accImage);
+            return "data:image/jpeg;base64," + base64Image;
+        }
+        return "images/support button/account.png";
     }
 }

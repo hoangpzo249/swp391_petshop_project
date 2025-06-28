@@ -8,10 +8,11 @@ import DAO.AccountDAO;
 import DAO.BreedDAO;
 import DAO.OrderDAO;
 import DAO.PetDAO;
+import DAO.ShipperDAO;
 import Models.Breed;
 import Models.Order;
 import Models.Pet;
-import java.util.ArrayList;
+import Models.Shipper;
 import java.util.List;
 
 /**
@@ -24,9 +25,16 @@ public class TestPet {
     static OrderDAO _daoorder = new OrderDAO();
     static BreedDAO _daobreed = new BreedDAO();
     static AccountDAO _daoacc = new AccountDAO();
+    static ShipperDAO _daoshipper = new ShipperDAO();
 
     public static void main(String[] args) {
-        shipperAcc(13);
+        for (Shipper shipper : getShippers()) {
+            System.out.println(shipper.getShipperAccount().getAccId() + " - " + shipper.getShipperAccount().getAccFname() + " - " + shipper.getShipperAccount().getAccLname() + " - " + shipper.getShipperNote() + " - " + shipper.getLastDeliveryTime() + " - " + shipper.getCurrentShippingOrders());
+        }
+    }
+
+    private static List<Shipper> getShippers() {
+        return _daoshipper.getAvailableShippers();
     }
 
     private static void shipperAcc(int id) {

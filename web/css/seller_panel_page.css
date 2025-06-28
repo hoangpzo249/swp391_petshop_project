@@ -942,7 +942,7 @@ textarea.form-control {
 }
 
 .status-badge.status-pending {
-    background-color: rgba(243, 156, 18, 0.15); /* Orange/Yellow */
+    background-color: rgba(243, 156, 18, 0.15);
     color: #f39c12;
 }
 
@@ -974,7 +974,7 @@ textarea.form-control {
 }
 .status-badge.status-payment-unpaid,
 .status-badge.status-payment-pending {
-    background-color: rgba(231, 76, 60, 0.15); /* Red */
+    background-color: rgba(231, 76, 60, 0.15);
     color: #e74c3c;
 }
 
@@ -1556,4 +1556,39 @@ textarea.form-control {
         opacity: 0;
         transform: translateY(-20px);
     }
+}
+
+.shipper-details-block {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.shipper-avatar-container {
+    flex-shrink: 0;
+}
+
+.shipper-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f26f21;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.shipper-text-details {
+    flex-grow: 1;
+}
+
+.shipper-text-details .details-grid {
+    gap: 15px;
+}
+
+.shipper-text-details .detail-label {
+    font-weight: 600;
 }

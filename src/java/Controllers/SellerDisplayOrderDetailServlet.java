@@ -6,9 +6,11 @@ package Controllers;
 
 import DAO.OrderDAO;
 import DAO.PetDAO;
+import DAO.ShipperDAO;
 import Models.Account;
 import Models.Order;
 import Models.Pet;
+import Models.Shipper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -62,27 +64,36 @@ public class SellerDisplayOrderDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        HttpSession session=request.getSession();
-        Account account=(Account) session.getAttribute("userAccount");
-        if (account==null || !account.getAccRole().equals("Seller")) {
+
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Seller")) {
             session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
             response.sendRedirect("homepage");
             return;
         }
 
-        String id = request.getParameter("orderId");
+        int id = Integer.parseInt(request.getParameter("orderId"));
 
         OrderDAO _daoorder = new OrderDAO();
         PetDAO _daopet = new PetDAO();
+        ShipperDAO _daoshipper = new ShipperDAO();
 
         Order order = _daoorder.getOrderById(id);
 
-        List<Pet> petList = _daopet.getPetForOrderDetail(Integer.parseInt(id));
+        List<Pet> petList = _daopet.getPetForOrderDetail(id);
+
         request.setAttribute("petList", petList);
 
-        request.setAttribute("order", order);
+        if (order.getShipperId() == null) {
+            List<Shipper> shipperList = _daoshipper.getAvailableShippers();
+            request.setAttribute("shipperList", shipperList);
+        } else {
+            Shipper assignedShipper = _daoshipper.getShipperById(order.getShipperId());
+            request.setAttribute("assignedShipper", assignedShipper);
+        }
 
+        request.setAttribute("order", order);
         request.getRequestDispatcher("seller_order_detail.jsp")
                 .forward(request, response);
     }

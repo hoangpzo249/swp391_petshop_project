@@ -168,6 +168,10 @@
         <servlet-name>BlogServlet</servlet-name>
         <servlet-class>Controllers.BlogServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SellerAssignShipperServlet</servlet-name>
+        <servlet-class>Controllers.SellerAssignShipperServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -335,6 +339,10 @@
     <servlet-mapping>
         <servlet-name>ManagerBreedImageChangeServlet</servlet-name>
         <url-pattern>/breedimagechange</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SellerAssignShipperServlet</servlet-name>
+        <url-pattern>/assignshipper</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>
