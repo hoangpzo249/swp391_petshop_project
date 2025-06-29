@@ -58,16 +58,23 @@
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
+<<<<<<< HEAD
                         <a href="displaybreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
+=======
+>>>>>>> nam
                         <a href="discountmanager" class="sidebar-link active"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
+<<<<<<< HEAD
                         <a href="addbreed" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm giống mới</a>
                         <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã mới</a>
                         <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
                         <a href="profile?action=change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
                         <a href="logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+=======
+                        <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã giảm giá mới</a>
+>>>>>>> nam
                     </div>
                 </div>
             </div>
@@ -204,8 +211,7 @@
                                                         <i class="fas fa-pencil-alt"></i>
                                                     </a>
                                                     <a class="action-btn ${d.active ? 'toggle-btn-active' : 'toggle-btn-inactive'}"
-                                                       href="deactivatediscount?id=${d.discountId}"
-                                                       title="${d.active ? 'Tạm ngưng mã' : 'Kích hoạt mã'}" >
+                                                       href="deactivatediscount?id=${d.discountId}" >
                                                         <i class="fas ${d.active ? 'fa-check-square' : 'fa-ban'} fa-fw"></i>
                                                     </a>
                                                     <a class="action-btn reset-btn " href="resetdiscountusage?id=${d.discountId}" style="background: red" >

@@ -424,20 +424,7 @@
                     <button onclick="closeTerms()">Đóng</button>
                 </div>
             </div>
-        </div>
-        <script>
-            window.addEventListener("DOMContentLoaded", function () {
-                const warning = document.querySelector('.warning-message');
-                if (warning) {
-                    setTimeout(() => {
-                        warning.style.opacity = '0';
-                        warning.style.transform = 'translateY(-10px)';
-                        setTimeout(() => warning.remove(), 500);
-                    }, 4000);
-                }
-            });
-        </script>
-
+        </div
         <script>
             function openTerms() {
                 document.getElementById("terms").style.display = "flex";

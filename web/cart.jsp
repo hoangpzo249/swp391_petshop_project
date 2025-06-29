@@ -17,7 +17,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <script src="js/cart_selection.js?v=22" type="text/javascript"></script>
-        <link href="css/cart.css?v=9" rel="stylesheet" type="text/css"/>
+        <link href="css/cart.css?v=10" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 
@@ -144,7 +144,7 @@
                 <ul class="menu">
                     <li><a href="homepage">Trang Chủ</a></li>
                     <li><a href="listshoppet">Thú Cưng</a></li>
-                    
+
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
                     <li><a href="menu_contact.jsp">Liên Hệ</a></li>
 
@@ -164,10 +164,16 @@
 
 
 
-
+                <th class="select-all-column">
+                    <label class="select-all-label">
+                        <input type="checkbox" id="select-all" class="select-all-checkbox" />
+                        <span>Chọn tất cả</span>
+                    </label>
+                </th> 
                 <table class="cart-table">
                     <thead>
                         <tr class="cart-header">
+
                             <th>Chọn</th> 
                             <th>Sản phẩm</th>
                             <th>Số lượng</th>
@@ -296,25 +302,12 @@
                     </div>
                 </div>
                 <div id="toast" class="toast-message"></div> 
-
-                <script>
-                    function showToast(message, type = "error") {
-                        const toast = document.getElementById('toast');
-                        toast.textContent = message;
-                        toast.className = `toast-message ${type} show`;
-
-                        setTimeout(() => {
-                            toast.classList.remove("show");
-                        }, 3500);
-                    }
-
-
-                    <c:if test="${not empty sessionScope.cartMessage}">
-                    showToast('${sessionScope.cartMessage}', 'error');
-                    </c:if>
-                </script>
                 <c:if test="${not empty sessionScope.cartMessage}">
-                    <c:remove var="cartMessage" scope="session"/>
+                    <div class="warning-message animate-shake">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        ${cartMessage}
+                    </div>
+                     <c:remove var="cartMessage" scope="session"/>
                 </c:if>
 
 

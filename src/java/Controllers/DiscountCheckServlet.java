@@ -82,9 +82,6 @@ public class DiscountCheckServlet extends HttpServlet {
         String agreedTerms = request.getParameter("agreedTerms");
         request.setAttribute("agreedTerms", agreedTerms);
         String paymentMethod = request.getParameter("payment-method");
-        if (paymentMethod == null) {
-            paymentMethod = "bank"; 
-        }
         request.setAttribute("paymentMethod", paymentMethod);
 
         if ("apply-discount".equals(action)) {
@@ -170,8 +167,19 @@ public class DiscountCheckServlet extends HttpServlet {
             request.setAttribute("email", request.getParameter("email"));
 
         } else if ("checkout".equals(action)) {
-            request.getRequestDispatcher("/purchase").forward(request, response);
+            HttpSession session = request.getSession();
+            session.setAttribute("guestName", request.getParameter("guestName"));
+            session.setAttribute("guestPhone", request.getParameter("guestPhone"));
+            session.setAttribute("guestAddress", request.getParameter("guestAddress"));
+            session.setAttribute("email", request.getParameter("email"));
+            session.setAttribute("paymentMethod", paymentMethod);
+            session.setAttribute("selectedPets", request.getParameterValues("selectedPets"));
+            session.setAttribute("discountAmount", request.getParameter("discountAmount"));
+            session.setAttribute("amount", request.getParameter("amount"));
+            session.setAttribute("discountCode", request.getParameter("discountCode"));
+            response.sendRedirect("purchase");
             return;
+
         }
 
         request.getRequestDispatcher("checkout.jsp").forward(request, response);

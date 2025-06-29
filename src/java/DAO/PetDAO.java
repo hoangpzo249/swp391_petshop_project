@@ -194,14 +194,14 @@ public class PetDAO {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        
+
         StringBuilder sqlBase = new StringBuilder("SELECT COUNT(p.petId) ");
         sqlBase.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus));
 
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sqlBase.toString());
-            
+
             int paramIndex = 1;
             if (searchKey != null && !searchKey.trim().isEmpty()) {
                 if (searchKey.matches("\\d+")) {
@@ -228,7 +228,7 @@ public class PetDAO {
             if (petStatus != null && !petStatus.isEmpty()) {
                 ps.setString(paramIndex++, petStatus);
             }
-            
+
             rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1);
@@ -237,9 +237,15 @@ public class PetDAO {
             ex.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -252,7 +258,7 @@ public class PetDAO {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        
+
         StringBuilder sql = new StringBuilder("SELECT p.*, b.breedName ");
         sql.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus));
         sql.append("ORDER BY p.petId DESC ");
@@ -307,9 +313,15 @@ public class PetDAO {
             ex.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -548,6 +560,7 @@ public class PetDAO {
                 while (rs.next()) {
                     Pet pet = PetInfo(rs);
                     pet.setBreedName(rs.getString("breedName"));
+                    pet.setImages(getImageDataByPetId(pet.getPetId()));
                     listPet.add(pet);
                 }
             }

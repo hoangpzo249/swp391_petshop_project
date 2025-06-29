@@ -29,15 +29,9 @@ public class DeleteFromCart extends HttpServlet {
         Account account = (Account) session.getAttribute("userAccount");
 
         if (account != null) {
-
             int accountId = account.getAccId();
             cartDAO.deleteFromPetCart(accountId, petId);
-
-            int totalItems = cartDAO.getTotalCartItems(accountId);
-            session.setAttribute("cartcount", totalItems);
-            
         } else {
-
             List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
             if (guestCart != null) {
                 for (int i = 0; i < guestCart.size(); i++) {
@@ -48,11 +42,9 @@ public class DeleteFromCart extends HttpServlet {
                     }
                 }
                 session.setAttribute("guestCart", guestCart);
-                session.setAttribute("cartcount", guestCart.size());
-              
             }
         }
-
+        session.setAttribute("cartMessage", "Xóa thành công khỏi giỏ hàng");
         response.sendRedirect("displaycart");
 
     }

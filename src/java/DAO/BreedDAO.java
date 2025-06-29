@@ -194,7 +194,7 @@ public class BreedDAO {
 
     public List<Breed> getBreedsBySpecies(String species) {
         List<Breed> list = new ArrayList<>();
-        String sql = "SELECT * FROM BreedTB WHERE breedSpecies = ?";
+        String sql = "SELECT * FROM BreedTB WHERE breedSpecies = ? AND breedStatus = 1 ";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);

@@ -152,8 +152,8 @@ public class AddDiscountServlet extends HttpServlet {
                 if (maxValue != null && !maxValue.trim().isEmpty()) {
                     try {
                         maxVal = Double.parseDouble(maxValue.trim());
-                        if (maxVal < 0) {
-                            request.setAttribute("errMess", "Giảm tối đa phải là số không âm.");
+                        if (maxVal <= 0) {
+                            request.setAttribute("errMess", "Giảm tối đa phải là số dương.");
                             request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                             return;
                         }
@@ -164,18 +164,18 @@ public class AddDiscountServlet extends HttpServlet {
                     }
                     d.setMaxValue(maxVal);
                 } else {
-                    d.setMaxValue(null); 
+                    d.setMaxValue(null);
                 }
             } else {
-                d.setMaxValue(null); 
+                d.setMaxValue(null);
             }
 
             int maxUse;
             if (maxUsage != null && !maxUsage.trim().isEmpty()) {
                 try {
                     maxUse = Integer.parseInt(maxUsage.trim());
-                    if (maxUse < 0) {
-                        request.setAttribute("errMess", "Số lần sử dụng không được nhỏ hơn 0.");
+                    if (maxUse <= 0) {
+                        request.setAttribute("errMess", "Số lần sử dụng phải lớn hơn 0.");
                         request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                         return;
                     }
@@ -190,8 +190,8 @@ public class AddDiscountServlet extends HttpServlet {
             Date fromDate, toDate;
             fromDate = Date.valueOf(from);
             toDate = Date.valueOf(to);
-            if (fromDate.after(toDate)) {
-                request.setAttribute("errMess", "Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.");
+            if (!toDate.after(fromDate)) {
+                request.setAttribute("errMess", "Ngày kết thúc phải sau ngày bắt đầu.");
                 request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                 return;
             }

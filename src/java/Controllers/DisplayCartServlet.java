@@ -65,7 +65,7 @@ public class DisplayCartServlet extends HttpServlet {
         for (Cart c : petCart) {
             if (c.getPetId() != null) {
                 Pet pet = petDao.getPetById(c.getPetId());
-                if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
+                if (pet != null && pet.getPetAvailability() == 1 && pet.getPetStatus() == 1) {
                     pets.add(pet);
                     updatedPetCart.add(c);
 
@@ -86,8 +86,8 @@ public class DisplayCartServlet extends HttpServlet {
             session.setAttribute("guestCart", updatedPetCart);
 
         }
-        if (petCart.size() > updatedPetCart.size()) {
-            session.setAttribute("cartMessage", "Một số sản phẩm bạn đã chọn hiện không còn khả dụng nên không hiển thị trong giỏ hàng.");
+        if (petCart.size() > updatedPetCart.size()&&session.getAttribute("cartMessage") == null) {
+                session.setAttribute("cartMessage", "Một số sản phẩm bạn đã chọn hiện không còn khả dụng nên không hiển thị trong giỏ hàng.");            
         }
 
         request.setAttribute("pets", pets);
