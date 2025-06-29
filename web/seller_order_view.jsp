@@ -164,6 +164,13 @@
                                     <input type="date" name="endDate" value="${param.endDate}" onchange="this.form.submit()">
                                 </div>
 
+                                <div class="select-group">
+                                    <select name="sort" onchange="this.form.submit()">
+                                        <option value="DESC" ${param.sort == 'DESC' ? 'selected' : ''}>Đơn mới nhất</option>
+                                        <option value="ASC" ${param.sort == 'ASC' ? 'selected' : ''}>Đơn cũ nhất</option>
+                                    </select>
+                                </div>
+
                                 <button type="button" class="btn btn-outline" onclick="location.href = 'displayorder'">
                                     <i class="fas fa-times"></i> Xóa bộ lọc
                                 </button>
@@ -258,6 +265,7 @@
                                             <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
                                             <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
                                             <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                            <c:if test="${not empty param.sort}"><c:param name="sort" value="${param.sort}"/></c:if>
                                         </c:url>
                                         <a class="page-link" href="${currentPage > 1 ? prevUrl : '#'}">«</a>
                                     </li>
@@ -269,6 +277,7 @@
                                             <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
                                             <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
                                             <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                            <c:if test="${not empty param.sort}"><c:param name="sort" value="${param.sort}"/></c:if>
                                         </c:url>
                                         <li class="page-item"><a class="page-link" href="${firstPageUrl}">1</a></li>
                                             <c:if test="${startPage > 2}">
@@ -283,6 +292,7 @@
                                             <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
                                             <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
                                             <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                            <c:if test="${not empty param.sort}"><c:param name="sort" value="${param.sort}"/></c:if>
                                         </c:url>
                                         <li class="page-item ${currentPage == i ? 'active' : ''}">
                                             <a class="page-link" href="${pageUrl}">${i}</a>
@@ -299,6 +309,7 @@
                                                 <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
                                                 <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
                                                 <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                                <c:if test="${not empty param.sort}"><c:param name="sort" value="${param.sort}"/></c:if>
                                             </c:url>
                                         <li class="page-item"><a class="page-link" href="${lastPageUrl}">${totalPages}</a></li>
                                         </c:if>
@@ -310,6 +321,7 @@
                                             <c:if test="${not empty param.status}"><c:param name="status" value="${param.status}"/></c:if>
                                             <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
                                             <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                            <c:if test="${not empty param.sort}"><c:param name="sort" value="${param.sort}"/></c:if>
                                         </c:url>
                                         <a class="page-link" href="${currentPage < totalPages ? nextUrl : '#'}">»</a>
                                     </li>
