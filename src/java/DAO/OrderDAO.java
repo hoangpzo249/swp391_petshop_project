@@ -360,8 +360,8 @@ public class OrderDAO {
         try {
             conn = new DBContext().getConnection();
 
-            String sql = "INSERT INTO OrderTB (accId, orderDate, orderStatus, customerName, customerEmail, customerPhone, customerAddress, shipperId, paymentMethod, paymentStatus, discountId) "
-                    + "VALUES (?, GETDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO OrderTB (accId, orderDate, orderStatus, customerName, customerEmail, customerPhone, customerAddress, shipperId, paymentMethod, paymentStatus, discountId, discountAmountAtApply) "
+                    + "VALUES (?, GETDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -388,6 +388,11 @@ public class OrderDAO {
                 ps.setNull(10, Types.INTEGER);
             } else {
                 ps.setInt(10, order.getDiscountId());
+            }
+            if (order.getDiscountAmountAtApply() == null) {
+                ps.setNull(11, Types.DECIMAL);
+            } else {
+                ps.setDouble(11, order.getDiscountAmountAtApply());
             }
 
             ps.executeUpdate();
@@ -501,7 +506,7 @@ public class OrderDAO {
         try {
             conn = db.getConnection();
             String sql = "UPDATE OrderTB SET shipperId = ?, orderStatus = 'Pending Shipper' WHERE orderId = ?;";
-            ps=conn.prepareStatement(sql);
+            ps = conn.prepareStatement(sql);
             ps.setInt(1, shipperId);
             ps.setInt(2, orderId);
             ps.executeUpdate();
@@ -511,13 +516,13 @@ public class OrderDAO {
         }
         return false;
     }
-    
+
     public boolean unassignShipper(int orderId) {
         DBContext db = new DBContext();
         try {
             conn = db.getConnection();
             String sql = "UPDATE OrderTB SET shipperId = NULL, orderStatus = 'Confirmed' WHERE orderId = ?;";
-            ps=conn.prepareStatement(sql);
+            ps = conn.prepareStatement(sql);
             ps.setInt(1, orderId);
             ps.executeUpdate();
             return true;

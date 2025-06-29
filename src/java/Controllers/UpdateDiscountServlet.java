@@ -100,67 +100,126 @@ public class UpdateDiscountServlet extends HttpServlet {
         String maxValue = request.getParameter("maxValue");
         String status = request.getParameter("status");
 
+        Discount d = new Discount();
         DiscountDAO dao = new DiscountDAO();
 
         try {
-            Discount d = new Discount();
-            d.setDiscountId(Integer.parseInt(id));
-            d.setDiscountCode(code.trim());
+            int discountId = Integer.parseInt(id);
+            d.setDiscountId(discountId);
+            d.setDiscountCode(code);
             d.setDiscountType(type);
-            d.setDiscountValue(Double.parseDouble(value));
             d.setDescription(description);
-            d.setValidFrom(Date.valueOf(from));
-            d.setValidTo(Date.valueOf(to));
-            d.setMinOrderAmount(Double.parseDouble(min));
             d.setActive("1".equals(status));
+            request.setAttribute("discount", d);
 
-            if (maxUsage != null && !maxUsage.isEmpty()) {
-                d.setMaxUsage(Integer.parseInt(maxUsage));
-            } else {
-                d.setMaxUsage(null);
+            double val;
+            try {
+                val = Double.parseDouble(value.trim());
+            if (val <= 0) {
+                request.setAttribute("errMess", "Giá trị giảm phải lớn hơn 0.");
+                request.getRequestDispatcher("update_discount.jsp").forward(request, response);
+                return;
             }
-
-            if (maxValue != null && !maxValue.isEmpty()) {
-                d.setMaxValue(Double.parseDouble(maxValue));
-            } else {
-                d.setMaxValue(null);
+            } catch (NumberFormatException e) {
+                request.setAttribute("errMess", "Giá trị giảm không hợp lệ. Vui lòng nhập số.");
+                request.getRequestDispatcher("update_discount.jsp").forward(request, response);
+                return;
             }
+            if ("Percent".equals(type) && val > 100) {
+                request.setAttribute("errMess", "Phần trăm giảm không được vượt quá 100%.");
+                request.getRequestDispatcher("update_discount.jsp").forward(request, response);
+                return;
+            }
+            d.setDiscountValue(val);
 
-            
-            Discount existing = dao.getActiveDiscountByCode(code);
-            if (existing != null && existing.getDiscountId() != d.getDiscountId()) {
-                request.setAttribute("errMess", "Mã giảm giá này đã tồn tại. Vui lòng chọn mã khác.");
-                request.setAttribute("discount", d); 
+            double minAmt;
+            try {
+                minAmt = Double.parseDouble(min.trim());
+                if (minAmt < 0) {
+                    request.setAttribute("errMess", "Đơn hàng tối thiểu không được nhỏ hơn 0.");
+                    request.getRequestDispatcher("update_discount.jsp").forward(request, response);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("errMess", "Đơn hàng tối thiểu không hợp lệ. Vui lòng nhập số.");
                 request.getRequestDispatcher("update_discount.jsp").forward(request, response);
                 return;
             }
 
-            boolean success = dao.updateDiscount(d);
+            d.setMinOrderAmount(minAmt);
 
-            if (success) {
+            if (maxValue != null && !maxValue.trim().isEmpty()) {
+                try {
+                    double maxVal = Double.parseDouble(maxValue.trim());
+                    if (maxVal < 0) {
+                        request.setAttribute("errMess", "Giảm tối đa phải là số không âm.");
+                        request.getRequestDispatcher("update_discount.jsp").forward(request, response);
+                        return;
+                    }
+                    d.setMaxValue(maxVal);
+                } catch (NumberFormatException e) {
+                    request.setAttribute("errMess", "Giảm tối đa không hợp lệ. Vui lòng nhập số.");
+                    request.getRequestDispatcher("update_discount.jsp").forward(request, response);
+                    return;
+                }
+            }
+
+            if (maxUsage != null && !maxUsage.trim().isEmpty()) {
+                try {
+                    int maxUse = Integer.parseInt(maxUsage.trim());
+                    if (maxUse < 0) {
+                        request.setAttribute("errMess", "Số lần sử dụng không được nhỏ hơn 0.");
+                        request.getRequestDispatcher("update_discount.jsp").forward(request, response);
+                        return;
+                    }
+                    d.setMaxUsage(maxUse);
+                } catch (NumberFormatException e) {
+                    request.setAttribute("errMess", "Số lần sử dụng không hợp lệ. Vui lòng nhập số nguyên.");
+                    request.getRequestDispatcher("update_discount.jsp").forward(request, response);
+                    return;
+                }
+            }
+
+            Date fromDate, toDate;
+            fromDate = Date.valueOf(from);
+            toDate = Date.valueOf(to);
+            if (fromDate.after(toDate)) {
+                request.setAttribute("errMess", "Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.");
+                request.getRequestDispatcher("update_discount.jsp").forward(request, response);
+                return;
+            }
+            Date today = new Date(System.currentTimeMillis());
+            if (toDate.before(today)) {
+                request.setAttribute("errMess", "Ngày hết hạn không được trong quá khứ.");
+                request.getRequestDispatcher("update_discount.jsp").forward(request, response);
+                return;
+            }
+            d.setValidFrom(fromDate);
+            d.setValidTo(toDate);
+
+            boolean updated = dao.updateDiscount(d);
+            if (updated) {
                 request.getSession().setAttribute("successMess", "Cập nhật mã giảm giá thành công.");
                 response.sendRedirect("discountmanager");
             } else {
                 request.setAttribute("errMess", "Không thể cập nhật mã giảm giá.");
-                request.setAttribute("discount", d);
                 request.getRequestDispatcher("update_discount.jsp").forward(request, response);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errMess", "Lỗi xử lý dữ liệu: " + e.getMessage());
+            request.setAttribute("errMess", "Lỗi hệ thống: " + e.getMessage());
             request.getRequestDispatcher("update_discount.jsp").forward(request, response);
         }
     }
 
-
-/**
- * Returns a short description of the servlet.
- *
- * @return a String containing servlet description
- */
-@Override
-public String getServletInfo() {
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 

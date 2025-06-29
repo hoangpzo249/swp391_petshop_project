@@ -22,7 +22,7 @@
                 <p>Cảm ơn bạn đã mua sắm tại <strong>PETFPT Shop</strong>.</p>
 
                 <div class="order-details">
-                    <p>Mã đơn hàng: <strong>#PFT${orderId}</strong></p>
+                    <p>Mã đơn hàng: <strong>${orderId}</strong></p>
                     <p>Ngày đặt hàng: <strong>${date}</strong></p>
                     <p>Phương thức thanh toán: <strong>${method}</strong></p>
                 </div>

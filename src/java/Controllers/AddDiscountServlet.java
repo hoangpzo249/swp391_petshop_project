@@ -96,48 +96,129 @@ public class AddDiscountServlet extends HttpServlet {
         request.setAttribute("maxValue", maxValue);
         request.setAttribute("status", status);
 
+        DiscountDAO dao = new DiscountDAO();
+        Discount d = new Discount();
+
         try {
-            Discount d = new Discount();
-            d.setDiscountCode(code);
-            d.setDiscountType(type);
-            d.setDiscountValue(Double.parseDouble(value.trim()));
-            d.setDescription(description);
-            d.setValidFrom(Date.valueOf(from));
-            d.setValidTo(Date.valueOf(to));
-            d.setMinOrderAmount(Double.parseDouble(min.trim()));
-
-            if (maxUsage != null && !maxUsage.isEmpty()) {
-                d.setMaxUsage(Integer.parseInt(maxUsage.trim()));
-            } else {
-                d.setMaxUsage(null);
-            }
-
-            if (maxValue != null && !maxValue.isEmpty()) {
-                d.setMaxValue(Double.parseDouble(maxValue.trim()));
-            } else {
-                d.setMaxValue(null);
-            }
-
-            d.setUsageCount(0);
-            d.setActive("1".equals(status));
-
-            DiscountDAO dao = new DiscountDAO();
-            
             Discount existing = dao.getActiveDiscountByCode(code);
             if (existing != null) {
                 request.setAttribute("errMess", "Mã giảm giá này đã tồn tại. Vui lòng chọn mã khác.");
                 request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                 return;
             }
+            d.setDiscountCode(code);
+            d.setDiscountType(type);
+            if (status.equals("1")) {
+                d.setActive(true);
+            }
+
+            double val;
+            try {
+                val = Double.parseDouble(value.trim());
+                if (val <= 0) {
+                    request.setAttribute("errMess", "Giá trị giảm phải lớn hơn 0.");
+                    request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                    return;
+                }
+                if ("Percent".equals(type) && val > 100) {
+                    request.setAttribute("errMess", "Phần trăm giảm không được vượt quá 100%.");
+                    request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("errMess", "Giá trị giảm không hợp lệ. Vui lòng nhập số.");
+                request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                return;
+            }
+            d.setDiscountValue(val);
+
+            double minAmt;
+            try {
+                minAmt = Double.parseDouble(min.trim());
+                if (minAmt < 0) {
+                    request.setAttribute("errMess", "Đơn hàng tối thiểu không được nhỏ hơn 0.");
+                    request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("errMess", "Đơn hàng tối thiểu không hợp lệ. Vui lòng nhập số.");
+                request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                return;
+            }
+            d.setMinOrderAmount(minAmt);
+
+            double maxVal;
+            if ("Percent".equals(type)) {
+                if (maxValue != null && !maxValue.trim().isEmpty()) {
+                    try {
+                        maxVal = Double.parseDouble(maxValue.trim());
+                        if (maxVal < 0) {
+                            request.setAttribute("errMess", "Giảm tối đa phải là số không âm.");
+                            request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                            return;
+                        }
+                    } catch (NumberFormatException e) {
+                        request.setAttribute("errMess", "Giảm tối đa không hợp lệ. Vui lòng nhập số.");
+                        request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                        return;
+                    }
+                    d.setMaxValue(maxVal);
+                } else {
+                    d.setMaxValue(null); 
+                }
+            } else {
+                d.setMaxValue(null); 
+            }
+
+            int maxUse;
+            if (maxUsage != null && !maxUsage.trim().isEmpty()) {
+                try {
+                    maxUse = Integer.parseInt(maxUsage.trim());
+                    if (maxUse < 0) {
+                        request.setAttribute("errMess", "Số lần sử dụng không được nhỏ hơn 0.");
+                        request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    request.setAttribute("errMess", "Số lần sử dụng không hợp lệ. Vui lòng nhập số nguyên.");
+                    request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                    return;
+                }
+                d.setMaxUsage(maxUse);
+            }
+
+            Date fromDate, toDate;
+            fromDate = Date.valueOf(from);
+            toDate = Date.valueOf(to);
+            if (fromDate.after(toDate)) {
+                request.setAttribute("errMess", "Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.");
+                request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                return;
+            }
+
+            Date today = new Date(System.currentTimeMillis());
+            if (toDate.before(today)) {
+                request.setAttribute("errMess", "Ngày hết hạn không được trong quá khứ.");
+                request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                return;
+            }
+
+            d.setValidFrom(fromDate);
+            d.setValidTo(toDate);
 
             boolean success = dao.addDiscount(d);
-
             if (success) {
                 request.getSession().setAttribute("successMess", "Thêm mã giảm giá thành công.");
                 response.sendRedirect("discountmanager");
-            } 
+            } else {
+                request.setAttribute("errMess", "Không thể thêm mã giảm giá. Vui lòng thử lại.");
+                request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
+            request.setAttribute("errMess", "Lỗi hệ thống: " + e.getMessage());
+            request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
         }
     }
 

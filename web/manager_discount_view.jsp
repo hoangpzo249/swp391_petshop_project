@@ -103,7 +103,7 @@
                                     </select>
                                 </div>
 
-                                    <div class="date-group">
+                                <div class="date-group">
                                     <label for="fromDate">HSD Từ:</label>
                                     <input type="date" id="fromDate" name="fromDate" value="${param.fromDate}">
                                     <label for="toDate">HSD Đến:</label>
@@ -119,7 +119,7 @@
                                         <option value="usageCount_desc" ${param.sortBy == 'usageCount_desc' ? 'selected' : ''}>Số lần sử dụng giảm</option>
                                     </select>
                                 </div>
-                                    
+
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
                                 <button type="button" class="btn btn-outline" onclick="location.href = 'discountmanager'">
                                     <i class="fas fa-times"></i> Xóa bộ lọc
@@ -166,11 +166,15 @@
                                             <td><fmt:formatNumber value="${d.minOrderAmount}" type="currency" currencySymbol="₫" groupingUsed="true"/></td>
                                             <td>
                                                 <c:choose>
+                                                    <c:when test="${d.discountType == 'Fixed'}">
+                                                        -
+                                                    </c:when>
                                                     <c:when test="${d.maxValue != null}">
                                                         <fmt:formatNumber value="${d.maxValue}" type="currency" currencySymbol="₫" groupingUsed="true"/>
                                                     </c:when>
                                                     <c:otherwise>Không giới hạn</c:otherwise>
                                                 </c:choose>
+
                                             </td>
 
                                             <td>${d.usageCount}/${d.maxUsage != null ? d.maxUsage : '∞'}</td>

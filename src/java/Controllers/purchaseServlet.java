@@ -97,6 +97,7 @@ public class purchaseServlet extends HttpServlet {
                 DiscountDAO ddao = new DiscountDAO();
                 Integer discountId = ddao.getActiveDiscountByCode(discountCode).getDiscountId();
                 order.setDiscountId(discountId);
+                order.setDiscountAmountAtApply(discountAmount); 
                 ddao.increaseUsageCount(discountCode);
             } else {
                 order.setDiscountId(null);

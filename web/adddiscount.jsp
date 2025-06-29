@@ -17,6 +17,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <script src="js/add_discount_validate.js?v=2"></script>
+        <script src="js/discount_fixed.js?v=4"></script>
     </head>
     <body>
         <div class="seller-header">
@@ -72,19 +73,20 @@
                             </div>
                             <div class="form-group">
                                 <label for="value">Giá trị</label>
-                                <input type="number" step="0.01" id="value" name="value" class="form-control" value="${value}" required>
+                                <input type="text" id="value" name="value" class="form-control" value="${value}" required>
                             </div>
                             <div class="form-group">
                                 <label for="minAmount">Đơn hàng tối thiểu (₫)</label>
-                                <input type="number" step="100" id="minAmount" name="minAmount" class="form-control" value="${minAmount}">
+                                <input type="text" id="minAmount" name="minAmount" class="form-control" value="${minAmount}">
                             </div>
                             <div class="form-group">
                                 <label for="maxValue">Giảm tối đa (₫)</label>
-                                <input type="number" step="100" id="maxValue" name="maxValue" class="form-control" value="${maxValue}">
+                                <input type="text" id="maxValue" name="maxValue" class="form-control" value="${maxValue}">
+
                             </div>
                             <div class="form-group">
                                 <label for="maxUsage">Số lần dùng tối đa</label>
-                                <input type="number" id="maxUsage" name="maxUsage" class="form-control" value="${maxUsage}">
+                                <input type="text" id="maxUsage" name="maxUsage" class="form-control" value="${maxUsage}">
                             </div>
                             <div class="form-group">
                                 <label for="validFrom">Hiệu lực từ</label>
