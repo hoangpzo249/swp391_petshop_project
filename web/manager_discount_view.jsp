@@ -53,12 +53,21 @@
                 </div>
                 <div class="sidebar-menu">
                     <div class="menu-category">
+                        <h5 class="category-title">Điều hướng</h5>
+                        <a href="comingsoon" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                    </div>
+                    <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
-                        <a href="displayalldiscounts" class="sidebar-link active"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
+                        <a href="displaybreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
+                        <a href="discountmanager" class="sidebar-link active"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
+                        <a href="addbreed" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm giống mới</a>
                         <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã mới</a>
+                        <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
+                        <a href="profile?action=change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
+                        <a href="logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
                     </div>
                 </div>
             </div>
@@ -103,7 +112,7 @@
                                     </select>
                                 </div>
 
-                                    <div class="date-group">
+                                <div class="date-group">
                                     <label for="fromDate">HSD Từ:</label>
                                     <input type="date" id="fromDate" name="fromDate" value="${param.fromDate}">
                                     <label for="toDate">HSD Đến:</label>
@@ -119,7 +128,7 @@
                                         <option value="usageCount_desc" ${param.sortBy == 'usageCount_desc' ? 'selected' : ''}>Số lần sử dụng giảm</option>
                                     </select>
                                 </div>
-                                    
+
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
                                 <button type="button" class="btn btn-outline" onclick="location.href = 'discountmanager'">
                                     <i class="fas fa-times"></i> Xóa bộ lọc
