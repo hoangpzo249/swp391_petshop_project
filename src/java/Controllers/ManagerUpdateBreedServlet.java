@@ -114,8 +114,8 @@ public class ManagerUpdateBreedServlet extends HttpServlet {
 
         String breedIdStr = request.getParameter("breedId");
         int breedId = 0;
-        String breedName = request.getParameter("breedName");
-        String breedSpecies = request.getParameter("breedSpecies");
+        String breedName = request.getParameter("breedName").trim();
+        String breedSpecies = request.getParameter("breedSpecies").trim();
         String breedStatus = request.getParameter("breedStatus");
 
         try {
