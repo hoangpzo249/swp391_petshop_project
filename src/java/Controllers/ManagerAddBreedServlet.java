@@ -86,8 +86,8 @@ public class ManagerAddBreedServlet extends HttpServlet {
         HttpSession session = request.getSession();
         StringBuilder errMess = new StringBuilder();
 
-        String breedName = request.getParameter("breedName");
-        String breedSpecies = request.getParameter("breedSpecies");
+        String breedName = request.getParameter("breedName").trim();
+        String breedSpecies = request.getParameter("breedSpecies").trim();
         String breedStatus = request.getParameter("breedStatus");
 
         List<String> speciesList = _dao.getAllSpecies();
