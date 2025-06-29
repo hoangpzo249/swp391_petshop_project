@@ -322,7 +322,7 @@ public class BreedDAO {
         return listbreed;
     }
 
-    private StringBuilder buildFilterQuery(String searchKey, String species, String status, List<Object> params) {
+    private StringBuilder buildFilterQuery(String searchKey, String species, String status) {
         StringBuilder sql = new StringBuilder(
                 " FROM BreedTB b"
                 + " LEFT JOIN PetTB p ON p.breedId = b.breedId"
@@ -334,85 +334,137 @@ public class BreedDAO {
         if (searchKey != null && !searchKey.trim().isEmpty()) {
             if (searchKey.matches("\\d+")) {
                 sql.append(" AND b.breedId = ?");
-                params.add(Integer.parseInt(searchKey.trim()));
             } else {
                 sql.append(" AND b.breedName LIKE ?");
-                params.add("%" + searchKey.trim() + "%");
             }
         }
 
         if (species != null && !species.isEmpty()) {
             sql.append(" AND b.breedSpecies = ?");
-            params.add(species);
         }
 
         if (status != null && !status.isEmpty()) {
             sql.append(" AND b.breedStatus = ?");
-            params.add("1".equals(status));
         }
         return sql;
     }
 
     public int countFilteredBreeds(String searchKey, String species, String status) {
-        List<Object> params = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         StringBuilder sqlBase = new StringBuilder("SELECT COUNT(DISTINCT b.breedId) ");
+        sqlBase.append(buildFilterQuery(searchKey, species, status));
 
-        sqlBase.append(buildFilterQuery(searchKey, species, status, params));
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sqlBase.toString());
 
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sqlBase.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
+            int paramIndex = 1;
+            if (searchKey != null && !searchKey.trim().isEmpty()) {
+                if (searchKey.matches("\\d+")) {
+                    ps.setInt(paramIndex++, Integer.parseInt(searchKey.trim()));
+                } else {
+                    ps.setString(paramIndex++, "%" + searchKey.trim() + "%");
+                }
+            }
+            if (species != null && !species.isEmpty()) {
+                ps.setString(paramIndex++, species);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setBoolean(paramIndex++, "1".equals(status));
             }
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return 0;
     }
 
     public List<Breed> filterBreedsForManager(String searchKey, String species, String status, int pageNumber, int pageSize) {
         List<Breed> list = new ArrayList<>();
-        List<Object> params = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         StringBuilder sql = new StringBuilder(
                 "SELECT b.breedId, b.breedName, b.breedSpecies, b.breedImage, b.breedStatus,"
                 + " COUNT(o.orderId) AS totalPurchases"
         );
 
-        sql.append(buildFilterQuery(searchKey, species, status, params));
-
+        sql.append(buildFilterQuery(searchKey, species, status));
         sql.append(" GROUP BY b.breedId, b.breedName, b.breedSpecies, b.breedImage, b.breedStatus");
         sql.append(" ORDER BY b.breedId ASC");
-
         sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-        int offset = (pageNumber - 1) * pageSize;
-        params.add(offset);
-        params.add(pageSize);
 
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql.toString());
 
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
+            int paramIndex = 1;
+            if (searchKey != null && !searchKey.trim().isEmpty()) {
+                if (searchKey.matches("\\d+")) {
+                    ps.setInt(paramIndex++, Integer.parseInt(searchKey.trim()));
+                } else {
+                    ps.setString(paramIndex++, "%" + searchKey.trim() + "%");
+                }
+            }
+            if (species != null && !species.isEmpty()) {
+                ps.setString(paramIndex++, species);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setBoolean(paramIndex++, "1".equals(status));
             }
 
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    int id = rs.getInt("breedId");
-                    String name = rs.getString("breedName");
-                    String sp = rs.getString("breedSpecies");
-                    int st = rs.getInt("breedStatus");
-                    byte[] img = rs.getBytes("breedImage");
-                    int purchases = rs.getInt("totalPurchases");
-                    list.add(new Breed(id, name, sp, st, img, purchases));
-                }
+            int offset = (pageNumber - 1) * pageSize;
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, pageSize);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("breedId");
+                String name = rs.getString("breedName");
+                String sp = rs.getString("breedSpecies");
+                int st = rs.getInt("breedStatus");
+                byte[] img = rs.getBytes("breedImage");
+                int purchases = rs.getInt("totalPurchases");
+                list.add(new Breed(id, name, sp, st, img, purchases));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return list;
     }

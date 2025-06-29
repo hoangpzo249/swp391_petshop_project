@@ -63,11 +63,12 @@ public class SellerDisplayOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
 
+        request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
+
         Account account = (Account) session.getAttribute("userAccount");
-        if (account == null || !account.getAccRole().equals("Seller")) {
+        if (account == null || !"Seller".equals(account.getAccRole())) {
             session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
             response.sendRedirect("homepage");
             return;
@@ -78,27 +79,22 @@ public class SellerDisplayOrderServlet extends HttpServlet {
 
         String searchKey = request.getParameter("searchKey");
         String status = request.getParameter("status");
+        String sort = request.getParameter("sort");
+        String pageStr = request.getParameter("page");
         String startDateStr = request.getParameter("startDate");
         String endDateStr = request.getParameter("endDate");
-        String pageStr = request.getParameter("page");
 
-        int currentPage = 1;
-        if (pageStr != null && pageStr.matches("\\d+")) {
-            currentPage = Integer.parseInt(pageStr);
-        }
+        int currentPage = (pageStr != null && pageStr.matches("\\d+")) ? Integer.parseInt(pageStr) : 1;
+        sort = (sort == null || sort.trim().isEmpty()) ? "DESC" : sort;
 
-        java.sql.Date startDate = null;
-        java.sql.Date endDate = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
+        java.sql.Date startDate = null, endDate = null;
         try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             if (startDateStr != null && !startDateStr.isEmpty()) {
-                Date utilStartDate = sdf.parse(startDateStr);
-                startDate = new java.sql.Date(utilStartDate.getTime());
+                startDate = new java.sql.Date(sdf.parse(startDateStr).getTime());
             }
             if (endDateStr != null && !endDateStr.isEmpty()) {
-                Date utilEndDate = sdf.parse(endDateStr);
-                endDate = new java.sql.Date(utilEndDate.getTime());
+                endDate = new java.sql.Date(sdf.parse(endDateStr).getTime());
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -107,37 +103,33 @@ public class SellerDisplayOrderServlet extends HttpServlet {
             return;
         }
 
-        OrderDAO _dao = new OrderDAO();
-
-        int totalRecords = _dao.countFilteredOrders(searchKey, status, startDate, endDate);
+        OrderDAO dao = new OrderDAO();
+        int totalRecords = dao.countFilteredOrders(searchKey, status, startDate, endDate);
         int totalPages = (int) Math.ceil((double) totalRecords / PAGE_SIZE);
 
-        int startPage, endPage;
-        if (totalPages <= MAX_PAGE_NUMBERS_TO_SHOW) {
-            startPage = 1;
-            endPage = totalPages;
-        } else {
-            int maxPagesBeforeCurrent = (int) Math.floor(MAX_PAGE_NUMBERS_TO_SHOW / 2.0);
-            int maxPagesAfterCurrent = (int) Math.ceil(MAX_PAGE_NUMBERS_TO_SHOW / 2.0) - 1;
-            if (currentPage <= maxPagesBeforeCurrent) {
-                startPage = 1;
+        int startPage = 1, endPage = totalPages;
+        if (totalPages > MAX_PAGE_NUMBERS_TO_SHOW) {
+            int before = MAX_PAGE_NUMBERS_TO_SHOW / 2;
+            int after = MAX_PAGE_NUMBERS_TO_SHOW - before - 1;
+
+            if (currentPage <= before) {
                 endPage = MAX_PAGE_NUMBERS_TO_SHOW;
-            } else if (currentPage + maxPagesAfterCurrent >= totalPages) {
+            } else if (currentPage + after >= totalPages) {
                 startPage = totalPages - MAX_PAGE_NUMBERS_TO_SHOW + 1;
-                endPage = totalPages;
             } else {
-                startPage = currentPage - maxPagesBeforeCurrent;
-                endPage = currentPage + maxPagesAfterCurrent;
+                startPage = currentPage - before;
+                endPage = currentPage + after;
             }
         }
 
-        List<Order> list = _dao.filterOrderForSeller(searchKey, status, startDate, endDate, currentPage, PAGE_SIZE);
+        List<Order> orderList = dao.filterOrderForSeller(searchKey, status, startDate, endDate, sort, currentPage, PAGE_SIZE);
 
-        request.setAttribute("orderList", list);
+        request.setAttribute("orderList", orderList);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("startPage", startPage);
         request.setAttribute("endPage", endPage);
+        request.setAttribute("sort", sort);
 
         request.getRequestDispatcher("seller_order_view.jsp").forward(request, response);
     }
