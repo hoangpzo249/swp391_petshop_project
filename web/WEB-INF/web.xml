@@ -172,6 +172,10 @@
         <servlet-name>SellerAssignShipperServlet</servlet-name>
         <servlet-class>Controllers.SellerAssignShipperServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ResetDiscountUsageServlet</servlet-name>
+        <servlet-class>Controllers.ResetDiscountUsageServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -343,6 +347,10 @@
     <servlet-mapping>
         <servlet-name>SellerAssignShipperServlet</servlet-name>
         <url-pattern>/assignshipper</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResetDiscountUsageServlet</servlet-name>
+        <url-pattern>/resetdiscountusage</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>

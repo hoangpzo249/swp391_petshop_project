@@ -449,4 +449,30 @@ public class DiscountDAO extends DBContext {
         return list;
     }
 
+
+    public boolean resetUsageCountById(int discountId) {
+        String sql = "UPDATE DiscountTB SET usageCount = 0 WHERE discountId = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, discountId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return false;
+    }
+
 }

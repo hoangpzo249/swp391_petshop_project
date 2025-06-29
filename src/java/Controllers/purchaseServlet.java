@@ -9,6 +9,7 @@ import DAO.DiscountDAO;
 import DAO.OrderDAO;
 import DAO.PetDAO;
 import Models.Account;
+import Models.Discount;
 import Models.Order;
 import Models.Pet;
 import Utils.Config;
@@ -99,6 +100,10 @@ public class purchaseServlet extends HttpServlet {
                 order.setDiscountId(discountId);
                 order.setDiscountAmountAtApply(discountAmount); 
                 ddao.increaseUsageCount(discountCode);
+                Discount d = ddao.getDiscountById(discountId);
+                if ((d.getUsageCount()>=d.getMaxUsage())&&d.isActive()){
+                    ddao.updateStatus(discountId);
+                }
             } else {
                 order.setDiscountId(null);
             }

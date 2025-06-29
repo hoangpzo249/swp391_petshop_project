@@ -196,8 +196,11 @@
                                                     </a>
                                                     <a class="action-btn ${d.active ? 'toggle-btn-active' : 'toggle-btn-inactive'}"
                                                        href="deactivatediscount?id=${d.discountId}"
-                                                       title="${d.active ? 'Tạm ngưng mã' : 'Kích hoạt mã'}">
+                                                       title="${d.active ? 'Tạm ngưng mã' : 'Kích hoạt mã'}" >
                                                         <i class="fas ${d.active ? 'fa-check-square' : 'fa-ban'} fa-fw"></i>
+                                                    </a>
+                                                    <a class="action-btn reset-btn " href="resetdiscountusage?id=${d.discountId}" style="background: red" >
+                                                        <i class="fas fa-sync-alt fa-fw"></i>
                                                     </a>
                                                 </div>
                                             </td>
