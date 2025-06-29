@@ -117,9 +117,6 @@ public class ListShopPetServlet extends HttpServlet {
         int totalPages = (int) Math.ceil((double) petList.size() / pageSize);
         petList = petList.subList(start, end);
 
-        for (Pet pet : petList) {
-            pet.setImages(petDAO.getImageDataByPetId(pet.getPetId()));
-        }
         request.setAttribute("listPet", petList);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);

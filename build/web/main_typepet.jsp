@@ -159,7 +159,7 @@
                     </div>
                     <div class="form-group">
                         <label>Giống</label>
-                        <select name="breed" onchange="this.form.submit()" id="breed">
+                        <select name="breed" onchange="this.form.submit()" id="breed" >
                             <option value="">Tất cả</option>
                             <c:forEach var="b" items="${listBreedBySpecies}">
                                 <option value="${b.breedId}" ${breed == b.breedId ? 'selected' : ''}>${b.breedName}</option>

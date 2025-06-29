@@ -30,21 +30,13 @@ public class DisplayPetServlet extends HttpServlet {
         
         int petId = Integer.parseInt(id);
         PetDAO dao = new PetDAO();
-        BreedDAO daobreed = new BreedDAO();
-        
         Pet pet = dao.getPetById(petId);
-        pet.setBreedName(daobreed.getBreedNameById(pet.getBreedId()));
-        List<byte[]> images = dao.getImageDataByPetId(petId);
-        pet.setImages(images);
-        
         List<Pet> similarPets = dao.getSimilarPets(pet.getBreedId(), petId);
-        
         request.setAttribute("similarPets", similarPets);
-        
         request.setAttribute("pet", pet);
+        
         HttpSession session = request.getSession();
         CartDAO _daoCart = new CartDAO();
-        
         if (session.getAttribute("userAccount") != null) {
             int accountId = ((Account) session.getAttribute("userAccount")).getAccId();
             List<Cart> carts = _daoCart.getCart(accountId);
@@ -75,7 +67,6 @@ public class DisplayPetServlet extends HttpServlet {
                 }
             }
             session.setAttribute("cartcount", guestCount);
-            
         }
         
         request.getRequestDispatcher("main_productpet.jsp").forward(request, response);

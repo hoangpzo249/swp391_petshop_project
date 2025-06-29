@@ -144,7 +144,7 @@
                 <ul class="menu">
                     <li><a href="homepage">Trang Chủ</a></li>
                     <li><a href="listshoppet">Thú Cưng</a></li>
-                    
+
                     <li><a href="menu_about.jsp">Giới Thiệu</a></li>
                     <li><a href="menu_contact.jsp">Liên Hệ</a></li>
 
@@ -164,10 +164,16 @@
 
 
 
-
+                <th class="select-all-column">
+                    <label class="select-all-label">
+                        <input type="checkbox" id="select-all" class="select-all-checkbox" />
+                        <span>Chọn tất cả</span>
+                    </label>
+                </th> 
                 <table class="cart-table">
                     <thead>
                         <tr class="cart-header">
+
                             <th>Chọn</th> 
                             <th>Sản phẩm</th>
                             <th>Số lượng</th>

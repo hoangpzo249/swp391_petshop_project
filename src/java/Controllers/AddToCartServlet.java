@@ -74,36 +74,21 @@ public class AddToCartServlet extends HttpServlet {
 
             if (acc != null) {
                 int accId = acc.getAccId();
-                List<Cart> userCart = dao.getCart(accId);
-                for (Cart c : userCart) {
-                    if (petDAO.getPetById(c.getPetId()).getPetAvailability() == 0 || petDAO.getPetById(c.getPetId()).getPetStatus() == 0) {
-                        dao.deleteFromPetCart(accId, c.getPetId());
-                    }
-                }
-                session.setAttribute("cartcount", dao.getTotalCartItems(accId));
+               
                 if (dao.petInCart(accId, petId)) {
                     session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
                 } else {
                     dao.addToPetCart(accId, petId);
                     session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
                 }
-                session.setAttribute("cartcount", dao.getTotalCartItems(accId));
 
             } else {
                 List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
                 if (guestCart == null) {
                     guestCart = new ArrayList<>();
                 }
-                List<Cart> validCart = new ArrayList<>();
-                for (Cart c : guestCart) {
-                    if (petDAO.getPetById(c.getPetId()).getPetAvailability() != 0 || petDAO.getPetById(c.getPetId()).getPetStatus() != 0) {
-                        validCart.add(c);
-                    }
-                }
-                session.setAttribute("guestCart", validCart);
-                session.setAttribute("cartcount", validCart.size());
                 boolean exists = false;
-                for (Cart c : validCart) {
+                for (Cart c : guestCart) {
                     if (c.getPetId() == petId) {
                         exists = true;
                         break;
@@ -112,11 +97,10 @@ public class AddToCartServlet extends HttpServlet {
                 if (exists) {
                     session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
                 } else {
-                    validCart.add(new Cart(-1, petId, 1, petDAO.getPetById(petId).getPetPrice()));
+                    guestCart.add(new Cart(-1, petId, 1, petDAO.getPetById(petId).getPetPrice()));
                     session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
                 }
-                session.setAttribute("guestCart", validCart);
-                session.setAttribute("cartcount", validCart.size());
+                session.setAttribute("guestCart", guestCart);
             }
         }
         response.sendRedirect("displaypet?id=" + idStr);
