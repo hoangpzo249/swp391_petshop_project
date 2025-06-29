@@ -11,6 +11,7 @@ import Models.Account;
 import Models.Breed;
 import Models.Cart;
 import Models.Pet;
+import Utils.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -85,22 +86,22 @@ public class Homepage_Servlet extends HttpServlet {
             for (Cart c : carts) {
                 if (c.getPetId() != null) {
                     Pet pet = petDao.getPetById(c.getPetId());
-                    if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
+                    if (pet != null && pet.getPetAvailability() == 1 && pet.getPetStatus() == 1) {
                         filtered.add(c);
                     }
                 }
             }
 
             session.setAttribute("cartcount", filtered.size());
-        }else {
+        } else {
             List<Cart> guestCart = (List<Cart>) session.getAttribute("guestCart");
             int guestCount = 0;
             if (guestCart != null) {
-               
+
                 for (Cart c : guestCart) {
                     if (c.getPetId() != null) {
                         Pet pet = petDao.getPetById(c.getPetId());
-                        if (pet != null && pet.getPetAvailability() == 1&&pet.getPetStatus()==1) {
+                        if (pet != null && pet.getPetAvailability() == 1 && pet.getPetStatus() == 1) {
                             guestCount++;
                         }
                     }
@@ -110,35 +111,42 @@ public class Homepage_Servlet extends HttpServlet {
 
         }
 
+        request.getRequestDispatcher("home_page.jsp").forward(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String email = request.getParameter("email");
+
+        if (email == null || email.trim().isEmpty()) {
             request.getRequestDispatcher("home_page.jsp").forward(request, response);
         }
 
-        /**
-         * Handles the HTTP <code>POST</code> method.
-         *
-         * @param request servlet request
-         * @param response servlet response
-         * @throws ServletException if a servlet-specific error occurs
-         * @throws IOException if an I/O error occurs
-         */
-        @Override
-        protected void doPost
-        (HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-
+        try {
+            EmailSender.registerInfo(email);
+            request.setAttribute("loginSuccess", "Đăng kí nhận thông tin thành công!");
+        } catch (Exception e) {
         }
+        request.getRequestDispatcher("home_page.jsp").forward(request, response);
+    }
 
-        /**
-         * Returns a short description of the servlet.
-         *
-         * @return a String containing servlet description
-         */
-        @Override
-        public String getServletInfo
-        
-            () {
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
         return "Short description";
-        }// </editor-fold>
+    }// </editor-fold>
 
-    
 }
