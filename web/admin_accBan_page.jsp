@@ -25,18 +25,11 @@
 
             <div class="admin-profile">
                 <c:choose>
-                    <c:when test="${not empty sessionScope.userAccount.accImage}">
-                        <img src="${sessionScope.userAccount.accImage}" alt="Admin Avatar"/>
-                    </c:when>
-                    <c:otherwise>
-                                        <c:choose>
-                    <c:when test="${not empty sessionScope.userAccount.accImage}">
-                        <img src="${sessionScope.userAccount.accImage}" alt="Admin Avatar"/>
+                    <c:when test="${not empty sessionScope.userAccount.displayAccImage()}">
+                        <img src="${sessionScope.userAccount.displayAccImage()}" width="45" height="45" class="table-avatar"/>
                     </c:when>
                     <c:otherwise>
                         <img src="images/support button/account.png" alt="Admin Avatar"/>
-                    </c:otherwise>
-                </c:choose>
                     </c:otherwise>
                 </c:choose>
                 <div class="admin-info">
@@ -139,8 +132,8 @@
                                 <div class="account-info-card">
                                     <div class="account-profile">
                                         <c:choose>
-                                            <c:when test="${not empty banacc.accImage}">
-                                                <img src="${banacc.accImage}" alt="Avatar" width="45" height="45" class="account-avatar"/>
+                                            <c:when test="${not empty banacc.displayAccImage()}">
+                                                <img src="${banacc.displayAccImage()}" alt="Avatar" width="45" height="45" class="account-avatar"/>
                                             </c:when>
                                             <c:otherwise>
                                                 <img src="images/support button/account.png" alt="User Avatar" class="account-avatar">

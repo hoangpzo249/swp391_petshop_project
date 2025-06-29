@@ -24,9 +24,9 @@
             </div>
 
             <div class="admin-profile">
-                                <c:choose>
-                    <c:when test="${not empty sessionScope.userAccount.accImage}">
-                        <img src="${sessionScope.userAccount.accImage}" alt="Admin Avatar"/>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.userAccount.displayAccImage()}">
+                        <img src="${sessionScope.userAccount.displayAccImage()}" width="45" height="45" class="table-avatar"/>
                     </c:when>
                     <c:otherwise>
                         <img src="images/support button/account.png" alt="Admin Avatar"/>
@@ -291,31 +291,31 @@
                                                         <option value="Manager" <c:if test="${roleStaff == 'Manager'}">selected</c:if>>Manager</option>
                                                         <option value="Seller"<c:if test="${roleStaff == 'Seller'}">selected</c:if>>Seller</option>
                                                         <option value="Shipper"<c:if test="${roleStaff == 'Shipper'}">selected</c:if>>Shipper</option>
-                                                    </select>
-                                                    <span class="select-arrow"><i class="fas fa-chevron-down"></i></span>
+                                                        </select>
+                                                        <span class="select-arrow"><i class="fas fa-chevron-down"></i></span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group col-half">
-                                                <label for="status">Trạng thái</label>
-                                                <div class="select-group">
-                                                    <select name="statusStaff" class="form-control" required>
-                                                        <option value="Active" <c:if test="${statusStaff == 'Active'}">selected</c:if>>Hoạt động</option>
+                                                <div class="form-group col-half">
+                                                    <label for="status">Trạng thái</label>
+                                                    <div class="select-group">
+                                                        <select name="statusStaff" class="form-control" required>
+                                                            <option value="Active" <c:if test="${statusStaff == 'Active'}">selected</c:if>>Hoạt động</option>
                                                         <option value="Inactive" <c:if test="${statusStaff == 'Inactive'}">selected</c:if>>Không hoạt động</option>
-                                                    </select>
-                                                    <span class="select-arrow"><i class="fas fa-chevron-down"></i></span>
+                                                        </select>
+                                                        <span class="select-arrow"><i class="fas fa-chevron-down"></i></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="form-section">
-                                        <h3 class="section-title">
-                                            <i class="fas fa-user-circle"></i> Thông tin cá nhân
-                                        </h3>
-                                        <div class="form-row">
-                                            <div class="form-group col-half">
-                                                <label for="firstName">Họ <span class="required">*</span></label>
-                                                <input type="text" name="fNameStaff" class="form-control" required value="${fNameStaff}">
+                                        <div class="form-section">
+                                            <h3 class="section-title">
+                                                <i class="fas fa-user-circle"></i> Thông tin cá nhân
+                                            </h3>
+                                            <div class="form-row">
+                                                <div class="form-group col-half">
+                                                    <label for="firstName">Họ <span class="required">*</span></label>
+                                                    <input type="text" name="fNameStaff" class="form-control" required value="${fNameStaff}">
                                             </div>
                                             <div class="form-group col-half">
                                                 <label for="lastName">Tên <span class="required">*</span></label>

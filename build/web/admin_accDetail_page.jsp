@@ -24,9 +24,9 @@
             </div>
 
             <div class="admin-profile">
-                                <c:choose>
-                    <c:when test="${not empty sessionScope.userAccount.accImage}">
-                        <img src="${sessionScope.userAccount.accImage}" alt="Admin Avatar"/>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.userAccount.displayAccImage()}">
+                        <img src="${sessionScope.userAccount.displayAccImage()}" width="45" height="45" class="table-avatar"/>
                     </c:when>
                     <c:otherwise>
                         <img src="images/support button/account.png" alt="Admin Avatar"/>
@@ -175,22 +175,15 @@
                             <div class="account-view-container">
                                 <div class="account-profile-section">
                                     <div class="account-profile">
+
                                         <c:choose>
-                                            <c:when test="${not empty accDetail.accImage}">
-                                                <img src="${accDetail.accImage}" alt="Avatar" width="45" height="45" class="account-avatar"/>
-                                            </c:when>
-                                            <c:otherwise>
-                                                                                        <c:choose>
-                                            <c:when test="${not empty accDetail.accImage}">
-                                                <img src="${accDetail.accImage}" alt="Avatar" width="45" height="45" class="account-avatar"/>
+                                            <c:when test="${not empty accDetail.displayAccImage()}">
+                                                <img src="${accDetail.displayAccImage()}" alt="Avatar" width="45" height="45" class="account-avatar"/>
                                             </c:when>
                                             <c:otherwise>
                                                 <img src="images/support button/account.png" alt="User Avatar" class="account-avatar">
                                             </c:otherwise>
                                         </c:choose>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        
                                         <h2 class="account-name">${accDetail.accFname} ${accDetail.accLname}</h2>
                                         <p class="account-username">@${accDetail.accUsername}</p>
 

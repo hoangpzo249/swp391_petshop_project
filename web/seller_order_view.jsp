@@ -28,7 +28,7 @@
 
             <div class="seller-profile">
                 <c:choose>
-                    <c:when test="${not empty sessionScope.userAccount.accImage}">
+                    <c:when test="${not empty sessionScope.userAccount.displayAccImage()}">
                         <img src="data:image/jpeg;base64,${sessionScope.userAccount.getBase64Image()}" alt="Seller Avatar"/>
                     </c:when>
                     <c:otherwise>

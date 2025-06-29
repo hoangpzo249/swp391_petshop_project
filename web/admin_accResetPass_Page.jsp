@@ -25,8 +25,8 @@
 
             <div class="admin-profile">
                                 <c:choose>
-                    <c:when test="${not empty sessionScope.userAccount.accImage}">
-                        <img src="${sessionScope.userAccount.accImage}" alt="Admin Avatar"/>
+                    <c:when test="${not empty sessionScope.userAccount.displayAccImage()}">
+                        <img src="${sessionScope.userAccount.displayAccImage()}" width="45" height="45" class="table-avatar"/>
                     </c:when>
                     <c:otherwise>
                         <img src="images/support button/account.png" alt="Admin Avatar"/>
@@ -140,8 +140,8 @@
                                     <div class="account-info-card">
                                         <div class="account-profile">
                                             <c:choose>
-                                                <c:when test="${not empty resetpass.accImage}">
-                                                    <img src="${resetpass.accImage}" alt="Avatar" width="45" height="45" class="account-avatar"/>
+                                                <c:when test="${not empty resetpass.displayAccImage()}">
+                                                    <img src="${resetpass.displayAccImage()}" alt="Avatar" width="45" height="45" class="account-avatar"/>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <img src="images/support button/account.png" alt="User Avatar" class="account-avatar">

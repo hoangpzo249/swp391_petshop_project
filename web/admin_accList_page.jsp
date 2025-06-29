@@ -24,9 +24,9 @@
             </div>
 
             <div class="admin-profile">
-                                <c:choose>
-                    <c:when test="${not empty sessionScope.userAccount.accImage}">
-                        <img src="${sessionScope.userAccount.accImage}" alt="Admin Avatar"/>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.userAccount.displayAccImage()}">
+                        <img src="${sessionScope.userAccount.displayAccImage()}" width="45" height="45" class="table-avatar"/>
                     </c:when>
                     <c:otherwise>
                         <img src="images/support button/account.png" alt="Admin Avatar"/>
@@ -195,8 +195,8 @@
                                             <td>
                                                 <div class="user-info">
                                                     <c:choose>
-                                                        <c:when test="${not empty acc.accImage}">
-                                                            <img src="${acc.accImage}" alt="Avatar" width="45" height="45" class="table-avatar"/>
+                                                        <c:when test="${not empty acc.displayAccImage()}">
+                                                            <img src="${acc.displayAccImage()}" alt="Avatar" width="45" height="45" class="table-avatar"/>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <img src="images/support button/account.png" class="table-avatar" alt="User">

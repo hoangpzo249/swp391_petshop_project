@@ -99,7 +99,7 @@
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    
+
                                     <c:choose>
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Customer'}">
                                             <a href="orders?status=pending" class="dropdown-item">
@@ -109,7 +109,7 @@
                                         </c:when>
                                         <c:otherwise></c:otherwise>
                                     </c:choose>
-                                    
+
                                     <a href="logout" class="dropdown-item logout">
                                         <i class="fas fa-sign-out-alt"></i> 
                                         <span>Đăng xuất</span>
@@ -182,8 +182,8 @@
                             <div class="profile-avatar-container">
                                 <div class="default-avatar">
                                     <c:choose>
-                                        <c:when test="${not empty sessionScope.userAccount.accImage}">
-                                            <img src="${sessionScope.userAccount.accImage}" alt="Avatar" width="150" height="150" class="avatar-img"/>
+                                        <c:when test="${not empty sessionScope.userAccount.displayAccImage()}">
+                                            <img src="${sessionScope.userAccount.displayAccImage()}" alt="Avatar" width="150" height="150" class="avatar-img"/>
                                         </c:when>
                                         <c:otherwise>
                                             <i class="fas fa-user"></i>
@@ -395,7 +395,8 @@
                                             </div>
                                             <div class="image-upload-text">Nhấp để tải ảnh lên</div>
                                         </label>
-                                        <input type="file" id="profile-image" name="avatar" class="file-input" accept="image/png, image/jpg" required />
+                                        
+                                        <input type="file" id="profile-image" name="images" class="file-input" multiple accept="image/*" required />
 
                                         <div class="save-btn-avatar1">
                                             <button type="submit" name="submitA" class="save-btn-avatar">Cập nhật ảnh đại diện</button>

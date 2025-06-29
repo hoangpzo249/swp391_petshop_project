@@ -28,7 +28,7 @@
 
             <div class="manager-profile">
                 <c:choose>
-                    <c:when test="${not empty sessionScope.userAccount.accImage}">
+                    <c:when test="${not empty sessionScope.userAccount.displayAccImage()}">
                         <img src="data:image/jpeg;base64,${sessionScope.userAccount.getBase64Image()}" alt="Manager Avatar"/>
                     </c:when>
                     <c:otherwise>

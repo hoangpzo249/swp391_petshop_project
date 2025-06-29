@@ -452,13 +452,13 @@ public class AccountDAO extends DBContext {
         }
     }
 
-    public boolean uploadAvatar(int accId, String avatar) {
+    public boolean uploadAvatar(int accId, byte[] avatar) {
         try {
             con = db.getConnection();
             String sql = "UPDATE AccountTB SET accImage = ? WHERE accId = ?";
             ps = con.prepareStatement(sql);
 
-            ps.setString(1, avatar);
+            ps.setBytes(1, avatar);
             ps.setInt(2, accId);
 
             int row = ps.executeUpdate();
