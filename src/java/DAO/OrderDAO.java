@@ -5,6 +5,7 @@
 package DAO;
 
 import Models.Order;
+import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,6 +43,14 @@ public class OrderDAO {
         order.setPaymentStatus(rs.getString("paymentStatus"));
         order.setTotalPrice(rs.getDouble("totalPrice"));
         order.setRejectionReason(rs.getString("rejectionReason"));
+        order.setDiscountId((Integer) rs.getObject("discountId"));
+        java.math.BigDecimal discountAmountBd = (java.math.BigDecimal) rs.getObject("discountAmountAtApply");
+
+        if (discountAmountBd != null) {
+            order.setDiscountAmountAtApply(discountAmountBd.doubleValue());
+        } else {
+            order.setDiscountAmountAtApply(null);
+        }
         return order;
     }
 
@@ -114,7 +123,7 @@ public class OrderDAO {
                     + "    o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
                     + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus, \n"
-                    + "    o.rejectionReason, o.discountId;";
+                    + "    o.rejectionReason, o.discountId, o.discountAmountAtApply;";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -127,16 +136,17 @@ public class OrderDAO {
         return null;
     }
 
-    private StringBuilder buildFilterWhereClause(String searchKey, String status, Date startDate, Date endDate, List<Object> params) {
+    private StringBuilder buildFilterWhereClause(String searchKey, String status, Date startDate, Date endDate) {
         StringBuilder whereClause = new StringBuilder();
 
         if (searchKey != null && !searchKey.trim().isEmpty()) {
-            if (searchKey.matches("\\d+")) {
+            String trimmedKey = searchKey.trim();
+            if (trimmedKey.matches("\\d+")) {
                 whereClause.append("o.orderId = ? ");
-                params.add(Integer.parseInt(searchKey.trim()));
+            } else if (trimmedKey.contains("@")) {
+                whereClause.append("o.customerEmail LIKE ? ");
             } else {
                 whereClause.append("o.customerName LIKE ? ");
-                params.add("%" + searchKey.trim() + "%");
             }
         }
 
@@ -145,7 +155,6 @@ public class OrderDAO {
                 whereClause.append("AND ");
             }
             whereClause.append("o.orderStatus = ? ");
-            params.add(status);
         }
 
         if (startDate != null) {
@@ -153,7 +162,6 @@ public class OrderDAO {
                 whereClause.append("AND ");
             }
             whereClause.append("CAST(o.orderDate AS DATE) >= ? ");
-            params.add(startDate);
         }
 
         if (endDate != null) {
@@ -161,7 +169,6 @@ public class OrderDAO {
                 whereClause.append("AND ");
             }
             whereClause.append("CAST(o.orderDate AS DATE) <= ? ");
-            params.add(endDate);
         }
 
         if (whereClause.length() > 0) {
@@ -173,60 +180,134 @@ public class OrderDAO {
 
     public int countFilteredOrders(String searchKey, String status, Date startDate, Date endDate) {
         DBContext db = new DBContext();
-        List<Object> params = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         String baseSql = "SELECT COUNT(o.orderId) FROM OrderTB o ";
-        StringBuilder whereClause = buildFilterWhereClause(searchKey, status, startDate, endDate, params);
+        StringBuilder whereClause = buildFilterWhereClause(searchKey, status, startDate, endDate);
         String finalSql = baseSql + whereClause.toString();
 
-        try (Connection conn = db.getConnection(); PreparedStatement ps = conn.prepareStatement(finalSql)) {
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(finalSql);
 
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
+            int paramIndex = 1;
+            if (searchKey != null && !searchKey.trim().isEmpty()) {
+                String trimmedKey = searchKey.trim();
+                if (trimmedKey.matches("\\d+")) {
+                    ps.setInt(paramIndex++, Integer.parseInt(trimmedKey));
+                } else if (trimmedKey.contains("@")) {
+                    ps.setString(paramIndex++, "%" + trimmedKey + "%");
+                } else {
+                    ps.setString(paramIndex++, "%" + trimmedKey + "%");
+                }
+            }
+            if (status != null && !status.trim().isEmpty()) {
+                ps.setString(paramIndex++, status);
+            }
+            if (startDate != null) {
+                ps.setDate(paramIndex++, new java.sql.Date(startDate.getTime()));
+            }
+            if (endDate != null) {
+                ps.setDate(paramIndex++, new java.sql.Date(endDate.getTime()));
             }
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
             }
         } catch (Exception ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return 0;
     }
 
-    public List<Order> filterOrderForSeller(String searchKey, String status, Date startDate, Date endDate, int pageNumber, int pageSize) {
+    public List<Order> filterOrderForSeller(String searchKey, String status, Date startDate, Date endDate, String sort, int pageNumber, int pageSize) {
         DBContext db = new DBContext();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sortDirection = "DESC";
+        if ("ASC".equalsIgnoreCase(sort)) {
+            sortDirection = "ASC";
+        }
+
         List<Order> list = new ArrayList<>();
-        List<Object> params = new ArrayList<>();
 
         String baseSql = "SELECT o.*, ISNULL(oc.totalPrice, 0) AS totalPrice FROM OrderTB o "
                 + "LEFT JOIN (SELECT orderId, SUM(priceAtOrder) as totalPrice FROM OrderContentTB GROUP BY orderId) oc "
                 + "ON o.orderId = oc.orderId ";
 
-        StringBuilder whereClause = buildFilterWhereClause(searchKey, status, startDate, endDate, params);
+        StringBuilder whereClause = buildFilterWhereClause(searchKey, status, startDate, endDate);
 
         String finalSql = baseSql + whereClause.toString()
-                + "ORDER BY o.orderId DESC "
+                + "ORDER BY o.orderId " + sortDirection + " "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
-        int offset = (pageNumber - 1) * pageSize;
-        params.add(offset);
-        params.add(pageSize);
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(finalSql);
 
-        try (Connection conn = db.getConnection(); PreparedStatement ps = conn.prepareStatement(finalSql)) {
-
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
+            int paramIndex = 1;
+            if (searchKey != null && !searchKey.trim().isEmpty()) {
+                String trimmedKey = searchKey.trim();
+                if (trimmedKey.matches("\\d+")) {
+                    ps.setInt(paramIndex++, Integer.parseInt(trimmedKey));
+                } else if (trimmedKey.contains("@")) {
+                    ps.setString(paramIndex++, "%" + trimmedKey + "%");
+                } else {
+                    ps.setString(paramIndex++, "%" + trimmedKey + "%");
+                }
+            }
+            if (status != null && !status.trim().isEmpty()) {
+                ps.setString(paramIndex++, status);
+            }
+            if (startDate != null) {
+                ps.setDate(paramIndex++, new java.sql.Date(startDate.getTime()));
+            }
+            if (endDate != null) {
+                ps.setDate(paramIndex++, new java.sql.Date(endDate.getTime()));
             }
 
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(orderInfo(rs));
-                }
+            int offset = (pageNumber - 1) * pageSize;
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, pageSize);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(orderInfo(rs));
             }
         } catch (Exception ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return list;
     }
@@ -251,7 +332,7 @@ public class OrderDAO {
                     + "GROUP BY \n"
                     + "    o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
-                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus, o.rejectionReason, o.discountId;";
+                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus, o.rejectionReason, o.discountId, o.discountAmountAtApply;";
 
             ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
@@ -360,8 +441,8 @@ public class OrderDAO {
         try {
             conn = new DBContext().getConnection();
 
-            String sql = "INSERT INTO OrderTB (accId, orderDate, orderStatus, customerName, customerEmail, customerPhone, customerAddress, shipperId, paymentMethod, paymentStatus, discountId) "
-                    + "VALUES (?, GETDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO OrderTB (accId, orderDate, orderStatus, customerName, customerEmail, customerPhone, customerAddress, shipperId, paymentMethod, paymentStatus, discountId, discountAmountAtApply) "
+                    + "VALUES (?, GETDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -388,6 +469,12 @@ public class OrderDAO {
                 ps.setNull(10, Types.INTEGER);
             } else {
                 ps.setInt(10, order.getDiscountId());
+            }
+
+            if (order.getDiscountAmountAtApply() == null) {
+                ps.setNull(11, Types.DECIMAL);
+            } else {
+                ps.setDouble(11, order.getDiscountAmountAtApply());
             }
 
             ps.executeUpdate();
@@ -456,18 +543,20 @@ public class OrderDAO {
     public List<Order> getOrderCus(int accId) {
         Connection conn = null;
         PreparedStatement ps = null;
+        ResultSet rs = null; // Declare rs here
         DBContext db = new DBContext();
         List<Order> list = new ArrayList<>();
         try {
             conn = db.getConnection();
             String sql = "SELECT o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
-                    + "o.customerAddress, o.shipperId, o.paymentMethod, o.paymentstatus, SUM(c.priceAtOrder) AS totalPrice, o.rejectionReason,p.petname\n"
+                    + "o.customerAddress, o.shipperId, o.paymentMethod, o.paymentstatus, SUM(c.priceAtOrder) AS totalPrice, o.rejectionReason, p.petname, o.discountAmountAtApply\n" // Added column to SELECT
                     + "from ordertb o\n"
                     + "join OrderContentTB c on o.orderid=c.orderid\n"
                     + "join pettb p on c.petid=p.petid\n"
-                    + "where accId =?\n"
+                    + "where o.accId = ?\n"
                     + "group by o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
-                    + "o.customerAddress, o.shipperId, o.paymentMethod,o.paymentstatus, o.rejectionReason,p.petname";
+                    + "o.customerAddress, o.shipperId, o.paymentMethod,o.paymentstatus, o.rejectionReason, p.petname, o.discountAmountAtApply"; // Added column to GROUP BY
+
             ps = conn.prepareStatement(sql);
             ps.setInt(1, accId);
             rs = ps.executeQuery();
@@ -482,16 +571,36 @@ public class OrderDAO {
                 o.setCustomerEmail(rs.getString("customerEmail"));
                 o.setCustomerPhone(rs.getString("customerPhone"));
                 o.setCustomerAddress(rs.getString("customerAddress"));
-                o.setShipperId(rs.getInt("shipperId"));
+                o.setShipperId((Integer) rs.getObject("shipperId"));
                 o.setPaymentMethod(rs.getString("paymentMethod"));
                 o.setPaymentStatus(rs.getString("paymentStatus"));
                 o.setRejectionReason(rs.getString("rejectionReason"));
                 o.setTotalPrice(rs.getDouble("totalPrice"));
                 o.setPetName(rs.getString("petName"));
+                o.setDiscountAmountAtApply((Double) rs.getObject("discountAmountAtApply"));
                 list.add(o);
             }
         } catch (Exception ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
         }
         return list;
     }
@@ -501,7 +610,7 @@ public class OrderDAO {
         try {
             conn = db.getConnection();
             String sql = "UPDATE OrderTB SET shipperId = ?, orderStatus = 'Pending Shipper' WHERE orderId = ?;";
-            ps=conn.prepareStatement(sql);
+            ps = conn.prepareStatement(sql);
             ps.setInt(1, shipperId);
             ps.setInt(2, orderId);
             ps.executeUpdate();
@@ -511,13 +620,13 @@ public class OrderDAO {
         }
         return false;
     }
-    
+
     public boolean unassignShipper(int orderId) {
         DBContext db = new DBContext();
         try {
             conn = db.getConnection();
             String sql = "UPDATE OrderTB SET shipperId = NULL, orderStatus = 'Confirmed' WHERE orderId = ?;";
-            ps=conn.prepareStatement(sql);
+            ps = conn.prepareStatement(sql);
             ps.setInt(1, orderId);
             ps.executeUpdate();
             return true;

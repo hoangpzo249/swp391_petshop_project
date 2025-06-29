@@ -199,7 +199,17 @@
 
                                         <div class="detail-label">Mã giảm giá</div>
                                         <div class="detail-value">
-                                            <c:out value="${empty order.discountId or order.discountId == 0 ? 'Không sử dụng' : order.discountId}"/>
+                                            <c:choose>
+                                                <c:when test="${empty order.discountId or order.discountId == 0}">
+                                                    Không sử dụng
+                                                </c:when>
+
+                                                <c:otherwise>
+                                                    ${order.discountId} 
+
+                                                    (<fmt:formatNumber value="${order.discountAmountAtApply}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>)
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
                                 </div>

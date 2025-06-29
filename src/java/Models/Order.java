@@ -4,7 +4,7 @@
  */
 package Models;
 
-import java.sql.Timestamp; 
+import java.sql.Timestamp;
 
 /**
  *
@@ -176,14 +176,20 @@ public class Order {
     public void setDeliveryDate(Timestamp deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
-    
-    
 
-    
+    private Double discountAmountAtApply;
+
+    public Double getDiscountAmountAtApply() {
+        return discountAmountAtApply;
+    }
+
+    public void setDiscountAmountAtApply(Double discountAmountAtApply) {
+        this.discountAmountAtApply = discountAmountAtApply;
+    }
+
     @Override
     public String toString() {
         return "Order{" + "orderId=" + orderId + ", accId=" + accId + ", orderDate=" + orderDate + ", orderStatus=" + orderStatus + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", customerPhone=" + customerPhone + ", customerAddress=" + customerAddress + ", shipperId=" + shipperId + ", paymentMethod=" + paymentMethod + ", paymentStatus=" + paymentStatus + ", totalPrice=" + totalPrice + ", rejectionReason=" + rejectionReason + ", discountId=" + discountId + '}';
     }
- 
+
 }
-   

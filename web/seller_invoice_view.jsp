@@ -24,7 +24,7 @@
             </div>
 
             <div class="seller-profile">
-                        <img src="${sessionScope.userAccount.displayAccImage()}" alt="Seller Avatar"/>
+                <img src="${sessionScope.userAccount.displayAccImage()}" alt="Seller Avatar"/>
                 </c:choose>
                 <div class="seller-info">
                     <span class="seller-name">${sessionScope.userAccount.accFname} ${sessionScope.userAccount.accLname}</span>
@@ -153,6 +153,13 @@
                                 <input type="date" name="endDate" value="${param.endDate}" onchange="this.form.submit()">
                             </div>
 
+                            <div class="select-group">
+                                <select name="sort" onchange="this.form.submit()">
+                                    <option value="DESC" ${param.sort == 'DESC' ? 'selected' : ''}>Hóa đơn mới nhất</option>
+                                    <option value="ASC" ${param.sort == 'ASC' ? 'selected' : ''}>Hóa đơn cũ nhất</option>
+                                </select>
+                            </div>
+
                             <button type="button" class="btn btn-outline" onclick="location.href = 'displayinvoice'">
                                 <i class="fas fa-times"></i> Xóa bộ lọc
                             </button>
@@ -162,7 +169,6 @@
                     <!-- Invoices Table -->
                     <div class="table-container">
                         <table>
-                            <%-- CHANGE 3: Update Table Headers --%>
                             <thead>
                                 <tr>
                                     <th>Mã HĐ</th>
@@ -174,7 +180,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <%-- CHANGE 4: Loop through 'invoiceList' --%>
                             <c:forEach items="${invoiceList}" var="invoice">
                                 <tr>
                                     <td><strong>#${invoice.invoiceId}</strong></td>
@@ -209,11 +214,9 @@
                         </table>
                     </div>
 
-                    <!-- CHANGE 5: Update Pagination -->
                     <c:if test="${totalPages > 1}">
                         <div class="pagination-container">
                             <ul class="pagination">
-                                <%-- Previous Button --%>
                                 <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
                                 <c:url value="displayinvoice" var="prevUrl">
                                     <c:param name="page" value="${currentPage - 1}"/>
@@ -221,10 +224,10 @@
                                     <c:if test="${not empty param.paymentMethod}"><c:param name="paymentMethod" value="${param.paymentMethod}"/></c:if>
                                     <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
                                     <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                    <c:if test="${not empty param.sort}"><c:param name="sort" value="${param.sort}"/></c:if>
                                 </c:url>
                                 <a class="page-link" href="${currentPage > 1 ? prevUrl : '#'}">«</a>
                                 </li>
-                                <%-- Page Numbers --%>
                                 <c:forEach begin="${startPage}" end="${endPage}" var="i">
                                     <c:url value="displayinvoice" var="pageUrl">
                                         <c:param name="page" value="${i}"/>
@@ -232,6 +235,7 @@
                                         <c:if test="${not empty param.paymentMethod}"><c:param name="paymentMethod" value="${param.paymentMethod}"/></c:if>
                                         <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
                                         <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                        <c:if test="${not empty param.sort}"><c:param name="sort" value="${param.sort}"/></c:if>
                                     </c:url>
                                     <li class="page-item ${currentPage == i ? 'active' : ''}">
                                         <a class="page-link" href="${pageUrl}">${i}</a>
@@ -245,6 +249,7 @@
                                     <c:if test="${not empty param.paymentMethod}"><c:param name="paymentMethod" value="${param.paymentMethod}"/></c:if>
                                     <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
                                     <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                    <c:if test="${not empty param.sort}"><c:param name="sort" value="${param.sort}"/></c:if>
                                 </c:url>
                                 <a class="page-link" href="${currentPage < totalPages ? nextUrl : '#'}">»</a>
                                 </li>

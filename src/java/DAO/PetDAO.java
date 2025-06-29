@@ -158,7 +158,7 @@ public class PetDAO {
         return images;
     }
 
-    private StringBuilder buildFilterQuery(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus, List<Object> params) {
+    private StringBuilder buildFilterQuery(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus) {
         StringBuilder sql = new StringBuilder(
                 " FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
                 + " WHERE 1=1 "
@@ -167,88 +167,154 @@ public class PetDAO {
         if (searchKey != null && !searchKey.trim().isEmpty()) {
             if (searchKey.matches("\\d+")) {
                 sql.append("AND p.petId = ? ");
-                params.add(Integer.parseInt(searchKey.trim()));
             } else {
                 sql.append("AND p.petName LIKE ? ");
-                params.add("%" + searchKey.trim() + "%");
             }
         }
         if (availability != null && !availability.isEmpty()) {
             sql.append("AND p.petAvailability = ? ");
-            params.add(availability);
         }
         if (species != null && !species.isEmpty()) {
             sql.append("AND b.breedSpecies = ? ");
-            params.add(species);
         }
         if (breedId != null && !breedId.isEmpty()) {
             sql.append("AND p.breedId = ? ");
-            params.add(breedId);
         }
         if (gender != null && !gender.isEmpty()) {
             sql.append("AND p.petGender = ? ");
-            params.add(gender);
         }
         if (vaccination != null && !vaccination.isEmpty()) {
             sql.append("AND p.petVaccination = ? ");
-            params.add(vaccination);
         }
         if (petStatus != null && !petStatus.isEmpty()) {
             sql.append("AND p.petStatus = ? ");
-            params.add(petStatus);
         }
         return sql;
     }
 
     public int countFilteredPetsForSeller(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus) {
-        List<Object> params = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
         StringBuilder sqlBase = new StringBuilder("SELECT COUNT(p.petId) ");
-        sqlBase.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus, params));
+        sqlBase.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus));
 
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sqlBase.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
-            }
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sqlBase.toString());
+            
+            int paramIndex = 1;
+            if (searchKey != null && !searchKey.trim().isEmpty()) {
+                if (searchKey.matches("\\d+")) {
+                    ps.setInt(paramIndex++, Integer.parseInt(searchKey.trim()));
+                } else {
+                    ps.setString(paramIndex++, "%" + searchKey.trim() + "%");
                 }
+            }
+            if (availability != null && !availability.isEmpty()) {
+                ps.setString(paramIndex++, availability);
+            }
+            if (species != null && !species.isEmpty()) {
+                ps.setString(paramIndex++, species);
+            }
+            if (breedId != null && !breedId.isEmpty()) {
+                ps.setString(paramIndex++, breedId);
+            }
+            if (gender != null && !gender.isEmpty()) {
+                ps.setString(paramIndex++, gender);
+            }
+            if (vaccination != null && !vaccination.isEmpty()) {
+                ps.setString(paramIndex++, vaccination);
+            }
+            if (petStatus != null && !petStatus.isEmpty()) {
+                ps.setString(paramIndex++, petStatus);
+            }
+            
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return 0;
     }
 
     public List<Pet> filterPetsForSeller(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus, int pageNumber, int pageSize) {
         List<Pet> list = new ArrayList<>();
-        List<Object> params = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
         StringBuilder sql = new StringBuilder("SELECT p.*, b.breedName ");
-        sql.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus, params));
+        sql.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus));
         sql.append("ORDER BY p.petId DESC ");
         sql.append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
-        int offset = (pageNumber - 1) * pageSize;
-        params.add(offset);
-        params.add(pageSize);
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql.toString());
 
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
-            }
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Pet pet = PetInfo(rs);
-                    Breed breed = new Breed();
-                    breed.setBreedId(rs.getInt("breedId"));
-                    breed.setBreedName(rs.getString("breedName"));
-                    pet.setBreed(breed);
-                    pet.setImages(getImageDataByPetId(pet.getPetId()));
-                    list.add(pet);
+            int paramIndex = 1;
+            if (searchKey != null && !searchKey.trim().isEmpty()) {
+                if (searchKey.matches("\\d+")) {
+                    ps.setInt(paramIndex++, Integer.parseInt(searchKey.trim()));
+                } else {
+                    ps.setString(paramIndex++, "%" + searchKey.trim() + "%");
                 }
+            }
+            if (availability != null && !availability.isEmpty()) {
+                ps.setString(paramIndex++, availability);
+            }
+            if (species != null && !species.isEmpty()) {
+                ps.setString(paramIndex++, species);
+            }
+            if (breedId != null && !breedId.isEmpty()) {
+                ps.setString(paramIndex++, breedId);
+            }
+            if (gender != null && !gender.isEmpty()) {
+                ps.setString(paramIndex++, gender);
+            }
+            if (vaccination != null && !vaccination.isEmpty()) {
+                ps.setString(paramIndex++, vaccination);
+            }
+            if (petStatus != null && !petStatus.isEmpty()) {
+                ps.setString(paramIndex++, petStatus);
+            }
+
+            int offset = (pageNumber - 1) * pageSize;
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, pageSize);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Pet pet = PetInfo(rs);
+                Breed breed = new Breed();
+                breed.setBreedId(rs.getInt("breedId"));
+                breed.setBreedName(rs.getString("breedName"));
+                pet.setBreed(breed);
+                pet.setImages(getImageDataByPetId(pet.getPetId()));
+                list.add(pet);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return list;
     }
