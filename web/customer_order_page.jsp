@@ -95,7 +95,7 @@
 
                                     <c:choose>
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Customer'}">
-                                            <a href="orders" class="dropdown-item">
+                                            <a href="orders?status=pending" class="dropdown-item">
                                                 <i class="fas fa-shopping-bag"></i> 
                                                 <span>Đơn hàng đã mua</span>
                                             </a>
@@ -170,14 +170,17 @@
 
                 <div class="orders-content">
                     <div class="order-tabs">
-                        <a href="orders?status=all" class="${empty param.status || param.status eq 'all' ? 'active' : ''}">
+<!--                        <a href="orders?status=all" class="${empty param.status || param.status eq 'all' ? 'active' : ''}">
                             <i class="fas fa-list-ul"></i> Tất cả
-                        </a>
+                        </a>-->
                         <a href="orders?status=pending" class="${param.status eq 'pending' ? 'active' : ''}">
                             <i class="fas fa-clock"></i> Chờ xác nhận
                         </a>
                         <a href="orders?status=confirmed" class="${param.status eq 'confirmed' ? 'active' : ''}">
                             <i class="fas fa-check"></i> Đã xác nhận
+                        </a>
+                        <a href="orders?status=pendingShipper" class="${param.status eq 'pendingShipper' ? 'active' : ''}">
+                            <i class="fas fa-user-clock"></i> Chờ shipper nhận
                         </a>
                         <a href="orders?status=shipping" class="${param.status eq 'shipping' ? 'active' : ''}">
                             <i class="fas fa-shipping-fast"></i> Đang giao
@@ -192,21 +195,21 @@
 
 
                     <div class="orders-list">
-
-                        <div class="order-search">
-                            <form action="orders" method="GET">
-                                <input type="hidden" name="status" value="${param.status}">
-                                <div class="search-container">
-                                    <input type="text" name="keyword" placeholder="Tìm kiếm theo mã đơn hàng..." value="${param.keyword}">
-                                    <button type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>                        
                         <c:choose>
-                            <c:when test="${param.status eq 'all'}">
+                            <c:when test="${param.status eq 'pending'}">
+                                <div class="order-search">
+                                    <form action="orders" method="GET">
+                                        <input type="hidden" name="status" value="${param.status}">
+                                        <div class="search-container">
+                                            <input type="text" name="keyword" placeholder="Tìm kiếm theo mã đơn hàng..." value="${param.keyword}">
+                                            <button type="submit">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div> 
                                 <c:forEach items="${orderList}" var="order">
+
                                     <div class="order-item">
                                         <div class="order-header">
                                             <div class="order-id">
@@ -273,12 +276,23 @@
 
                                             <div class="payment-info">
                                                 <h4><i class="fas fa-money-check-alt"></i> Thông tin thanh toán</h4>
-                                                <p><span class="label">Phương thức:</span> ${order.paymentMethod}</p>
+                                                <p><span class="label">Phương thức:</span> 
+                                                    <c:choose>
+                                                        <c:when test="${order.paymentMethod eq 'Cash on Delivery'}">
+                                                            Thanh toán khi nhận hàng
+                                                        </c:when>
+                                                    </c:choose>
+                                                </p>
                                                 <p><span class="label">Trạng thái:</span>
                                                     <c:choose>
                                                         <c:when test="${order.paymentStatus eq 'Paid'}">
                                                             <span class="payment-status paid">
                                                                 Đã thanh toán
+                                                            </span>
+                                                        </c:when>
+                                                        <c:when test="${order.paymentStatus eq 'Unpaid'}">
+                                                            <span class="payment-status unpaid">
+                                                                Chưa thanh toán
                                                             </span>
                                                         </c:when>
                                                     </c:choose>

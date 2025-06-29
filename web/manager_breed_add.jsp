@@ -71,7 +71,7 @@
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
-                        <a href="displayallbreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
+                        <a href="displaybreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
@@ -89,7 +89,7 @@
                     <h1 class="page-title"><i class="fas fa-plus-circle"></i> Thêm Giống Mới</h1>
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
-                        <li><a href="displayallbreed">Quản lý giống thú cưng</a></li>
+                        <li><a href="displaybreed">Quản lý giống thú cưng</a></li>
                         <li>Thêm mới</li>
                     </ul>
                 </div>
@@ -136,7 +136,7 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <a href="displayallbreed" class="btn btn-outline">Hủy bỏ</a>
+                            <a href="displaybreed" class="btn btn-outline">Hủy bỏ</a>
                             <button type="submit" class="btn btn-primary">Thêm giống</button>
                         </div>
                     </form>

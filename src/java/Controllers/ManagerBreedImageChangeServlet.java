@@ -4,8 +4,7 @@
  */
 package Controllers;
 
-import DAO.PetImageDAO;
-import Models.Account;
+import DAO.BreedDAO;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,7 +13,6 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.InputStream;
 import java.util.Base64;
@@ -26,7 +24,7 @@ import java.util.Map;
  * @author Lenovo
  */
 @MultipartConfig
-public class SellerPetImageActionServlet extends HttpServlet {
+public class ManagerBreedImageChangeServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,10 +43,10 @@ public class SellerPetImageActionServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SellerPetImageActionServlet</title>");
+            out.println("<title>Servlet ManagerBreedImageChangeServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SellerPetImageActionServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ManagerBreedImageChangeServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -66,13 +64,7 @@ public class SellerPetImageActionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Account account = (Account) session.getAttribute("userAccount");
-        if (account == null || !account.getAccRole().equals("Seller")) {
-            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
-            response.sendRedirect("homepage");
-            return;
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -90,30 +82,26 @@ public class SellerPetImageActionServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        PetImageDAO _dao = new PetImageDAO();
+        BreedDAO _dao = new BreedDAO();
         Map<String, Object> jsonResponse = new HashMap<>();
         Gson gson = new Gson();
 
         try {
-            int petId = Integer.parseInt(request.getParameter("petId"));
-            int imageId = Integer.parseInt(request.getParameter("imageId"));
+            int breedId = Integer.parseInt(request.getParameter("breedId"));
             String action = request.getParameter("action");
 
-            switch (action) {
-                case "change":
-                    Part filePart = request.getPart("newImageFile");
-                    if (filePart == null || filePart.getSize() == 0) {
-                        jsonResponse.put("success", false);
-                        jsonResponse.put("message", "Không có ảnh nào được tải lên.");
-                        break;
-                    }
-
+            if ("changeImage".equals(action)) {
+                Part filePart = request.getPart("newImageFile");
+                if (filePart == null || filePart.getSize() == 0) {
+                    jsonResponse.put("success", false);
+                    jsonResponse.put("message", "Không có ảnh nào được tải lên.");
+                } else {
                     byte[] imageData;
                     try (InputStream fileContent = filePart.getInputStream()) {
                         imageData = fileContent.readAllBytes();
                     }
 
-                    if (_dao.changeImageById(imageId, imageData)) {
+                    if (_dao.updateBreedImage(breedId, imageData)) {
                         String base64Image = Base64.getEncoder().encodeToString(imageData);
                         jsonResponse.put("success", true);
                         jsonResponse.put("message", "Đã thay đổi ảnh thành công.");
@@ -122,26 +110,15 @@ public class SellerPetImageActionServlet extends HttpServlet {
                         jsonResponse.put("success", false);
                         jsonResponse.put("message", "Đã xảy ra lỗi khi thay đổi ảnh.");
                     }
-                    break;
-                case "delete":
-                    if (_dao.countImagesById(petId) <= 1) {
-                        jsonResponse.put("success", false);
-                        jsonResponse.put("message", "Không thể xóa ảnh cuối cùng. Thú cưng phải có ít nhất một ảnh.");
-                    } else {
-                        if (_dao.deleteImageById(petId, imageId)) {
-                            jsonResponse.put("success", true);
-                            jsonResponse.put("message", "Đã xóa ảnh thành công.");
-                        } else {
-                            jsonResponse.put("success", false);
-                            jsonResponse.put("message", "Đã xảy ra lỗi khi xóa ảnh.");
-                        }
-                    }
-                    break;
-                default:
-                    jsonResponse.put("success", false);
-                    jsonResponse.put("message", "Hành động không hợp lệ.");
-                    break;
+                }
+            } else {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Hành động không hợp lệ.");
             }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "ID giống thú cưng không hợp lệ.");
         } catch (Exception e) {
             e.printStackTrace();
             jsonResponse.put("success", false);

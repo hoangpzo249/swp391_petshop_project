@@ -100,7 +100,7 @@
                                     </a>
                                     <c:choose>
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Customer'}">
-                                            <a href="orders" class="dropdown-item">
+                                            <a href="orders?status=pending" class="dropdown-item">
                                                 <i class="fas fa-shopping-bag"></i> 
                                                 <span>Đơn hàng đã mua</span>
                                             </a>
@@ -183,7 +183,6 @@
                     </div>
                 </c:forEach>
             </div>
-
 
             <!-- cat-product -->
 

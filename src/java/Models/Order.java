@@ -27,6 +27,7 @@ public class Order {
     private String rejectionReason;
     private Integer discountId;
     private String petName;
+    private Timestamp deliveryDate;
 
     public Order() {
     }
@@ -167,6 +168,16 @@ public class Order {
     public void setPetName(String petName) {
         this.petName = petName;
     }
+
+    public Timestamp getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(Timestamp deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+    
+    
 
     
     @Override

@@ -31,6 +31,7 @@ public class OrderDAO {
         order.setOrderId(rs.getInt("orderId"));
         order.setAccId(rs.getInt("accId"));
         order.setOrderDate(rs.getTimestamp("orderDate"));
+        order.setDeliveryDate(rs.getTimestamp("deliveryDate"));
         order.setOrderStatus(rs.getString("orderStatus"));
         order.setCustomerName(rs.getString("customerName"));
         order.setCustomerEmail(rs.getString("customerEmail"));
@@ -55,19 +56,25 @@ public class OrderDAO {
 
             if (reason != null && !reason.trim().isEmpty()) {
                 sql = "UPDATE OrderTB "
-                        + "SET orderStatus = ?, rejectionReason = ? "
+                        + "SET orderStatus = ?, "
+                        + "deliveryDate = CASE WHEN ? = 'Delivered' THEN GETDATE() ELSE NULL END, "
+                        + "rejectionReason = ? "
                         + "WHERE orderId = ?;";
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, status);
-                ps.setString(2, reason);
-                ps.setInt(3, id);
+                ps.setString(2, status);
+                ps.setString(3, reason);
+                ps.setInt(4, id);
             } else {
                 sql = "UPDATE OrderTB "
-                        + "SET orderStatus = ?, rejectionReason = NULL "
+                        + "SET orderStatus = ?, "
+                        + "deliveryDate = CASE WHEN ? = 'Delivered' THEN GETDATE() ELSE NULL END, "
+                        + "rejectionReason = NULL "
                         + "WHERE orderId = ?;";
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, status);
-                ps.setInt(2, id);
+                ps.setString(2, status);
+                ps.setInt(3, id);
             }
 
             ps.executeUpdate();
@@ -104,10 +111,10 @@ public class OrderDAO {
                     + "LEFT JOIN \n"
                     + "    OrderContentTB oc ON o.orderId = oc.orderId\n"
                     + "GROUP BY \n"
-                    + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
+                    + "    o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
                     + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus, \n"
-                    + "    o.rejectionReason;";
+                    + "    o.rejectionReason, o.discountId;";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -224,7 +231,7 @@ public class OrderDAO {
         return list;
     }
 
-    public Order getOrderById(String id) {
+    public Order getOrderById(int id) {
         DBContext db = new DBContext();
         Connection conn = null;
         PreparedStatement ps = null;
@@ -242,14 +249,12 @@ public class OrderDAO {
                     + "WHERE \n"
                     + "    o.orderId = ? \n"
                     + "GROUP BY \n"
-                    + "    o.orderId, o.accId, o.orderDate, o.orderStatus, \n"
+                    + "    o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, \n"
                     + "    o.customerName, o.customerEmail, o.customerPhone, \n"
-
-                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus,  o.rejectionReason,o.discountId;";
-
+                    + "    o.customerAddress, o.shipperId, o.paymentMethod, o.paymentStatus, o.rejectionReason, o.discountId;";
 
             ps = conn.prepareStatement(sql);
-            ps.setString(1, id);
+            ps.setInt(1, id);
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -371,7 +376,11 @@ public class OrderDAO {
             ps.setString(4, order.getCustomerEmail());
             ps.setString(5, order.getCustomerPhone());
             ps.setString(6, order.getCustomerAddress());
-            ps.setInt(7, order.getShipperId());
+            if (order.getShipperId() != null) {
+                ps.setInt(7, order.getShipperId());
+            } else {
+                ps.setNull(7, java.sql.Types.INTEGER);
+            }
             ps.setString(8, order.getPaymentMethod());
             ps.setString(9, order.getPaymentStatus());
 
@@ -444,9 +453,6 @@ public class OrderDAO {
 
     }
 
-        
-
-
     public List<Order> getOrderCus(int accId) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -454,13 +460,13 @@ public class OrderDAO {
         List<Order> list = new ArrayList<>();
         try {
             conn = db.getConnection();
-            String sql = "SELECT o.orderId, o.accId, o.orderDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
+            String sql = "SELECT o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
                     + "o.customerAddress, o.shipperId, o.paymentMethod, o.paymentstatus, SUM(c.priceAtOrder) AS totalPrice, o.rejectionReason,p.petname\n"
                     + "from ordertb o\n"
                     + "join OrderContentTB c on o.orderid=c.orderid\n"
                     + "join pettb p on c.petid=p.petid\n"
                     + "where accId =?\n"
-                    + "group by o.orderId, o.accId, o.orderDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
+                    + "group by o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
                     + "o.customerAddress, o.shipperId, o.paymentMethod,o.paymentstatus, o.rejectionReason,p.petname";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, accId);
@@ -470,6 +476,7 @@ public class OrderDAO {
                 o.setOrderId(rs.getInt("orderId"));
                 o.setAccId(rs.getInt("accId"));
                 o.setOrderDate(rs.getTimestamp("orderDate"));
+                o.setDeliveryDate(rs.getTimestamp("deliveryDate"));
                 o.setOrderStatus(rs.getString("orderStatus"));
                 o.setCustomerName(rs.getString("customerName"));
                 o.setCustomerEmail(rs.getString("customerEmail"));
@@ -489,5 +496,34 @@ public class OrderDAO {
         return list;
     }
 
-
+    public boolean assignShipper(int orderId, int shipperId) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "UPDATE OrderTB SET shipperId = ?, orderStatus = 'Pending Shipper' WHERE orderId = ?;";
+            ps=conn.prepareStatement(sql);
+            ps.setInt(1, shipperId);
+            ps.setInt(2, orderId);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean unassignShipper(int orderId) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "UPDATE OrderTB SET shipperId = NULL, orderStatus = 'Confirmed' WHERE orderId = ?;";
+            ps=conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 }

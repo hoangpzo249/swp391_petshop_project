@@ -5,6 +5,7 @@
 package DAO;
 
 import Models.Account;
+import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -122,12 +125,14 @@ public class AccountDAO extends DBContext {
 //        return false;
     }
 
-    public void registerAccStaffByAdmin(Account account) {
+    public int registerAccStaffByAdmin(Account account) {
+        int generatedId = -1; // default in case of failure
         try {
             con = db.getConnection();
             String sql = "INSERT INTO AccountTB(accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRole, accDescription, accCreateDate, accImage, accStatus) \n"
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), Null, ?);";
-            ps = con.prepareStatement(sql);
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), NULL, ?);";
+
+            ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, account.getAccUsername());
             ps.setString(2, account.getAccEmail());
@@ -141,13 +146,29 @@ public class AccountDAO extends DBContext {
             ps.setString(10, "New account");
             ps.setString(11, account.getAccStatus());
 
-//            int rowsAffected = ps.executeUpdate();
-            ps.executeUpdate();
-//            return rowsAffected > 0;
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                }
+                rs.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
-//        return false;
+        return generatedId;
     }
 
     public boolean isEmailExist(String email) {
@@ -832,5 +853,38 @@ public class AccountDAO extends DBContext {
     public boolean LoginUser(String username, String password) {
         Account acc = FindUserInfo(username);
         return acc != null && BCrypt.checkpw(password, acc.getAccPassword());
+    }
+
+    public void shipperAccount(int newId) {
+        DBContext db = new DBContext();
+        try {
+            con = db.getConnection();
+            String sql = "INSERT INTO ShipperTB (shipperId, shipperAvailability)\n"
+                    + "VALUES (?, 'Offline');";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, newId);
+            ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public String getUserFullnameById(int accId) {
+        DBContext db = new DBContext();
+        String fullname = "";
+        try {
+            con = db.getConnection();
+            String sql = "SELECT accLname, accFname FROM AccountTB WHERE accId=?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, accId);
+            rs=ps.executeQuery();
+            while (rs.next()) {
+                fullname = rs.getString("accLname") + " " + rs.getString("accFname");
+            }
+            return fullname;
+        } catch (Exception ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

@@ -15,14 +15,14 @@ public class Breed {
     private int breedId;
     private String breedName;
     private String breedSpecies;
-    private boolean breedStatus;
+    private int breedStatus;
     private byte[] breedImage;
     private int totalPurchases;
 
     public Breed() {
     }
 
-    public Breed(int breedId, String breedName, String breedSpecies, boolean breedStatus, byte[] breedImage) {
+    public Breed(int breedId, String breedName, String breedSpecies, int breedStatus, byte[] breedImage) {
         this.breedId = breedId;
         this.breedName = breedName;
         this.breedSpecies = breedSpecies;
@@ -30,7 +30,7 @@ public class Breed {
         this.breedImage = breedImage;
     }
 
-    public Breed(int breedId, String breedName, String breedSpecies, boolean breedStatus, byte[] breedImage, int totalPurchases) {
+    public Breed(int breedId, String breedName, String breedSpecies, int breedStatus, byte[] breedImage, int totalPurchases) {
         this.breedId = breedId;
         this.breedName = breedName;
         this.breedSpecies = breedSpecies;
@@ -63,11 +63,11 @@ public class Breed {
         this.breedSpecies = breedSpecies;
     }
 
-    public boolean isBreedStatus() {
+    public int getBreedStatus() {
         return breedStatus;
     }
 
-    public void setBreedStatus(boolean breedStatus) {
+    public void setBreedStatus(int breedStatus) {
         this.breedStatus = breedStatus;
     }
 

@@ -101,7 +101,7 @@
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="orders" class="dropdown-item">
+                                    <a href="orders?status=pending" class="dropdown-item">
                                         <i class="fas fa-shopping-bag"></i> 
                                         <span>Đơn hàng đã mua</span>
                                     </a>
@@ -174,7 +174,7 @@
                         <button class="thumbnail-nav"><i class="fas fa-chevron-left"></i></button>
 
                         <div class="thumbnails">
-                            <c:forEach var="img" items="${pet.getImages()}">
+                            <c:forEach var="img" items="${pet.images}">
 
                                 <div class="thumbnail-box">
                                     <img src="${pet.getImage(img)}" alt="Thumbnail" class="thumbnail-img" onclick="showImage('${pet.getImage(img)}')" />
