@@ -32,7 +32,22 @@
             <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/src/java/Controllers/DiscountCheckServlet.java</file>
             <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/src/java/Controllers/DeactivateDiscountServlet.java</file>
             <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/src/java/Controllers/DiscountManagerServlet.java</file>
-            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/src/java/Controllers/ResetDiscountUsageServlet.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/web/WEB-INF/web.xml</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/web/admin_accBan_page.jsp</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/src/java/Controllers/DeleteFromCart.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/web/main_typepet.jsp</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/src/java/Controllers/ListShopPetServlet.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/src/java/DAO/BreedDAO.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/src/java/DAO/PetDAO.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/src/java/Controllers/DisplayPetServlet.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/src/java/Controllers/AddToCartServlet.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/web/home_page.jsp</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/test/BreedDAOTest.java</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/web/js/discount_fixed.js</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/web/manager_breed_view.jsp</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/web/seller_pet_add.jsp</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/web/manager_breed_add.jsp</file>
+            <file>file:/E:/Bản%20đầy%20đủ/Bản%20nộp%202/swp391_petshop_project%20-%20Copy/src/java/Controllers/ManagerAddBreedServlet.java</file>
         </group>
     </open-files>
 </project-private>

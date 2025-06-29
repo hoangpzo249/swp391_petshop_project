@@ -47,7 +47,6 @@ public class VnPayReturnServlet extends HttpServlet {
         double discountAmount = (Double) session.getAttribute("discountAmount");
         PetDAO petDao = new PetDAO();
         boolean available = true;
-
         if ("00".equals(responseCode)) {
             if (selectedPetIds != null) {
                 for (String petIdStr : selectedPetIds) {
@@ -79,7 +78,7 @@ public class VnPayReturnServlet extends HttpServlet {
                     DiscountDAO ddao = new DiscountDAO();
                     Integer discountId = ddao.getActiveDiscountByCode(discountCode).getDiscountId();
                     order.setDiscountId(discountId);
-                    order.setDiscountAmountAtApply(discountAmount); 
+                    order.setDiscountAmountAtApply(discountAmount);
                     ddao.increaseUsageCount(discountCode);
                 } else {
                     order.setDiscountId(null);
@@ -95,7 +94,9 @@ public class VnPayReturnServlet extends HttpServlet {
                 }
 
                 EmailSender.sendRejectOrderRefund(email, orderId, totalPrice);
+                session.removeAttribute("selectedPets");
                 session.removeAttribute("discountAmount");
+                session.removeAttribute("amount");
                 session.removeAttribute("discountCode");
 
                 req.setAttribute("unavailableMessage", "Đơn hàng đã được ghi nhận nhưng thú cưng không còn khả dụng. Chúng tôi sẽ hoàn tiền trong thời gian sớm nhất.");
@@ -118,7 +119,7 @@ public class VnPayReturnServlet extends HttpServlet {
                     DiscountDAO ddao = new DiscountDAO();
                     Integer discountId = ddao.getActiveDiscountByCode(discountCode).getDiscountId();
                     order.setDiscountId(discountId);
-                    order.setDiscountAmountAtApply(discountAmount); 
+                    order.setDiscountAmountAtApply(discountAmount);
                     ddao.increaseUsageCount(discountCode);
                 } else {
                     order.setDiscountId(null);
@@ -136,7 +137,9 @@ public class VnPayReturnServlet extends HttpServlet {
                     }
                 }
                 EmailSender.sendConfirmOrderCustomer(email, orderId, orderedPets, discountAmount, totalPrice);
+                session.removeAttribute("selectedPets");
                 session.removeAttribute("discountAmount");
+                session.removeAttribute("amount");
                 session.removeAttribute("discountCode");
                 req.setAttribute("status", "success");
                 req.setAttribute("orderId", orderId);
@@ -148,8 +151,12 @@ public class VnPayReturnServlet extends HttpServlet {
 
             }
         } else {
-            // Không thành công
+
             req.setAttribute("status", "fail");
+            session.removeAttribute("selectedPets");
+            session.removeAttribute("discountAmount");
+            session.removeAttribute("amount");
+            session.removeAttribute("discountCode");
             resp.sendRedirect("homepage");
 
         }

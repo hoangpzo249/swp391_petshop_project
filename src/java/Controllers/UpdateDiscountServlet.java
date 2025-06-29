@@ -151,8 +151,8 @@ public class UpdateDiscountServlet extends HttpServlet {
             if (maxValue != null && !maxValue.trim().isEmpty()) {
                 try {
                     double maxVal = Double.parseDouble(maxValue.trim());
-                    if (maxVal < 0) {
-                        request.setAttribute("errMess", "Giảm tối đa phải là số không âm.");
+                    if (maxVal <= 0) {
+                        request.setAttribute("errMess", "Giảm tối đa phải là số dương.");
                         request.getRequestDispatcher("update_discount.jsp").forward(request, response);
                         return;
                     }
@@ -167,8 +167,8 @@ public class UpdateDiscountServlet extends HttpServlet {
             if (maxUsage != null && !maxUsage.trim().isEmpty()) {
                 try {
                     int maxUse = Integer.parseInt(maxUsage.trim());
-                    if (maxUse < 0) {
-                        request.setAttribute("errMess", "Số lần sử dụng không được nhỏ hơn 0.");
+                    if (maxUse <= 0) {
+                        request.setAttribute("errMess", "Số lần sử dụng phải lớn hơn 0.");
                         request.getRequestDispatcher("update_discount.jsp").forward(request, response);
                         return;
                     }
@@ -184,7 +184,7 @@ public class UpdateDiscountServlet extends HttpServlet {
             fromDate = Date.valueOf(from);
             toDate = Date.valueOf(to);
             if (fromDate.after(toDate)) {
-                request.setAttribute("errMess", "Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.");
+                request.setAttribute("errMess", "Ngày bắt đầu phải trước ngày kết thúc.");
                 request.getRequestDispatcher("update_discount.jsp").forward(request, response);
                 return;
             }

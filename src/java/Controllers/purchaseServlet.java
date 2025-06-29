@@ -40,19 +40,25 @@ import java.util.TimeZone;
 public class purchaseServlet extends HttpServlet {
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doPost(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Account account = (Account) session.getAttribute("userAccount");
         Integer accId = account != null ? account.getAccId() : null;
-        String paymentMethod = req.getParameter("payment-method");
-        String name = req.getParameter("guestName");
-        String email = req.getParameter("email");
-        String phone = req.getParameter("guestPhone");
-        String address = req.getParameter("guestAddress");
-        String[] selectedPetIds = req.getParameterValues("selectedPets");
-        double totalPrice = Double.parseDouble(req.getParameter("amount"));
-        double discountAmount = Double.parseDouble(req.getParameter("discountAmount"));
-        String discountCode = req.getParameter("discountCode");
+        String paymentMethod = (String) session.getAttribute("paymentMethod");
+        String name = (String) session.getAttribute("guestName");
+        String email = (String) session.getAttribute("email");
+        String phone = (String) session.getAttribute("guestPhone");
+        String address = (String) session.getAttribute("guestAddress");
+        String[] selectedPetIds = (String[]) session.getAttribute("selectedPets");
+        double totalPrice = Double.parseDouble((String) session.getAttribute("amount"));
+        double discountAmount = Double.parseDouble((String) session.getAttribute("discountAmount"));
+        String discountCode = (String) session.getAttribute("discountCode");
+
         session.setAttribute("guestName", name);
         session.setAttribute("email", email);
         session.setAttribute("guestPhone", phone);
@@ -75,7 +81,10 @@ public class purchaseServlet extends HttpServlet {
             }
         }
         if (!available) {
-
+            session.removeAttribute("selectedPets");
+            session.removeAttribute("discountAmount");
+            session.removeAttribute("amount");
+            session.removeAttribute("discountCode");
             req.getRequestDispatcher("pet_unavailable.jsp").forward(req, resp);
             return;
         }
@@ -98,10 +107,10 @@ public class purchaseServlet extends HttpServlet {
                 DiscountDAO ddao = new DiscountDAO();
                 Integer discountId = ddao.getActiveDiscountByCode(discountCode).getDiscountId();
                 order.setDiscountId(discountId);
-                order.setDiscountAmountAtApply(discountAmount); 
+                order.setDiscountAmountAtApply(discountAmount);
                 ddao.increaseUsageCount(discountCode);
                 Discount d = ddao.getDiscountById(discountId);
-                if ((d.getUsageCount()>=d.getMaxUsage())&&d.isActive()){
+                if ((d.getUsageCount() >= d.getMaxUsage()) && d.isActive()) {
                     ddao.updateStatus(discountId);
                 }
             } else {
@@ -126,20 +135,26 @@ public class purchaseServlet extends HttpServlet {
             Date now = new Date();
             String orderDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(now);
             req.setAttribute("date", orderDate);
+            session.removeAttribute("selectedPets");
+            session.removeAttribute("discountAmount");
+            session.removeAttribute("amount");
+            session.removeAttribute("discountCode");
             req.getRequestDispatcher("confirm.jsp").forward(req, resp);
         } else if ("bank".equals(paymentMethod)) {
-            session.setAttribute("selectedPets", selectedPetIds);
+            session.setAttribute("guestName", name);
+            session.setAttribute("guestPhone", phone);
+            session.setAttribute("guestAddress", address);
+            session.setAttribute("email", email);
+            session.setAttribute("discountCode", discountCode);
             session.setAttribute("totalPrice", totalPrice);
             session.setAttribute("discountAmount", discountAmount);
-            session.setAttribute("discountCode", discountCode);
+            session.setAttribute("selectedPetIds", selectedPetIds);
+
             String vnp_Version = "2.1.0";
             String vnp_Command = "pay";
             String orderType = "other";
-
-            long amount = (long) (Double.parseDouble(req.getParameter("amount")) * 100);
-
+            long amount = (long) (totalPrice * 100);
             String bankCode = req.getParameter("bankCode");
-
             String vnp_TxnRef = Config.getRandomNumber(8);
             String vnp_IpAddr = Config.getIpAddress(req);
 

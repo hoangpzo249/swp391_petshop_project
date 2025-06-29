@@ -54,11 +54,11 @@
                 <div class="sidebar-menu">
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
-                        <a href="displayalldiscounts" class="sidebar-link active"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
+                        <a href="discountmanager" class="sidebar-link active"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
-                        <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã mới</a>
+                        <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã giảm giá mới</a>
                     </div>
                 </div>
             </div>
@@ -195,8 +195,7 @@
                                                         <i class="fas fa-pencil-alt"></i>
                                                     </a>
                                                     <a class="action-btn ${d.active ? 'toggle-btn-active' : 'toggle-btn-inactive'}"
-                                                       href="deactivatediscount?id=${d.discountId}"
-                                                       title="${d.active ? 'Tạm ngưng mã' : 'Kích hoạt mã'}" >
+                                                       href="deactivatediscount?id=${d.discountId}" >
                                                         <i class="fas ${d.active ? 'fa-check-square' : 'fa-ban'} fa-fw"></i>
                                                     </a>
                                                     <a class="action-btn reset-btn " href="resetdiscountusage?id=${d.discountId}" style="background: red" >
