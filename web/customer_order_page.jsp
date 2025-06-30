@@ -173,163 +173,157 @@
 <!--                        <a href="orders?status=all" class="${empty param.status || param.status eq 'all' ? 'active' : ''}">
                             <i class="fas fa-list-ul"></i> Tất cả
                         </a>-->
-                        <a href="orders?status=pending" class="${param.status eq 'pending' ? 'active' : ''}">
+                        <a href="orders?status=pending" class="${status eq 'pending' ? 'active' : ''}">
                             <i class="fas fa-clock"></i> Chờ xác nhận
                         </a>
-                        <a href="orders?status=confirmed" class="${param.status eq 'confirmed' ? 'active' : ''}">
+                        <a href="orders?status=confirmed" class="${status eq 'confirmed' ? 'active' : ''}">
                             <i class="fas fa-check"></i> Đã xác nhận
                         </a>
-                        <a href="orders?status=pendingShipper" class="${param.status eq 'pendingShipper' ? 'active' : ''}">
+                        <a href="orders?status=pendingShipper" class="${status eq 'pendingShipper' ? 'active' : ''}">
                             <i class="fas fa-user-clock"></i> Chờ shipper nhận
                         </a>
-                        <a href="orders?status=shipping" class="${param.status eq 'shipping' ? 'active' : ''}">
+                        <a href="orders?status=shipping" class="${status eq 'shipping' ? 'active' : ''}">
                             <i class="fas fa-shipping-fast"></i> Đang giao
                         </a>
-                        <a href="orders?status=delivered" class="${param.status eq 'delivered' ? 'active' : ''}">
+                        <a href="orders?status=delivered" class="${status eq 'delivered' ? 'active' : ''}">
                             <i class="fas fa-box-open"></i> Đã giao
                         </a>
-                        <a href="orders?status=rejected" class="${param.status eq 'rejected' ? 'active' : ''}">
+                        <a href="orders?status=rejected" class="${status eq 'rejected' ? 'active' : ''}">
                             <i class="fas fa-times"></i> Đã hủy
                         </a>
                     </div>
 
-
                     <div class="orders-list">
-                        <c:choose>
-                            <c:when test="${param.status eq 'pending'}">
-                                <div class="order-search">
-                                    <form action="orders" method="GET">
-                                        <input type="hidden" name="status" value="${param.status}">
-                                        <div class="search-container">
-                                            <input type="text" name="keyword" placeholder="Tìm kiếm theo mã đơn hàng..." value="${param.keyword}">
-                                            <button type="submit">
-                                                <i class="fas fa-search"></i>
-                                            </button>
+                        <div class="order-search">
+                            <form action="orders" method="GET">
+                                <input type="hidden" name="status" value="${status}" />
+                                <div class="search-container">
+                                    <input type="text" name="keyword" placeholder="Tìm kiếm theo mã đơn hàng..." value="${keyword}">
+                                    <button type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div> 
+                        <c:forEach items="${orderList}" var="order">
+
+                            <div class="order-item">
+                                <div class="order-header">
+                                    <div class="order-id">
+                                        <span class="label">Mã đơn hàng:</span>
+                                        <span class="value">#${order.orderId}</span>
+                                    </div>
+
+                                    <div class="order-date">
+                                        <i class="far fa-calendar-alt"></i>
+                                        <span><fmt:formatDate value="${order.orderDate}" pattern="HH:mm dd-MM-yyyy"/></span>
+                                    </div>
+
+                                    <c:choose>
+                                        <c:when test="${order.orderStatus eq 'Pending'}">
+                                            <div class="order-status pending">
+                                                <i class="fas fa-clock"></i>Chờ xác nhận
+                                            </div>
+                                        </c:when>
+                                        <c:when test="${order.orderStatus eq 'Rejected'}">
+                                            <div class="order-status rejected">
+                                                <i class="fas fa-times"></i>Đã hủy
+                                            </div>
+                                        </c:when>
+                                        <c:when test="${order.orderStatus eq 'Confirmed'}">
+                                            <div class="order-status confirmed">
+                                                <i class="fas fa-check"></i>Đã xác nhận
+                                            </div>
+                                        </c:when>
+                                        <c:when test="${order.orderStatus eq 'Shipping'}">
+                                            <div class="order-status shipping">
+                                                <i class="fas fa-shipping-fast"></i>Đang giao
+                                            </div>
+                                        </c:when>
+                                        <c:when test="${order.orderStatus eq 'Delivered'}">
+                                            <div class="order-status delivered">
+                                                <i class="fas fa-box-open"></i>Đã giao
+                                            </div>
+                                        </c:when>
+                                    </c:choose>
+                                </div>
+
+
+                                <div class="order-products">
+                                    <div class="order-product">
+                                        <div class="product-image">
+                                            <img src="images/pets/defaultcatdog.jpg" alt="Golden Retriever">
                                         </div>
-                                    </form>
-                                </div> 
-                                <c:forEach items="${orderList}" var="order">
-
-                                    <div class="order-item">
-                                        <div class="order-header">
-                                            <div class="order-id">
-                                                <span class="label">Mã đơn hàng:</span>
-                                                <span class="value">#${order.orderId}</span>
+                                        <div class="product-details">
+                                            <h4 class="product-name">${order.petName}</h4>
+                                            <!--<p class="product-price">${order.totalPrice} VNĐ</p>-->
+                                            <div class="product-price">
+                                                <fmt:formatNumber  value="${order.totalPrice}" pattern="#,##0" /> VNĐ
                                             </div>
-
-                                            <div class="order-date">
-                                                <i class="far fa-calendar-alt"></i>
-                                                <span><fmt:formatDate value="${order.orderDate}" pattern="HH:mm dd-MM-yyyy"/></span>
-                                            </div>
-
-                                            <c:choose>
-                                                <c:when test="${order.orderStatus eq 'Pending'}">
-                                                    <div class="order-status pending">
-                                                        <i class="fas fa-clock"></i>Chờ xác nhận
-                                                    </div>
-                                                </c:when>
-                                                <c:when test="${order.orderStatus eq 'Rejected'}">
-                                                    <div class="order-status rejected">
-                                                        <i class="fas fa-times"></i>Đã hủy
-                                                    </div>
-                                                </c:when>
-                                                <c:when test="${order.orderStatus eq 'Confirmed'}">
-                                                    <div class="order-status confirmed">
-                                                        <i class="fas fa-check"></i>Đã xác nhận
-                                                    </div>
-                                                </c:when>
-                                                <c:when test="${order.orderStatus eq 'Shipping'}">
-                                                    <div class="order-status shipping">
-                                                        <i class="fas fa-shipping-fast"></i>Đang giao
-                                                    </div>
-                                                </c:when>
-                                                <c:when test="${order.orderStatus eq 'Delivered'}">
-                                                    <div class="order-status delivered">
-                                                        <i class="fas fa-box-open"></i>Đã giao
-                                                    </div>
-                                                </c:when>
-                                            </c:choose>
-                                        </div>
-
-
-                                        <div class="order-products">
-                                            <div class="order-product">
-                                                <div class="product-image">
-                                                    <img src="images/pets/dog1.jpg" alt="Golden Retriever">
-                                                </div>
-                                                <div class="product-details">
-                                                    <h4 class="product-name">${order.petName}</h4>
-                                                    <!--<p class="product-price">${order.totalPrice} VNĐ</p>-->
-                                                    <div class="product-price">
-                                                        <fmt:formatNumber  value="${order.totalPrice}" pattern="#,##0" /> VNĐ
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="order-details">
-                                            <div class="shipping-info">
-                                                <h4><i class="fas fa-map-marker-alt"></i> Thông tin giao hàng</h4>
-                                                <p><span class="label">Người nhận:</span> ${order.customerName}</p>
-                                                <p><span class="label">Số điện thoại:</span> ${order.customerPhone}</p>
-                                                <p><span class="label">Địa chỉ:</span> ${order.customerAddress}</p>
-                                            </div>
-
-                                            <div class="payment-info">
-                                                <h4><i class="fas fa-money-check-alt"></i> Thông tin thanh toán</h4>
-                                                <p><span class="label">Phương thức:</span> 
-                                                    <c:choose>
-                                                        <c:when test="${order.paymentMethod eq 'Cash on Delivery'}">
-                                                            Thanh toán khi nhận hàng
-                                                        </c:when>
-                                                    </c:choose>
-                                                </p>
-                                                <p><span class="label">Trạng thái:</span>
-                                                    <c:choose>
-                                                        <c:when test="${order.paymentStatus eq 'Paid'}">
-                                                            <span class="payment-status paid">
-                                                                Đã thanh toán
-                                                            </span>
-                                                        </c:when>
-                                                        <c:when test="${order.paymentStatus eq 'Unpaid'}">
-                                                            <span class="payment-status unpaid">
-                                                                Chưa thanh toán
-                                                            </span>
-                                                        </c:when>
-                                                    </c:choose>
-                                                </p>
-                                                <p class="total-price"><span class="label">Tổng tiền:</span> <span class="value"><fmt:formatNumber  value="${order.totalPrice}" pattern="#,##0" /> VNĐ</span></p>
-                                            </div>
-                                        </div>
-
-                                        <div class="order-actions">
-                                            <a href="orders?action=view&id=10" class="btn view-btn">
-                                                <i class="fas fa-eye"></i> Xem chi tiết
-                                            </a>
-                                            <c:choose>
-                                                <c:when test="${order.orderStatus eq 'Pending'}">
-                                                    <a href="#" class="btn cancel-btn">
-                                                        <i class="fas fa-times"></i> Hủy đơn hàng
-                                                    </a>
-                                                </c:when>
-                                                <c:when test="${order.orderStatus eq 'Rejected'}">
-                                                    <div class="rejection-reason">
-                                                        <span class="label">Lý do hủy:</span>
-                                                        <span class="value">${order.rejectionReason}</span>
-                                                    </div>
-                                                </c:when>
-                                                <c:when test="${order.orderStatus eq 'Confirmed'}">
-                                                </c:when>
-                                                <c:when test="${order.orderStatus eq 'Shipping'}">
-                                                </c:when>
-                                                <c:when test="${order.orderStatus eq 'Delivered'}">
-                                                </c:when>
-                                            </c:choose>
                                         </div>
                                     </div>
-                                </c:forEach>
-                            </c:when>
-                        </c:choose>
+                                </div>
+                                <div class="order-details">
+                                    <div class="shipping-info">
+                                        <h4><i class="fas fa-map-marker-alt"></i> Thông tin giao hàng</h4>
+                                        <p><span class="label">Người nhận:</span> ${order.customerName}</p>
+                                        <p><span class="label">Số điện thoại:</span> ${order.customerPhone}</p>
+                                        <p><span class="label">Địa chỉ:</span> ${order.customerAddress}</p>
+                                    </div>
 
+                                    <div class="payment-info">
+                                        <h4><i class="fas fa-money-check-alt"></i> Thông tin thanh toán</h4>
+                                        <p><span class="label">Phương thức:</span> 
+                                            <c:choose>
+                                                <c:when test="${order.paymentMethod eq 'Cash on Delivery'}">
+                                                    Thanh toán khi nhận hàng
+                                                </c:when>
+                                            </c:choose>
+                                        </p>
+                                        <p><span class="label">Trạng thái:</span>
+                                            <c:choose>
+                                                <c:when test="${order.paymentStatus eq 'Paid'}">
+                                                    <span class="payment-status paid">
+                                                        Đã thanh toán
+                                                    </span>
+                                                </c:when>
+                                                <c:when test="${order.paymentStatus eq 'Unpaid'}">
+                                                    <span class="payment-status unpaid">
+                                                        Chưa thanh toán
+                                                    </span>
+                                                </c:when>
+                                            </c:choose>
+                                        </p>
+                                        <p class="total-price"><span class="label">Tổng tiền:</span> <span class="value"><fmt:formatNumber  value="${order.totalPrice}" pattern="#,##0" /> VNĐ</span></p>
+                                    </div>
+                                </div>
+
+                                <div class="order-actions">
+                                    <a href="orders?action=view&id=10" class="btn view-btn">
+                                        <i class="fas fa-eye"></i> Xem chi tiết
+                                    </a>
+                                    <c:choose>
+                                        <c:when test="${order.orderStatus eq 'Pending'}">
+                                            <a href="#" class="btn cancel-btn">
+                                                <i class="fas fa-times"></i> Hủy đơn hàng
+                                            </a>
+                                        </c:when>
+                                        <c:when test="${order.orderStatus eq 'Rejected'}">
+                                            <div class="rejection-reason">
+                                                <span class="label">Lý do hủy:</span>
+                                                <span class="value">${order.rejectionReason}</span>
+                                            </div>
+                                        </c:when>
+                                        <c:when test="${order.orderStatus eq 'Confirmed'}">
+                                        </c:when>
+                                        <c:when test="${order.orderStatus eq 'Shipping'}">
+                                        </c:when>
+                                        <c:when test="${order.orderStatus eq 'Delivered'}">
+                                        </c:when>
+                                    </c:choose>
+                                </div>
+                            </div>
+                        </c:forEach>
                     </div>
                     <c:if test="${empty orderList}">
                         <div class="empty-orders">

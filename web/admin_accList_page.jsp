@@ -290,6 +290,9 @@
                             <c:if test="${not empty key and empty accList}">
                                 <p><span class="required" style="font-style: italic; font-size: 14px">Không có thông tin tìm kiếm phù hợp</span></p>
                             </c:if>
+                            <c:if test="${empty accList}">
+                                <p><span class="required" style="font-style: italic; font-size: 14px">Không có thông tin tìm kiếm phù hợp</span></p>
+                            </c:if>
                         </div>
                     </div>
                 </div>

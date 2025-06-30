@@ -61,14 +61,34 @@ public class Customer_Order_Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+        String status = request.getParameter("status");
+        String keyword = request.getParameter("keyword");
 
         Account acc = (Account) session.getAttribute("userAccount");
         int accId = acc.getAccId();
-        System.err.println(accId);
-
+//        System.err.println(accId);
         OrderDAO odao = new OrderDAO();
-        List<Order> orderList = odao.getOrderCus(accId);
-        request.setAttribute("orderList", orderList);
+        if (status != null && keyword != null && !keyword.trim().isEmpty()) {
+
+            try {
+                int key = Integer.parseInt(keyword);
+                List<Order> orderList = odao.getOrderCusSearch(accId, status, key);
+                request.setAttribute("orderList", orderList);
+                request.setAttribute("keyword", keyword);
+                request.setAttribute("status", status);
+            } catch (NumberFormatException e) {
+                request.setAttribute("errorMessage", "Tìm kiếm theo Id chỉ chấp nhận dạng chữ số");
+                List<Order> orderList = odao.getOrderCus(accId, status);
+                request.setAttribute("orderList", orderList);
+                request.setAttribute("status", status);
+            }
+
+        } else {
+
+            List<Order> orderList = odao.getOrderCus(accId, status);
+            request.setAttribute("orderList", orderList);
+            request.setAttribute("status", status);
+        }
 
         request.getRequestDispatcher("customer_order_page.jsp").forward(request, response);
     }
