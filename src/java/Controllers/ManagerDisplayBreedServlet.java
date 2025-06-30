@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAO.BreedDAO;
+import Models.Account;
 import Models.Breed;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -59,6 +61,13 @@ public class ManagerDisplayBreedServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         BreedDAO _dao = new BreedDAO();
+        HttpSession session=request.getSession();
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Manager")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
         final int PAGE_SIZE = 8;
         final int MAX_PAGE_NUMBERS_TO_SHOW = 5;
 

@@ -70,9 +70,9 @@ public class ListShopPetServlet extends HttpServlet {
         List<String> listSpecies = breedDAO.getAllSpecies();
         List<Breed> listBreed = null;
         String species = request.getParameter("species");
-        
+
         String breed = request.getParameter("breed");
-       
+
         if ((species == null || species.isEmpty()) && breed != null && !breed.isEmpty()) {
             species = breedDAO.getSpeciesByBreed(breed);
         }
@@ -114,8 +114,25 @@ public class ListShopPetServlet extends HttpServlet {
 
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, petList.size());
+        // Sau khi tính totalPages
         int totalPages = (int) Math.ceil((double) petList.size() / pageSize);
         petList = petList.subList(start, end);
+
+// Thêm đoạn này
+        int displayPageCount = 3;
+        int startPage = Math.max(1, page - 1);
+        int endPage = Math.min(totalPages, page + 1);
+
+        if (page <= 2) {
+            startPage = 1;
+            endPage = Math.min(totalPages, displayPageCount);
+        } else if (page >= totalPages - 1) {
+            endPage = totalPages;
+            startPage = Math.max(1, totalPages - displayPageCount + 1);
+        }
+
+        request.setAttribute("startPage", startPage);
+        request.setAttribute("endPage", endPage);
 
         request.setAttribute("listPet", petList);
         request.setAttribute("currentPage", page);

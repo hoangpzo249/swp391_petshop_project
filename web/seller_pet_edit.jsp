@@ -68,7 +68,7 @@
                     <div class="menu-category">
                         <h5 class="category-title">Điều hướng</h5>
                         <a href="comingsoon" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
-                        <a href="sellerdisplayinvoice" class="sidebar-link">
+                        <a href="comingsoon" class="sidebar-link">
                             <i class="fas fa-file-invoice"></i> Danh sách hóa đơn
                         </a>
                     </div>

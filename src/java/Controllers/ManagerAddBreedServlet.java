@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAO.BreedDAO;
+import Models.Account;
 import Models.Breed;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -64,6 +65,13 @@ public class ManagerAddBreedServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Manager")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
         BreedDAO _dao = new BreedDAO();
         List<String> speciesList = _dao.getAllSpecies();
         request.setAttribute("speciesList", speciesList);
