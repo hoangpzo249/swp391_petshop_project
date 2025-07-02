@@ -114,12 +114,10 @@ public class ListShopPetServlet extends HttpServlet {
 
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, petList.size());
-        // Sau khi tính totalPages
         int totalPages = (int) Math.ceil((double) petList.size() / pageSize);
         petList = petList.subList(start, end);
 
-// Thêm đoạn này
-        int displayPageCount = 3;
+        int displayPageCount = 5;
         int startPage = Math.max(1, page - 1);
         int endPage = Math.min(totalPages, page + 1);
 

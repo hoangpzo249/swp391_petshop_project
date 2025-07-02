@@ -640,4 +640,41 @@ public class OrderDAO {
         }
         return false;
     }
+     public Double getDiscountAmountAtApply(int orderId) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT discountAmountAtApply FROM OrderTB WHERE orderId = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("discountAmountAtApply");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
 }
