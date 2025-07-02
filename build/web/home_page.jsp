@@ -157,6 +157,14 @@
             </div>
             <c:remove var="loginSuccess" scope="session" />
         </c:if>
+        <c:if test="${not empty successMess}">
+            <div class="alert-message">${successMess}</div>
+            <c:remove var="successMess" scope="session" />
+        </c:if>
+        <c:if test="${not empty errMess}">
+            <div class="alert-message error">${errMess}</div>
+            <c:remove var="errMess" scope="session" />
+        </c:if>
 
         <!-- banner -->
         <div class="banner">
