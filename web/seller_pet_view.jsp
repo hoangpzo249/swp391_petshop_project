@@ -256,12 +256,12 @@
                         </div>
 
                         <!-- Pagination -->
-                        <c:if test="${totalPages > 1}">
+                        <c:if test="${pagination.totalPages > 1}">
                             <div class="pagination-container">
                                 <ul class="pagination">
-                                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                    <li class="page-item ${!pagination.hasPrevious() ? 'disabled' : ''}">
                                         <c:url value="displayallpet" var="prevUrl">
-                                            <c:param name="page" value="${currentPage - 1}"/>
+                                            <c:param name="page" value="${pagination.currentPage - 1}"/>
                                             <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                             <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
                                             <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
@@ -270,11 +270,11 @@
                                             <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
                                             <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
                                         </c:url>
-                                        <a class="page-link" href="${currentPage > 1 ? prevUrl : '#'}">«</a>
+                                        <a class="page-link" href="${pagination.hasPrevious() ? prevUrl : '#'}">«</a>
                                     </li>
 
-                                    <c:if test="${startPage > 1}">
-                                        <c:url value="displayallpet" var="firstPageUrl" scope="page">
+                                    <c:if test="${pagination.startPage > 1}">
+                                        <c:url value="displayallpet" var="firstPageUrl">
                                             <c:param name="page" value="1"/>
                                             <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                             <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
@@ -285,13 +285,13 @@
                                             <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
                                         </c:url>
                                         <li class="page-item"><a class="page-link" href="${firstPageUrl}">1</a></li>
-                                            <c:if test="${startPage > 2}">
+                                            <c:if test="${pagination.startPage > 2}">
                                             <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
                                             </c:if>
                                         </c:if>
 
-                                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
-                                        <c:url value="displayallpet" var="pageUrl" scope="page">
+                                    <c:forEach begin="${pagination.startPage}" end="${pagination.endPage}" var="i">
+                                        <c:url value="displayallpet" var="pageUrl">
                                             <c:param name="page" value="${i}"/>
                                             <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                             <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
@@ -301,17 +301,17 @@
                                             <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
                                             <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
                                         </c:url>
-                                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                        <li class="page-item ${pagination.currentPage == i ? 'active' : ''}">
                                             <a class="page-link" href="${pageUrl}">${i}</a>
                                         </li>
                                     </c:forEach>
 
-                                    <c:if test="${endPage < totalPages}">
-                                        <c:if test="${endPage < totalPages - 1}">
+                                    <c:if test="${pagination.endPage < pagination.totalPages}">
+                                        <c:if test="${pagination.endPage < pagination.totalPages - 1}">
                                             <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
                                             </c:if>
-                                            <c:url value="displayallpet" var="lastPageUrl" scope="page">
-                                                <c:param name="page" value="${totalPages}"/>
+                                            <c:url value="displayallpet" var="lastPageUrl">
+                                                <c:param name="page" value="${pagination.totalPages}"/>
                                                 <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                                 <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
                                                 <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
@@ -320,12 +320,12 @@
                                                 <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
                                                 <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
                                             </c:url>
-                                        <li class="page-item"><a class="page-link" href="${lastPageUrl}">${totalPages}</a></li>
+                                        <li class="page-item"><a class="page-link" href="${lastPageUrl}">${pagination.totalPages}</a></li>
                                         </c:if>
 
-                                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                    <li class="page-item ${!pagination.hasNext() ? 'disabled' : ''}">
                                         <c:url value="displayallpet" var="nextUrl">
-                                            <c:param name="page" value="${currentPage + 1}"/>
+                                            <c:param name="page" value="${pagination.currentPage + 1}"/>
                                             <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                             <c:if test="${not empty param.availability}"><c:param name="availability" value="${param.availability}"/></c:if>
                                             <c:if test="${not empty param.petStatus}"><c:param name="petStatus" value="${param.petStatus}"/></c:if>
@@ -334,7 +334,7 @@
                                             <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
                                             <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
                                         </c:url>
-                                        <a class="page-link" href="${currentPage < totalPages ? nextUrl : '#'}">»</a>
+                                        <a class="page-link" href="${pagination.hasNext() ? nextUrl : '#'}">»</a>
                                     </li>
                                 </ul>
                             </div>

@@ -1,0 +1,151 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 2 Jul 2025, 21:00:49
+    Author     : Lenovo
+*/
+
+
+.invoice-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.invoice-paper {
+    background-color: #fff;
+    padding: 40px;
+    margin: 0 auto;
+    max-width: 800px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e0e0e0;
+    font-family: 'Asap', sans-serif;
+    color: #333;
+}
+
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.invoice-header .logo-section img {
+    max-width: 150px;
+}
+
+.invoice-header .invoice-title-section {
+    text-align: right;
+}
+
+.invoice-title-section h2 {
+    font-size: 28px;
+    color: #007bff;
+    margin: 0;
+}
+
+.invoice-title-section p {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.invoice-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.invoice-details .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    color: #007bff;
+}
+
+.invoice-details p {
+    margin: 4px 0;
+    font-size: 14px;
+}
+
+.invoice-details .customer-details {
+    text-align: right;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.items-table th, .items-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.items-table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.items-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.items-table .text-right {
+    text-align: right;
+}
+
+.invoice-totals {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.invoice-totals table {
+    width: 40%;
+    max-width: 300px;
+}
+
+.invoice-totals td {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.invoice-totals .label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.invoice-totals .grand-total td {
+    font-size: 18px;
+    font-weight: 700;
+    color: #007bff;
+    border-top: 2px solid #333;
+}
+
+.invoice-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.invoice-footer p {
+    margin: 5px 0;
+}
+
+.invoice-footer .shop-name {
+    font-weight: 600;
+}

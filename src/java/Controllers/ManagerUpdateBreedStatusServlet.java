@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAO.BreedDAO;
+import Models.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -60,6 +61,12 @@ public class ManagerUpdateBreedStatusServlet extends HttpServlet {
         BreedDAO _dao = new BreedDAO();
         StringBuilder errMess = new StringBuilder();
         HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Manager")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
         String referer = request.getHeader("referer");
 
         String breedId = request.getParameter("breedId");

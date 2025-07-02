@@ -4,7 +4,9 @@
     Author     : Lenovo
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -25,7 +27,6 @@
 
             <div class="seller-profile">
                 <img src="${sessionScope.userAccount.displayAccImage()}" alt="Seller Avatar"/>
-                </c:choose>
                 <div class="seller-info">
                     <span class="seller-name">${sessionScope.userAccount.accFname} ${sessionScope.userAccount.accLname}</span>
                     <span class="seller-role">Seller</span>
@@ -42,28 +43,20 @@
         </div>
 
     <c:if test="${not empty successMess}">
-        <div class="alert-message">
-            ${successMess}
-        </div>
+        <div class="alert-message">${successMess}</div>
         <c:remove var="successMess" scope="session" />
     </c:if>
-
     <c:if test="${not empty errMess}">
-        <div class="alert-message error">
-            ${errMess}
-        </div>
+        <div class="alert-message error">${errMess}</div>
         <c:remove var="errMess" scope="session" />
     </c:if>
 
-
     <div class="seller-container">
-        <!-- Sidebar -->
         <div class="seller-sidebar">
             <div class="sidebar-header">
                 <h2 class="sidebar-title">SELLER PANEL</h2>
                 <p class="sidebar-subtitle">Quản lý hệ thống PETFPT Shop</p>
             </div>
-
             <div class="sidebar-menu">
                 <div class="menu-category">
                     <h5 class="category-title">Điều hướng</h5>
@@ -74,7 +67,6 @@
                         <i class="fas fa-file-invoice"></i> Danh sách hóa đơn
                     </a>
                 </div>
-
                 <div class="menu-category">
                     <h5 class="category-title">Quản lý</h5>
                     <a href="displayorder" class="sidebar-link">
@@ -84,7 +76,6 @@
                         <i class="fas fa-dog"></i> Quản lý thú cưng
                     </a>
                 </div>
-
                 <div class="menu-category">
                     <h5 class="category-title">Thao tác</h5>
                     <a href="addpet" class="sidebar-link">
@@ -103,12 +94,9 @@
             </div>
         </div>
 
-        <%-- Main Body --%>
-
         <div class="seller-content">
             <div class="page-header">
                 <h1 class="page-title">
-                    <%-- CHANGE 1: Update Page Title --%>
                     <i class="fas fa-file-invoice"></i> Quản lý Hóa Đơn
                 </h1>
                 <ul class="breadcrumb">
@@ -123,27 +111,20 @@
                     <h3 class="card-title">
                         <i class="fas fa-list-ul"></i> Danh sách Hóa Đơn
                     </h3>
-                    <div class="card-tools">
-                        <button class="btn btn-outline">
-                            <i class="fas fa-file-export"></i> Xuất dữ liệu
-                        </button>
-                    </div>
                 </div>
                 <div class="card-body">
-                    <%-- CHANGE 2: Update Filter Form --%>
-                    <form action="displayinvoice" method="GET" id="filterForm">
+                    <form action="sellerdisplayinvoice" method="GET" id="filterForm">
                         <div class="filter-controls">
                             <div class="input-group">
                                 <i class="fas fa-search"></i>
-                                <input type="text" name="searchKey" placeholder="Tìm theo Mã HĐ, Mã ĐH..." value="${param.searchKey}">
+                                <input type="text" name="searchKey" placeholder="Tìm theo Mã Đơn Hàng..." value="${param.searchKey}">
                             </div>
 
                             <div class="select-group">
                                 <select name="paymentMethod" onchange="this.form.submit()">
-                                    <option value="" ${empty param.paymentMethod ? 'selected' : ''}>Tất cả phương thức thanh toán</option>
-                                    <option value="Credit Card" ${param.paymentMethod == 'Credit Card' ? 'selected' : ''}>Thẻ tín dụng</option>
-                                    <option value="COD" ${param.paymentMethod == 'COD' ? 'selected' : ''}>Thanh toán khi nhận hàng</option>
-                                    <%-- Add other payment methods as needed --%>
+                                    <option value="" ${empty param.paymentMethod ? 'selected' : ''}>Tất cả phương thức TT</option>
+                                    <option value="Thanh toán khi nhận hàng" ${param.paymentMethod == 'Thanh toán khi nhận hàng' ? 'selected' : ''}>Thanh toán khi nhận hàng</option>
+                                    <option value="Thanh toán qua VNPAY" ${param.paymentMethod == 'Thanh toán qua VNPAY' ? 'selected' : ''}>Thanh toán qua VNPAY</option>
                                 </select>
                             </div>
 
@@ -153,20 +134,15 @@
                                 <input type="date" name="endDate" value="${param.endDate}" onchange="this.form.submit()">
                             </div>
 
-                            <div class="select-group">
-                                <select name="sort" onchange="this.form.submit()">
-                                    <option value="DESC" ${param.sort == 'DESC' ? 'selected' : ''}>Hóa đơn mới nhất</option>
-                                    <option value="ASC" ${param.sort == 'ASC' ? 'selected' : ''}>Hóa đơn cũ nhất</option>
-                                </select>
-                            </div>
-
-                            <button type="button" class="btn btn-outline" onclick="location.href = 'displayinvoice'">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter"></i> Lọc
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="location.href = 'sellerdisplayinvoice'">
                                 <i class="fas fa-times"></i> Xóa bộ lọc
                             </button>
                         </div>
                     </form>
 
-                    <!-- Invoices Table -->
                     <div class="table-container">
                         <table>
                             <thead>
@@ -183,7 +159,7 @@
                             <c:forEach items="${invoiceList}" var="invoice">
                                 <tr>
                                     <td><strong>#${invoice.invoiceId}</strong></td>
-                                    <td>#${invoice.orderId}</td>
+                                    <td>#${invoice.order.orderId}</td>
                                     <td>
                                 <fmt:formatDate value="${invoice.issueDate}" pattern="dd-MM-yyyy HH:mm"/>
                                 </td>
@@ -195,8 +171,7 @@
                                 <td>${invoice.paymentMethod}</td>
                                 <td>
                                     <div class="table-actions">
-                                        <%-- A view button for the invoice details --%>
-                                        <a class="action-btn view-btn" title="Xem hóa đơn" href="displayinvoicedetail?invoiceId=${invoice.invoiceId}">
+                                        <a class="action-btn view-btn" title="Xem hóa đơn" href="sellerdisplayinvoicedetail?invoiceId=${invoice.invoiceId}">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </div>
@@ -214,44 +189,70 @@
                         </table>
                     </div>
 
-                    <c:if test="${totalPages > 1}">
+                    <c:if test="${pagination.totalPages > 1}">
                         <div class="pagination-container">
                             <ul class="pagination">
-                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                <c:url value="displayinvoice" var="prevUrl">
-                                    <c:param name="page" value="${currentPage - 1}"/>
+                                <li class="page-item ${!pagination.hasPrevious() ? 'disabled' : ''}">
+                                <c:url value="sellerdisplayinvoice" var="prevUrl">
+                                    <c:param name="page" value="${pagination.currentPage - 1}"/>
                                     <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                     <c:if test="${not empty param.paymentMethod}"><c:param name="paymentMethod" value="${param.paymentMethod}"/></c:if>
                                     <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
                                     <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
-                                    <c:if test="${not empty param.sort}"><c:param name="sort" value="${param.sort}"/></c:if>
                                 </c:url>
-                                <a class="page-link" href="${currentPage > 1 ? prevUrl : '#'}">«</a>
+                                <a class="page-link" href="${pagination.hasPrevious() ? prevUrl : '#'}">«</a>
                                 </li>
-                                <c:forEach begin="${startPage}" end="${endPage}" var="i">
-                                    <c:url value="displayinvoice" var="pageUrl">
+
+                                <c:if test="${pagination.startPage > 1}">
+                                    <c:url value="sellerdisplayinvoice" var="firstPageUrl">
+                                        <c:param name="page" value="1"/>
+                                        <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                        <c:if test="${not empty param.paymentMethod}"><c:param name="paymentMethod" value="${param.paymentMethod}"/></c:if>
+                                        <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
+                                        <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                    </c:url>
+                                    <li class="page-item"><a class="page-link" href="${firstPageUrl}">1</a></li>
+                                    <c:if test="${pagination.startPage > 2}">
+                                        <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                    </c:if>
+                                </c:if>
+
+                                <c:forEach begin="${pagination.startPage}" end="${pagination.endPage}" var="i">
+                                    <c:url value="sellerdisplayinvoice" var="pageUrl">
                                         <c:param name="page" value="${i}"/>
                                         <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                         <c:if test="${not empty param.paymentMethod}"><c:param name="paymentMethod" value="${param.paymentMethod}"/></c:if>
                                         <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
                                         <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
-                                        <c:if test="${not empty param.sort}"><c:param name="sort" value="${param.sort}"/></c:if>
                                     </c:url>
-                                    <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                    <li class="page-item ${pagination.currentPage == i ? 'active' : ''}">
                                         <a class="page-link" href="${pageUrl}">${i}</a>
                                     </li>
                                 </c:forEach>
-                                <%-- Next Button --%>
-                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                <c:url value="displayinvoice" var="nextUrl">
-                                    <c:param name="page" value="${currentPage + 1}"/>
+
+                                <c:if test="${pagination.endPage < pagination.totalPages}">
+                                    <c:if test="${pagination.endPage < pagination.totalPages - 1}">
+                                        <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                    </c:if>
+                                    <c:url value="sellerdisplayinvoice" var="lastPageUrl">
+                                        <c:param name="page" value="${pagination.totalPages}"/>
+                                        <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
+                                        <c:if test="${not empty param.paymentMethod}"><c:param name="paymentMethod" value="${param.paymentMethod}"/></c:if>
+                                        <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
+                                        <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                    </c:url>
+                                    <li class="page-item"><a class="page-link" href="${lastPageUrl}">${pagination.totalPages}</a></li>
+                                </c:if>
+
+                                <li class="page-item ${!pagination.hasNext() ? 'disabled' : ''}">
+                                <c:url value="sellerdisplayinvoice" var="nextUrl">
+                                    <c:param name="page" value="${pagination.currentPage + 1}"/>
                                     <c:if test="${not empty param.searchKey}"><c:param name="searchKey" value="${param.searchKey}"/></c:if>
                                     <c:if test="${not empty param.paymentMethod}"><c:param name="paymentMethod" value="${param.paymentMethod}"/></c:if>
                                     <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
                                     <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
-                                    <c:if test="${not empty param.sort}"><c:param name="sort" value="${param.sort}"/></c:if>
                                 </c:url>
-                                <a class="page-link" href="${currentPage < totalPages ? nextUrl : '#'}">»</a>
+                                <a class="page-link" href="${pagination.hasNext() ? nextUrl : '#'}">»</a>
                                 </li>
                             </ul>
                         </div>

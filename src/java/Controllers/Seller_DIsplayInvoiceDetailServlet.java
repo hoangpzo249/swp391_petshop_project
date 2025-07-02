@@ -4,10 +4,7 @@
  */
 package Controllers;
 
-import DAO.BreedDAO;
-import Models.Account;
-import Models.Breed;
-import Models.Pagination;
+import DAO.InvoiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,13 +12,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  *
  * @author Lenovo
  */
-public class ManagerDisplayBreedServlet extends HttpServlet {
+public class Seller_DIsplayInvoiceDetailServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +36,10 @@ public class ManagerDisplayBreedServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ManagerDisplayBreedServlet</title>");
+            out.println("<title>Servlet Seller_DIsplayInvoiceDetailServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ManagerDisplayBreedServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Seller_DIsplayInvoiceDetailServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,55 +57,26 @@ public class ManagerDisplayBreedServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        request.setCharacterEncoding("UTF-8");
-
-        BreedDAO _dao = new BreedDAO();
         HttpSession session = request.getSession();
-        Account account = (Account) session.getAttribute("userAccount");
+        InvoiceDAO _invoicedao = new InvoiceDAO();
+        String referer = request.getHeader("referer");
+        if (referer == null) {
+            referer = "sellerdisplayinvoice";
+        }
+        String invoiceIdStr = request.getParameter("invoiceId");
 
-        if (account == null || !account.getAccRole().equals("Manager")) {
-            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
-            response.sendRedirect("homepage");
+        if (invoiceIdStr == null || !invoiceIdStr.matches("\\d+")) {
+            session.setAttribute("errMess", "ID hóa đơn không hợp lệ");
+            response.sendRedirect(referer);
             return;
         }
-
-        final int PAGE_SIZE = 8;
-        final int MAX_PAGE_NUMBERS_TO_SHOW = 5;
-
-        String searchKey = request.getParameter("searchKey");
-        String species = request.getParameter("species");
-        String status = request.getParameter("status");
-        String pageStr = request.getParameter("page");
-
-        int currentPage = 1;
-        if (pageStr != null && pageStr.matches("\\d+")) {
-            currentPage = Integer.parseInt(pageStr);
+        int invoiceId=Integer.parseInt(invoiceIdStr);
+        if (!_invoicedao.invoiceIdExists(invoiceId)) {
+            session.setAttribute("errMess", "Hóa đơn không tồn tại");
+            response.sendRedirect(referer);
+            return;
         }
-
-        int totalRecords = _dao.countFilteredBreeds(searchKey, species, status);
-
-        Pagination pagination = new Pagination(totalRecords, currentPage, PAGE_SIZE, MAX_PAGE_NUMBERS_TO_SHOW);
-
-        if (currentPage > pagination.getTotalPages() && pagination.getTotalPages() > 0) {
-            currentPage = pagination.getTotalPages();
-            pagination = new Pagination(totalRecords, currentPage, PAGE_SIZE, MAX_PAGE_NUMBERS_TO_SHOW);
-        }
-
-        List<Breed> breedList = _dao.filterBreedsForManager(
-                searchKey, species, status,
-                pagination.getCurrentPage(),
-                pagination.getPageSize()
-        );
-
-        List<String> speciesList = _dao.getAllSpecies();
-
-        request.setAttribute("breedList", breedList);
-        request.setAttribute("speciesList", speciesList);
-        request.setAttribute("pagination", pagination);
-
-        request.getRequestDispatcher("manager_breed_view.jsp")
-                .forward(request, response);
+        
     }
 
     /**

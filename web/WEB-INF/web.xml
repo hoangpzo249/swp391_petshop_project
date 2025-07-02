@@ -180,7 +180,10 @@
         <servlet-name>Seller_DisplayInvoiceServlet</servlet-name>
         <servlet-class>Controllers.Seller_DisplayInvoiceServlet</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>Seller_DIsplayInvoiceDetailServlet</servlet-name>
+        <servlet-class>Controllers.Seller_DIsplayInvoiceDetailServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -361,7 +364,10 @@
         <servlet-name>Seller_DisplayInvoiceServlet</servlet-name>
         <url-pattern>/sellerdisplayinvoice</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>Seller_DIsplayInvoiceDetailServlet</servlet-name>
+        <url-pattern>/sellerdisplayinvoicedetail</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>
     </session-config>

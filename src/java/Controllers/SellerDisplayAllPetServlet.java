@@ -8,6 +8,7 @@ import DAO.BreedDAO;
 import DAO.PetDAO;
 import Models.Account;
 import Models.Breed;
+import Models.Pagination;
 import Models.Pet;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -93,28 +94,18 @@ public class SellerDisplayAllPetServlet extends HttpServlet {
         PetDAO petDAO = new PetDAO();
         int totalRecords = petDAO.countFilteredPetsForSeller(searchKey, availability, species, breedId, gender, vaccination, petStatus);
 
-        int totalPages = (int) Math.ceil((double) totalRecords / PAGE_SIZE);
-
-        int startPage, endPage;
-        if (totalPages <= MAX_PAGE_NUMBERS_TO_SHOW) {
-            startPage = 1;
-            endPage = totalPages;
-        } else {
-            int maxPagesBeforeCurrent = (int) Math.floor(MAX_PAGE_NUMBERS_TO_SHOW / 2.0);
-            int maxPagesAfterCurrent = (int) Math.ceil(MAX_PAGE_NUMBERS_TO_SHOW / 2.0) - 1;
-            if (currentPage <= maxPagesBeforeCurrent) {
-                startPage = 1;
-                endPage = MAX_PAGE_NUMBERS_TO_SHOW;
-            } else if (currentPage + maxPagesAfterCurrent >= totalPages) {
-                startPage = totalPages - MAX_PAGE_NUMBERS_TO_SHOW + 1;
-                endPage = totalPages;
-            } else {
-                startPage = currentPage - maxPagesBeforeCurrent;
-                endPage = currentPage + maxPagesAfterCurrent;
-            }
+        Pagination pagination = new Pagination(totalRecords, currentPage, PAGE_SIZE, MAX_PAGE_NUMBERS_TO_SHOW);
+        
+        if (currentPage > pagination.getTotalPages() && pagination.getTotalPages() > 0) {
+            currentPage = pagination.getTotalPages();
+            pagination = new Pagination(totalRecords, currentPage, PAGE_SIZE, MAX_PAGE_NUMBERS_TO_SHOW);
         }
 
-        List<Pet> petList = petDAO.filterPetsForSeller(searchKey, availability, species, breedId, gender, vaccination, petStatus, currentPage, PAGE_SIZE);
+        List<Pet> petList = petDAO.filterPetsForSeller(
+                searchKey, availability, species, breedId, gender, vaccination, petStatus,
+                pagination.getCurrentPage(),
+                pagination.getPageSize()
+        );
 
         BreedDAO breedDAO = new BreedDAO();
         List<String> speciesList = breedDAO.getAllSpecies();
@@ -123,11 +114,7 @@ public class SellerDisplayAllPetServlet extends HttpServlet {
         request.setAttribute("petList", petList);
         request.setAttribute("speciesList", speciesList);
         request.setAttribute("breedList", breedList);
-
-        request.setAttribute("currentPage", currentPage);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("startPage", startPage);
-        request.setAttribute("endPage", endPage);
+        request.setAttribute("pagination", pagination);
 
         request.getRequestDispatcher("seller_pet_view.jsp").forward(request, response);
     }

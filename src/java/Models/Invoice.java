@@ -6,6 +6,7 @@ package Models;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  *
@@ -17,17 +18,21 @@ public class Invoice {
     private Timestamp issueDate;
     private BigDecimal totalAmount;
     private String paymentMethod;
+    private List<InvoiceContent> invoiceContents;
 
     public Invoice() {
     }
 
-    public Invoice(int invoiceId, Order order, Timestamp issueDate, BigDecimal totalAmount, String paymentMethod) {
+    public Invoice(int invoiceId, Order order, Timestamp issueDate, BigDecimal totalAmount, String paymentMethod, List<InvoiceContent> invoiceContents) {
         this.invoiceId = invoiceId;
         this.order = order;
         this.issueDate = issueDate;
         this.totalAmount = totalAmount;
         this.paymentMethod = paymentMethod;
+        this.invoiceContents = invoiceContents;
     }
+
+    
 
     public int getInvoiceId() {
         return invoiceId;
@@ -67,6 +72,14 @@ public class Invoice {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public List<InvoiceContent> getInvoiceContents() {
+        return invoiceContents;
+    }
+
+    public void setInvoiceContents(List<InvoiceContent> invoiceContents) {
+        this.invoiceContents = invoiceContents;
     }
     
     
