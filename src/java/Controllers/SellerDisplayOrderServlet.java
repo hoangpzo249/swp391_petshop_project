@@ -7,6 +7,7 @@ package Controllers;
 import DAO.OrderDAO;
 import Models.Account;
 import Models.Order;
+import Models.Pagination;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -105,30 +105,23 @@ public class SellerDisplayOrderServlet extends HttpServlet {
 
         OrderDAO dao = new OrderDAO();
         int totalRecords = dao.countFilteredOrders(searchKey, status, startDate, endDate);
-        int totalPages = (int) Math.ceil((double) totalRecords / PAGE_SIZE);
 
-        int startPage = 1, endPage = totalPages;
-        if (totalPages > MAX_PAGE_NUMBERS_TO_SHOW) {
-            int before = MAX_PAGE_NUMBERS_TO_SHOW / 2;
-            int after = MAX_PAGE_NUMBERS_TO_SHOW - before - 1;
-
-            if (currentPage <= before) {
-                endPage = MAX_PAGE_NUMBERS_TO_SHOW;
-            } else if (currentPage + after >= totalPages) {
-                startPage = totalPages - MAX_PAGE_NUMBERS_TO_SHOW + 1;
-            } else {
-                startPage = currentPage - before;
-                endPage = currentPage + after;
-            }
+        Pagination pagination = new Pagination(totalRecords, currentPage, PAGE_SIZE, MAX_PAGE_NUMBERS_TO_SHOW);
+        
+        if (currentPage > pagination.getTotalPages() && pagination.getTotalPages() > 0) {
+            currentPage = pagination.getTotalPages();
+            pagination = new Pagination(totalRecords, currentPage, PAGE_SIZE, MAX_PAGE_NUMBERS_TO_SHOW);
         }
 
-        List<Order> orderList = dao.filterOrderForSeller(searchKey, status, startDate, endDate, sort, currentPage, PAGE_SIZE);
+
+        List<Order> orderList = dao.filterOrderForSeller(
+                searchKey, status, startDate, endDate, sort,
+                pagination.getCurrentPage(),
+                pagination.getPageSize()
+        );
 
         request.setAttribute("orderList", orderList);
-        request.setAttribute("currentPage", currentPage);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("startPage", startPage);
-        request.setAttribute("endPage", endPage);
+        request.setAttribute("pagination", pagination);
         request.setAttribute("sort", sort);
 
         request.getRequestDispatcher("seller_order_view.jsp").forward(request, response);

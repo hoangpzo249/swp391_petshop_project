@@ -60,68 +60,44 @@ public class InvoiceDAO {
         return invoice;
     }
 
-    private StringBuilder buildInvoiceFilterWhereClause(String searchKey, String status, Date startDate, Date endDate) {
-        StringBuilder whereClause = new StringBuilder();
+    private StringBuilder buildInvoiceFilterQuery(String orderId, String paymentMethod, Date startDate, Date endDate) {
+        StringBuilder sql = new StringBuilder(
+                " FROM InvoiceTB i JOIN OrderTB o ON i.orderId = o.orderId WHERE 1=1 "
+        );
 
-        if (searchKey != null && !searchKey.trim().isEmpty()) {
-            String trimmedKey = searchKey.trim();
-            if (trimmedKey.matches("\\d+")) {
-                whereClause.append("(i.invoiceId = ? OR o.orderId = ?) ");
-            } else if (trimmedKey.contains("@")) {
-                whereClause.append("o.customerEmail LIKE ? ");
-            } else {
-                whereClause.append("o.customerName LIKE ? ");
-            }
+        if (orderId != null && orderId.matches("\\d+")) {
+            sql.append("AND o.orderId = ? ");
         }
-
-        if (status != null && !status.trim().isEmpty()) {
-            if (whereClause.length() > 0) {
-                whereClause.append("AND ");
-            }
-            whereClause.append("o.orderStatus = ? ");
+        if (paymentMethod != null && !paymentMethod.trim().isEmpty()) {
+            sql.append("AND i.paymentMethod = ? ");
         }
-
         if (startDate != null) {
-            if (whereClause.length() > 0) {
-                whereClause.append("AND ");
-            }
-            whereClause.append("CAST(i.issueDate AS DATE) >= ? ");
+            sql.append("AND CAST(i.issueDate AS DATE) >= ? ");
         }
-
         if (endDate != null) {
-            if (whereClause.length() > 0) {
-                whereClause.append("AND ");
-            }
-            whereClause.append("CAST(i.issueDate AS DATE) <= ? ");
+            sql.append("AND CAST(i.issueDate AS DATE) <= ? ");
         }
-
-        if (whereClause.length() > 0) {
-            return new StringBuilder("WHERE ").append(whereClause);
-        }
-
-        return new StringBuilder();
+        return sql;
     }
 
-    public int countFilteredInvoices(String searchKey, String status, Date startDate, Date endDate) {
-        String baseSql = "SELECT COUNT(i.invoiceId) FROM InvoiceTB i JOIN OrderTB o ON i.orderId = o.orderId ";
-        StringBuilder whereClause = buildInvoiceFilterWhereClause(searchKey, status, startDate, endDate);
-        String finalSql = baseSql + whereClause.toString();
+    public int countFilteredInvoices(String orderId, String paymentMethod, Date startDate, Date endDate) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(finalSql)) {
+        StringBuilder sqlBase = new StringBuilder("SELECT COUNT(i.invoiceId) ");
+        sqlBase.append(buildInvoiceFilterQuery(orderId, paymentMethod, startDate, endDate));
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sqlBase.toString());
 
             int paramIndex = 1;
-            if (searchKey != null && !searchKey.trim().isEmpty()) {
-                String trimmedKey = searchKey.trim();
-                if (trimmedKey.matches("\\d+")) {
-                    int id = Integer.parseInt(trimmedKey);
-                    ps.setInt(paramIndex++, id);
-                    ps.setInt(paramIndex++, id);
-                } else {
-                    ps.setString(paramIndex++, "%" + trimmedKey + "%");
-                }
+            if (orderId != null && orderId.matches("\\d+")) {
+                ps.setInt(paramIndex++, Integer.parseInt(orderId));
             }
-            if (status != null && !status.trim().isEmpty()) {
-                ps.setString(paramIndex++, status);
+            if (paymentMethod != null && !paymentMethod.trim().isEmpty()) {
+                ps.setString(paramIndex++, paymentMethod);
             }
             if (startDate != null) {
                 ps.setDate(paramIndex++, new java.sql.Date(startDate.getTime()));
@@ -130,43 +106,51 @@ public class InvoiceDAO {
                 ps.setDate(paramIndex++, new java.sql.Date(endDate.getTime()));
             }
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
             }
         } catch (Exception ex) {
-            Logger.getLogger(InvoiceDAO.class.getName()).log(Level.SEVERE, "Error counting filtered invoices", ex);
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return 0;
     }
 
-    public List<Invoice> filterInvoices(String searchKey, String status, Date startDate, Date endDate, String sort, int pageNumber, int pageSize) {
+    public List<Invoice> filterInvoices(String orderId, String paymentMethod, Date startDate, Date endDate, int pageNumber, int pageSize) {
         List<Invoice> list = new ArrayList<>();
-        String sortDirection = "ASC".equalsIgnoreCase(sort) ? "ASC" : "DESC";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        String baseSql = "SELECT i.*, o.* FROM InvoiceTB i JOIN OrderTB o ON i.orderId = o.orderId ";
-        StringBuilder whereClause = buildInvoiceFilterWhereClause(searchKey, status, startDate, endDate);
+        StringBuilder sql = new StringBuilder("SELECT i.*, o.* ");
+        sql.append(buildInvoiceFilterQuery(orderId, paymentMethod, startDate, endDate));
+        sql.append("ORDER BY i.issueDate DESC ");
+        sql.append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
-        String finalSql = baseSql + whereClause.toString()
-                + "ORDER BY i.invoiceId " + sortDirection + " "
-                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-
-        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(finalSql)) {
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql.toString());
 
             int paramIndex = 1;
-            if (searchKey != null && !searchKey.trim().isEmpty()) {
-                String trimmedKey = searchKey.trim();
-                if (trimmedKey.matches("\\d+")) {
-                    int id = Integer.parseInt(trimmedKey);
-                    ps.setInt(paramIndex++, id);
-                    ps.setInt(paramIndex++, id);
-                } else {
-                    ps.setString(paramIndex++, "%" + trimmedKey + "%");
-                }
+            if (orderId != null && orderId.matches("\\d+")) {
+                ps.setInt(paramIndex++, Integer.parseInt(orderId));
             }
-            if (status != null && !status.trim().isEmpty()) {
-                ps.setString(paramIndex++, status);
+            if (paymentMethod != null && !paymentMethod.trim().isEmpty()) {
+                ps.setString(paramIndex++, paymentMethod);
             }
             if (startDate != null) {
                 ps.setDate(paramIndex++, new java.sql.Date(startDate.getTime()));
@@ -179,14 +163,66 @@ public class InvoiceDAO {
             ps.setInt(paramIndex++, offset);
             ps.setInt(paramIndex++, pageSize);
 
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(invoiceInfo(rs));
-                }
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(invoiceInfo(rs));
             }
         } catch (Exception ex) {
-            Logger.getLogger(InvoiceDAO.class.getName()).log(Level.SEVERE, "Error filtering invoices", ex);
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return list;
+    }
+    
+    public boolean invoiceIdExists(int invoiceId) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT 1 FROM InvoiceTB WHERE invoiceId=?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, invoiceId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(InvoiceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 }
