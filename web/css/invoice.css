@@ -13,15 +13,28 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    max-width: 210mm; /* Match A4 width */
+    margin-left: auto;
+    margin-right: auto;
 }
 
+/* A4 Paper Styling */
 .invoice-paper {
-    background-color: #fff;
+    background: #fff;
+    width: 210mm; /* A4 width */
+    min-height: 297mm; /* A4 height */
+
+    /* For responsiveness on smaller screens */
+    max-width: 100%;
+    height: auto; /* Allow height to grow if content is larger */
+
+    display: block;
+    margin: 20px auto;
     padding: 40px;
-    margin: 0 auto;
-    max-width: 800px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e0e0e0;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    border: 1px solid #eee;
+    box-sizing: border-box; /* Important for padding to be included in width/height */
+
     font-family: 'Asap', sans-serif;
     color: #333;
 }
@@ -89,12 +102,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #dee2e6;
+    font-size: 14px;
 }
 
 .items-table thead th {
     background-color: #f8f9fa;
     font-weight: 600;
-    font-size: 14px;
     text-transform: uppercase;
 }
 
@@ -148,4 +161,93 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 .invoice-footer .shop-name {
     font-weight: 600;
+}
+
+
+/* --- SPECIAL STYLES FOR PRINTING --- */
+@media print {
+    /* Hide all elements that are not the invoice itself */
+    body > *:not(.seller-container) {
+        display: none;
+    }
+    .seller-container > *:not(.seller-content) {
+        display: none;
+    }
+    .seller-content > *:not(.invoice-paper) {
+        display: none;
+    }
+    .invoice-actions, .page-header, #detail-pagination {
+        display: none !important;
+    }
+
+    .invoice-pagination {
+        display: none !important;
+    }
+
+    /* Reset body and container styles for printing */
+    body, html {
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+    }
+
+    .seller-container, .seller-content {
+        padding: 0;
+        margin: 0;
+    }
+
+    /* Style the invoice paper for printing */
+    .invoice-paper {
+        margin: 0;
+        padding: 20mm 15mm; /* Typical A4 margins */
+        box-shadow: none;
+        border: none;
+        width: 100%;
+        min-height: 0; /* Let content define height */
+        max-width: 100%;
+        page-break-after: always; /* Each .invoice-paper is a new page */
+    }
+
+    /* Prevent tables and other elements from being split across pages */
+    .items-table thead {
+        display: table-header-group; /* Repeat header on each page */
+    }
+    .items-table tr, .invoice-totals, .invoice-header, .invoice-details {
+        page-break-inside: avoid;
+    }
+}
+
+/* Add these styles to css/invoice.css */
+
+.invoice-pagination {
+    text-align: center;
+    margin: 25px 0;
+    font-family: 'Asap', sans-serif;
+    color: #888;
+    user-select: none; /* Prevents text selection */
+}
+
+.invoice-pagination .page-nav {
+    display: inline-block;
+    padding: 2px 6px;
+    margin: 0 3px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #007bff;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+}
+
+.invoice-pagination .page-nav:hover {
+    background-color: #f0f8ff;
+    text-decoration: underline;
+}
+
+.invoice-pagination .page-nav.active {
+    font-weight: 700;
+    color: #333;
+    cursor: default;
+    background-color: transparent;
+    text-decoration: none;
+    border-bottom: 2px solid #333;
 }

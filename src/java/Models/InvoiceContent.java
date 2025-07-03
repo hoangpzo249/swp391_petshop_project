@@ -86,4 +86,10 @@ public class InvoiceContent {
         this.priceAtInvoice = priceAtInvoice;
     }
 
+    @Override
+    public String toString() {
+        return "InvoiceContent{" + "invoiceContentId=" + invoiceContentId + ", invoiceId=" + invoiceId + ", petId=" + petId + ", petName=" + petName + ", petBreed=" + petBreed + ", petGender=" + petGender + ", petDob=" + petDob + ", priceAtInvoice=" + priceAtInvoice + '}';
+    }
+
+    
 }

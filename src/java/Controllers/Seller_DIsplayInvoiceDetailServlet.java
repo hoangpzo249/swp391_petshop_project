@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAO.InvoiceDAO;
+import Models.Invoice;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -77,6 +78,10 @@ public class Seller_DIsplayInvoiceDetailServlet extends HttpServlet {
             return;
         }
         
+        Invoice invoice=_invoicedao.getInvoiceDetailById(invoiceId);
+        request.setAttribute("invoice", invoice);
+        request.getRequestDispatcher("seller_invoice_detail.jsp")
+                .forward(request, response);
     }
 
     /**

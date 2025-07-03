@@ -17,13 +17,13 @@
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     </head>
     <body>
         <div class="seller-header">
             <div class="logo-container">
-                <a href="homepage">
-                    <img src="images/logo_banner/logo2.png" alt="PETFPT Shop Logo"/>
-                </a>
+                <a href="homepage"><img src="images/logo_banner/logo2.png" alt="PETFPT Shop Logo"/></a>
                 <h1 class="seller-title">SELLER</h1>
             </div>
             <div class="seller-profile">
@@ -41,7 +41,6 @@
 
         <div class="seller-container">
             <div class="seller-sidebar">
-                <!-- Sidebar content remains the same as your list page -->
                 <div class="sidebar-header"><h2 class="sidebar-title">SELLER PANEL</h2><p class="sidebar-subtitle">Quản lý hệ thống PETFPT Shop</p></div>
                 <div class="sidebar-menu">
                     <div class="menu-category"><h5 class="category-title">Điều hướng</h5>
@@ -68,8 +67,8 @@
                             <a href="sellerdisplayinvoice" class="btn btn-outline">
                                 <i class="fas fa-arrow-left"></i> Quay lại danh sách
                             </a>
-                            <button class="btn btn-primary" onclick="downloadInvoice()">
-                                <i class="fas fa-download"></i> Tải hóa đơn (Ảnh)
+                            <button id="downloadBtn" class="btn btn-primary">
+                                <i class="fas fa-download"></i> Tải tất cả các trang
                             </button>
                         </div>
 
@@ -109,23 +108,24 @@
                                     <tr>
                                         <th>STT</th>
                                         <th>Sản phẩm</th>
-                                        <th class="text-right">Số lượng</th>
-                                        <th class="text-right">Đơn giá</th>
-                                        <th class="text-right">Thành tiền</th>
+                                        <th class="text-right">Giá</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                <c:forEach var="pet" items="${petList}" varStatus="loop">
-                                    <tr>
-                                        <td>${loop.count}</td>
-                                        <td>${pet.petName}</td>
-                                        <td class="text-right">1</td>
-                                        <td class="text-right"><fmt:formatNumber value="${item.priceAtOrder}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
-                                    <td class="text-right"><fmt:formatNumber value="${item.priceAtOrder}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
-                                    </tr>
-                                </c:forEach>
+                                <tbody id="invoice-items-body">
+                                    <c:forEach var="item" items="${invoice.invoiceContents}" varStatus="loop">
+                                        <tr>
+                                            <td>${loop.count}</td>
+                                            <td>
+                                                <strong>${item.petName}</strong><br>
+                                                <small>Giống: ${item.petBreed} - Giới tính: ${item.petGender}</small>
+                                            </td>
+                                            <td class="text-right"><fmt:formatNumber value="${item.priceAtInvoice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                        </tr>
+                                    </c:forEach>
                                 </tbody>
                             </table>
+
+                            <div id="detail-pagination" class="invoice-pagination"></div>
 
                             <div class="invoice-totals">
                                 <table>
@@ -161,33 +161,102 @@
         </div>
 
         <script>
-            function downloadInvoice() {
-                const invoiceElement = document.getElementById("invoice-paper-container");
-                const downloadButton = event.target;
+            document.addEventListener('DOMContentLoaded', function () {
+                const itemsTbody = document.getElementById('invoice-items-body');
+                if (!itemsTbody)
+                    return;
 
-                // Temporarily disable the button to prevent multiple clicks
-                downloadButton.disabled = true;
-                downloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+                const invoiceElement = document.getElementById('invoice-paper-container');
+                const items = Array.from(itemsTbody.getElementsByTagName('tr'));
+                const paginationContainer = document.getElementById('detail-pagination');
+                const downloadBtn = document.getElementById('downloadBtn');
 
-                html2canvas(invoiceElement, {
-                    scale: 2, // Increase scale for better image quality
-                    useCORS: true // For images from other domains if any
-                }).then(canvas => {
+                const ITEMS_PER_PAGE = 7;
+                const totalItems = items.length;
+                const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+                let currentPage = 1;
+
+                function showPage(page) {
+                    currentPage = page;
+                    const startIndex = (page - 1) * ITEMS_PER_PAGE;
+                    const endIndex = startIndex + ITEMS_PER_PAGE;
+                    items.forEach((item, i) => {
+                        item.style.display = (i >= startIndex && i < endIndex) ? '' : 'none';
+                    });
+                    updatePaginationControls();
+                }
+
+                function updatePaginationControls() {
+                    paginationContainer.innerHTML = '';
+                    if (totalPages <= 1)
+                        return;
+
+                    for (let i = 1; i <= totalPages; i++) {
+                        const pageLink = document.createElement('a');
+                        pageLink.className = 'page-nav';
+                        if (i === currentPage) {
+                            pageLink.classList.add('active');
+                        }
+                        pageLink.href = '#';
+                        pageLink.innerText = i;
+                        pageLink.addEventListener('click', e => {
+                            e.preventDefault();
+                            showPage(i);
+                        });
+                        paginationContainer.appendChild(pageLink);
+                    }
+                }
+
+                function waitForRender() {
+                    return new Promise(resolve => requestAnimationFrame(resolve));
+                }
+
+                async function downloadInvoiceAsZip() {
+                    downloadBtn.disabled = true;
+                    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+
+                    const zip = new JSZip();
+
+                    for (let i = 1; i <= totalPages; i++) {
+                        showPage(i);
+                        await waitForRender();
+                        const canvas = await html2canvas(invoiceElement, {scale: 2, useCORS: true});
+                        const imageData = canvas.toDataURL('image/png').split(',')[1];
+                        const filename = `hoa-don-${invoice.invoiceId}-trang-\${i}.png`;
+                        zip.file(filename, imageData, {base64: true});
+                    }
+
+                    downloadBtn.innerHTML = '<i class="fas fa-archive"></i> Đang nén file...';
+                    const content = await zip.generateAsync({type: "blob"});
+                    saveAs(content, `hoa-don-${invoice.invoiceId}.zip`);
+                    showPage(1);
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (ZIP)';
+                }
+
+                async function downloadSingleImage() {
+                    downloadBtn.disabled = true;
+                    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tải...';
+                    await waitForRender();
+                    const canvas = await html2canvas(invoiceElement, {scale: 2, useCORS: true});
                     const link = document.createElement('a');
-                    link.download = 'hoa-don-${invoice.invoiceId}.png';
+                    link.download = `hoa-don-${invoice.invoiceId}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (Ảnh)';
+                }
 
-                    // Re-enable the button after download
-                    downloadButton.disabled = false;
-                    downloadButton.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (Ảnh)';
-                }).catch(err => {
-                    console.error('Oops, something went wrong!', err);
-                    alert('Không thể tạo ảnh hóa đơn. Vui lòng thử lại.');
-                    downloadButton.disabled = false;
-                    downloadButton.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (Ảnh)';
-                });
-            }
+                if (totalPages > 1) {
+                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (ZIP)';
+                    downloadBtn.addEventListener('click', downloadInvoiceAsZip);
+                } else {
+                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (Ảnh)';
+                    downloadBtn.addEventListener('click', downloadSingleImage);
+                }
+
+                showPage(1);
+            });
         </script>
     </body>
 </html>
