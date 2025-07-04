@@ -5,6 +5,9 @@
         <group>
             <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/ListShopPetServlet.java</file>
             <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/main_typepet.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/import_discount.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/ImportDiscountServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/manager_discount_view.jsp</file>
         </group>
     </open-files>
 </project-private>

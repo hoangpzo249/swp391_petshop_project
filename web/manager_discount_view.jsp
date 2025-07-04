@@ -86,6 +86,7 @@
                             <button class="btn btn-primary" onclick="location.href = 'adddiscount.jsp'">
                                 <i class="fas fa-plus-circle"></i> Thêm mã mới
                             </button>
+                            <a href="import_discount.jsp" class="sidebar-link"><i class="fas fa-file-upload"></i> Import mã từ Excel</a>
                         </div>
                     </div>
                     <div class="card-body">
