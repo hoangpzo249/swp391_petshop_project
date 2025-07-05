@@ -87,67 +87,75 @@
                                 </div>
                             </div>
 
-                            <div class="invoice-details">
-                                <div class="shop-details">
-                                    <h3 class="section-title">Thông tin người bán</h3>
-                                    <p><strong>Cửa hàng:</strong> PETFPT Shop</p>
-                                    <p><strong>Điện thoại:</strong> 0987.654.321</p>
-                                    <p><strong>Email:</strong> support@petfpt.com</p>
+                            <div class="invoice-body">
+                                <div class="invoice-details">
+                                    <div class="shop-details">
+                                        <h3 class="section-title">Thông tin người bán</h3>
+                                        <p><strong>Cửa hàng:</strong> PETFPT Shop</p>
+                                        <p><strong>Điện thoại:</strong> 0767.676.770</p>
+                                        <p><strong>Email:</strong> fptpet@gmail.com</p>
+                                    </div>
+                                    <div class="customer-details">
+                                        <h3 class="section-title">Thông tin khách hàng</h3>
+                                        <p><strong>Tên khách hàng:</strong> ${invoice.order.customerName}</p>
+                                        <p><strong>Địa chỉ:</strong> ${invoice.order.customerAddress}</p>
+                                        <p><strong>Điện thoại:</strong> ${invoice.order.customerPhone}</p>
+                                        <p><strong>Email:</strong> ${invoice.order.customerEmail}</p>
+                                    </div>
                                 </div>
-                                <div class="customer-details">
-                                    <h3 class="section-title">Thông tin khách hàng</h3>
-                                    <p><strong>Tên khách hàng:</strong> ${invoice.order.customerName}</p>
-                                    <p><strong>Địa chỉ:</strong> ${invoice.order.customerAddress}</p>
-                                    <p><strong>Điện thoại:</strong> ${invoice.order.customerPhone}</p>
-                                    <p><strong>Email:</strong> ${invoice.order.customerEmail}</p>
-                                </div>
+
+                                <table class="items-table">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Sản phẩm</th>
+                                            <th class="text-right">Giá</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="invoice-items-body">
+                                        <c:forEach var="item" items="${invoice.invoiceContents}" varStatus="loop">
+                                            <tr>
+                                                <td>${loop.count}</td>
+                                                <td>
+                                                    <strong>${item.petName}</strong><br>
+                                                    <small>Giống: ${item.petBreed} - Giới tính: ${item.petGender}</small>
+                                                </td>
+                                                <td class="text-right"><fmt:formatNumber value="${item.priceAtInvoice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+
+                                <div id="detail-pagination" class="invoice-pagination"></div>
                             </div>
 
-                            <table class="items-table">
-                                <thead>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Sản phẩm</th>
-                                        <th class="text-right">Giá</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="invoice-items-body">
-                                    <c:forEach var="item" items="${invoice.invoiceContents}" varStatus="loop">
+                            <div class="invoice-summary">
+                                <div class="payment-method-section">
+                                    <h3 class="section-title">Phương thức thanh toán</h3>
+                                    <p>${invoice.paymentMethod}</p>
+                                </div>
+                                <div class="invoice-totals">
+                                    <table>
                                         <tr>
-                                            <td>${loop.count}</td>
-                                            <td>
-                                                <strong>${item.petName}</strong><br>
-                                                <small>Giống: ${item.petBreed} - Giới tính: ${item.petGender}</small>
-                                            </td>
-                                            <td class="text-right"><fmt:formatNumber value="${item.priceAtInvoice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                            <td class="label">Tổng tiền hàng:</td>
+                                            <td class="text-right"><fmt:formatNumber value="${invoice.totalAmount + invoice.order.discountAmountAtApply}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
                                         </tr>
-                                    </c:forEach>
-                                </tbody>
-                            </table>
-
-                            <div id="detail-pagination" class="invoice-pagination"></div>
-
-                            <div class="invoice-totals">
-                                <table>
-                                    <tr>
-                                        <td class="label">Tổng tiền hàng:</td>
-                                        <td class="text-right"><fmt:formatNumber value="${invoice.totalAmount + invoice.order.discountAmountAtApply}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="label">Giảm giá:</td>
-                                        <td class="text-right">- <fmt:formatNumber value="${invoice.order.discountAmountAtApply}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
-                                    </tr>
-                                    <tr class="grand-total">
-                                        <td class="label">TỔNG CỘNG:</td>
-                                        <td class="text-right"><fmt:formatNumber value="${invoice.totalAmount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
-                                    </tr>
-                                </table>
+                                        <tr>
+                                            <td class="label">Giảm giá:</td>
+                                            <td class="text-right">- <fmt:formatNumber value="${invoice.order.discountAmountAtApply}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                        </tr>
+                                        <tr class="grand-total">
+                                            <td class="label">TỔNG CỘNG:</td>
+                                            <td class="text-right"><fmt:formatNumber value="${invoice.totalAmount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
 
                             <div class="invoice-footer">
-                                <p>Phương thức thanh toán: <strong>${invoice.paymentMethod}</strong></p>
                                 <p>Cảm ơn quý khách đã mua sắm tại <strong class="shop-name">PETFPT Shop</strong>!</p>
                             </div>
+
                         </div>
                     </c:when>
                     <c:otherwise>
