@@ -188,6 +188,14 @@
         <servlet-name>ImportDiscountServlet</servlet-name>
         <servlet-class>Controllers.ImportDiscountServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RetryAddDiscountServlet</servlet-name>
+        <servlet-class>Controllers.RetryAddDiscountServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DowloadFailedServlet</servlet-name>
+        <servlet-class>Controllers.DowloadFailedServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -375,6 +383,14 @@
     <servlet-mapping>
         <servlet-name>ImportDiscountServlet</servlet-name>
         <url-pattern>/importdiscount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RetryAddDiscountServlet</servlet-name>
+        <url-pattern>/retryadddiscount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DowloadFailedServlet</servlet-name>
+        <url-pattern>/downloadfailed</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>

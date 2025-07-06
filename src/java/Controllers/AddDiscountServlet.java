@@ -108,9 +108,7 @@ public class AddDiscountServlet extends HttpServlet {
             }
             d.setDiscountCode(code);
             d.setDiscountType(type);
-            if (status.equals("1")) {
-                d.setActive(true);
-            }
+            d.setActive("1".equals(status));
 
             double val;
             try {

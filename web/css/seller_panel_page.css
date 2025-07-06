@@ -1592,3 +1592,13 @@ textarea.form-control {
 .shipper-text-details .detail-label {
     font-weight: 600;
 }
+
+.field-error {
+    color: #e53935;            /* Đỏ đẹp, không chói */
+    font-size: 13px;           /* Chữ nhỏ vừa phải */
+    margin-top: 4px;           /* Khoảng cách lên trên */
+    line-height: 1.4;          /* Tăng độ thoáng */
+    display: block;            /* Chiếm nguyên 1 dòng */
+    font-weight: 500;          /* Hơi đậm 1 chút cho dễ đọc */
+    transition: all 0.3s ease; /* Mượt mà khi hiện lên */
+}

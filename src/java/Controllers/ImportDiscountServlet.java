@@ -85,68 +85,129 @@ public class ImportDiscountServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Part filePart = request.getPart("excelFile");
+        String fileName = filePart.getSubmittedFileName().toLowerCase().trim();
+
         InputStream inputStream = filePart.getInputStream();
 
         List<Discount> importedList = new ArrayList<>();
+        List<Discount> failedDiscounts = new ArrayList<>();
         DiscountDAO dao = new DiscountDAO();
         int successCount = 0, failCount = 0;
 
         try (Workbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(0);
             int rowNum = 0;
+            Row firstRow = sheet.getRow(0);
+            boolean isTemplate = false;
+
+            if (firstRow != null) {
+                Cell cell = firstRow.getCell(0);
+                if (cell != null && cell.getCellType() == CellType.STRING) {
+                    String val = cell.getStringCellValue().toLowerCase();
+                    if (val.contains("template")) {
+                        isTemplate = true;
+                    }
+                }
+            }
+            int startRow = isTemplate ? 6 : 1;
+
             for (Row row : sheet) {
-                if (rowNum == 0) {
+                if (rowNum < startRow) {
                     rowNum++;
                     continue;
                 }
                 try {
                     Discount d = new Discount();
+                    boolean hasError = false;
 
-                    d.setDiscountCode(row.getCell(0).getStringCellValue().trim());
-                    d.setDiscountType(row.getCell(1).getStringCellValue().trim());
-                    d.setDiscountValue(row.getCell(2).getNumericCellValue());
+                    String code = row.getCell(0).getStringCellValue().trim();
+                    d.setDiscountCode(code);
+                    if (code.isEmpty()) {
+                        d.setDiscountCodeErr("Mã giảm giá không được để trống.");
+                        hasError = true;
+                    } else if (dao.getActiveDiscountByCode(code) != null) {
+                        d.setDiscountCodeErr("Mã giảm giá đã tồn tại.");
+                        hasError = true;
+                    }
+
+                    String type = row.getCell(1).getStringCellValue().trim();
+                    d.setDiscountType(type);
+
+                    double value = row.getCell(2).getNumericCellValue();
+                    d.setDiscountValue(value);
+                    if (value <= 0) {
+                        d.setDiscountValueErr("Giá trị giảm phải >0.");
+                        hasError = true;
+                    } else if ("Percent".equals(type) && value > 100) {
+                        d.setDiscountValueErr("Phần trăm giảm không vượt quá 100%.");
+                        hasError = true;
+                    }
 
                     if (row.getCell(3) != null && row.getCell(3).getCellType() != CellType.BLANK) {
                         d.setDescription(row.getCell(3).getStringCellValue().trim());
-                    } else {
-                        d.setDescription(null);
                     }
 
-                    Date fromDate;
-                    Cell fromCell = row.getCell(4);
-                    if (fromCell.getCellType() == CellType.NUMERIC) {
-                        java.util.Date utilDate = fromCell.getDateCellValue();
-                        fromDate = new Date(utilDate.getTime());
-                    } else {
-                        fromDate = Date.valueOf(fromCell.getStringCellValue().trim());
+                    Date fromDate, toDate;
+                    try {
+                        Cell fromCell = row.getCell(4);
+                        if (fromCell.getCellType() == CellType.NUMERIC) {
+                            fromDate = new Date(fromCell.getDateCellValue().getTime());
+                        } else {
+                            fromDate = Date.valueOf(fromCell.getStringCellValue().trim());
+                        }
+                        d.setValidFrom(fromDate);
+                        d.setValidFromErr(null);
+                    } catch (Exception e) {
+                        d.setValidFromErr("Ngày bắt đầu không hợp lệ.");
+                        hasError = true;
+                        fromDate = null;
                     }
-                    d.setValidFrom(fromDate);
 
-                    Date toDate;
-                    Cell toCell = row.getCell(5);
-                    if (toCell.getCellType() == CellType.NUMERIC) {
-                        java.util.Date utilDate = toCell.getDateCellValue();
-                        toDate = new Date(utilDate.getTime());
-                    } else {
-                        toDate = Date.valueOf(toCell.getStringCellValue().trim());
+                    try {
+                        Cell toCell = row.getCell(5);
+                        if (toCell.getCellType() == CellType.NUMERIC) {
+                            toDate = new Date(toCell.getDateCellValue().getTime());
+                        } else {
+                            toDate = Date.valueOf(toCell.getStringCellValue().trim());
+                        }
+                        d.setValidTo(toDate);
+                        if (fromDate != null && !toDate.after(fromDate)) {
+                            d.setValidToErr("Ngày kết thúc phải sau ngày bắt đầu.");
+                            hasError = true;
+                        } else if (toDate.before(new Date(System.currentTimeMillis()))) {
+                            d.setValidToErr("Ngày kết thúc không được trong quá khứ.");
+                            hasError = true;
+                        } else {
+                            d.setValidToErr(null);
+                        }
+                    } catch (Exception e) {
+                        d.setValidToErr("Ngày kết thúc không hợp lệ.");
+                        hasError = true;
                     }
-                    d.setValidTo(toDate);
 
-                    d.setMinOrderAmount(row.getCell(6).getNumericCellValue());
+                    double minOrder = row.getCell(6).getNumericCellValue();
+                    d.setMinOrderAmount(minOrder);
+                    if (minOrder < 0) {
+                        d.setMinOrderAmountErr("Đơn hàng tối thiểu >=0.");
+                        hasError = true;
+                    }
 
                     if (row.getCell(7) != null && row.getCell(7).getCellType() != CellType.BLANK) {
-                        d.setMaxUsage((int) row.getCell(7).getNumericCellValue());
-                    } else {
-                        d.setMaxUsage(null);
+                        int maxUsage = (int) row.getCell(7).getNumericCellValue();
+                        d.setMaxUsage(maxUsage);
+                        if (maxUsage <= 0) {
+                            d.setMaxUsageErr("Số lần dùng phải >0.");
+                            hasError = true;
+                        }
                     }
-
-                    d.setUsageCount(0);
 
                     if (row.getCell(8) != null && row.getCell(8).getCellType() != CellType.BLANK) {
                         Cell activeCell = row.getCell(8);
                         boolean activeValue;
                         if (activeCell.getCellType() == CellType.BOOLEAN) {
                             activeValue = activeCell.getBooleanCellValue();
+                        } else if (activeCell.getCellType() == CellType.NUMERIC) {
+                            activeValue = activeCell.getNumericCellValue() != 0;
                         } else {
                             String activeStr = activeCell.getStringCellValue().trim();
                             activeValue = activeStr.equalsIgnoreCase("true") || activeStr.equalsIgnoreCase("1");
@@ -156,29 +217,45 @@ public class ImportDiscountServlet extends HttpServlet {
                         d.setActive(false);
                     }
 
-                    if (row.getCell(9) != null && row.getCell(9).getCellType() != CellType.BLANK) {
-                        d.setMaxValue(row.getCell(9).getNumericCellValue());
-                    } else {
-                        d.setMaxValue(null);
+                    if ("Percent".equals(type)) {
+                        if (row.getCell(9) != null && row.getCell(9).getCellType() != CellType.BLANK) {
+                            double maxValue = row.getCell(9).getNumericCellValue();
+                            d.setMaxValue(maxValue);
+                            if (maxValue <= 0) {
+                                d.setMaxValueErr("Giảm tối đa phải >0.");
+                                hasError = true;
+                            }
+                        }
                     }
+
+                    d.setUsageCount(0);
 
                     boolean added = dao.addDiscount(d);
                     if (added) {
                         successCount++;
                     } else {
                         failCount++;
+                        failedDiscounts.add(d);
                     }
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     failCount++;
+
                 }
+
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errMess", "Lỗi đọc file: " + e.getMessage());
             request.getRequestDispatcher("import_discount.jsp").forward(request, response);
+            return;
+        }
+        if (!failedDiscounts.isEmpty()) {
+            request.getSession().setAttribute("failedDiscounts", failedDiscounts);
+            request.getSession().setAttribute("successMess", "Import thành công " + successCount + " mã, thất bại " + failCount + " mã.");
+            response.sendRedirect("update_failed_discount.jsp");
             return;
         }
 

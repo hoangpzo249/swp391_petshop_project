@@ -8,6 +8,17 @@
             <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/import_discount.jsp</file>
             <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/ImportDiscountServlet.java</file>
             <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/manager_discount_view.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/update_failed_discount.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/AddToCartServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/AddDiscountServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/adddiscount.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/RetryAddDiscountServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/UpdateDiscountServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/css/manager_panel_page.css</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/css/seller_panel_page.css</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Models/Discount.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/js/discount_fixed.js</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/js/retry_discount_fixed.js</file>
         </group>
     </open-files>
 </project-private>
