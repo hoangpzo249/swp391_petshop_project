@@ -78,7 +78,7 @@
                                         </c:when>
 
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
-                                            <a href="shipper-panel" class="dropdown-item">
+                                            <a href="profile" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Shipper</span>
                                             </a>
@@ -95,7 +95,7 @@
 
                                     <c:choose>
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Customer'}">
-                                            <a href="orders?status=pending" class="dropdown-item">
+                                            <a href="orders?status=Pending" class="dropdown-item">
                                                 <i class="fas fa-shopping-bag"></i> 
                                                 <span>Đơn hàng đã mua</span>
                                             </a>
@@ -173,22 +173,22 @@
 <!--                        <a href="orders?status=all" class="${empty param.status || param.status eq 'all' ? 'active' : ''}">
                             <i class="fas fa-list-ul"></i> Tất cả
                         </a>-->
-                        <a href="orders?status=pending" class="${status eq 'pending' ? 'active' : ''}">
+                        <a href="orders?status=Pending" class="${status eq 'Pending' ? 'active' : ''}">
                             <i class="fas fa-clock"></i> Chờ xác nhận
                         </a>
-                        <a href="orders?status=confirmed" class="${status eq 'confirmed' ? 'active' : ''}">
+                        <a href="orders?status=Confirmed" class="${status eq 'Confirmed' ? 'active' : ''}">
                             <i class="fas fa-check"></i> Đã xác nhận
                         </a>
-                        <a href="orders?status=pendingShipper" class="${status eq 'pendingShipper' ? 'active' : ''}">
+                        <a href="orders?status=PendingShipper" class="${status eq 'PendingShipper' ? 'active' : ''}">
                             <i class="fas fa-user-clock"></i> Chờ shipper nhận
                         </a>
-                        <a href="orders?status=shipping" class="${status eq 'shipping' ? 'active' : ''}">
+                        <a href="orders?status=Shipping" class="${status eq 'Shipping' ? 'active' : ''}">
                             <i class="fas fa-shipping-fast"></i> Đang giao
                         </a>
-                        <a href="orders?status=delivered" class="${status eq 'delivered' ? 'active' : ''}">
+                        <a href="orders?status=Delivered" class="${status eq 'Delivered' ? 'active' : ''}">
                             <i class="fas fa-box-open"></i> Đã giao
                         </a>
-                        <a href="orders?status=rejected" class="${status eq 'rejected' ? 'active' : ''}">
+                        <a href="orders?status=Rejected" class="${status eq 'Rejected' ? 'active' : ''}">
                             <i class="fas fa-times"></i> Đã hủy
                         </a>
                     </div>
@@ -278,6 +278,9 @@
                                                 <c:when test="${order.paymentMethod eq 'Cash on Delivery'}">
                                                     Thanh toán khi nhận hàng
                                                 </c:when>
+                                                <c:when test="${order.paymentMethod eq 'Credit Card'}">
+                                                    Thẻ tín dụng
+                                                </c:when>
                                             </c:choose>
                                         </p>
                                         <p><span class="label">Trạng thái:</span>
@@ -299,7 +302,7 @@
                                 </div>
 
                                 <div class="order-actions">
-                                    <a href="orders?action=view&id=10" class="btn view-btn">
+                                    <a href="orders?status=${order.orderStatus}&view=${order.orderId}" class="btn view-btn">
                                         <i class="fas fa-eye"></i> Xem chi tiết
                                     </a>
                                     <c:choose>

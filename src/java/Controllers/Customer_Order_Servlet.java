@@ -63,6 +63,7 @@ public class Customer_Order_Servlet extends HttpServlet {
         HttpSession session = request.getSession();
         String status = request.getParameter("status");
         String keyword = request.getParameter("keyword");
+        String view = request.getParameter("view");
 
         Account acc = (Account) session.getAttribute("userAccount");
         int accId = acc.getAccId();
@@ -76,21 +77,23 @@ public class Customer_Order_Servlet extends HttpServlet {
                 request.setAttribute("orderList", orderList);
                 request.setAttribute("keyword", keyword);
                 request.setAttribute("status", status);
+                request.getRequestDispatcher("customer_order_page.jsp").forward(request, response);
             } catch (NumberFormatException e) {
                 request.setAttribute("errorMessage", "Tìm kiếm theo Id chỉ chấp nhận dạng chữ số");
                 List<Order> orderList = odao.getOrderCus(accId, status);
                 request.setAttribute("orderList", orderList);
                 request.setAttribute("status", status);
+                request.getRequestDispatcher("customer_order_page.jsp").forward(request, response);
             }
-
+        } else if (status != null && view != null) {
+            request.getRequestDispatcher("customer_orderDetail_page.jsp").forward(request, response);
         } else {
-
             List<Order> orderList = odao.getOrderCus(accId, status);
             request.setAttribute("orderList", orderList);
             request.setAttribute("status", status);
+            request.getRequestDispatcher("customer_order_page.jsp").forward(request, response);
         }
 
-        request.getRequestDispatcher("customer_order_page.jsp").forward(request, response);
     }
 
     /**

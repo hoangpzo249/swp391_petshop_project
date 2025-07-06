@@ -155,6 +155,18 @@ public class Register_Account_Servlet extends HttpServlet {
                 return;
             }
 
+            String fNameCheck = fNameRegister.trim().replaceAll("\\s+", " ");
+            String lNameCheck = lNameRegister.trim().replaceAll("\\s+", " ");
+
+            if (!fNameRegister.matches(fNameCheck) || !lNameRegister.matches(lNameCheck)) {
+                request.setAttribute("errMessRegister", "Họ và Tên của bạn không được chứa nhiều khoảng trắng liên tiếp");
+                request.setAttribute("emailRegister", emailRegister);
+                request.setAttribute("passRegister", passRegister);
+                request.setAttribute("confirm_passwordRegister", confirm_passwordRegister);
+                request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
+                return;
+            }
+
             AccountDAO daoAcc = new AccountDAO();
 
             boolean checkEmail = daoAcc.isEmailExist(emailRegister);
@@ -213,7 +225,6 @@ public class Register_Account_Servlet extends HttpServlet {
 
             try {
                 EmailSender.sendOTP(emailRegister, otpRegister);
-
                 session.setAttribute("otpRegister", otpRegister);
                 session.setAttribute("curTime", curTime);
 
@@ -294,7 +305,7 @@ public class Register_Account_Servlet extends HttpServlet {
             } else {
                 session.setAttribute("sendOtpSuccessRegister", "true");
                 request.setAttribute("errMessRegisOtp", "Mã OTP không hợp lệ");
-                
+
                 request.getRequestDispatcher("register_account_page.jsp").forward(request, response);
             }
         } else {

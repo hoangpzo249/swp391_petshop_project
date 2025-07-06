@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link rel="icon" type="image/png" href="images/logo_banner/logo1.png">
         <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="css/main_type.css?v=22" />
+        <link rel="stylesheet" href="css/main_type.css?v=23" />
         <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
         <link href="css/advance_footer.css?v=3" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
@@ -92,7 +92,7 @@
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="orders?status=pending" class="dropdown-item">
+                                    <a href="orders?status=Pending" class="dropdown-item">
                                         <i class="fas fa-shopping-bag"></i> 
                                         <span>Đơn hàng đã mua</span>
                                     </a>
@@ -298,14 +298,115 @@
                     </c:forEach>
                 </div>
 
-                <div class="pagination">
-                    <c:forEach begin="1" end="${totalPages}" var="i">
-                        <a href="listshoppet?page=${i}&breed=${param.breed}&species=${param.species}&search=${param.search}&priceRange=${param.priceRange}&sortpet=${param.sortpet}&gender=${param.gender}&color=${param.color}&origin=${param.origin}&dobFrom=${param.dobFrom}&dobTo=${param.dobTo}&vaccination=${param.vaccination}"
-                           class="${i == currentPage ? 'active' : ''}">
-                            ${i}
-                        </a>
-                    </c:forEach>
-                </div>
+                <c:if test="${totalPages > 1}">
+                    <div class="pagination-container">
+                        <ul class="pagination">
+
+                            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                <c:url value="listshoppet" var="prevUrl">
+                                    <c:param name="page" value="${currentPage - 1}"/>
+                                    <c:if test="${not empty species}"><c:param name="species" value="${species}"/></c:if>
+                                    <c:if test="${not empty breed}"><c:param name="breed" value="${breed}"/></c:if>
+                                    <c:if test="${not empty param.search}"><c:param name="search" value="${param.search}"/></c:if>
+                                    <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                    <c:if test="${not empty param.color}"><c:param name="color" value="${param.color}"/></c:if>
+                                    <c:if test="${not empty param.origin}"><c:param name="origin" value="${param.origin}"/></c:if>
+                                    <c:if test="${not empty param.dobFrom}"><c:param name="dobFrom" value="${param.dobFrom}"/></c:if>
+                                    <c:if test="${not empty param.dobTo}"><c:param name="dobTo" value="${param.dobTo}"/></c:if>
+                                    <c:if test="${not empty param.priceRange}"><c:param name="priceRange" value="${param.priceRange}"/></c:if>
+                                    <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                    <c:if test="${not empty param.sortpet}"><c:param name="sortpet" value="${param.sortpet}"/></c:if>
+                                </c:url>
+                                <a class="page-link" href="${currentPage > 1 ? prevUrl : '#'}">«</a>
+                            </li>
+
+                            <c:if test="${startPage > 1}">
+                                <c:url value="listshoppet" var="firstPageUrl">
+                                    <c:param name="page" value="1"/>
+                                    <c:if test="${not empty species}"><c:param name="species" value="${species}"/></c:if>
+                                    <c:if test="${not empty breed}"><c:param name="breed" value="${breed}"/></c:if>
+                                    <c:if test="${not empty param.search}"><c:param name="search" value="${param.search}"/></c:if>
+                                    <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                    <c:if test="${not empty param.color}"><c:param name="color" value="${param.color}"/></c:if>
+                                    <c:if test="${not empty param.origin}"><c:param name="origin" value="${param.origin}"/></c:if>
+                                    <c:if test="${not empty param.dobFrom}"><c:param name="dobFrom" value="${param.dobFrom}"/></c:if>
+                                    <c:if test="${not empty param.dobTo}"><c:param name="dobTo" value="${param.dobTo}"/></c:if>
+                                    <c:if test="${not empty param.priceRange}"><c:param name="priceRange" value="${param.priceRange}"/></c:if>
+                                    <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                    <c:if test="${not empty param.sortpet}"><c:param name="sortpet" value="${param.sortpet}"/></c:if>
+                                </c:url>
+                                <li class="page-item">
+                                    <a class="page-link" href="${firstPageUrl}">1</a>
+                                </li>
+                                <c:if test="${startPage >= 3}">
+                                    <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                    </c:if>
+                                </c:if>
+
+                            <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                                <c:url value="listshoppet" var="pageUrl">
+                                    <c:param name="page" value="${i}"/>
+                                    <c:if test="${not empty species}"><c:param name="species" value="${species}"/></c:if>
+                                    <c:if test="${not empty breed}"><c:param name="breed" value="${breed}"/></c:if>
+                                    <c:if test="${not empty param.search}"><c:param name="search" value="${param.search}"/></c:if>
+                                    <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                    <c:if test="${not empty param.color}"><c:param name="color" value="${param.color}"/></c:if>
+                                    <c:if test="${not empty param.origin}"><c:param name="origin" value="${param.origin}"/></c:if>
+                                    <c:if test="${not empty param.dobFrom}"><c:param name="dobFrom" value="${param.dobFrom}"/></c:if>
+                                    <c:if test="${not empty param.dobTo}"><c:param name="dobTo" value="${param.dobTo}"/></c:if>
+                                    <c:if test="${not empty param.priceRange}"><c:param name="priceRange" value="${param.priceRange}"/></c:if>
+                                    <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                    <c:if test="${not empty param.sortpet}"><c:param name="sortpet" value="${param.sortpet}"/></c:if>
+                                </c:url>
+                                <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                    <a class="page-link" href="${pageUrl}">${i}</a>
+                                </li>
+                            </c:forEach>
+
+                            <c:if test="${endPage < totalPages}">
+                                <c:if test="${endPage < totalPages - 1}">
+                                    <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                    </c:if>
+                                    <c:url value="listshoppet" var="lastPageUrl">
+                                        <c:param name="page" value="${totalPages}"/>
+                                        <c:if test="${not empty species}"><c:param name="species" value="${species}"/></c:if>
+                                        <c:if test="${not empty breed}"><c:param name="breed" value="${breed}"/></c:if>
+                                        <c:if test="${not empty param.search}"><c:param name="search" value="${param.search}"/></c:if>
+                                        <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                        <c:if test="${not empty param.color}"><c:param name="color" value="${param.color}"/></c:if>
+                                        <c:if test="${not empty param.origin}"><c:param name="origin" value="${param.origin}"/></c:if>
+                                        <c:if test="${not empty param.dobFrom}"><c:param name="dobFrom" value="${param.dobFrom}"/></c:if>
+                                        <c:if test="${not empty param.dobTo}"><c:param name="dobTo" value="${param.dobTo}"/></c:if>
+                                        <c:if test="${not empty param.priceRange}"><c:param name="priceRange" value="${param.priceRange}"/></c:if>
+                                        <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                        <c:if test="${not empty param.sortpet}"><c:param name="sortpet" value="${param.sortpet}"/></c:if>
+                                    </c:url>
+                                <li class="page-item">
+                                    <a class="page-link" href="${lastPageUrl}">${totalPages}</a>
+                                </li>
+                            </c:if>
+
+                            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                <c:url value="listshoppet" var="nextUrl">
+                                    <c:param name="page" value="${currentPage + 1}"/>
+                                    <c:if test="${not empty species}"><c:param name="species" value="${species}"/></c:if>
+                                    <c:if test="${not empty breed}"><c:param name="breed" value="${breed}"/></c:if>
+                                    <c:if test="${not empty param.search}"><c:param name="search" value="${param.search}"/></c:if>
+                                    <c:if test="${not empty param.gender}"><c:param name="gender" value="${param.gender}"/></c:if>
+                                    <c:if test="${not empty param.color}"><c:param name="color" value="${param.color}"/></c:if>
+                                    <c:if test="${not empty param.origin}"><c:param name="origin" value="${param.origin}"/></c:if>
+                                    <c:if test="${not empty param.dobFrom}"><c:param name="dobFrom" value="${param.dobFrom}"/></c:if>
+                                    <c:if test="${not empty param.dobTo}"><c:param name="dobTo" value="${param.dobTo}"/></c:if>
+                                    <c:if test="${not empty param.priceRange}"><c:param name="priceRange" value="${param.priceRange}"/></c:if>
+                                    <c:if test="${not empty param.vaccination}"><c:param name="vaccination" value="${param.vaccination}"/></c:if>
+                                    <c:if test="${not empty param.sortpet}"><c:param name="sortpet" value="${param.sortpet}"/></c:if>
+                                </c:url>
+                                <a class="page-link" href="${currentPage < totalPages ? nextUrl : '#'}">»</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </c:if>
             </main>
         </div>
 

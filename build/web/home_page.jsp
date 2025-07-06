@@ -76,15 +76,8 @@
                                             </a>
                                         </c:when>
 
-                                        <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
-                                            <a href="displayorder" class="dropdown-item">
-                                                <i class="fas fa-user"></i> 
-                                                <span>Quản lý Seller</span>
-                                            </a>
-                                        </c:when>
-
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
-                                            <a href="profile" class="dropdown-item">
+                                            <a href="shipper_panel" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Shipper</span>
                                             </a>
@@ -100,7 +93,7 @@
                                     </a>
                                     <c:choose>
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Customer'}">
-                                            <a href="orders?status=pending" class="dropdown-item">
+                                            <a href="orders?status=Pending" class="dropdown-item">
                                                 <i class="fas fa-shopping-bag"></i> 
                                                 <span>Đơn hàng đã mua</span>
                                             </a>
@@ -156,6 +149,14 @@
                 ${loginSuccess}
             </div>
             <c:remove var="loginSuccess" scope="session" />
+        </c:if>
+        <c:if test="${not empty successMess}">
+            <div class="alert-message">${successMess}</div>
+            <c:remove var="successMess" scope="session" />
+        </c:if>
+        <c:if test="${not empty errMess}">
+            <div class="alert-message error">${errMess}</div>
+            <c:remove var="errMess" scope="session" />
         </c:if>
 
         <!-- banner -->
