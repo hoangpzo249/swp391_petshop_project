@@ -120,7 +120,7 @@
                         <li>Tổng quan</li>
                     </ul>
                 </div>
-                
+
                 <!-- Status Toggle Section -->
                 <div class="status-toggle-container">
                     <div class="status-info">
@@ -132,15 +132,21 @@
                             <p>Bật để nhận đơn hàng mới từ cửa hàng</p>
                         </div>
                     </div>
-                    
+
                     <div class="status-controls">
-                        <span id="statusText" class="current-status ${shipperStatus eq 'Active' ? 'status-online' : 'status-offline'}">
-                            ${shipperStatus eq 'Active' ? 'Đang hoạt động' : 'Không hoạt động'}
-                        </span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="statusSwitch" ${shipperStatus eq 'Active' ? 'checked' : ''} onchange="toggleStatus()">
-                            <span class="switch-slider"></span>
-                        </label>
+                        <form action="shipper_panel" method="post">
+                            <label class="toggle-switch">
+                                <input type="checkbox" name="statusCheckbox"
+                                       onchange="this.form.submit()" 
+                                       ${shipper.shipperAvailability eq 'Online' ? 'checked' : ''}>
+                                <span class="switch-slider"></span>
+                            </label>
+
+                            <span class="${shipper.shipperAvailability eq 'Online' ? 'status-online' : 'status-offline'}">
+                                ${shipper.shipperAvailability eq 'Online' ? 'Đang hoạt động' : 'Không hoạt động'}
+                            </span>
+                        </form>
+
                     </div>
                 </div>
 
@@ -192,12 +198,11 @@
                                     <input type="text" name="search" placeholder="Tìm kiếm đơn hàng..." value="${param.search}">
                                 </div>
                             </form>
-                            
+
                             <form action="shipper-dashboard" method="get">
                                 <div class="select-group">
                                     <select name="status" onchange="this.form.submit()">
                                         <option value="">Tất cả trạng thái</option>
-                                        <option value="pending" ${param.status == 'pending' ? 'selected' : ''}>Chờ xác nhận</option>
                                         <option value="confirmed" ${param.status == 'confirmed' ? 'selected' : ''}>Đã xác nhận</option>
                                         <option value="delivering" ${param.status == 'delivering' ? 'selected' : ''}>Đang giao</option>
                                         <option value="completed" ${param.status == 'completed' ? 'selected' : ''}>Đã giao</option>
@@ -218,30 +223,25 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${pendingOrders}" var="order">
+                                    <c:forEach items="${orderList}" var="order">
                                         <tr>
-                                            <td>#ORD-${order.orderId}</td>
+                                            <td>#${order.orderId}</td>
                                             <td>
                                                 <div class="user-info">
-                                                    <c:choose>
-                                                        <c:when test="${not empty order.customer.accImage}">
-                                                            <img src="${order.customer.accImage}" class="table-avatar" alt="Customer">
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <img src="images/support button/account.png" class="table-avatar" alt="Customer">
-                                                        </c:otherwise>
-                                                    </c:choose>
+
+                                                    <img src="images/support button/account.png" class="table-avatar" alt="Customer">
+
                                                     <div>
-                                                        <div class="user-name">${order.customer.accFname} ${order.customer.accLname}</div>
-                                                        <div class="user-email">${order.customer.accPhone}</div>
+                                                        <div class="user-name">${order.customerName}</div>
+                                                        <div class="user-email">${order.customerPhone}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>${order.orderAddress}</td>
+                                            <td>${order.customerAddress}</td>
                                             <td>${order.orderDate}</td>
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${order.orderStatus eq 'Pending'}">
+                                                    <c:when test="${order.orderStatus eq 'Pending Shipper'}">
                                                         <span class="status-badge status-pending">Chờ lấy hàng</span>
                                                     </c:when>
                                                     <c:when test="${order.orderStatus eq 'Delivering'}">
@@ -250,9 +250,6 @@
                                                     <c:when test="${order.orderStatus eq 'Completed'}">
                                                         <span class="status-badge status-completed">Đã giao</span>
                                                     </c:when>
-                                                    <c:otherwise>
-                                                        <span class="status-badge status-cancelled">Đã hủy</span>
-                                                    </c:otherwise>
                                                 </c:choose>
                                             </td>
                                             <td>
@@ -279,104 +276,8 @@
                                             </td>
                                         </tr>
                                     </c:forEach>
-                                    
-                                    <c:if test="${empty pendingOrders}">
-                                        <tr>
-                                            <td colspan="6" style="text-align: center; padding: 30px;">Không có đơn hàng nào</td>
-                                        </tr>
-                                    </c:if>
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <c:if test="${totalPages > 1}">
-                            <ul class="pagination">
-                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                    <a class="page-link" href="shipper-dashboard?page=${currentPage - 1}${not empty param.search ? '&search='.concat(param.search) : ''}${not empty param.status ? '&status='.concat(param.status) : ''}">
-                                        <i class="fas fa-angle-left"></i>
-                                    </a>
-                                </li>
-                                
-                                <c:forEach begin="1" end="${totalPages}" var="i">
-                                    <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                        <a class="page-link" href="shipper-dashboard?page=${i}${not empty param.search ? '&search='.concat(param.search) : ''}${not empty param.status ? '&status='.concat(param.status) : ''}">
-                                            ${i}
-                                        </a>
-                                    </li>
-                                </c:forEach>
-                                
-                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                    <a class="page-link" href="shipper-dashboard?page=${currentPage + 1}${not empty param.search ? '&search='.concat(param.search) : ''}${not empty param.status ? '&status='.concat(param.status) : ''}">
-                                        <i class="fas fa-angle-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </c:if>
-                    </div>
-                </div>
-                
-                <!-- Recent Deliveries Table -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-check-circle"></i> Đơn hàng gần đây
-                        </h3>
-                        <div class="card-tools">
-                            <button class="btn btn-outline" onclick="location.href='shipper-dashboard?action=completed'">
-                                <i class="fas fa-eye"></i> Xem tất cả
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Mã đơn hàng</th>
-                                        <th>Khách hàng</th>
-                                        <th>Địa chỉ</th>
-                                        <th>Ngày giao</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach items="${recentOrders}" var="order">
-                                        <tr>
-                                            <td>#ORD-${order.orderId}</td>
-                                            <td>
-                                                <div class="user-info">
-                                                    <c:choose>
-                                                        <c:when test="${not empty order.customer.accImage}">
-                                                            <img src="${order.customer.accImage}" class="table-avatar" alt="Customer">
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <img src="images/support button/account.png" class="table-avatar" alt="Customer">
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                    <div>
-                                                        <div class="user-name">${order.customer.accFname} ${order.customer.accLname}</div>
-                                                        <div class="user-email">${order.customer.accPhone}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>${order.orderAddress}</td>
-                                            <td>${order.deliveryDate}</td>
-                                            <td><span class="status-badge status-completed">Đã giao</span></td>
-                                            <td>
-                                                <div class="table-actions">
-                                                    <a class="action-btn view-btn" title="Xem chi tiết" href="shipper-dashboard?action=view&id=${order.orderId}">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a class="action-btn note-btn" title="Ghi chú" href="shipper-dashboard?action=note&id=${order.orderId}">
-                                                        <i class="fas fa-sticky-note"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                    
-                                    <c:if test="${empty recentOrders}">
+
+                                    <c:if test="${empty order}">
                                         <tr>
                                             <td colspan="6" style="text-align: center; padding: 30px;">Không có đơn hàng nào</td>
                                         </tr>

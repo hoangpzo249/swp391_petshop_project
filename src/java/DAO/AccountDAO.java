@@ -126,7 +126,7 @@ public class AccountDAO extends DBContext {
     }
 
     public int registerAccStaffByAdmin(Account account) {
-        int generatedId = -1; // default in case of failure
+        int generatedId = -1;
         try {
             con = db.getConnection();
             String sql = "INSERT INTO AccountTB(accUsername, accEmail, accPassword, accFname, accLname, accDob, accAddress, accPhoneNumber, accRole, accDescription, accCreateDate, accImage, accStatus) \n"
@@ -153,6 +153,14 @@ public class AccountDAO extends DBContext {
                     generatedId = rs.getInt(1);
                 }
                 rs.close();
+                
+                if("Shipper".equals(account.getAccRole())) {
+                    String shipperSql = "insert into ShipperTB (shipperid, shipperAvailability, shipperNote) values (?, 'Offline',NULL)";
+                    ps = con.prepareStatement(shipperSql);
+                    ps.setInt(1, generatedId);
+                    ps.executeUpdate();
+                    ps.close();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

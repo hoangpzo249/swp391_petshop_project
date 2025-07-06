@@ -137,4 +137,21 @@ public class ShipperDAO {
         }
         return null;
     }
+
+    public boolean updateStatusShipper(int shipperid) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "UPDATE Shippertb SET shipperAvailability = 'Online' WHERE shipperId = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, shipperid);
+
+            int row = ps.executeUpdate();
+            return row > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

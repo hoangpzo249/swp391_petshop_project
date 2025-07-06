@@ -185,6 +185,10 @@
         <servlet-class>Controllers.Seller_DIsplayInvoiceDetailServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>SellerDisplaySalesStatisticServlet</servlet-name>
+        <servlet-class>Controllers.SellerDisplaySalesStatisticServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Shipper_Panel_Servlet</servlet-name>
         <servlet-class>Controllers.Shipper_Panel_Servlet</servlet-class>
     </servlet>
@@ -371,6 +375,10 @@
     <servlet-mapping>
         <servlet-name>Seller_DIsplayInvoiceDetailServlet</servlet-name>
         <url-pattern>/sellerdisplayinvoicedetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SellerDisplaySalesStatisticServlet</servlet-name>
+        <url-pattern>/displaysalesstatistic</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Shipper_Panel_Servlet</servlet-name>
