@@ -17,10 +17,10 @@
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     </head>
     <body>
+
         <div class="seller-header">
             <div class="logo-container">
                 <a href="homepage"><img src="images/logo_banner/logo2.png" alt="PETFPT Shop Logo"/></a>
@@ -38,13 +38,25 @@
                 </div>
             </div>
         </div>
+        <c:if test="${not empty successMess}">
+            <div class="alert-message">
+                ${successMess}
+            </div>
+            <c:remove var="successMess" scope="session" />
+        </c:if>
 
+        <c:if test="${not empty errMess}">
+            <div class="alert-message error">
+                ${errMess}
+            </div>
+            <c:remove var="errMess" scope="session" />
+        </c:if>
         <div class="seller-container">
             <div class="seller-sidebar">
                 <div class="sidebar-header"><h2 class="sidebar-title">SELLER PANEL</h2><p class="sidebar-subtitle">Quản lý hệ thống PETFPT Shop</p></div>
                 <div class="sidebar-menu">
                     <div class="menu-category"><h5 class="category-title">Điều hướng</h5>
-                        <a href="comingsoon" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                        <a href="displaysalesstatistic" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
                         <a href="sellerdisplayinvoice" class="sidebar-link active"><i class="fas fa-file-invoice"></i> Danh sách hóa đơn</a>
                     </div>
                     <div class="menu-category"><h5 class="category-title">Quản lý</h5>
@@ -68,7 +80,7 @@
                                 <i class="fas fa-arrow-left"></i> Quay lại danh sách
                             </a>
                             <button id="downloadBtn" class="btn btn-primary">
-                                <i class="fas fa-download"></i> Tải tất cả các trang
+                                <i class="fas fa-download"></i> Tải hóa đơn (PDF)
                             </button>
                         </div>
 
@@ -86,7 +98,6 @@
                                     <p>Ngày xuất: <fmt:formatDate value="${invoice.issueDate}" pattern="HH:mm, dd/MM/yyyy"/></p>
                                 </div>
                             </div>
-
                             <div class="invoice-body">
                                 <div class="invoice-details">
                                     <div class="shop-details">
@@ -103,7 +114,6 @@
                                         <p><strong>Email:</strong> ${invoice.order.customerEmail}</p>
                                     </div>
                                 </div>
-
                                 <table class="items-table">
                                     <thead>
                                         <tr>
@@ -125,10 +135,8 @@
                                         </c:forEach>
                                     </tbody>
                                 </table>
-
                                 <div id="detail-pagination" class="invoice-pagination"></div>
                             </div>
-
                             <div class="invoice-summary">
                                 <div class="payment-method-section">
                                     <h3 class="section-title">Phương thức thanh toán</h3>
@@ -151,11 +159,9 @@
                                     </table>
                                 </div>
                             </div>
-
                             <div class="invoice-footer">
                                 <p>Cảm ơn quý khách đã mua sắm tại <strong class="shop-name">PETFPT Shop</strong>!</p>
                             </div>
-
                         </div>
                     </c:when>
                     <c:otherwise>
@@ -178,6 +184,7 @@
                 const items = Array.from(itemsTbody.getElementsByTagName('tr'));
                 const paginationContainer = document.getElementById('detail-pagination');
                 const downloadBtn = document.getElementById('downloadBtn');
+                const invoiceId = "${invoice.invoiceId}";
 
                 const ITEMS_PER_PAGE = 7;
                 const totalItems = items.length;
@@ -219,48 +226,55 @@
                     return new Promise(resolve => requestAnimationFrame(resolve));
                 }
 
-                async function downloadInvoiceAsZip() {
+                async function downloadInvoiceAsPdf() {
                     downloadBtn.disabled = true;
-                    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+                    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tạo PDF...';
 
-                    const zip = new JSZip();
+                    const {jsPDF} = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+                    const originalPaginationDisplay = paginationContainer.style.display;
+                    if (totalPages > 1) {
+                        paginationContainer.style.display = 'none';
+                    }
 
                     for (let i = 1; i <= totalPages; i++) {
                         showPage(i);
                         await waitForRender();
+
                         const canvas = await html2canvas(invoiceElement, {scale: 2, useCORS: true});
-                        const imageData = canvas.toDataURL('image/png').split(',')[1];
-                        const filename = `hoa-don-${invoice.invoiceId}-trang-\${i}.png`;
-                        zip.file(filename, imageData, {base64: true});
+                        const imgData = canvas.toDataURL('image/png');
+
+                        const imgProps = pdf.getImageProperties(imgData);
+                        const imgWidth = imgProps.width;
+                        const imgHeight = imgProps.height;
+                        const ratio = Math.min((pdfWidth - 10) / imgWidth, (pdfHeight - 10) / imgHeight);
+                        const finalImgWidth = imgWidth * ratio;
+                        const finalImgHeight = imgHeight * ratio;
+                        const x = (pdfWidth - finalImgWidth) / 2;
+                        const y = (pdfHeight - finalImgHeight) / 2;
+
+                        if (i > 1) {
+                            pdf.addPage();
+                        }
+                        pdf.addImage(imgData, 'PNG', x, y, finalImgWidth, finalImgHeight);
                     }
 
-                    downloadBtn.innerHTML = '<i class="fas fa-archive"></i> Đang nén file...';
-                    const content = await zip.generateAsync({type: "blob"});
-                    saveAs(content, `hoa-don-${invoice.invoiceId}.zip`);
+                    if (totalPages > 1) {
+                        paginationContainer.style.display = originalPaginationDisplay;
+                    }
+
+                    pdf.save(`hoa-don-${invoice.invoiceId}.pdf`);
+
                     showPage(1);
                     downloadBtn.disabled = false;
-                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (ZIP)';
+                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (PDF)';
                 }
 
-                async function downloadSingleImage() {
-                    downloadBtn.disabled = true;
-                    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tải...';
-                    await waitForRender();
-                    const canvas = await html2canvas(invoiceElement, {scale: 2, useCORS: true});
-                    const link = document.createElement('a');
-                    link.download = `hoa-don-${invoice.invoiceId}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                    downloadBtn.disabled = false;
-                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (Ảnh)';
-                }
-
-                if (totalPages > 1) {
-                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (ZIP)';
-                    downloadBtn.addEventListener('click', downloadInvoiceAsZip);
-                } else {
-                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (Ảnh)';
-                    downloadBtn.addEventListener('click', downloadSingleImage);
+                if (downloadBtn) {
+                    downloadBtn.addEventListener('click', downloadInvoiceAsPdf);
                 }
 
                 showPage(1);

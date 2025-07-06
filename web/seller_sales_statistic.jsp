@@ -65,8 +65,7 @@
                 <div class="sidebar-menu">
                     <div class="menu-category">
                         <h5 class="category-title">Điều hướng</h5>
-                        <%-- Add a new link to this page and make it active --%>
-                        <a href="sellerstatistics" class="sidebar-link active"><i class="fas fa-chart-line"></i> Thống kê bán hàng</a>
+                        <a href="displaysalesstatistic" class="sidebar-link active"><i class="fas fa-tachometer-alt"></i>Tổng quan</a>
                         <a href="sellerdisplayinvoice" class="sidebar-link">
                             <i class="fas fa-file-invoice"></i> Danh sách hóa đơn
                         </a>
@@ -98,7 +97,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <form action="sellerstatistics" method="GET" id="statsFilterForm">
+                        <form action="displaysalesstatistic" method="GET" id="statsFilterForm">
                             <div class="stats-filter-bar">
                                 <div class="date-range-group">
                                     <input type="date" name="startDate" value="${param.startDate}">
@@ -125,7 +124,7 @@
                             <i class="fas fa-paw"></i>
                         </div>
                         <div class="kpi-content">
-                            <div class="kpi-value">${kpi.totalPetsSold}</div>
+                            <div class="kpi-value">${totalPetsSold}</div>
                             <div class="kpi-label">Tổng Thú Cưng Đã Bán</div>
                         </div>
                     </div>
@@ -134,7 +133,7 @@
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <div class="kpi-content">
-                            <div class="kpi-value">${kpi.ordersFulfilled}</div>
+                            <div class="kpi-value">${ordersFulfilled}</div>
                             <div class="kpi-label">Đơn Hàng Hoàn Thành</div>
                         </div>
                     </div>
@@ -143,7 +142,7 @@
                             <i class="fas fa-star"></i>
                         </div>
                         <div class="kpi-content">
-                            <div class="kpi-value">${kpi.mostPopularBreed}</div>
+                            <div class="kpi-value">${mostPopularBreed}</div>
                             <div class="kpi-label">Giống Phổ Biến Nhất</div>
                         </div>
                     </div>
@@ -176,14 +175,27 @@
                                 </thead>
                                 <tbody>
                                     <c:forEach items="${recentSales}" var="sale">
-                                        <tr>
+                                        <tr 
+                                            style="cursor: pointer;"
+                                            onclick="window.location.href = '${pageContext.request.contextPath}/displaypet?id=${sale.petId}'"
+                                            >
                                             <td><strong>#${sale.petId}</strong></td>
                                             <td>${sale.petName}</td>
                                             <td>${sale.breedName}</td>
-                                            <td><fmt:formatDate value="${sale.dateSold}" pattern="dd-MM-yyyy"/></td>
+                                            <td>
+                                                <fmt:formatDate 
+                                                    value="${sale.dateSold}" 
+                                                    pattern="dd-MM-yyyy"
+                                                    />
+                                            </td>
                                             <td>
                                                 <span class="price-value">
-                                                    <fmt:formatNumber value="${sale.price}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                                    <fmt:formatNumber 
+                                                        value="${sale.priceAtOrder}" 
+                                                        type="currency" 
+                                                        currencySymbol="₫" 
+                                                        maxFractionDigits="0"
+                                                        />
                                                 </span>
                                             </td>
                                         </tr>
@@ -198,6 +210,69 @@
                                 </tbody>
                             </table>
                         </div>
+                        <!-- Pagination -->
+                        <c:if test="${pagination.totalPages > 1}">
+                            <div class="pagination-container">
+                                <ul class="pagination">
+                                    <li class="page-item ${!pagination.hasPrevious() ? 'disabled' : ''}">
+                                        <c:url value="displaysalesstatistic" var="prevUrl">
+                                            <c:param name="page" value="${pagination.currentPage - 1}"/>
+                                            <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
+                                            <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                        </c:url>
+                                        <a class="page-link" href="${pagination.hasPrevious() ? prevUrl : '#'}">«</a>
+                                    </li>
+
+                                    <c:if test="${pagination.startPage > 1}">
+                                        <c:url value="displaysalesstatistic" var="firstPageUrl">
+                                            <c:param name="page" value="1"/>
+                                            <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
+                                            <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                        </c:url>
+                                        <li class="page-item"><a class="page-link" href="${firstPageUrl}">1</a></li>
+                                            <c:if test="${pagination.startPage > 2}">
+                                            <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                            </c:if>
+                                        </c:if>
+
+                                    <c:forEach begin="${pagination.startPage}" end="${pagination.endPage}" var="i">
+                                        <c:url value="displaysalesstatistic" var="pageUrl">
+                                            <c:param name="page" value="${i}"/>
+                                            <c:if test="${not empty param.startDate}">
+                                                <c:param name="startDate" value="${param.startDate}"/>
+                                            </c:if>
+                                            <c:if test="${not empty param.endDate}">
+                                                <c:param name="endDate" value="${param.endDate}"/>
+                                            </c:if>
+                                        </c:url>
+                                        <li class="page-item ${pagination.currentPage == i ? 'active' : ''}">
+                                            <a class="page-link" href="${pageUrl}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+
+                                    <c:if test="${pagination.endPage < pagination.totalPages}">
+                                        <c:if test="${pagination.endPage < pagination.totalPages - 1}">
+                                            <li class="page-item disabled"><span class="page-ellipsis">...</span></li>
+                                            </c:if>
+                                            <c:url value="displaysalesstatistic" var="lastPageUrl">
+                                                <c:param name="page" value="${pagination.totalPages}"/>
+                                                <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
+                                                <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                            </c:url>
+                                        <li class="page-item"><a class="page-link" href="${lastPageUrl}">${pagination.totalPages}</a></li>
+                                        </c:if>
+
+                                    <li class="page-item ${!pagination.hasNext() ? 'disabled' : ''}">
+                                        <c:url value="displaysalesstatistic" var="nextUrl">
+                                            <c:param name="page" value="${pagination.currentPage + 1}"/>
+                                            <c:if test="${not empty param.startDate}"><c:param name="startDate" value="${param.startDate}"/></c:if>
+                                            <c:if test="${not empty param.endDate}"><c:param name="endDate" value="${param.endDate}"/></c:if>
+                                        </c:url>
+                                        <a class="page-link" href="${pagination.hasNext() ? nextUrl : '#'}">»</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -209,87 +284,124 @@
 
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-            const ctx = document.getElementById('salesByBreedChart').getContext('2d');
-            // You need to pass data from your servlet to this script
-            // Example data structure:
-            // const salesData = {
-            //     labels: ['Corgi', 'Golden Retriever', 'Bengal', 'Poodle', 'Samoyed'],
-            //     data: [12, 19, 8, 5, 7]
-            // };
+                const ctx = document.getElementById('salesByBreedChart').getContext('2d');
 
-            const salesData = {
-            labels: [<c:forEach items="${salesByBreed}" var="item" varStatus="loop">"${item.breedName}"<c:if test="${!loop.last}">, </c:if></c:forEach>],
-                    data: [<c:forEach items="${salesByBreed}" var="item" varStatus="loop">${item.quantitySold}<c:if test="${!loop.last}">, </c:if></c:forEach>]
-            };
-            new Chart(ctx, {
-            type: 'bar',
+                const salesData = {
+                    labels: [<c:forEach items="${salesByBreed}" var="item" varStatus="loop">"${item.breedName}"<c:if test="${!loop.last}">, </c:if></c:forEach>],
+                            data: [<c:forEach items="${salesByBreed}" var="item" varStatus="loop">${item.totalPurchases}<c:if test="${!loop.last}">, </c:if></c:forEach>]
+                };
+
+                const colorPalette = [
+                    'rgba(242, 111, 33, 0.7)',
+                    'rgba(52, 152, 219, 0.7)',
+                    'rgba(46, 204, 113, 0.7)',
+                    'rgba(241, 196, 15, 0.7)',
+                    'rgba(155, 89, 182, 0.7)',
+                    'rgba(230, 126, 34, 0.7)',
+                    'rgba(26, 188, 156, 0.7)'
+                ];
+
+                const backgroundColors = salesData.data.map((_, i) => colorPalette[i % colorPalette.length]);
+                const borderColors = backgroundColors.map(color => color.replace('0.7', '1'));
+
+                new Chart(ctx, {
+                    type: 'bar',
                     data: {
-                    labels: salesData.labels,
-                            datasets: [{
-                            label: 'Số lượng đã bán',
-                                    data: salesData.data,
-                                    backgroundColor: 'rgba(242, 111, 33, 0.6)',
-                                    borderColor: 'rgba(242, 111, 33, 1)',
-                                    borderWidth: 1
+                        labels: salesData.labels,
+                        datasets: [{
+                                label: 'Số lượng đã bán',
+                                data: salesData.data,
+                                backgroundColor: backgroundColors,
+                                borderColor: borderColors,
+                                borderWidth: 1
                             }]
                     },
                     options: {
-                    indexAxis: 'y',
-                            scales: {
+                        indexAxis: 'y',
+                        scales: {
                             x: {
-                            beginAtZero: true,
-                                    ticks: {
-                                    stepSize: 1
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function (value) {
+                                        if (Math.floor(value) === value) {
+                                            return value;
+                                        }
                                     }
+                                }
                             }
-                            },
-                            plugins: {
+                        },
+                        plugins: {
                             legend: {
-                            display: false
+                                display: false
                             },
-                                    tooltip: {
-                                    callbacks: {
+                            tooltip: {
+                                callbacks: {
                                     label: function (context) {
-                                    return ' Đã bán: ' + context.raw + ' bé';
+                                        return ' Đã bán: ' + context.raw + ' bé';
                                     }
-                                    }
-                                    }
+                                }
                             }
+                        }
                     }
+                });
             });
-            });
-            function setRange(range) {
-            const endDate = new Date();
-            let startDate = new Date();
-            if (range === '7days') {
-            startDate.setDate(endDate.getDate() - 7);
-            } else if (range === '30days') {
-            startDate.setDate(endDate.getDate() - 30);
-            } else if (range === 'thisMonth') {
-            startDate.setDate(1);
-            }
 
-            document.querySelector('input[name="startDate"]').value = startDate.toISOString().split('T')[0];
-            document.querySelector('input[name="endDate"]').value = endDate.toISOString().split('T')[0];
-            document.getElementById('statsFilterForm').submit();
+            function setRange(range) {
+                const endDate = new Date();
+                let startDate = new Date();
+
+                if (range === '7days') {
+                    startDate.setDate(endDate.getDate() - 7);
+                } else if (range === '30days') {
+                    startDate.setDate(endDate.getDate() - 30);
+                } else if (range === 'thisMonth') {
+                    startDate.setDate(1);
+                }
+
+                document.querySelector('input[name="startDate"]').value = startDate.toISOString().split('T')[0];
+                document.querySelector('input[name="endDate"]').value = endDate.toISOString().split('T')[0];
+
+                document.getElementById('statsFilterForm').submit();
             }
 
             function exportToCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Mã Pet,Tên Thú Cưng,Giống,Ngày Bán,Giá Bán\n";
-            const table = document.getElementById("recentSalesTable");
-            const rows = table.querySelectorAll("tbody tr");
-            rows.forEach(row => {
-            const cols = row.querySelectorAll("td");
-            const rowData = Array.from(cols).map(col => `"\${col.innerText.replace(/"/g, '""')}"`);
-                
-                const encodedUri = encodeURI(csvContent);
+                const csvHeader = "Mã Pet,Tên Thú Cưng,Giống,Ngày Bán,Giá Bán\n";
+                let csvBody = "";
+
+                const table = document.getElementById("recentSalesTable");
+                const rows = table.querySelectorAll("tbody tr");
+
+                rows.forEach(row => {
+                    if (row.querySelector('td[colspan="5"]')) {
+                        return;
+                    }
+
+                    const cols = row.querySelectorAll("td");
+                    const rowData = Array.from(cols).map(col => `"\${col.innerText.replace(/"/g, '""')}"`);
+                    csvBody += rowData.join(",") + "\n";
+                });
+
+                if (csvBody.trim() === "") {
+                    csvBody = "Không có dữ liệu bán hàng trong khoảng thời gian này.\n";
+                }
+
+                const bom = "\uFEFF";
+                const fullCsvContent = bom + csvHeader + csvBody;
+
+                const blob = new Blob([fullCsvContent], {type: 'text/csv;charset=utf-8;'});
+
                 const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "sales_statistics.csv");
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", "sales_statistics.csv");
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }
             }
         </script>
     </body>

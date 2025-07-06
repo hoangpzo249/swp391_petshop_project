@@ -4,6 +4,7 @@ import Models.Breed;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
@@ -663,7 +664,7 @@ public class BreedDAO {
 
     public Breed mostPopularBreed(Date startDate, Date endDate) {
         DBContext db = new DBContext();
-        Breed breed=new Breed();
+        Breed breed = new Breed();
         try {
             conn = db.getConnection();
             StringBuilder sql = new StringBuilder("SELECT TOP 1 \n"
@@ -683,15 +684,15 @@ public class BreedDAO {
             }
             sql.append("GROUP BY b.breedId, b.breedName\n"
                     + "ORDER BY COUNT(*) DESC;");
-            ps=conn.prepareStatement(sql.toString());
-            int param=1;
+            ps = conn.prepareStatement(sql.toString());
+            int param = 1;
             if (startDate != null) {
                 ps.setDate(param++, startDate);
             }
             if (endDate != null) {
                 ps.setDate(param++, endDate);
             }
-            rs=ps.executeQuery();
+            rs = ps.executeQuery();
             if (rs.next()) {
                 breed.setBreedId(rs.getInt("breedId"));
                 breed.setBreedName(rs.getString("breedName"));
@@ -702,6 +703,68 @@ public class BreedDAO {
             Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public List<Breed> getBreedsSortedBySales(Date startDate, Date endDate) {
+        List<Breed> breedList = new ArrayList<>();
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            StringBuilder sql = new StringBuilder(
+                    "SELECT b.breedId, b.breedName, COUNT(*) AS timesSold\n"
+                    + "FROM OrderContentTB oc\n"
+                    + "INNER JOIN OrderTB o ON oc.orderId = o.orderId\n"
+                    + "INNER JOIN PetTB p ON oc.petId = p.petId\n"
+                    + "INNER JOIN BreedTB b ON p.breedId = b.breedId\n"
+                    + "WHERE o.deliveryDate IS NOT NULL\n"
+            );
+
+            if (startDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) >= ?\n");
+            }
+            if (endDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) <= ?\n");
+            }
+
+            sql.append("GROUP BY b.breedId, b.breedName\n"
+                    + "ORDER BY timesSold DESC");
+
+            ps = conn.prepareStatement(sql.toString());
+
+            int param = 1;
+            if (startDate != null) {
+                ps.setDate(param++, startDate);
+            }
+            if (endDate != null) {
+                ps.setDate(param++, endDate);
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Breed breed = new Breed();
+                breed.setBreedId(rs.getInt("breedId"));
+                breed.setBreedName(rs.getString("breedName"));
+                breed.setTotalPurchases(rs.getInt("timesSold"));
+                breedList.add(breed);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return breedList;
     }
 
 }

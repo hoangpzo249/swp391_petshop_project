@@ -32,6 +32,7 @@ public class Pet {
     private double priceAtOrder;
     private String breedName;
     private List<byte[]> images;
+    private Date dateSold;
 
     public Pet() {
     }
@@ -53,6 +54,16 @@ public class Pet {
         this.createdBy = createdBy;
         this.petStatus = petStatus;
     }
+
+    public Date getDateSold() {
+        return dateSold;
+    }
+
+    public void setDateSold(Date dateSold) {
+        this.dateSold = dateSold;
+    }
+    
+    
 
     public int getPetId() {
         return petId;

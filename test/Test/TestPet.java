@@ -31,8 +31,7 @@ public class TestPet {
     static InvoiceDAO _daoinvoice = new InvoiceDAO();
 
     public static void main(String[] args) {
-        Breed breed = topBreed(new Date(0).valueOf("2025-01-01"), new Date(0).valueOf("2025-12-01"));
-        System.out.println(breed.getBreedId() + " - " + breed.getBreedName() + " - " + breed.getTotalPurchases());
+        System.out.println(totalPetsSold(new Date(0).valueOf("2025-01-01"), new Date(0).valueOf("2025-12-01")));
     }
 
     private static Breed topBreed(Date start, Date end) {
