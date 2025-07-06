@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -610,7 +610,7 @@ public class OrderDAO {
         }
         return list;
     }
-    
+
     public List<Order> getOrderCusSearch(int accId, String status, int orderId) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -690,6 +690,25 @@ public class OrderDAO {
             return true;
         } catch (Exception ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
         }
         return false;
     }
@@ -707,5 +726,57 @@ public class OrderDAO {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+
+    public int totalOrdersFulfilled(Date startDate, Date endDate) {
+        int total = 0;
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            StringBuilder sql = new StringBuilder("SELECT COUNT(*) AS totalOrdersFulfilled\n"
+                    + "FROM OrderTB o\n"
+                    + "WHERE o.deliveryDate IS NOT NULL\n");
+            if (startDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) >= ?\n");
+            }
+            if (endDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) <= ?\n");
+            }
+            ps = conn.prepareStatement(sql.toString());
+            int param = 1;
+            if (startDate != null) {
+                ps.setDate(param++, startDate);
+
+            }
+            if (endDate != null) {
+                ps.setDate(param++, endDate);
+            }
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt("totalOrdersFulfilled");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+        return total;
     }
 }

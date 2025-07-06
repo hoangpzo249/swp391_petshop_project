@@ -12,9 +12,9 @@ import DAO.PetDAO;
 import DAO.ShipperDAO;
 import Models.Breed;
 import Models.Invoice;
-import Models.InvoiceContent;
 import Models.Pet;
 import Models.Shipper;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -31,12 +31,22 @@ public class TestPet {
     static InvoiceDAO _daoinvoice = new InvoiceDAO();
 
     public static void main(String[] args) {
-        Invoice invoice=getInvoiceContent(1);
-        for (InvoiceContent i : invoice.getInvoiceContents()) {
-            System.out.println(i.toString());
-        }
+        Breed breed = topBreed(new Date(0).valueOf("2025-01-01"), new Date(0).valueOf("2025-12-01"));
+        System.out.println(breed.getBreedId() + " - " + breed.getBreedName() + " - " + breed.getTotalPurchases());
     }
-    
+
+    private static Breed topBreed(Date start, Date end) {
+        return _daobreed.mostPopularBreed(start, end);
+    }
+
+    private static int totalOrders(Date start, Date end) {
+        return _daoorder.totalOrdersFulfilled(start, end);
+    }
+
+    private static int totalPetsSold(Date start, Date end) {
+        return dao.totalPetsSold(start, end);
+    }
+
     private static Invoice getInvoiceContent(int id) {
         return _daoinvoice.getInvoiceDetailById(id);
     }
@@ -64,7 +74,6 @@ public class TestPet {
 //    private static Order getOrder(String id) {
 //        return _daoorder.getOrderById(id);
 //    }
-
     private static List<Breed> getBreed() {
         return _daobreed.get6BreedHot();
     }

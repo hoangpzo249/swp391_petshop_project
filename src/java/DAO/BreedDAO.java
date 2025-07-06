@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -659,4 +660,48 @@ public class BreedDAO {
         }
         return false;
     }
+
+    public Breed mostPopularBreed(Date startDate, Date endDate) {
+        DBContext db = new DBContext();
+        Breed breed=new Breed();
+        try {
+            conn = db.getConnection();
+            StringBuilder sql = new StringBuilder("SELECT TOP 1 \n"
+                    + "    b.breedId,\n"
+                    + "    b.breedName,\n"
+                    + "    COUNT(*) AS timesSold\n"
+                    + "FROM OrderContentTB oc\n"
+                    + "INNER JOIN OrderTB o ON oc.orderId = o.orderId\n"
+                    + "INNER JOIN PetTB p ON oc.petId = p.petId\n"
+                    + "INNER JOIN BreedTB b ON p.breedId = b.breedId\n"
+                    + "WHERE o.deliveryDate IS NOT NULL\n");
+            if (startDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) >= ?\n");
+            }
+            if (endDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) <= ?\n");
+            }
+            sql.append("GROUP BY b.breedId, b.breedName\n"
+                    + "ORDER BY COUNT(*) DESC;");
+            ps=conn.prepareStatement(sql.toString());
+            int param=1;
+            if (startDate != null) {
+                ps.setDate(param++, startDate);
+            }
+            if (endDate != null) {
+                ps.setDate(param++, endDate);
+            }
+            rs=ps.executeQuery();
+            if (rs.next()) {
+                breed.setBreedId(rs.getInt("breedId"));
+                breed.setBreedName(rs.getString("breedName"));
+                breed.setTotalPurchases(rs.getInt("timesSold"));
+                return breed;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
 }
