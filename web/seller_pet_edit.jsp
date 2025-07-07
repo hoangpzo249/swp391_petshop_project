@@ -142,9 +142,19 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="petPrice">Giá bán (₫)</label>
-                                    <fmt:formatNumber value="${pet.petPrice}" pattern="0" var="formattedPrice" />
-                                    <input type="number" id="petPrice" name="petPrice" class="form-control" value="${formattedPrice}" required min="0" step="1000">
+                                    <label for="priceDisplay">Giá bán (₫)</label>
+
+                                    <input type="text" 
+                                           id="priceDisplay" 
+                                           class="form-control" 
+                                           placeholder="Nhập giá của thú cưng" 
+                                           required 
+                                           autocomplete="off">
+
+                                    <input type="hidden" 
+                                           id="petPrice" 
+                                           name="petPrice" 
+                                           value="${pet.petPrice}">
                                 </div>
                                 <div></div>
                                 <div class="form-full-width">
@@ -181,7 +191,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="newImages">Tải lên ảnh mới</label>
-                                        <input type="file" id="newImages" name="newImages" class="form-control" multiple accept="image/*">
+                                        <input type="file" id="newImages" name="newImages" class="form-control" multiple accept="image/*" onchange="previewNewImages(event)">
+                                        <div id="new-image-previews" class="image-management-grid" style="margin-top: 15px;"></div>
                                     </div>
                                 </div>
 
@@ -233,6 +244,46 @@
             '${o}'<c:if test="${!loop.last}">,</c:if>
             </c:forEach>
             ];
+            function previewNewImages(event) {
+                const previewContainer = document.getElementById('new-image-previews');
+                const fileInput = event.target;
+
+                previewContainer.innerHTML = '';
+
+                const files = fileInput.files;
+                if (!files || files.length === 0) {
+                    return;
+                }
+
+                const existingImageCount = Number('${existingImageCount}');
+                const maxNewImages = Number('${maxNewImages}');
+
+                if (files.length > maxNewImages) {
+                    alert(`Bạn đã có ${existingImageCount} ảnh. Bạn chỉ có thể tải lên thêm tối đa ${maxNewImages} ảnh nữa (tổng cộng 5 ảnh).`);
+                    fileInput.value = '';
+                    return;
+                }
+
+                Array.from(files).forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            const previewItem = document.createElement('div');
+                            previewItem.className = 'image-preview-item';
+
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.alt = 'Xem trước ảnh mới';
+
+                            previewItem.appendChild(img);
+                            previewContainer.appendChild(previewItem);
+                        };
+
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
         </script>
         <script src="js/pet_autocomplete.js"></script>
         <script src="js/pet_image_confirmation_window.js"></script>

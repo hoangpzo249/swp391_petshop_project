@@ -80,3 +80,41 @@ document.addEventListener('click', function (e) {
         originListContainer.innerHTML = '';
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const priceDisplayInput = document.getElementById('priceDisplay');
+    const priceHiddenInput = document.getElementById('petPrice');
+
+    if (!priceDisplayInput || !priceHiddenInput) {
+        return;
+    }
+    
+    const formatNumber = (numStr) => {
+        if (!numStr) return '';
+        return numStr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+    
+    const getRawDigits = (str) => {
+        return str.replace(/\D/g, '');
+    }
+
+    const initialRawPrice = getRawDigits(priceHiddenInput.value);
+    if (initialRawPrice) {
+        priceDisplayInput.value = formatNumber(initialRawPrice);
+    }
+
+    priceDisplayInput.addEventListener('input', function(e) {
+        const rawValue = getRawDigits(e.target.value);
+        
+        priceHiddenInput.value = rawValue;
+
+        const originalCursor = e.target.selectionStart;
+        const originalLength = e.target.value.length;
+
+        e.target.value = formatNumber(rawValue);
+
+        const newLength = e.target.value.length;
+        e.target.setSelectionRange(originalCursor + (newLength - originalLength), originalCursor + (newLength - originalLength));
+    });
+
+});
