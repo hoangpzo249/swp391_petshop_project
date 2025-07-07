@@ -844,4 +844,56 @@ public class OrderDAO {
         }
         return total;
     }
+
+    public int countPendingShipper(int accId) {
+        int count = 0;
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT COUNT(*) FROM ordertb where shipperId = ? and orderStatus =  'Pending Shipper'";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, accId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+    public int countPendingShipperShipping(int accId) {
+        int count = 0;
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT COUNT(*) FROM ordertb where shipperId = ? and orderStatus =  'Shipping'";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, accId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+    public int countPendingShipperDelivered(int accId) {
+        int count = 0;
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT COUNT(*) FROM ordertb where shipperId = ? and orderStatus =  'Delivered'";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, accId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }

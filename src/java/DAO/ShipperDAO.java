@@ -138,13 +138,14 @@ public class ShipperDAO {
         return null;
     }
 
-    public boolean updateStatusShipper(int shipperid) {
+    public boolean updateStatusShipper(int shipperid, String status) {
         DBContext db = new DBContext();
         try {
             conn = db.getConnection();
-            String sql = "UPDATE Shippertb SET shipperAvailability = 'Online' WHERE shipperId = ?";
+            String sql = "UPDATE Shippertb SET shipperAvailability = ? WHERE shipperId = ?";
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, shipperid);
+            ps.setString(1, status);
+            ps.setInt(2, shipperid);
 
             int row = ps.executeUpdate();
             return row > 0;

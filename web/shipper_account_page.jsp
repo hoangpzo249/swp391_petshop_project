@@ -3,6 +3,7 @@
     Created on : 6 July 2025, 10:52:22 am
     Author     : HuyHoang
 --%>
+<%@taglib  prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -11,7 +12,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Shipper Dashboard - PETFPT Shop</title>
         <link href="css/shipper_account_page.css" rel="stylesheet" type="text/css"/>
-        <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     </head>
     <body>
@@ -81,11 +83,24 @@
                         <h5 class="category-title">Quản lý đơn hàng</h5>
                         <a href="shipper-dashboard?action=pending" class="sidebar-link">
                             <i class="fas fa-clipboard-list"></i> Đơn hàng cần giao
-                            <span class="badge">${pendingCount}</span>
+                            <c:choose>
+                                <c:when test="${pendingCount eq 0}">
+
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="badge">${pendingCount}</span>
+                                </c:otherwise>
+                            </c:choose>
                         </a>
                         <a href="shipper-dashboard?action=delivering" class="sidebar-link">
                             <i class="fas fa-truck"></i> Đang giao hàng
-                            <span class="badge">${deliveringCount}</span>
+                            <c:choose>
+                                <c:when test="${shippingCount eq 0}">
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="badge">${shippingCount}</span>
+                                </c:otherwise>
+                            </c:choose>
                         </a>
                         <a href="shipper-dashboard?action=completed" class="sidebar-link">
                             <i class="fas fa-check-circle"></i> Đã giao hàng
@@ -135,6 +150,8 @@
 
                     <div class="status-controls">
                         <form action="shipper_panel" method="post">
+                            <input type="hidden" name="action" value="status">
+
                             <label class="toggle-switch">
                                 <input type="checkbox" name="statusCheckbox"
                                        onchange="this.form.submit()" 
@@ -169,7 +186,7 @@
                             </div>
                         </div>
                         <h3 class="stat-title">Đơn hàng đang giao</h3>
-                        <div class="stat-value">${deliveringCount}</div>
+                        <div class="stat-value">${shippingCount}</div>
                     </div>
 
                     <div class="stat-card">
@@ -179,7 +196,7 @@
                             </div>
                         </div>
                         <h3 class="stat-title">Đơn hàng đã giao</h3>
-                        <div class="stat-value">${completedCount}</div>
+                        <div class="stat-value">${deliveredCount}</div>
                     </div>
                 </div>
 
@@ -228,9 +245,6 @@
                                             <td>#${order.orderId}</td>
                                             <td>
                                                 <div class="user-info">
-
-                                                    <img src="images/support button/account.png" class="table-avatar" alt="Customer">
-
                                                     <div>
                                                         <div class="user-name">${order.customerName}</div>
                                                         <div class="user-email">${order.customerPhone}</div>
@@ -238,7 +252,7 @@
                                                 </div>
                                             </td>
                                             <td>${order.customerAddress}</td>
-                                            <td>${order.orderDate}</td>
+                                            <td><fmt:formatDate value="${order.orderDate}" pattern="HH:mm dd-MM-yyyy"/></td>
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${order.orderStatus eq 'Pending Shipper'}">
@@ -258,7 +272,7 @@
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                     <c:choose>
-                                                        <c:when test="${order.orderStatus eq 'Pending'}">
+                                                        <c:when test="${order.orderStatus eq 'Pending Shipper'}">
                                                             <a class="action-btn edit-btn" title="Nhận đơn" href="shipper-dashboard?action=pickup&id=${order.orderId}">
                                                                 <i class="fas fa-truck-loading"></i>
                                                             </a>
@@ -269,15 +283,15 @@
                                                             </a>
                                                         </c:when>
                                                     </c:choose>
-                                                    <a class="action-btn note-btn" title="Ghi chú" href="shipper-dashboard?action=note&id=${order.orderId}">
+<!--                                                    <a class="action-btn note-btn" title="Ghi chú" href="shipper-dashboard?action=note&id=${order.orderId}">
                                                         <i class="fas fa-sticky-note"></i>
-                                                    </a>
+                                                    </a>-->
                                                 </div>
                                             </td>
                                         </tr>
                                     </c:forEach>
 
-                                    <c:if test="${empty order}">
+                                    <c:if test="${empty orderList}">
                                         <tr>
                                             <td colspan="6" style="text-align: center; padding: 30px;">Không có đơn hàng nào</td>
                                         </tr>

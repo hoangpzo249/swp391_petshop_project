@@ -208,6 +208,16 @@ img {
     color: #f26f21;
 }
 
+.badge {
+    display: inline-block;
+    background-color: #f26f21;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-left: auto;
+}
+
 /* Main Content */
 .admin-content {
     flex: 1;
@@ -991,6 +1001,7 @@ tbody tr:hover {
 
 .alert-message::before {
     content: '\f058';
+    font-family: 'Font Awesome 6 Free';
     font-weight: 900;
     margin-right: 10px;
     font-size: 18px;

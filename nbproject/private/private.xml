@@ -3,12 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Controllers/Admin_Panel_Servlet.java</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/shipper_account_page.jsp</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Controllers/Admin_Panel_Servlet.java</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/DAO/OrderDAO.java</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Controllers/Customer_Order_Servlet.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/css/shipper_account_page.css</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/DAO/AccountDAO.java</file>
-            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Models/Account.java</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Models/Shipper.java</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/DAO/ShipperDAO.java</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Controllers/Shipper_Panel_Servlet.java</file>

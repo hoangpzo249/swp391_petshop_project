@@ -64,7 +64,7 @@ public class Shipper_Panel_Servlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("userAccount");
-        
+
         ShipperDAO shipDao = new ShipperDAO();
         Shipper shipper = shipDao.getShipperById(acc.getAccId());
         request.setAttribute("shipper", shipper);
@@ -73,6 +73,15 @@ public class Shipper_Panel_Servlet extends HttpServlet {
         List<Order> orderList = oDao.getOrderShipperId(acc.getAccId());
         request.setAttribute("orderList", orderList);
         
+        int pendingCount = oDao.countPendingShipper(acc.getAccId());
+        request.setAttribute("pendingCount", pendingCount);
+        
+        int shippingCount = oDao.countPendingShipperShipping(acc.getAccId());
+        request.setAttribute("shippingCount", shippingCount);
+        
+        int deliveredCount = oDao.countPendingShipperDelivered(acc.getAccId());
+        request.setAttribute("deliveredCount", deliveredCount);
+
         request.getRequestDispatcher("shipper_account_page.jsp").forward(request, response);
     }
 
@@ -87,7 +96,42 @@ public class Shipper_Panel_Servlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("userAccount");
+
+        ShipperDAO shipDao = new ShipperDAO();
+
+        String action = request.getParameter("action");
+        if ("status".equals(action)) {
+            String statusCheckbox = request.getParameter("statusCheckbox");
+            String newStatus;
+
+            if (statusCheckbox != null && statusCheckbox.equals("on")) {
+                newStatus = "Online";
+            } else {
+                newStatus = "Offline";
+            }
+
+            boolean updatestatus = shipDao.updateStatusShipper(acc.getAccId(), newStatus);
+            if (updatestatus) {
+                session.setAttribute("successMessage", "Cập nhật trạng thái thành công");
+            } else {
+                session.setAttribute("errorMessage", "Lỗi cập nhật trạng thái");
+            }
+
+            Shipper shipper = shipDao.getShipperById(acc.getAccId());
+            request.setAttribute("shipper", shipper);
+
+            OrderDAO oDao = new OrderDAO();
+            List<Order> orderList = oDao.getOrderShipperId(acc.getAccId());
+            request.setAttribute("orderList", orderList);
+            String url = "shipper_panel?action=status";
+            response.sendRedirect(url);
+        } else {
             request.getRequestDispatcher("shipper_account_page.jsp").forward(request, response);
+
+        }
+
     }
 
     /**
