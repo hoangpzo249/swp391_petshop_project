@@ -62,8 +62,10 @@
                         <h5 class="category-title">Quản lý</h5>
                         <c:if test="${role ne 'Manager'}">
                             <a href="displayorder" class="sidebar-link"><i class="fas fa-bag-shopping"></i> Quản lý đơn hàng</a>
+                            <a href="displayallpet" class="sidebar-link"><i class="fas fa-dog"></i> Quản lý thú cưng</a>
                         </c:if>
                         <c:if test="${role eq 'Manager'}">
+                            <a href="displaybreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
                             <a href="discountmanager" class="sidebar-link"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
                         </c:if>
                         <a href="displayrefund" class="sidebar-link active"><i class="fas fa-undo-alt"></i> Quản lý hoàn tiền</a>
@@ -71,10 +73,12 @@
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
                         <c:if test="${role ne 'Manager'}">
+                            <a href="addpet" class="sidebar-link"><i class="fas fa-paw"></i> Đăng bán thú cưng</a>
                             <a href="add_refund.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Gửi yêu cầu hoàn tiền</a>
                         </c:if>
                         <c:if test="${role eq 'Manager'}">
-                            <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã mới</a>
+                            <a href="addbreed" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm giống mới</a>
+                            <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã giảm giá mới</a>
                         </c:if>
                         <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
                         <a href="profile?action=change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>

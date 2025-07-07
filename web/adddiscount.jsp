@@ -68,8 +68,8 @@
                         <h5 class="category-title">Quản lý</h5>
                         <a href="displaybreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
                         <a href="discountmanager" class="sidebar-link"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
+                        <a href="displayrefund" class="sidebar-link "><i class="fas fa-undo-alt"></i> Quản lý hoàn tiền</a>
                     </div>
-
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
                         <a href="addbreed" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm giống mới</a>
