@@ -154,8 +154,19 @@
 
                                 <%-- Left Column --%>
                                 <div class="form-group">
-                                    <label for="petPrice">Giá bán (₫)</label>
-                                    <input type="number" id="petPrice" name="petPrice" class="form-control" placeholder="Nhập giá bán" required step="1000" value="${petPrice}">
+                                    <label for="priceDisplay">Giá bán (₫)</label>
+
+                                    <input type="text" 
+                                           id="priceDisplay" 
+                                           class="form-control" 
+                                           placeholder="Nhập giá của thú cưng" 
+                                           required 
+                                           autocomplete="off">
+
+                                    <input type="hidden" 
+                                           id="petPrice" 
+                                           name="petPrice" 
+                                           value="${pet.petPrice}">
                                 </div>
 
                                 <%-- Right Column (empty for alignment, or add another field here) --%>
@@ -198,8 +209,9 @@
 
                                 <div class="form-full-width">
                                     <div class="form-group">
-                                        <label for="images">Hình ảnh thú cưng</label>
-                                        <input type="file" id="images" name="images" class="form-control" multiple accept="image/*">
+                                        <label for="images">Hình ảnh thú cưng (tối đa 5 ảnh)</label>
+                                        <input type="file" id="images" name="images" class="form-control" multiple accept="image/*" onchange="previewImages(event)">
+                                        <div id="image-previews" class="image-management-grid" style="margin-top: 15px;"></div>
                                     </div>
                                 </div>
 
@@ -233,6 +245,43 @@
             '${o}'<c:if test="${!loop.last}">,</c:if>
             </c:forEach>
             ];
+            function previewImages(event) {
+                const previewContainer = document.getElementById('image-previews');
+                const fileInput = event.target;
+
+                previewContainer.innerHTML = '';
+
+                const files = fileInput.files;
+                if (!files) {
+                    return;
+                }
+
+                if (files.length > 5) {
+                    alert('Bạn chỉ có thể tải lên tối đa 5 ảnh.');
+                    fileInput.value = '';
+                    return;
+                }
+
+                Array.from(files).forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            const previewItem = document.createElement('div');
+                            previewItem.className = 'image-preview-item'; // Reuse class for styling
+
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.alt = 'Xem trước ảnh mới';
+
+                            previewItem.appendChild(img);
+                            previewContainer.appendChild(previewItem);
+                        };
+
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
         </script>
         <script src="js/pet_autocomplete.js"></script>
     </body>

@@ -96,11 +96,17 @@ public class SellerUpdatePetServlet extends HttpServlet {
                 _daopet.updatePetStatusById(petId, 0);
                 session.setAttribute("successMess", "Thú cưng đã được ẩn cho quá trình chỉnh sửa thông tin.");
             }
+            int existingImageCount = pet.getImages().size();
+            int maxNewImages = 5 - existingImageCount;
+            request.setAttribute("existingImageCount", existingImageCount);
+            request.setAttribute("maxNewImages", maxNewImages);
             request.setAttribute("pet", pet);
             request.setAttribute("breedList", breedList);
             request.setAttribute("imageList", imageList);
             request.setAttribute("colorList", colorList);
             request.setAttribute("originList", originList);
+            
+            System.out.println("=====Debug: "+pet.getPetPrice());
 
             request.getRequestDispatcher("seller_pet_edit.jsp")
                     .forward(request, response);
@@ -154,7 +160,8 @@ public class SellerUpdatePetServlet extends HttpServlet {
             int petVaccination = Integer.parseInt(request.getParameter("petVaccination"));
             int petStatus = Integer.parseInt(request.getParameter("petStatus"));
             String petDescription = request.getParameter("petDescription").trim();
-            double petPrice = Double.parseDouble(request.getParameter("petPrice"));
+            String petPriceStr = request.getParameter("petPrice");
+            double petPrice = Double.parseDouble(petPriceStr);
             int breedId = Integer.parseInt(request.getParameter("breedId"));
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -188,6 +195,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
             if (infoValidation.length() != 0) {
                 errMess.append(infoValidation);
             }
+            System.out.println("====DEBUG: " + petPrice);
             if (petPrice < 0) {
                 if (errMess.length() != 0) {
                     errMess.append("<br>");
@@ -200,6 +208,13 @@ public class SellerUpdatePetServlet extends HttpServlet {
                     errMess.append("<br>");
                 }
                 errMess.append("Giá thú cưng không được vươt quá 99.999.000₫");
+            }
+
+            if (petPrice > 0 && petPrice % 1000 != 0) {
+                if (errMess.length() != 0) {
+                    errMess.append("<br>");
+                }
+                errMess.append("Giá thú cưng phải là một số chẵn nghìn (kết thúc bằng 000).");
             }
 
             if (dateValidation != null) {

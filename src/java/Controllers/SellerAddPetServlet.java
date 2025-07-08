@@ -172,6 +172,13 @@ public class SellerAddPetServlet extends HttpServlet {
                 errMess.append("Giá thú cưng không được vươt quá 99.999.000₫");
             }
 
+            if (petPrice > 0 && petPrice % 1000 != 0) {
+                if (errMess.length() != 0) {
+                    errMess.append("<br>");
+                }
+                errMess.append("Giá thú cưng phải là một số chẵn nghìn (kết thúc bằng 000).");
+            }
+
             if (dateValidation != null) {
                 if (errMess.length() != 0) {
                     errMess.append("<br>");
