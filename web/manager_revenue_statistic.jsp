@@ -96,7 +96,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <form action="managerstatistics" method="GET" id="statsFilterForm">
+                        <form action="displayrevenuestatistic" method="GET" id="statsFilterForm">
                             <div class="stats-filter-bar">
                                 <div class="date-range-group">
                                     <input type="date" name="startDate" value="${param.startDate}">
@@ -123,7 +123,7 @@
                             <i class="fas fa-dollar-sign"></i>
                         </div>
                         <div class="kpi-content">
-                            <div class="kpi-value"><fmt:formatNumber value="${kpi.totalRevenue}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></div>
+                            <div class="kpi-value"><fmt:formatNumber value="${totalRevenue}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></div>
                             <div class="kpi-label">Tổng Doanh Thu</div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                             <i class="fas fa-shopping-cart"></i>
                         </div>
                         <div class="kpi-content">
-                            <div class="kpi-value">${kpi.totalOrders}</div>
+                            <div class="kpi-value">${totalOrders}</div>
                             <div class="kpi-label">Tổng Đơn Hàng</div>
                         </div>
                     </div>
@@ -141,7 +141,7 @@
                             <i class="fas fa-file-invoice-dollar"></i>
                         </div>
                         <div class="kpi-content">
-                            <div class="kpi-value"><fmt:formatNumber value="${kpi.averageOrderValue}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></div>
+                            <div class="kpi-value"><fmt:formatNumber value="${averageOrderValue}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></div>
                             <div class="kpi-label">Giá Trị Đơn Trung Bình</div>
                         </div>
                     </div>
@@ -175,7 +175,7 @@
                                         <c:forEach items="${topBreedsByRevenue}" var="breed">
                                             <tr>
                                                 <td><strong>${breed.breedName}</strong></td>
-                                                <td>${breed.quantitySold}</td>
+                                                <td>${breed.totalPurchases}</td>
                                                 <td><span class="price-value"><fmt:formatNumber value="${breed.totalRevenue}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></span></td>
                                             </tr>
                                         </c:forEach>
@@ -205,7 +205,7 @@
                                                 <td><strong>#${order.orderId}</strong></td>
                                                 <td>${order.customerName}</td>
                                                 <td><fmt:formatDate value="${order.orderDate}" pattern="dd-MM-yyyy"/></td>
-                                                <td><span class="price-value"><fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></span></td>
+                                                <td><span class="price-value"><fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></span></td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -300,30 +300,30 @@
                 const startDate = document.querySelector('input[name="startDate"]').value || 'N/A';
                 const endDate = document.querySelector('input[name="endDate"]').value || 'N/A';
 
-                let csvContent = `BÁO CÁO TÀI CHÍNH TỔNG QUAN\n`;
+                let csvContent = "\uFEFF";
+
+                csvContent += `BÁO CÁO TÀI CHÍNH TỔNG QUAN\n`;
                 csvContent += `Khoảng thời gian: Từ ${startDate} đến ${endDate}\n\n`;
 
                 csvContent += `Chỉ số,Giá trị\n`;
-                csvContent += `Tổng Doanh Thu,"${'<fmt:formatNumber value="${kpi.totalRevenue}" type="number" maxFractionDigits="0"/>'} VND"\n`;
-                csvContent += `Tổng Đơn Hàng,${kpi.totalOrders}\n`;
-                csvContent += `Giá Trị Đơn Trung Bình,"${'<fmt:formatNumber value="${kpi.averageOrderValue}" type="number" maxFractionDigits="0"/>'} VND"\n\n`;
+                csvContent += `Tổng Doanh Thu (VND),${totalRevenue}\n`;
+                csvContent += `Tổng Đơn Hàng,${totalOrders}\n`;
+                csvContent += `Giá Trị Đơn Trung Bình (VND),${averageOrderValue}\n\n`;
 
                 csvContent += `TOP 5 GIỐNG DOANH THU CAO NHẤT\n`;
                 csvContent += `Giống,Số Lượng Bán,Tổng Doanh Thu (VND)\n`;
             <c:forEach items="${topBreedsByRevenue}" var="breed">
-                csvContent += `"${breed.breedName}",${breed.quantitySold},${breed.totalRevenue}\n`;
+                csvContent += `"${breed.breedName}",${breed.totalPurchases},${breed.totalRevenue}\n`;
             </c:forEach>
                 csvContent += `\n`;
 
-                csvContent += `TOP 5 ĐƠN HÀNG GIÁ TRỊ CAO NHẤT\n`;
+                csvContent += `TOP 10 ĐƠN HÀNG GIÁ TRỊ CAO NHẤT\n`;
                 csvContent += `Mã Đơn Hàng,Khách Hàng,Ngày Đặt,Giá Trị (VND)\n`;
             <c:forEach items="${topHighValueOrders}" var="order">
-                csvContent += `#${order.orderId},"${order.customerName}","${'<fmt:formatDate value="${order.orderDate}" pattern="dd-MM-yyyy"/>'}",${order.totalAmount}\n`;
+                csvContent += `#${order.orderId},"${order.customerName}","<fmt:formatDate value="${order.orderDate}" pattern="dd-MM-yyyy"/>",${order.totalPrice}\n`;
             </c:forEach>
 
-                const bom = "\uFEFF";
-                const blob = new Blob([bom + csvContent], {type: 'text/csv;charset=utf-8;'});
-
+                const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
                 const link = document.createElement("a");
                 const url = URL.createObjectURL(blob);
                 link.setAttribute("href", url);

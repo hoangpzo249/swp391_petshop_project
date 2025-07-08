@@ -766,5 +766,55 @@ public class BreedDAO {
         }
         return breedList;
     }
-    
+
+    public List<Breed> getTopPricedBreeds(Date startDate, Date endDate, int limit) {
+        DBContext db = new DBContext();
+        List<Breed> list = new ArrayList<>();
+        try {
+            conn = db.getConnection();
+            StringBuilder sql = new StringBuilder("SELECT TOP (?)\n"
+                    + "    b.breedId,\n"
+                    + "    b.breedName,\n"
+                    + "    COUNT(oc.petId) AS totalPetsSold,\n"
+                    + "    SUM(oc.priceAtOrder) AS totalRevenue\n"
+                    + "FROM OrderContentTB oc\n"
+                    + "JOIN PetTB p ON oc.petId = p.petId\n"
+                    + "JOIN BreedTB b ON p.breedId = b.breedId\n"
+                    + "JOIN OrderTB o ON oc.orderId = o.orderId\n"
+                    + "WHERE o.orderStatus = 'Delivered'\n");
+            if (startDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) >= ?\n");
+            }
+            if (endDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) <= ?\n");
+            }
+            sql.append("GROUP BY b.breedId, b.breedName\n"
+                    + "ORDER BY totalRevenue DESC;");
+            ps = conn.prepareStatement(sql.toString());
+
+            int index = 1;
+            ps.setInt(index++, limit);
+            if (startDate != null) {
+                ps.setDate(index++, startDate);
+            }
+            if (endDate != null) {
+                ps.setDate(index++, endDate);
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Breed breed = new Breed();
+                breed.setBreedId(rs.getInt("breedId"));
+                breed.setBreedName(rs.getString("breedName"));
+                breed.setTotalPurchases(rs.getInt("totalPetsSold"));
+                breed.setTotalRevenue(rs.getBigDecimal("totalRevenue"));
+                list.add(breed);
+            }
+            return list;
+        } catch (Exception ex) {
+            Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
 }

@@ -5,6 +5,8 @@
 package DAO;
 
 import Models.Order;
+import Models.Revenue;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -899,38 +901,426 @@ public class OrderDAO {
         return count;
     }
 
-    public List<Order> top10MostPricedOrders() {
+    public List<Order> getTopPricedOrders(Date startDate, Date endDate, int limit) {
         DBContext db = new DBContext();
         List<Order> list = new ArrayList<>();
         try {
             conn = db.getConnection();
-            String sql = "SELECT TOP 10 \n"
+            StringBuilder sql = new StringBuilder(
+                    "SELECT TOP (?) \n"
                     + "    o.orderId,\n"
                     + "    o.customerName,\n"
-                    + "    o.orderDate,\n"
+                    + "    o.deliveryDate,\n"
                     + "    SUM(oc.priceAtOrder) AS totalOrderPrice\n"
-                    + "FROM \n"
-                    + "    OrderTB o\n"
-                    + "JOIN \n"
-                    + "    OrderContentTB oc ON o.orderId = oc.orderId\n"
-                    + "GROUP BY \n"
-                    + "    o.orderId, o.customerName, o.orderDate\n"
+                    + "FROM OrderTB o\n"
+                    + "JOIN OrderContentTB oc ON o.orderId = oc.orderId\n"
+                    + "WHERE o.orderStatus = 'Delivered'\n"
+            );
+
+            if (startDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) >= ?\n");
+            }
+            if (endDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) <= ?\n");
+            }
+
+            sql.append("GROUP BY \n"
+                    + "    o.orderId, o.customerName, o.deliveryDate\n"
                     + "ORDER BY \n"
-                    + "    totalOrderPrice DESC;";
-            ps = conn.prepareStatement(sql);
+                    + "    totalOrderPrice DESC;");
+
+            ps = conn.prepareStatement(sql.toString());
+
+            int index = 1;
+            ps.setInt(index++, limit);
+            if (startDate != null) {
+                ps.setDate(index++, startDate);
+            }
+            if (endDate != null) {
+                ps.setDate(index++, endDate);
+            }
+
             rs = ps.executeQuery();
             while (rs.next()) {
                 Order order = new Order();
                 order.setOrderId(rs.getInt("orderId"));
                 order.setCustomerName(rs.getString("customerName"));
-                order.setOrderDate(rs.getTimestamp("orderDate"));
+                order.setOrderDate(rs.getTimestamp("deliveryDate"));
                 order.setTotalPrice(rs.getDouble("totalOrderPrice"));
                 list.add(order);
             }
             return list;
+
         } catch (Exception ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
         }
         return null;
+    }
+
+    public List<Revenue> getRevenueByDay(Date startDate, Date endDate) {
+        DBContext db = new DBContext();
+        List<Revenue> list = new ArrayList<>();
+
+        try {
+            conn = db.getConnection();
+            StringBuilder sql = new StringBuilder(
+                    "SELECT "
+                    + "    CAST(o.deliveryDate AS DATE) as [date], "
+                    + "    SUM(oc.priceAtOrder) as totalRevenue "
+                    + "FROM OrderContentTB oc "
+                    + "JOIN OrderTB o ON oc.orderId = o.orderId "
+                    + "WHERE o.orderStatus = 'Delivered' "
+            );
+
+            if (startDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) >= ? ");
+            }
+            if (endDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) <= ? ");
+            }
+
+            sql.append("GROUP BY CAST(o.deliveryDate AS DATE) ORDER BY [date]");
+
+            ps = conn.prepareStatement(sql.toString());
+
+            int index = 1;
+            if (startDate != null) {
+                ps.setDate(index++, startDate);
+            }
+            if (endDate != null) {
+                ps.setDate(index++, endDate);
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Revenue data = new Revenue();
+                data.setDate(rs.getDate("date"));
+                data.setTotalRevenue(rs.getBigDecimal("totalRevenue"));
+                list.add(data);
+            }
+            return list;
+
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error fetching daily revenue", ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public List<Revenue> getRevenueByWeek(Date startDate, Date endDate) {
+        DBContext db = new DBContext();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Revenue> list = new ArrayList<>();
+
+        try {
+            conn = db.getConnection();
+            StringBuilder sql = new StringBuilder(
+                    "SELECT "
+                    + "    DATEADD(wk, DATEDIFF(wk, 7, o.deliveryDate), 7) as [date], "
+                    + "    SUM(oc.priceAtOrder) as totalRevenue "
+                    + "FROM OrderContentTB oc "
+                    + "JOIN OrderTB o ON oc.orderId = o.orderId "
+                    + "WHERE o.orderStatus = 'Delivered' "
+            );
+
+            if (startDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) >= ? ");
+            }
+            if (endDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) <= ? ");
+            }
+
+            sql.append("GROUP BY DATEADD(wk, DATEDIFF(wk, 7, o.deliveryDate), 7) ORDER BY [date]");
+
+            ps = conn.prepareStatement(sql.toString());
+
+            int index = 1;
+            if (startDate != null) {
+                ps.setDate(index++, startDate);
+            }
+            if (endDate != null) {
+                ps.setDate(index++, endDate);
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Revenue data = new Revenue();
+                data.setDate(rs.getDate("date"));
+                data.setTotalRevenue(rs.getBigDecimal("totalRevenue"));
+                list.add(data);
+            }
+            return list;
+
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error fetching weekly revenue", ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public List<Revenue> getRevenueByMonth(Date startDate, Date endDate) {
+        DBContext db = new DBContext();
+        List<Revenue> list = new ArrayList<>();
+
+        try {
+            conn = db.getConnection();
+            StringBuilder sql = new StringBuilder(
+                    "SELECT "
+                    + "    DATEFROMPARTS(YEAR(o.deliveryDate), MONTH(o.deliveryDate), 1) as [date], "
+                    + "    SUM(oc.priceAtOrder) as totalRevenue "
+                    + "FROM OrderContentTB oc "
+                    + "JOIN OrderTB o ON oc.orderId = o.orderId "
+                    + "WHERE o.orderStatus = 'Delivered' "
+            );
+
+            if (startDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) >= ? ");
+            }
+            if (endDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) <= ? ");
+            }
+
+            sql.append("GROUP BY YEAR(o.deliveryDate), MONTH(o.deliveryDate) ORDER BY [date]");
+
+            ps = conn.prepareStatement(sql.toString());
+
+            int index = 1;
+            if (startDate != null) {
+                ps.setDate(index++, startDate);
+            }
+            if (endDate != null) {
+                ps.setDate(index++, endDate);
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Revenue data = new Revenue();
+                data.setDate(rs.getDate("date"));
+                data.setTotalRevenue(rs.getBigDecimal("totalRevenue"));
+                list.add(data);
+            }
+            return list;
+
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error fetching monthly revenue", ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public BigDecimal getTotalRevenue(Date startDate, Date endDate) {
+        DBContext db = new DBContext();
+        BigDecimal totalRevenue = BigDecimal.ZERO;
+
+        try {
+            conn = db.getConnection();
+            StringBuilder sql = new StringBuilder(
+                    "SELECT ISNULL(SUM(oc.priceAtOrder), 0) "
+                    + "FROM OrderContentTB oc "
+                    + "JOIN OrderTB o ON oc.orderId = o.orderId "
+                    + "WHERE o.orderStatus = 'Delivered' "
+            );
+
+            if (startDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) >= ? ");
+            }
+            if (endDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) <= ? ");
+            }
+
+            ps = conn.prepareStatement(sql.toString());
+
+            int index = 1;
+            if (startDate != null) {
+                ps.setDate(index++, startDate);
+            }
+            if (endDate != null) {
+                ps.setDate(index++, endDate);
+            }
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                totalRevenue = rs.getBigDecimal(1);
+            }
+            return totalRevenue;
+
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error fetching total revenue", ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return totalRevenue;
+    }
+
+    public BigDecimal getAverageOrderValue(Date startDate, Date endDate) {
+        DBContext db = new DBContext();
+        BigDecimal avgValue = BigDecimal.ZERO;
+
+        try {
+            conn = db.getConnection();
+            StringBuilder sql = new StringBuilder(
+                    "SELECT ISNULL(AVG(TotalAmount), 0) "
+                    + "FROM ( "
+                    + "    SELECT SUM(oc.priceAtOrder) AS TotalAmount "
+                    + "    FROM OrderTB o "
+                    + "    JOIN OrderContentTB oc ON o.orderId = oc.orderId "
+                    + "    WHERE o.orderStatus = 'Delivered' "
+            );
+
+            if (startDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) >= ? ");
+            }
+            if (endDate != null) {
+                sql.append("AND CAST(o.deliveryDate AS DATE) <= ? ");
+            }
+
+            sql.append("GROUP BY o.orderId) AS OrderTotals");
+
+            ps = conn.prepareStatement(sql.toString());
+
+            int index = 1;
+            if (startDate != null) {
+                ps.setDate(index++, startDate);
+            }
+            if (endDate != null) {
+                ps.setDate(index++, endDate);
+            }
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                avgValue = rs.getBigDecimal(1);
+            }
+            return avgValue;
+
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error fetching average order value", ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return avgValue;
     }
 }

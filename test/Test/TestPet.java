@@ -14,6 +14,7 @@ import Models.Breed;
 import Models.Invoice;
 import Models.Order;
 import Models.Pet;
+import Models.Revenue;
 import Models.Shipper;
 import java.sql.Date;
 import java.util.List;
@@ -32,13 +33,39 @@ public class TestPet {
     static InvoiceDAO _daoinvoice = new InvoiceDAO();
 
     public static void main(String[] args) {
-        for (Order order : top10Order()) {
-            System.out.println(order.getOrderId() + " - " + order.getCustomerName() + " - " + order.getOrderDate() + " - " + order.getTotalPrice());
+//        for (Breed breed : topBreed()) {
+//            System.out.println(breed.getBreedId() + " - " + breed.getBreedName() + " - " + breed.getTotalPurchases() + " - " + breed.getTotalRevenue());
+//        }
+
+        for (Revenue i : revenueDate()) {
+            System.out.println(i.getDate() + " - " + i.getTotalRevenue() + " D");
+        }
+        for (Revenue i : revenueWeek()) {
+            System.out.println(i.getDate() + " - " + i.getTotalRevenue() + " W");
+        }
+        for (Revenue i : revenueMonth()) {
+            System.out.println(i.getDate() + " - " + i.getTotalRevenue() + " M");
         }
     }
 
+    private static List<Revenue> revenueMonth() {
+        return _daoorder.getRevenueByMonth(new Date(0).valueOf("2025-01-01"), new Date(0).valueOf("2025-12-01"));
+    }
+
+    private static List<Revenue> revenueWeek() {
+        return _daoorder.getRevenueByWeek(new Date(0).valueOf("2025-01-01"), new Date(0).valueOf("2025-12-01"));
+    }
+
+    private static List<Revenue> revenueDate() {
+        return _daoorder.getRevenueByDay(new Date(0).valueOf("2025-01-01"), new Date(0).valueOf("2025-12-01"));
+    }
+
+    private static List<Breed> topBreed() {
+        return _daobreed.getTopPricedBreeds(new Date(0).valueOf("2025-01-01"), new Date(0).valueOf("2025-12-01"), 10);
+    }
+
     private static List<Order> top10Order() {
-        return _daoorder.top10MostPricedOrders();
+        return _daoorder.getTopPricedOrders(new Date(0).valueOf("2025-01-01"), new Date(0).valueOf("2025-12-01"), 10);
     }
 
     private static Breed topBreed(Date start, Date end) {

@@ -268,7 +268,7 @@
 
                         reader.onload = function (e) {
                             const previewItem = document.createElement('div');
-                            previewItem.className = 'image-preview-item'; // Reuse class for styling
+                            previewItem.className = 'image-preview-item';
 
                             const img = document.createElement('img');
                             img.src = e.target.result;

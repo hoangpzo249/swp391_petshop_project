@@ -4,6 +4,7 @@
  */
 package Models;
 
+import java.math.BigDecimal;
 import java.util.Base64;
 
 /**
@@ -18,6 +19,7 @@ public class Breed {
     private int breedStatus;
     private byte[] breedImage;
     private int totalPurchases;
+    private BigDecimal totalRevenue;
 
     public Breed() {
     }
@@ -28,6 +30,14 @@ public class Breed {
         this.breedSpecies = breedSpecies;
         this.breedStatus = breedStatus;
         this.breedImage = breedImage;
+    }
+
+    public BigDecimal getTotalRevenue() {
+        return totalRevenue;
+    }
+
+    public void setTotalRevenue(BigDecimal totalRevenue) {
+        this.totalRevenue = totalRevenue;
     }
 
     public Breed(int breedId, String breedName, String breedSpecies, int breedStatus, byte[] breedImage, int totalPurchases) {

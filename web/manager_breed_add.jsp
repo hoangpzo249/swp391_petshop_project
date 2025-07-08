@@ -132,7 +132,8 @@
                                 <div class="form-full-width">
                                     <div class="form-group">
                                         <label for="breedImage">Hình ảnh giống</label>
-                                        <input type="file" id="breedImage" name="breedImage" class="form-control" accept="image/*" >
+                                        <input type="file" id="breedImage" name="breedImage" class="form-control" accept="image/*" onchange="previewImages(event)">
+                                        <div id="image-previews" class="image-management-grid" style="margin-top: 15px;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -154,6 +155,43 @@
             '${s}'<c:if test="${!loop.last}">,</c:if>
             </c:forEach>
             ];
+            function previewImages(event) {
+                const previewContainer = document.getElementById('image-previews');
+                const fileInput = event.target;
+
+                previewContainer.innerHTML = '';
+
+                const files = fileInput.files;
+                if (!files) {
+                    return;
+                }
+
+                if (files.length > 1) {
+                    alert('Bạn chỉ có thể tải lên tối đa 1 ảnh.');
+                    fileInput.value = '';
+                    return;
+                }
+
+                Array.from(files).forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            const previewItem = document.createElement('div');
+                            previewItem.className = 'image-preview-item';
+
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.alt = 'Xem trước ảnh mới';
+
+                            previewItem.appendChild(img);
+                            previewContainer.appendChild(previewItem);
+                        };
+
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
         </script>
         <script src="js/breed_autocomplete.js"></script>
     </body>
