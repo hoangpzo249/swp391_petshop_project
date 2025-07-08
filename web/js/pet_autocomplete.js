@@ -4,23 +4,24 @@
  */
 
 function removeAccents(str) {
-  if (!str) return '';
-  return str
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D');
+    if (!str)
+        return '';
+    return str
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .replace(/Đ/g, 'D');
 }
 
 function setupAutocomplete(config) {
-    const { visibleInput, hiddenInput, data, listContainer } = config;
+    const {visibleInput, hiddenInput, data, listContainer} = config;
 
     visibleInput.addEventListener('input', function () {
         const inputValue = this.value;
         const normalizedInputValue = removeAccents(inputValue.toLowerCase());
-        
+
         listContainer.innerHTML = '';
-        hiddenInput.value = inputValue; 
+        hiddenInput.value = inputValue;
 
         if (!inputValue) {
             return;
@@ -40,8 +41,8 @@ function setupAutocomplete(config) {
 
             suggestionDiv.addEventListener('click', function () {
                 visibleInput.value = this.textContent;
-                hiddenInput.value = isObject ? item.id : this.textContent; 
-                listContainer.innerHTML = ''; 
+                hiddenInput.value = isObject ? item.id : this.textContent;
+                listContainer.innerHTML = '';
             });
 
             listContainer.appendChild(suggestionDiv);
@@ -75,37 +76,48 @@ document.addEventListener('click', function (e) {
     if (e.target !== colorInput && !colorListContainer.contains(e.target)) {
         colorListContainer.innerHTML = '';
     }
-    
+
     if (e.target !== originInput && !originListContainer.contains(e.target)) {
         originListContainer.innerHTML = '';
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const priceDisplayInput = document.getElementById('priceDisplay');
     const priceHiddenInput = document.getElementById('petPrice');
 
     if (!priceDisplayInput || !priceHiddenInput) {
         return;
     }
-    
+
     const formatNumber = (numStr) => {
-        if (!numStr) return '';
+        if (!numStr)
+            return '';
         return numStr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     };
-    
+
     const getRawDigits = (str) => {
         return str.replace(/\D/g, '');
     }
 
-    const initialRawPrice = getRawDigits(priceHiddenInput.value);
-    if (initialRawPrice) {
-        priceDisplayInput.value = formatNumber(initialRawPrice);
+
+    const initialPriceValue = priceHiddenInput.value;
+
+    if (initialPriceValue) {
+        const numericValue = parseFloat(initialPriceValue);
+
+        const roundedValue = Math.round(numericValue);
+
+        if (!isNaN(roundedValue)) {
+            priceHiddenInput.value = roundedValue;
+
+            priceDisplayInput.value = formatNumber(roundedValue.toString()); // "640.000"
+        }
     }
 
-    priceDisplayInput.addEventListener('input', function(e) {
+    priceDisplayInput.addEventListener('input', function (e) {
         const rawValue = getRawDigits(e.target.value);
-        
+
         priceHiddenInput.value = rawValue;
 
         const originalCursor = e.target.selectionStart;
@@ -114,7 +126,14 @@ document.addEventListener('DOMContentLoaded', function() {
         e.target.value = formatNumber(rawValue);
 
         const newLength = e.target.value.length;
-        e.target.setSelectionRange(originalCursor + (newLength - originalLength), originalCursor + (newLength - originalLength));
+        const cursorOffset = newLength - originalLength;
+
+        // Ensure cursor doesn't jump unexpectedly
+        if (cursorOffset > 0 && originalCursor > 0 && (originalCursor - 1) % 3 === 0) {
+            e.target.setSelectionRange(originalCursor + cursorOffset, originalCursor + cursorOffset);
+        } else {
+            e.target.setSelectionRange(originalCursor, originalCursor);
+        }
     });
 
 });

@@ -105,6 +105,8 @@ public class SellerUpdatePetServlet extends HttpServlet {
             request.setAttribute("imageList", imageList);
             request.setAttribute("colorList", colorList);
             request.setAttribute("originList", originList);
+            
+            System.out.println("=====Debug: "+pet.getPetPrice());
 
             request.getRequestDispatcher("seller_pet_edit.jsp")
                     .forward(request, response);
@@ -158,7 +160,8 @@ public class SellerUpdatePetServlet extends HttpServlet {
             int petVaccination = Integer.parseInt(request.getParameter("petVaccination"));
             int petStatus = Integer.parseInt(request.getParameter("petStatus"));
             String petDescription = request.getParameter("petDescription").trim();
-            double petPrice = Double.parseDouble(request.getParameter("petPrice"));
+            String petPriceStr = request.getParameter("petPrice");
+            double petPrice = Double.parseDouble(petPriceStr);
             int breedId = Integer.parseInt(request.getParameter("breedId"));
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -192,6 +195,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
             if (infoValidation.length() != 0) {
                 errMess.append(infoValidation);
             }
+            System.out.println("====DEBUG: " + petPrice);
             if (petPrice < 0) {
                 if (errMess.length() != 0) {
                     errMess.append("<br>");
