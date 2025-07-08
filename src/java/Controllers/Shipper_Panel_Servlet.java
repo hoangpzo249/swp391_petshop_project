@@ -68,17 +68,17 @@ public class Shipper_Panel_Servlet extends HttpServlet {
         ShipperDAO shipDao = new ShipperDAO();
         Shipper shipper = shipDao.getShipperById(acc.getAccId());
         request.setAttribute("shipper", shipper);
-        
+
         OrderDAO oDao = new OrderDAO();
         List<Order> orderList = oDao.getOrderShipperId(acc.getAccId());
         request.setAttribute("orderList", orderList);
-        
+
         int pendingCount = oDao.countPendingShipper(acc.getAccId());
         request.setAttribute("pendingCount", pendingCount);
-        
+
         int shippingCount = oDao.countPendingShipperShipping(acc.getAccId());
         request.setAttribute("shippingCount", shippingCount);
-        
+
         int deliveredCount = oDao.countPendingShipperDelivered(acc.getAccId());
         request.setAttribute("deliveredCount", deliveredCount);
 
@@ -100,6 +100,7 @@ public class Shipper_Panel_Servlet extends HttpServlet {
         Account acc = (Account) session.getAttribute("userAccount");
 
         ShipperDAO shipDao = new ShipperDAO();
+        OrderDAO oDao = new OrderDAO();
 
         String action = request.getParameter("action");
         if ("status".equals(action)) {
@@ -112,6 +113,14 @@ public class Shipper_Panel_Servlet extends HttpServlet {
                 newStatus = "Offline";
             }
 
+            boolean checkPenndingShippingShipper = oDao.checkPenndingShippingShipper(acc.getAccId());
+            if (checkPenndingShippingShipper) {
+                session.setAttribute("errorMessage", "Bạn cần hoàn thành hết đơn cần giao và đơn đang giao");
+                String url = "shipper_panel?action=status";
+                response.sendRedirect(url);
+                return;
+            }
+            
             boolean updatestatus = shipDao.updateStatusShipper(acc.getAccId(), newStatus);
             if (updatestatus) {
                 session.setAttribute("successMessage", "Cập nhật trạng thái thành công");
@@ -122,7 +131,6 @@ public class Shipper_Panel_Servlet extends HttpServlet {
             Shipper shipper = shipDao.getShipperById(acc.getAccId());
             request.setAttribute("shipper", shipper);
 
-            OrderDAO oDao = new OrderDAO();
             List<Order> orderList = oDao.getOrderShipperId(acc.getAccId());
             request.setAttribute("orderList", orderList);
             String url = "shipper_panel?action=status";

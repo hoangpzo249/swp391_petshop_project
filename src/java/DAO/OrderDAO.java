@@ -862,6 +862,7 @@ public class OrderDAO {
         }
         return count;
     }
+
     public int countPendingShipperShipping(int accId) {
         int count = 0;
         DBContext db = new DBContext();
@@ -879,6 +880,7 @@ public class OrderDAO {
         }
         return count;
     }
+
     public int countPendingShipperDelivered(int accId) {
         int count = 0;
         DBContext db = new DBContext();
@@ -895,5 +897,21 @@ public class OrderDAO {
             e.printStackTrace();
         }
         return count;
+    }
+
+    public boolean checkPenndingShippingShipper(int shipperId) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT 1 from ordertb where shipperId = ? and (orderstatus = 'Pending shipper' or orderstatus = 'shipping')";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, shipperId);
+            rs = ps.executeQuery();
+
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
