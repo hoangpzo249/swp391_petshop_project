@@ -69,12 +69,12 @@
                         <h5 class="category-title">Quản lý</h5>
                         <a href="displaybreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
                         <a href="discountmanager" class="sidebar-link"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
+                        <a href="displayrefund" class="sidebar-link "><i class="fas fa-undo-alt"></i> Quản lý hoàn tiền</a>
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
                         <a href="addbreed" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm giống mới</a>
-                        <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã giảm giá mới</a>
-                        <a href="import_discount.jsp" class="sidebar-link active"><i class="fas fa-file-upload"></i> Import mã từ Excel</a>
+                        <a href="adddiscount.jsp" class="sidebar-link active"><i class="fas fa-plus-circle"></i> Thêm mã giảm giá mới</a>
                         <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
                         <a href="profile?action=change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
                         <a href="logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
@@ -85,7 +85,7 @@
             <div class="seller-content">
                 <div class="page-header">
                     <h1 class="page-title"><i class="fas fa-exclamation-triangle"></i> Danh sách mã không import được</h1>
-                   
+
                     <a href="downloadfailed" class="btn btn-outline">
                         <i class="fas fa-download"></i> Tải danh sách lỗi Excel
                     </a>

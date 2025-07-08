@@ -85,11 +85,8 @@ public class ImportDiscountServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Part filePart = request.getPart("excelFile");
-        String fileName = filePart.getSubmittedFileName().toLowerCase().trim();
-
         InputStream inputStream = filePart.getInputStream();
 
-        List<Discount> importedList = new ArrayList<>();
         List<Discount> failedDiscounts = new ArrayList<>();
         DiscountDAO dao = new DiscountDAO();
         int successCount = 0, failCount = 0;
@@ -120,7 +117,18 @@ public class ImportDiscountServlet extends HttpServlet {
                     Discount d = new Discount();
                     boolean hasError = false;
 
-                    String code = row.getCell(0).getStringCellValue().trim();
+                    Cell codeCell = row.getCell(0);
+                    String code = "";
+
+                    if (codeCell != null) {
+                        if (codeCell.getCellType() == CellType.STRING) {
+                            code = codeCell.getStringCellValue().trim();
+                        } else if (codeCell.getCellType() == CellType.NUMERIC) {
+                            code = String.valueOf((long) codeCell.getNumericCellValue()).trim();
+                        } else {
+                            code = codeCell.toString().trim();
+                        }
+                    }
                     d.setDiscountCode(code);
                     if (code.isEmpty()) {
                         d.setDiscountCodeErr("Mã giảm giá không được để trống.");
@@ -229,13 +237,12 @@ public class ImportDiscountServlet extends HttpServlet {
                     }
 
                     d.setUsageCount(0);
-
-                    boolean added = dao.addDiscount(d);
-                    if (added) {
-                        successCount++;
-                    } else {
+                    if (hasError) {
                         failCount++;
                         failedDiscounts.add(d);
+                    } else {
+                        dao.addDiscount(d);
+                        successCount++;
                     }
 
                 } catch (Exception ex) {
@@ -255,7 +262,7 @@ public class ImportDiscountServlet extends HttpServlet {
         if (!failedDiscounts.isEmpty()) {
             request.getSession().setAttribute("failedDiscounts", failedDiscounts);
             request.getSession().setAttribute("successMess", "Import thành công " + successCount + " mã, thất bại " + failCount + " mã.");
-            response.sendRedirect("update_failed_discount.jsp");
+            response.sendRedirect("retryadddiscount");
             return;
         }
 

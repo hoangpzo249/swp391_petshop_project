@@ -26,8 +26,9 @@ public class RefundDAO {
         try {
             conn = db.getConnection();
             String sql = "INSERT INTO RefundTB (orderId, bankAccountNumber, bankName, accountHolderName, "
-                    + "refundAmount, proofImage, refundStatus, refundRequestDate,rejectReason) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, GETDATE(),?)";
+                    + "refundAmount, proofImage, refundStatus, refundRequestDate, rejectReason, refundReasonDescription) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, GETDATE(), ?, ?)";
+
             ps = conn.prepareStatement(sql);
             ps.setInt(1, refund.getOrderId());
             ps.setString(2, refund.getBankAccountNumber());
@@ -37,6 +38,7 @@ public class RefundDAO {
             ps.setBytes(6, refund.getProofImage());
             ps.setString(7, refund.getRefundStatus());
             ps.setString(8, refund.getRejectReason());
+            ps.setString(9, refund.getRefundReasonDescription());
             int rows = ps.executeUpdate();
             return rows > 0;
 
@@ -83,6 +85,7 @@ public class RefundDAO {
                 r.setRefundProcessedDate(rs.getTimestamp("refundProcessedDate"));
                 r.setRejectReason(rs.getString("rejectReason"));
                 r.setProofRefundedImage(rs.getBytes("proofRefundedImage"));
+                r.setRefundReasonDescription(rs.getString("refundReasonDescription"));
 
                 list.add(r);
             }
@@ -136,6 +139,7 @@ public class RefundDAO {
                 r.setRefundProcessedDate(rs.getTimestamp("refundProcessedDate"));
                 r.setRejectReason(rs.getString("rejectReason"));
                 r.setProofRefundedImage(rs.getBytes("proofRefundedImage"));
+                r.setRefundReasonDescription(rs.getString("refundReasonDescription"));
 
             }
         } catch (Exception e) {
@@ -174,7 +178,8 @@ public class RefundDAO {
                     + "bankName = ?, "
                     + "accountHolderName = ?, "
                     + "refundAmount = ?, "
-                    + "proofImage = ? "
+                    + "proofImage = ?, "
+                    + "refundReasonDescription = ? "
                     + "WHERE refundId = ?";
 
             ps = conn.prepareStatement(sql);
@@ -184,7 +189,8 @@ public class RefundDAO {
             ps.setString(4, refund.getAccountHolderName());
             ps.setDouble(5, refund.getRefundAmount());
             ps.setBytes(6, refund.getProofImage());
-            ps.setInt(7, refund.getRefundId());
+            ps.setString(7, refund.getRefundReasonDescription());
+            ps.setInt(8, refund.getRefundId());
             int updatedRows = ps.executeUpdate();
             return updatedRows > 0;
 
@@ -287,6 +293,8 @@ public class RefundDAO {
                 r.setProofImage(rs.getBytes("proofImage"));
                 r.setRejectReason(rs.getString("rejectReason"));
                 r.setProofRefundedImage(rs.getBytes("proofRefundedImage"));
+                r.setRefundReasonDescription(rs.getString("refundReasonDescription"));
+
                 list.add(r);
             }
 
@@ -341,6 +349,7 @@ public class RefundDAO {
                 r.setRefundProcessedDate(rs.getTimestamp("refundProcessedDate"));
                 r.setRejectReason(rs.getString("rejectReason"));
                 r.setProofRefundedImage(rs.getBytes("proofRefundedImage"));
+                r.setRefundReasonDescription(rs.getString("refundReasonDescription"));
             }
         } catch (Exception e) {
             e.printStackTrace();

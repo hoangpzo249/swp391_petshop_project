@@ -14,7 +14,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Quản Lý Hoàn Tiền - PETFPT Shop</title>
-        <link href="css/seller_panel_page.css?v=2" rel="stylesheet" type="text/css"/>
+        <link href="css/seller_panel_page.css?v=3" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     </head>

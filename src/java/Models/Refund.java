@@ -144,5 +144,14 @@ public class Refund {
     public String getBase64ProofRefundedImage() {
         return proofRefundedImage != null ? Base64.getEncoder().encodeToString(proofRefundedImage) : null;
     }
+    private String refundReasonDescription;
+
+    public String getRefundReasonDescription() {
+        return refundReasonDescription;
+    }
+
+    public void setRefundReasonDescription(String refundReasonDescription) {
+        this.refundReasonDescription = refundReasonDescription;
+    }
 
 }

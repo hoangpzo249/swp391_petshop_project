@@ -59,7 +59,19 @@ public class RetryAddDiscountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        List<Discount> failedDiscounts = (List<Discount>) request.getSession().getAttribute("failedDiscounts");
+        String successMess = (String) request.getSession().getAttribute("successMess");
+        String errMess = (String) request.getSession().getAttribute("errMess");
+
+        request.setAttribute("failedDiscounts", failedDiscounts);
+        request.setAttribute("successMess", successMess);
+        request.setAttribute("errMess", errMess);
+
+        request.getSession().removeAttribute("successMess");
+        request.getSession().removeAttribute("errMess");
+
+        request.getRequestDispatcher("update_failed_discount.jsp").forward(request, response);
     }
 
     /**
@@ -94,15 +106,7 @@ public class RetryAddDiscountServlet extends HttpServlet {
 
         DiscountDAO dao = new DiscountDAO();
         String indexParam = request.getParameter("index");
-        int index;
-        try {
-            index = Integer.parseInt(indexParam);
-        } catch (NumberFormatException e) {
-            request.getSession().setAttribute("errMess", "Index không hợp lệ.");
-            response.sendRedirect("update_failed_discount.jsp");
-            return;
-        }
-
+        int index=Integer.parseInt(indexParam);
         Discount d = failedDiscounts.get(index);
         d.setActive("1".equals(status));
         d.setDescription(description);
@@ -215,25 +219,22 @@ public class RetryAddDiscountServlet extends HttpServlet {
         }
 
         if (hasError) {
-            request.getRequestDispatcher("update_failed_discount.jsp").forward(request, response);
+            response.sendRedirect("retryadddiscount");
             return;
         }
 
-        boolean added = dao.addDiscount(d);
-        if (added) {
-            failedDiscounts.removeIf(dis -> dis.getDiscountCode().equals(code));
-            if (failedDiscounts.isEmpty()) {
-                request.getSession().removeAttribute("failedDiscounts");
-                request.getSession().setAttribute("successMess", "Tất cả mã đã được lưu thành công.");
-                response.sendRedirect("discountmanager");
-            } else {
-                request.getSession().setAttribute("successMess", "Lưu thành công mã " + code + ".");
-                response.sendRedirect("update_failed_discount.jsp");
-            }
+        dao.addDiscount(d);
+        failedDiscounts.remove(index);
+
+        if (failedDiscounts.isEmpty()) {
+            request.getSession().removeAttribute("failedDiscounts");
+            request.getSession().setAttribute("successMess", "Tất cả mã đã được lưu thành công.");
+            response.sendRedirect("discountmanager");
         } else {
-            request.getSession().setAttribute("errMess", "Không thể lưu mã " + code + ".");
-            response.sendRedirect("update_failed_discount.jsp");
+            request.getSession().setAttribute("successMess", "Lưu thành công mã " + code + ".");
+            response.sendRedirect("retryadddiscount");
         }
+
     }
 
     /**
