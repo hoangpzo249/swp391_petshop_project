@@ -862,6 +862,7 @@ public class OrderDAO {
         }
         return count;
     }
+
     public int countPendingShipperShipping(int accId) {
         int count = 0;
         DBContext db = new DBContext();
@@ -879,6 +880,7 @@ public class OrderDAO {
         }
         return count;
     }
+
     public int countPendingShipperDelivered(int accId) {
         int count = 0;
         DBContext db = new DBContext();
@@ -895,5 +897,40 @@ public class OrderDAO {
             e.printStackTrace();
         }
         return count;
+    }
+
+    public List<Order> top10MostPricedOrders() {
+        DBContext db = new DBContext();
+        List<Order> list = new ArrayList<>();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT TOP 10 \n"
+                    + "    o.orderId,\n"
+                    + "    o.customerName,\n"
+                    + "    o.orderDate,\n"
+                    + "    SUM(oc.priceAtOrder) AS totalOrderPrice\n"
+                    + "FROM \n"
+                    + "    OrderTB o\n"
+                    + "JOIN \n"
+                    + "    OrderContentTB oc ON o.orderId = oc.orderId\n"
+                    + "GROUP BY \n"
+                    + "    o.orderId, o.customerName, o.orderDate\n"
+                    + "ORDER BY \n"
+                    + "    totalOrderPrice DESC;";
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("orderId"));
+                order.setCustomerName(rs.getString("customerName"));
+                order.setOrderDate(rs.getTimestamp("orderDate"));
+                order.setTotalPrice(rs.getDouble("totalOrderPrice"));
+                list.add(order);
+            }
+            return list;
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

@@ -12,6 +12,7 @@ import DAO.PetDAO;
 import DAO.ShipperDAO;
 import Models.Breed;
 import Models.Invoice;
+import Models.Order;
 import Models.Pet;
 import Models.Shipper;
 import java.sql.Date;
@@ -31,7 +32,13 @@ public class TestPet {
     static InvoiceDAO _daoinvoice = new InvoiceDAO();
 
     public static void main(String[] args) {
-        System.out.println(totalPetsSold(new Date(0).valueOf("2025-01-01"), new Date(0).valueOf("2025-12-01")));
+        for (Order order : top10Order()) {
+            System.out.println(order.getOrderId() + " - " + order.getCustomerName() + " - " + order.getOrderDate() + " - " + order.getTotalPrice());
+        }
+    }
+
+    private static List<Order> top10Order() {
+        return _daoorder.top10MostPricedOrders();
     }
 
     private static Breed topBreed(Date start, Date end) {
