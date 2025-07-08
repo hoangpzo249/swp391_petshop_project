@@ -74,14 +74,14 @@
                 <div class="sidebar-menu">
                     <div class="menu-category">
                         <h5 class="category-title">Điều hướng</h5>
-                        <a href="shipper-dashboard" class="sidebar-link active">
+                        <a href="shipper_panel" class="sidebar-link active">
                             <i class="fas fa-tachometer-alt"></i> Tổng quan
                         </a>
                     </div>
 
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý đơn hàng</h5>
-                        <a href="shipper-dashboard?action=pending" class="sidebar-link">
+                        <a href="shipper_panel?action=pending" class="sidebar-link">
                             <i class="fas fa-clipboard-list"></i> Đơn hàng cần giao
                             <c:choose>
                                 <c:when test="${pendingCount eq 0}">
@@ -92,7 +92,7 @@
                                 </c:otherwise>
                             </c:choose>
                         </a>
-                        <a href="shipper-dashboard?action=delivering" class="sidebar-link">
+                        <a href="shipper_panel?action=delivering" class="sidebar-link">
                             <i class="fas fa-truck"></i> Đang giao hàng
                             <c:choose>
                                 <c:when test="${shippingCount eq 0}">
@@ -102,7 +102,7 @@
                                 </c:otherwise>
                             </c:choose>
                         </a>
-                        <a href="shipper-dashboard?action=completed" class="sidebar-link">
+                        <a href="shipper_panel?action=completed" class="sidebar-link">
                             <i class="fas fa-check-circle"></i> Đã giao hàng
                         </a>
                     </div>
@@ -221,8 +221,8 @@
                                     <select name="status" onchange="this.form.submit()">
                                         <option value="">Tất cả trạng thái</option>
                                         <option value="confirmed" ${param.status == 'confirmed' ? 'selected' : ''}>Đã xác nhận</option>
-                                        <option value="delivering" ${param.status == 'delivering' ? 'selected' : ''}>Đang giao</option>
-                                        <option value="completed" ${param.status == 'completed' ? 'selected' : ''}>Đã giao</option>
+                                        <option value="delivering" ${param.status == 'shipping' ? 'selected' : ''}>Đang giao</option>
+                                        <option value="completed" ${param.status == 'delivered' ? 'selected' : ''}>Đã giao</option>
                                     </select>
                                 </div>
                             </form>
@@ -258,32 +258,32 @@
                                                     <c:when test="${order.orderStatus eq 'Pending Shipper'}">
                                                         <span class="status-badge status-pending">Chờ lấy hàng</span>
                                                     </c:when>
-                                                    <c:when test="${order.orderStatus eq 'Delivering'}">
+                                                    <c:when test="${order.orderStatus eq 'Shipping'}">
                                                         <span class="status-badge status-active">Đang giao</span>
                                                     </c:when>
-                                                    <c:when test="${order.orderStatus eq 'Completed'}">
+                                                    <c:when test="${order.orderStatus eq 'Delivered'}">
                                                         <span class="status-badge status-completed">Đã giao</span>
                                                     </c:when>
                                                 </c:choose>
                                             </td>
                                             <td>
                                                 <div class="table-actions">
-                                                    <a class="action-btn view-btn" title="Xem chi tiết" href="shipper-dashboard?action=view&id=${order.orderId}">
+                                                    <a class="action-btn view-btn" title="Xem chi tiết" href="shipper_panel?action=view&id=${order.orderId}">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                     <c:choose>
                                                         <c:when test="${order.orderStatus eq 'Pending Shipper'}">
-                                                            <a class="action-btn edit-btn" title="Nhận đơn" href="shipper-dashboard?action=pickup&id=${order.orderId}">
+                                                            <a class="action-btn edit-btn" title="Nhận đơn" href="shipper_panel?action=pickup&id=${order.orderId}">
                                                                 <i class="fas fa-truck-loading"></i>
                                                             </a>
                                                         </c:when>
-                                                        <c:when test="${order.orderStatus eq 'Delivering'}">
-                                                            <a class="action-btn complete-btn" title="Hoàn thành" href="shipper-dashboard?action=complete&id=${order.orderId}">
+                                                        <c:when test="${order.orderStatus eq 'Shipping'}">
+                                                            <a class="action-btn complete-btn" title="Hoàn thành" href="shipper_panel?action=complete&id=${order.orderId}">
                                                                 <i class="fas fa-check"></i>
                                                             </a>
                                                         </c:when>
                                                     </c:choose>
-<!--                                                    <a class="action-btn note-btn" title="Ghi chú" href="shipper-dashboard?action=note&id=${order.orderId}">
+<!--                                                    <a class="action-btn note-btn" title="Ghi chú" href="shipper_panel?action=note&id=${order.orderId}">
                                                         <i class="fas fa-sticky-note"></i>
                                                     </a>-->
                                                 </div>

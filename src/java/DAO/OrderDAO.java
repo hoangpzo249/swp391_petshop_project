@@ -676,6 +676,156 @@ public class OrderDAO {
         return list;
     }
 
+    public List<Order> getOrderDetailProductShipperId(int accId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DBContext db = new DBContext();
+        List<Order> list = new ArrayList<>();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
+                    + "o.customerAddress, o.shipperId, o.paymentMethod, o.paymentstatus, SUM(c.priceAtOrder) AS totalPrice, o.rejectionReason, o.discountAmountAtApply,\n"
+                    + "p.petname, p.petColor, p.petPrice, \n"
+                    + "(select top 1 imageData from PetImageTB pimg\n"
+                    + "	where p.petid = pimg.petid) as imageData\n"
+                    + "from ordertb o\n"
+                    + "join OrderContentTB c on o.orderid=c.orderid\n"
+                    + "join pettb p on c.petid=p.petid\n"
+                    + "join PetImageTB pimg on p.petid = pimg.petid\n"
+                    + "where shipperid =?\n"
+                    + "group by o.orderId, o.accId, o.orderDate,o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
+                    + "o.customerAddress, o.shipperId, o.paymentMethod,o.paymentstatus, o.rejectionReason, o.discountAmountAtApply,\n"
+                    + "p.petname, p.petColor, p.petPrice, \n"
+                    + "p.petid";
+
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, accId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Order o = new Order();
+                o.setOrderId(rs.getInt("orderId"));
+                o.setAccId(rs.getInt("accId"));
+                o.setOrderDate(rs.getTimestamp("orderDate"));
+                o.setDeliveryDate(rs.getTimestamp("deliveryDate"));
+                o.setOrderStatus(rs.getString("orderStatus"));
+                o.setCustomerName(rs.getString("customerName"));
+                o.setCustomerEmail(rs.getString("customerEmail"));
+                o.setCustomerPhone(rs.getString("customerPhone"));
+                o.setCustomerAddress(rs.getString("customerAddress"));
+                o.setShipperId((Integer) rs.getObject("shipperId"));
+                o.setPaymentMethod(rs.getString("paymentMethod"));
+                o.setPaymentStatus(rs.getString("paymentStatus"));
+                o.setRejectionReason(rs.getString("rejectionReason"));
+                o.setTotalPrice(rs.getDouble("totalPrice"));
+                o.setPetName(rs.getString("petName"));
+                o.setDiscountAmountAtApply((Double) rs.getObject("discountAmountAtApply"));
+
+                o.setPetColor(rs.getString("petColor"));
+                o.setPetPrice(rs.getDouble("petPrice"));
+                o.setImageData(rs.getBytes("imageData"));
+                list.add(o);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+        return list;
+    }
+
+    public Order getOrderDetailShipperId(int accId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DBContext db = new DBContext();
+        Order o = null;
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
+                    + "o.customerAddress, o.shipperId, o.paymentMethod, o.paymentstatus, SUM(c.priceAtOrder) AS totalPrice, o.rejectionReason, o.discountAmountAtApply,\n"
+                    + "p.petname, p.petColor, p.petPrice, \n"
+                    + "(select top 1 imageData from PetImageTB pimg\n"
+                    + "	where p.petid = pimg.petid) as imageData\n"
+                    + "from ordertb o\n"
+                    + "join OrderContentTB c on o.orderid=c.orderid\n"
+                    + "join pettb p on c.petid=p.petid\n"
+                    + "join PetImageTB pimg on p.petid = pimg.petid\n"
+                    + "where shipperid =?\n"
+                    + "group by o.orderId, o.accId, o.orderDate,o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
+                    + "o.customerAddress, o.shipperId, o.paymentMethod,o.paymentstatus, o.rejectionReason, o.discountAmountAtApply,\n"
+                    + "p.petname, p.petColor, p.petPrice, \n"
+                    + "p.petid";
+
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, accId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                o = new Order();
+                o.setOrderId(rs.getInt("orderId"));
+                o.setAccId(rs.getInt("accId"));
+                o.setOrderDate(rs.getTimestamp("orderDate"));
+                o.setDeliveryDate(rs.getTimestamp("deliveryDate"));
+                o.setOrderStatus(rs.getString("orderStatus"));
+                o.setCustomerName(rs.getString("customerName"));
+                o.setCustomerEmail(rs.getString("customerEmail"));
+                o.setCustomerPhone(rs.getString("customerPhone"));
+                o.setCustomerAddress(rs.getString("customerAddress"));
+                o.setShipperId((Integer) rs.getObject("shipperId"));
+                o.setPaymentMethod(rs.getString("paymentMethod"));
+                o.setPaymentStatus(rs.getString("paymentStatus"));
+                o.setRejectionReason(rs.getString("rejectionReason"));
+                o.setTotalPrice(rs.getDouble("totalPrice"));
+                o.setPetName(rs.getString("petName"));
+                Object discount = rs.getObject("discountAmountAtApply");
+                o.setDiscountAmountAtApply(discount != null ? (Double) discount : 0.0);
+                
+                o.setPetColor(rs.getString("petColor"));
+                o.setPetPrice(rs.getDouble("petPrice"));
+                o.setImageData(rs.getBytes("imageData"));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+        return o;
+    }
+
     public List<Order> getOrderCusSearch(int accId, String status, int orderId) {
         Connection conn = null;
         PreparedStatement ps = null;

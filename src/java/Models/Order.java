@@ -5,6 +5,7 @@
 package Models;
 
 import java.sql.Timestamp;
+import java.util.Base64;
 
 /**
  *
@@ -28,6 +29,10 @@ public class Order {
     private Integer discountId;
     private String petName;
     private Timestamp deliveryDate;
+
+    private String petColor;
+    private double petPrice;
+    private byte[] imageData;
 
     public Order() {
     }
@@ -185,6 +190,35 @@ public class Order {
 
     public void setDiscountAmountAtApply(Double discountAmountAtApply) {
         this.discountAmountAtApply = discountAmountAtApply;
+    }
+
+    public String getPetColor() {
+        return petColor;
+    }
+
+    public void setPetColor(String petColor) {
+        this.petColor = petColor;
+    }
+
+    public double getPetPrice() {
+        return petPrice;
+    }
+
+    public void setPetPrice(double petPrice) {
+        this.petPrice = petPrice;
+    }
+
+    public byte[] getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(byte[] imageData) {
+        this.imageData = imageData;
+    }
+
+    public String getImage() {
+        String base64Image = Base64.getEncoder().encodeToString(imageData);
+        return "data:image/jpeg;base64," + base64Image;
     }
 
     @Override
