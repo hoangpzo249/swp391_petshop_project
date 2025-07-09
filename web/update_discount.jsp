@@ -55,32 +55,32 @@
         </c:if>
         <div class="manager-container">
             <div class="manager-sidebar">
-                 <div class="manager-sidebar">
-                <div class="sidebar-header">
-                    <h2 class="sidebar-title">MANAGER PANEL</h2>
-                    <p class="sidebar-subtitle">Quản lý hệ thống PETFPT Shop</p>
+                <div class="manager-sidebar">
+                    <div class="sidebar-header">
+                        <h2 class="sidebar-title">MANAGER PANEL</h2>
+                        <p class="sidebar-subtitle">Quản lý hệ thống PETFPT Shop</p>
+                    </div>
+                    <div class="sidebar-menu">
+                        <div class="menu-category">
+                            <h5 class="category-title">Điều hướng</h5>
+                            <a href="comingsoon" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                        </div>
+                        <div class="menu-category">
+                            <h5 class="category-title">Quản lý</h5>
+                            <a href="displaybreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
+                            <a href="discountmanager" class="sidebar-link active"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
+                            <a href="displayrefund" class="sidebar-link "><i class="fas fa-undo-alt"></i> Quản lý hoàn tiền</a>
+                        </div>
+                        <div class="menu-category">
+                            <h5 class="category-title">Thao tác</h5>
+                            <a href="addbreed" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm giống mới</a>
+                            <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã giảm giá mới</a>
+                            <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
+                            <a href="profile?action=change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
+                            <a href="logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="sidebar-menu">
-                    <div class="menu-category">
-                        <h5 class="category-title">Điều hướng</h5>
-                        <a href="comingsoon" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
-                    </div>
-                    <div class="menu-category">
-                        <h5 class="category-title">Quản lý</h5>
-                        <a href="displaybreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
-                        <a href="discountmanager" class="sidebar-link active"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
-                    </div>
-
-                    <div class="menu-category">
-                        <h5 class="category-title">Thao tác</h5>
-                        <a href="addbreed" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm giống mới</a>
-                        <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã giảm giá mới</a>
-                        <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
-                        <a href="profile?action=change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
-                        <a href="logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-                    </div>
-                </div>
-            </div>
             </div>
 
             <div class="seller-content">

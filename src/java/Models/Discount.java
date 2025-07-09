@@ -17,11 +17,12 @@ public class Discount {
     private boolean isActive;
     private Double maxValue;
 
-    public Discount() {}
+    public Discount() {
+    }
 
     public Discount(int discountId, String discountCode, String discountType, Double discountValue, String description,
-                    Date validFrom, Date validTo, Double minOrderAmount, Integer maxUsage, int usageCount,
-                    boolean isActive, Double maxValue) {
+            Date validFrom, Date validTo, Double minOrderAmount, Integer maxUsage, int usageCount,
+            boolean isActive, Double maxValue) {
         this.discountId = discountId;
         this.discountCode = discountCode;
         this.discountType = discountType;
@@ -35,8 +36,6 @@ public class Discount {
         this.isActive = isActive;
         this.maxValue = maxValue;
     }
-
-    
 
     public int getDiscountId() {
         return discountId;
@@ -136,11 +135,76 @@ public class Discount {
 
     public boolean isValidNow() {
         Date today = new Date(System.currentTimeMillis());
-        return (validFrom == null || !today.before(validFrom)) &&
-               (validTo == null || !today.after(validTo));
+        return (validFrom == null || !today.before(validFrom))
+                && (validTo == null || !today.after(validTo));
     }
 
     public boolean isUsageAvailable() {
         return maxUsage == null || usageCount < maxUsage;
     }
+
+    private String discountCodeErr;
+    private String discountValueErr;
+    private String minOrderAmountErr;
+    private String maxValueErr;
+    private String maxUsageErr;
+    private String validFromErr;
+    private String validToErr;
+
+    public String getDiscountCodeErr() {
+        return discountCodeErr;
+    }
+
+    public void setDiscountCodeErr(String discountCodeErr) {
+        this.discountCodeErr = discountCodeErr;
+    }
+
+    public String getDiscountValueErr() {
+        return discountValueErr;
+    }
+
+    public void setDiscountValueErr(String discountValueErr) {
+        this.discountValueErr = discountValueErr;
+    }
+
+    public String getMinOrderAmountErr() {
+        return minOrderAmountErr;
+    }
+
+    public void setMinOrderAmountErr(String minOrderAmountErr) {
+        this.minOrderAmountErr = minOrderAmountErr;
+    }
+
+    public String getMaxValueErr() {
+        return maxValueErr;
+    }
+
+    public void setMaxValueErr(String maxValueErr) {
+        this.maxValueErr = maxValueErr;
+    }
+
+    public String getMaxUsageErr() {
+        return maxUsageErr;
+    }
+
+    public void setMaxUsageErr(String maxUsageErr) {
+        this.maxUsageErr = maxUsageErr;
+    }
+
+    public String getValidFromErr() {
+        return validFromErr;
+    }
+
+    public void setValidFromErr(String validFromErr) {
+        this.validFromErr = validFromErr;
+    }
+
+    public String getValidToErr() {
+        return validToErr;
+    }
+
+    public void setValidToErr(String validToErr) {
+        this.validToErr = validToErr;
+    }
+
 }

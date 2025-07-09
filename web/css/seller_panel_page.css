@@ -783,7 +783,7 @@ tbody tr:hover {
 
 textarea.form-control {
     resize: vertical;
-    min-height: 80px;
+    height: 203px;
 }
 
 /* Alert notification */
@@ -942,7 +942,7 @@ textarea.form-control {
 }
 
 .status-badge.status-pending {
-    background-color: rgba(243, 156, 18, 0.15);
+    background-color: rgba(243, 156, 18, 0.15); /* Orange/Yellow */
     color: #f39c12;
 }
 
@@ -974,7 +974,7 @@ textarea.form-control {
 }
 .status-badge.status-payment-unpaid,
 .status-badge.status-payment-pending {
-    background-color: rgba(231, 76, 60, 0.15);
+    background-color: rgba(231, 76, 60, 0.15); /* Red */
     color: #e74c3c;
 }
 
@@ -1358,113 +1358,7 @@ textarea.form-control {
 .hidden-file-input {
     display: none;
 }
-/* === UNIFIED PAGINATION STYLES (Use for all pages) === */
 
-.pagination-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-top: 25px;
-    padding: 10px 0;
-}
-
-.pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.page-item .page-link,
-.page-ellipsis {
-    position: relative;
-    display: block;
-    padding: 10px 16px;
-    margin-left: -1px;
-    color: #555;
-    background-color: #fff;
-    border: 1px solid #eee;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.page-ellipsis {
-    padding: 10px 12px;
-    color: #aaa;
-    pointer-events: none;
-    cursor: default;
-}
-
-.page-item:first-child .page-link {
-    margin-left: 0;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-}
-
-.page-item:last-child .page-link {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
-
-.page-item .page-link:hover {
-    z-index: 2;
-    color: #f26f21;
-    background-color: #f5f7fa;
-    border-color: #ddd;
-}
-
-.page-item.active .page-link {
-    z-index: 3;
-    cursor: default;
-    color: #fff;
-    background: linear-gradient(45deg, #f26f21, #ff8c42);
-    border-color: #f26f21;
-    box-shadow: 0 4px 10px rgba(242, 111, 33, 0.3);
-}
-
-.page-item.disabled .page-link {
-    color: #aaa;
-    pointer-events: none;
-    cursor: not-allowed;
-    background-color: #f9f9f9;
-    border-color: #eee;
-}
-
-/* === AUTOCOMPLETE STYLES === */
-.autocomplete-container {
-    position: relative;
-}
-
-.autocomplete-items {
-    position: absolute;
-    border: 1px solid #ced4da; /* Match your form-control border */
-    border-top: none;
-    z-index: 99;
-    top: 100%;
-    left: 0;
-    right: 0;
-    max-height: 150px;
-    overflow-y: auto;
-    background-color: #ffffff;
-}
-
-.autocomplete-items div {
-    padding: 10px;
-    cursor: pointer;
-    border-bottom: 1px solid #dee2e6; /* Lighter border for items */
-}
-
-.autocomplete-items div:last-child {
-    border-bottom: none;
-}
-
-.autocomplete-items div:hover {
-    background-color: #e9ecef; /* A nice hover effect */
-}
-
-/* === TOAST NOTIFICATION STYLES === */
 #toast {
     background-color: rgba(46, 204, 113, 0.1);
     color: #2ecc71;
@@ -1524,39 +1418,148 @@ textarea.form-control {
     }
 }
 
-.shipper-details-block {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-    background-color: #f9f9f9;
-    border: 1px solid #eee;
-    border-radius: 10px;
-    padding: 20px;
-}
-
-.shipper-avatar-container {
-    flex-shrink: 0;
-}
-
-.shipper-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #f26f21;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.shipper-text-details {
-    flex-grow: 1;
-}
-
-.shipper-text-details .details-grid {
-    gap: 15px;
-}
-
-.shipper-text-details .detail-label {
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 13px;
     font-weight: 600;
+    color: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.status-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+/* Pending */
+.status-pending {
+    background-color: #f0ad4e; /* Cam */
+}
+
+/* Approved */
+.status-approved {
+    background-color: #5bc0de; /* Xanh dương nhạt */
+}
+
+/* Rejected */
+.status-rejected {
+    background-color: #d9534f; /* Đỏ */
+}
+
+/* Completed */
+.status-completed {
+    background-color: #5cb85c; /* Xanh lá */
+}
+
+.custom-file-label {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.custom-file-label:hover {
+    background-color: #e1e1e1;
+}
+
+/* Lightbox hiển thị ảnh khi click */
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.2s ease-in-out;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.lightbox img {
+    max-width: 80vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.lightbox img:hover {
+    transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.main-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    min-height: 400px;
+    background-color: #f8f8f8;
+    animation: fadeInReal 0.5s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInReal {
+    to {
+        opacity: 1;
+    }
+}
+
+.btn-upload {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    background-color: #f1f1f1;
+    color: #333;
+    font-weight: 500;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    width:7%;
+}
+
+.btn-upload:hover {
+    background-color: #e1e1e1;
+    border-color: #bbb;
+}
+
+
+.preview-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    cursor: pointer;
+}
+
+.form-proof {
+    display: block ;
+    align-items: flex-start; /* Căn trái */
+    gap: 10px;
+    flex-wrap: wrap; /* Nếu màn nhỏ thì tự xuống dòng */
 }
 
 

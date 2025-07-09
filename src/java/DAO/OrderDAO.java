@@ -921,7 +921,7 @@ public class OrderDAO {
         }
         return false;
     }
-    
+
     public boolean updateDeliveredOrder(int orderId) {
         DBContext db = new DBContext();
         try {
@@ -1005,7 +1005,6 @@ public class OrderDAO {
             int param = 1;
             if (startDate != null) {
                 ps.setDate(param++, startDate);
-
             }
             if (endDate != null) {
                 ps.setDate(param++, endDate);
@@ -1015,28 +1014,65 @@ public class OrderDAO {
                 total = rs.getInt("totalOrdersFulfilled");
             }
         } catch (Exception ex) {
-            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {
                     rs.close();
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
             }
             try {
                 if (ps != null) {
                     ps.close();
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
             }
         }
         return total;
+    }
+
+    public Double getDiscountAmountAtApply(int orderId) {
+        Double discount = null;
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT discountAmountAtApply FROM OrderTB WHERE orderId = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                discount = rs.getDouble("discountAmountAtApply");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        
+        return discount;
     }
 
     public int countPendingShipper(int accId) {
@@ -1093,7 +1129,7 @@ public class OrderDAO {
         return count;
     }
 
-    public boolean checkPenndingShippingShipper(int shipperId) {
+     public boolean checkPenndingShippingShipper(int shipperId) {
         DBContext db = new DBContext();
         try {
             conn = db.getConnection();

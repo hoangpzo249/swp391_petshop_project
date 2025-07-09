@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/shipper_account_page.jsp</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/DAO/OrderDAO.java</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/shipper_orderDelivered_page.jsp</file>
@@ -11,6 +12,43 @@
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Controllers/Shipper_Panel_Servlet.java</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Models/Order.java</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Utils/EmailSender.java</file>
+=======
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/ListShopPetServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/main_typepet.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/import_discount.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/ImportDiscountServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/manager_discount_view.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/update_failed_discount.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/AddToCartServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/AddDiscountServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/adddiscount.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/RetryAddDiscountServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/UpdateDiscountServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/css/manager_panel_page.css</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/css/seller_panel_page.css</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Models/Discount.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/js/discount_fixed.js</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/js/retry_discount_fixed.js</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/DowloadFailedServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/update_discount.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/seller_pet_view.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/seller_order_view.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/manager_breed_view.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/AddRefundServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Models/Refund.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/DAO/OrderDAO.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/DAO/RefundDAO.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/add_refund.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/refund_view.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/DisplayAllRefundServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/UpdateRefundSellerServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/update_refund_seller.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/UpdateRefundManagerServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Utils/EmailSender.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/update_refund_manager.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/js/refund.js</file>
+>>>>>>> nam
         </group>
     </open-files>
 </project-private>

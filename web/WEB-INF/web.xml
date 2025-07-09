@@ -192,6 +192,38 @@
         <servlet-name>Shipper_Panel_Servlet</servlet-name>
         <servlet-class>Controllers.Shipper_Panel_Servlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DisplayAllRefundServlet</servlet-name>
+        <servlet-class>Controllers.DisplayAllRefundServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ImportDiscountServlet</servlet-name>
+        <servlet-class>Controllers.ImportDiscountServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RetryAddDiscountServlet</servlet-name>
+        <servlet-class>Controllers.RetryAddDiscountServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DowloadFailedServlet</servlet-name>
+        <servlet-class>Controllers.DowloadFailedServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddRefundServlet</servlet-name>
+        <servlet-class>Controllers.AddRefundServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateRefundSellerServlet</servlet-name>
+        <servlet-class>Controllers.UpdateRefundSellerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateRefundManagerServlet</servlet-name>
+        <servlet-class>Controllers.UpdateRefundManagerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewRefundServlet</servlet-name>
+        <servlet-class>Controllers.ViewRefundServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -383,6 +415,38 @@
     <servlet-mapping>
         <servlet-name>Shipper_Panel_Servlet</servlet-name>
         <url-pattern>/shipper_panel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DisplayAllRefundServlet</servlet-name>
+        <url-pattern>/displayrefund</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportDiscountServlet</servlet-name>
+        <url-pattern>/importdiscount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RetryAddDiscountServlet</servlet-name>
+        <url-pattern>/retryadddiscount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DowloadFailedServlet</servlet-name>
+        <url-pattern>/downloadfailed</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddRefundServlet</servlet-name>
+        <url-pattern>/addrefund</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateRefundSellerServlet</servlet-name>
+        <url-pattern>/updaterefundseller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateRefundManagerServlet</servlet-name>
+        <url-pattern>/updaterefundmanager</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewRefundServlet</servlet-name>
+        <url-pattern>/viewrefund</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>
