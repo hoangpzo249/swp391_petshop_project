@@ -9,6 +9,7 @@ import DAO.ShipperDAO;
 import Models.Account;
 import Models.Order;
 import Models.Shipper;
+import Utils.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -79,10 +80,12 @@ public class Shipper_Panel_Servlet extends HttpServlet {
         int deliveredCount = oDao.countPendingShipperDelivered(acc.getAccId());
         request.setAttribute("deliveredCount", deliveredCount);
 
-        if ("pickup".equals(action) & id != null) {
-            Order orderDetail = oDao.getOrderDetailShipperId(acc.getAccId());
-            List<Order> orderListDetail = oDao.getOrderDetailProductShipperId(acc.getAccId());
-            
+        if ("view".equals(action) & id != null) {
+            int idOrder = Integer.parseInt(id);
+
+            Order orderDetail = oDao.getOrderDetailShipperId(acc.getAccId(), idOrder);
+            List<Order> orderListDetail = oDao.getOrderDetailProductShipperId(acc.getAccId(), idOrder);
+
             request.setAttribute("orderDetail", orderDetail);
             request.setAttribute("orderListDetail", orderListDetail);
             request.getRequestDispatcher("shipper_orderPickup_page.jsp").forward(request, response);
@@ -116,6 +119,8 @@ public class Shipper_Panel_Servlet extends HttpServlet {
         OrderDAO oDao = new OrderDAO();
 
         String action = request.getParameter("action");
+        String id = request.getParameter("id");
+
         if ("status".equals(action)) {
             String statusCheckbox = request.getParameter("statusCheckbox");
             String newStatus;
@@ -148,6 +153,37 @@ public class Shipper_Panel_Servlet extends HttpServlet {
             request.setAttribute("orderList", orderList);
             String url = "shipper_panel?action=status";
             response.sendRedirect(url);
+        } else if ("view".equals(action) && id != null) {
+            int orderId = Integer.parseInt(id);
+            Order orderDetail = oDao.getOrderDetailShipperId(acc.getAccId(), orderId);
+            List<Order> orderListDetail = oDao.getOrderDetailProductShipperId(acc.getAccId(), orderId);
+
+            String checkboxInfo = request.getParameter("confirmInfo");
+
+            if (checkboxInfo == null || checkboxInfo.trim().isEmpty()) {
+                session.setAttribute("errorMessage", "Bạn cần xác nhận thông tin trước khi nhận đơn");
+                request.setAttribute("orderDetail", orderDetail);
+                request.setAttribute("orderListDetail", orderListDetail);
+                String url = "shipper_panel?action=view&id=" + orderId;
+                response.sendRedirect(url);
+                return;
+                
+            } else {
+                boolean updatePickupOrder = oDao.updatePickupOrder(orderId);
+                if (updatePickupOrder) {
+                    EmailSender.sendShippingOrderByShipper(orderDetail.getCustomerEmail(), orderId);
+                    session.setAttribute("successMessage", "Nhận đơn thành công");
+                    request.setAttribute("orderDetail", orderDetail);
+                    request.setAttribute("orderListDetail", orderListDetail);
+                } else {
+                    session.setAttribute("errorMessage", "Nhận đơn không thành công");
+                    request.setAttribute("orderDetail", orderDetail);
+                    request.setAttribute("orderListDetail", orderListDetail);
+                }
+                String url = "shipper_panel?action=view&id=" + orderId;
+                response.sendRedirect(url);
+            }
+
         } else {
             request.getRequestDispatcher("shipper_account_page.jsp").forward(request, response);
 

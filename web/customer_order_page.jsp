@@ -170,16 +170,13 @@
 
                 <div class="orders-content">
                     <div class="order-tabs">
-<!--                        <a href="orders?status=all" class="${empty param.status || param.status eq 'all' ? 'active' : ''}">
-                            <i class="fas fa-list-ul"></i> Tất cả
-                        </a>-->
                         <a href="orders?status=Pending" class="${status eq 'Pending' ? 'active' : ''}">
                             <i class="fas fa-clock"></i> Chờ xác nhận
                         </a>
                         <a href="orders?status=Confirmed" class="${status eq 'Confirmed' ? 'active' : ''}">
                             <i class="fas fa-check"></i> Đã xác nhận
                         </a>
-                        <a href="orders?status=PendingShipper" class="${status eq 'PendingShipper' ? 'active' : ''}">
+                        <a href="orders?status=Pending%20Shipper" class="${status eq 'Pending Shipper' ? 'active' : ''}">
                             <i class="fas fa-user-clock"></i> Chờ shipper nhận
                         </a>
                         <a href="orders?status=Shipping" class="${status eq 'Shipping' ? 'active' : ''}">
@@ -235,6 +232,11 @@
                                                 <i class="fas fa-check"></i>Đã xác nhận
                                             </div>
                                         </c:when>
+                                        <c:when test="${order.orderStatus eq 'Pending Shipper'}">
+                                            <div class="order-status confirmed">
+                                                <i class="fas fa-truck-loading"></i>Chờ Shipper nhận
+                                            </div>
+                                        </c:when>
                                         <c:when test="${order.orderStatus eq 'Shipping'}">
                                             <div class="order-status shipping">
                                                 <i class="fas fa-shipping-fast"></i>Đang giao
@@ -250,18 +252,32 @@
 
 
                                 <div class="order-products">
-                                    <div class="order-product">
-                                        <div class="product-image">
-                                            <img src="images/pets/defaultcatdog.jpg" alt="Golden Retriever">
-                                        </div>
-                                        <div class="product-details">
-                                            <h4 class="product-name">${order.petName}</h4>
-                                            <!--<p class="product-price">${order.totalPrice} VNĐ</p>-->
-                                            <div class="product-price">
-                                                <fmt:formatNumber  value="${order.totalPrice}" pattern="#,##0" /> VNĐ
+
+                                    <c:forEach items="${orderPet}" var="pet">
+                                        <c:if test="${pet.orderId == order.orderId}">
+                                            <div class="order-product">
+                                                <div class="product-image">
+                                                    <c:choose>
+                                                        <c:when test="${pet.getImage() != null}">
+                                                            <img src="${pet.getImage()}" alt="${pet.getImage()}">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <img src="images/defaultcatdog.png" alt=""/>
+                                                        </c:otherwise>
+                                                    </c:choose>
+
+                                                </div>
+                                                <div class="product-details">
+                                                    <h4 class="product-name">${pet.petName}</h4>
+                                                    <p style="font-size: 12px; font-style: italic">Màu: ${pet.petColor}</p>
+                                                    <div class="product-price">
+                                                        <fmt:formatNumber  value="${pet.petPrice}" pattern="#,###" /> VNĐ
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
+                                        </c:if>
+                                    </c:forEach>
+
                                 </div>
                                 <div class="order-details">
                                     <div class="shipping-info">
@@ -297,7 +313,13 @@
                                                 </c:when>
                                             </c:choose>
                                         </p>
-                                        <p class="total-price"><span class="label">Tổng tiền:</span> <span class="value"><fmt:formatNumber  value="${order.totalPrice}" pattern="#,##0" /> VNĐ</span></p>
+                                        <p>
+                                            <span class="label">Giảm giá:</span>
+                                            <span class="value">
+                                                - <fmt:formatNumber value="${order.discountAmountAtApply}" pattern="#,###" /> VNĐ
+                                            </span>
+                                        </p>
+                                        <p class="total-price"><span class="label">Tổng tiền:</span> <span class="value"><fmt:formatNumber  value="${order.totalPrice - order.discountAmountAtApply}" pattern="#,###" /> VNĐ</span></p>
                                     </div>
                                 </div>
 
@@ -318,6 +340,8 @@
                                             </div>
                                         </c:when>
                                         <c:when test="${order.orderStatus eq 'Confirmed'}">
+                                        </c:when>
+                                        <c:when test="${order.orderStatus eq 'Pending Shipper'}">
                                         </c:when>
                                         <c:when test="${order.orderStatus eq 'Shipping'}">
                                         </c:when>

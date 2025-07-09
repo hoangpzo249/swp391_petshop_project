@@ -70,11 +70,13 @@ public class Customer_Order_Servlet extends HttpServlet {
 //        System.err.println(accId);
         OrderDAO odao = new OrderDAO();
         if (status != null && keyword != null && !keyword.trim().isEmpty()) {
-
             try {
                 int key = Integer.parseInt(keyword);
                 List<Order> orderList = odao.getOrderCusSearch(accId, status, key);
+                List<Order> orderPet = odao.getOrderCusPet(accId, status);
+
                 request.setAttribute("orderList", orderList);
+                request.setAttribute("orderPet", orderPet);
                 request.setAttribute("keyword", keyword);
                 request.setAttribute("status", status);
                 request.getRequestDispatcher("customer_order_page.jsp").forward(request, response);
@@ -89,7 +91,12 @@ public class Customer_Order_Servlet extends HttpServlet {
             request.getRequestDispatcher("customer_orderDetail_page.jsp").forward(request, response);
         } else {
             List<Order> orderList = odao.getOrderCus(accId, status);
+
+            List<Order> orderPet = odao.getOrderCusPet(accId, status);
+
             request.setAttribute("orderList", orderList);
+            request.setAttribute("orderPet", orderPet);
+
             request.setAttribute("status", status);
             request.getRequestDispatcher("customer_order_page.jsp").forward(request, response);
         }

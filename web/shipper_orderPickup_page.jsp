@@ -209,26 +209,27 @@
                             <div class="order-detail-section">
                                 <h3 class="section-title"><i class="fas fa-box"></i> Danh sách sản phẩm</h3>
                                 <div class="order-items">
+
                                     <c:forEach items="${orderListDetail}" var="order">
-                                        <div class="order-item">
-                                            <div class="item-image">
-                                                <img src="${order.getImage()}" alt="${order.getImage()}">
-                                            </div>
-                                            <div class="item-details">
-                                                <div class="item-name">${order.petName}</div>
-                                                <div class="item-options">
-                                                    <c:if test="${not empty order.petColor}">
+                                        <c:if test="${order.orderId == orderDetail.orderId}">
+                                            <div class="order-item">
+                                                <div class="item-image">
+                                                    <img src="${order.getImage()}" alt="${order.getImage()}">
+                                                </div>
+                                                <div class="item-details">
+                                                    <div class="item-name">${order.petName}</div>
+                                                    <div class="item-options">
                                                         <span class="item-option">Màu: ${order.petColor}</span>
-                                                    </c:if>
+                                                    </div>
+                                                    <div class="item-price-qty">
+                                                        <span class="item-price"><fmt:formatNumber value="${order.petPrice}" pattern="#,###" /> ₫</span>
+                                                    </div>
                                                 </div>
-                                                <div class="item-price-qty">
-                                                    <span class="item-price"><fmt:formatNumber value="${order.petPrice}" pattern="#,###" /> ₫</span>
+                                                <div class="item-total">
+                                                    <span><fmt:formatNumber value="${order.petPrice}" pattern="#,###" /> ₫</span>
                                                 </div>
                                             </div>
-                                            <div class="item-total">
-                                                <span><fmt:formatNumber value="${order.petPrice}" pattern="#,###" /> ₫</span>
-                                            </div>
-                                        </div>
+                                        </c:if>
                                     </c:forEach>
                                 </div>
                                 <div class="order-summary">
@@ -268,23 +269,60 @@
                                 </div>
                             </div>
                         </div>
+                        <c:choose>
+                            <c:when test="${orderDetail.orderStatus eq 'Pending Shipper'}">
+                                <div class="shipper-note-section">
+                                    <form action="shipper_panel" method="post">
+                                        <input type="hidden" name="action" value="view">
+                                        <input type="hidden" name="id" value="${orderDetail.orderId}">
 
-                        <!-- Shipper Note Section -->
-                        <div class="shipper-note-section">
-                            <form action="shipper_panel" method="post">
-                                <input type="hidden" name="action" value="confirm-pickup">
-                                <input type="hidden" name="orderId" value="${order.orderId}">
+                                        <div class="confirm-checkbox">
+                                            <input type="checkbox" name="confirmInfo">
+                                            <label>
+                                                Tôi xác nhận đã kiểm tra thông tin giao hàng và sẵn sàng nhận đơn.
+                                            </label>
+                                        </div>
 
-                                <div class="pickup-actions">
-                                    <a href="shipper_panel?action=all" class="btn btn-outline">
-                                        <i class="fas fa-arrow-left"></i> Quay lại
-                                    </a>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-truck-loading"></i> Xác nhận nhận đơn
-                                    </button>
+                                        <div class="pickup-actions">
+                                            <a href="shipper_panel?action=all" class="btn btn-outline">
+                                                <i class="fas fa-arrow-left"></i> Quay lại
+                                            </a>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-truck-loading"></i> Xác nhận nhận đơn
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
-                        </div>
+                            </c:when>
+                            <c:when test="${orderDetail.orderStatus eq 'Shipping'}">
+                                <div class="shipper-note-section">
+                                    <form action="shipper_panel" method="post">
+                                        <input type="hidden" name="action" value="view">
+                                        <input type="hidden" name="orderId" value="${orderDetail.orderId}">
+
+                                        <div class="confirm-checkbox">
+                                            <input type="checkbox" name="confirmDelivered">
+                                            <label>
+                                                Tôi xác nhận đã giao hàng thành công.
+                                            </label>
+                                        </div>
+
+                                        <div class="pickup-actions">
+                                            <a href="shipper_panel?action=all" class="btn btn-outline">
+                                                <i class="fas fa-arrow-left"></i> Quay lại
+                                            </a>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-check"></i> Xác nhận đã giao
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+
+                            </c:otherwise>
+                        </c:choose>
+
                     </div>
                 </div>
             </div>
