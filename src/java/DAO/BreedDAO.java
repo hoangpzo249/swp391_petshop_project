@@ -817,4 +817,23 @@ public class BreedDAO {
         return null;
     }
 
+    public String getBreedPrompt() {
+        DBContext db = new DBContext();
+        StringBuilder prompt = new StringBuilder();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT breedId, breedName FROM BreedTB WHERE breedStatus=1";
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                String breed = rs.getString("breedName") + " (ID: " + rs.getInt("breedId") + ")<br>\n";
+                prompt.append(breed);
+            }
+            return prompt.toString();
+        } catch (Exception ex) {
+            Logger.getLogger(BreedDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "No breeds available right now!";
+    }
+
 }

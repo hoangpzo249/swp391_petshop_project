@@ -33,19 +33,11 @@ public class TestPet {
     static InvoiceDAO _daoinvoice = new InvoiceDAO();
 
     public static void main(String[] args) {
-//        for (Breed breed : topBreed()) {
-//            System.out.println(breed.getBreedId() + " - " + breed.getBreedName() + " - " + breed.getTotalPurchases() + " - " + breed.getTotalRevenue());
-//        }
-
-        for (Revenue i : revenueDate()) {
-            System.out.println(i.getDate() + " - " + i.getTotalRevenue() + " D");
-        }
-        for (Revenue i : revenueWeek()) {
-            System.out.println(i.getDate() + " - " + i.getTotalRevenue() + " W");
-        }
-        for (Revenue i : revenueMonth()) {
-            System.out.println(i.getDate() + " - " + i.getTotalRevenue() + " M");
-        }
+        System.out.println(breedPrompt());
+    }
+    
+    private static String breedPrompt() {
+        return _daobreed.getBreedPrompt();
     }
 
     private static List<Revenue> revenueMonth() {

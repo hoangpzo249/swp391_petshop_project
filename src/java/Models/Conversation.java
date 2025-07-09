@@ -12,66 +12,31 @@ import java.time.LocalDateTime;
  */
 public class Conversation {
 
-    private Integer convoId;
-    private Integer accId;
-    private LocalDateTime convoStartDate;
-    private LocalDateTime convoEndDate;
-    private String convoStatus;
+    String text;
+    String sender;
 
     public Conversation() {
     }
 
-    public Conversation(Integer convoId, Integer accId, LocalDateTime convoStartDate, LocalDateTime convoEndDate, String convoStatus) {
-        this.convoId = convoId;
-        this.accId = accId;
-        this.convoStartDate = convoStartDate;
-        this.convoEndDate = convoEndDate;
-        this.convoStatus = convoStatus;
+    public Conversation(String text, String sender) {
+        this.text = text;
+        this.sender = sender;
     }
 
-    public Integer getConvoId() {
-        return convoId;
+    public String getText() {
+        return text;
     }
 
-    public void setConvoId(Integer convoId) {
-        this.convoId = convoId;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public Integer getAccId() {
-        return accId;
+    public String getSender() {
+        return sender;
     }
 
-    public void setAccId(Integer accId) {
-        this.accId = accId;
-    }
-
-    public LocalDateTime getConvoStartDate() {
-        return convoStartDate;
-    }
-
-    public void setConvoStartDate(LocalDateTime convoStartDate) {
-        this.convoStartDate = convoStartDate;
-    }
-
-    public LocalDateTime getConvoEndDate() {
-        return convoEndDate;
-    }
-
-    public void setConvoEndDate(LocalDateTime convoEndDate) {
-        this.convoEndDate = convoEndDate;
-    }
-
-    public String getConvoStatus() {
-        return convoStatus;
-    }
-
-    public void setConvoStatus(String convoStatus) {
-        this.convoStatus = convoStatus;
-    }
-
-    @Override
-    public String toString() {
-        return "Conversation{" + "convoId=" + convoId + ", accId=" + accId + ", convoStartDate=" + convoStartDate + ", convoEndDate=" + convoEndDate + ", convoStatus=" + convoStatus + '}';
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
 }
