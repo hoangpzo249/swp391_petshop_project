@@ -20,6 +20,18 @@
             <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/js/discount_fixed.js</file>
             <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/js/retry_discount_fixed.js</file>
             <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/DowloadFailedServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/update_discount.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/seller_pet_view.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/seller_order_view.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/manager_breed_view.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/AddRefundServlet.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Models/Refund.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/DAO/OrderDAO.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/DAO/RefundDAO.java</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/add_refund.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/web/refund_view.jsp</file>
+            <file>file:/C:/Users/ADMIN/Desktop/swp391_petshop_project/src/java/Controllers/DisplayAllRefundServlet.java</file>
         </group>
     </open-files>
 </project-private>

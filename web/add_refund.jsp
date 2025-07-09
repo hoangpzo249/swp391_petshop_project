@@ -13,7 +13,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Gửi Yêu Cầu Hoàn Tiền - PETFPT Shop</title>
-        <link href="css/seller_panel_page.css?v=11" rel="stylesheet" type="text/css"/>
+        <link href="css/seller_panel_page.css?v=12" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <script src="js/refund.js"></script>
@@ -121,18 +121,20 @@
 
                                 <div class="form-group">
                                     <label for="refundReasonDescription">Lý do hoàn tiền</label>
-                                    <textarea id="refundReasonDescription" name="refundReasonDescription" class="form-control" rows="4"required style="height: 168px;">${refundReasonDescription}</textarea>
+                                    <textarea id="refundReasonDescription" name="refundReasonDescription" class="form-control" rows="4"required>${refundReasonDescription}</textarea>
                                 </div>
 
                                 <div class="form-group form-proof">
                                     <label class="proof-label" for="proofImage">Hình ảnh bằng chứng</label>
                                     <input type="file" id="proofImage" name="proofImage" class="hidden-file-input" accept="image/*" />
-                                    <label for="proofImage" class="btn-upload">Chọn tệp</label>
+                                    <label for="proofImage" class="btn-upload">Chọn tệp</label><br/>
 
-                                    <c:if test="${not empty sessionScope.preview}">
-                                        <img id="previewImage" src="data:image/jpeg;base64,${sessionScope.preview}" class="preview-image" onclick="showImage(this.src)" />
-                                    </c:if>
-                                    <img id="previewImage" src="" class="preview-image" style="display: none" onclick="showImage(this.src)" />
+                                    <div class="preview">
+                                        <c:if test="${not empty sessionScope.preview}">
+                                            <img id="previewImage" src="data:image/jpeg;base64,${sessionScope.preview}" class="preview-image" onclick="showImage(this.src)" />
+                                        </c:if>
+                                        <img id="previewImage" src="" class="preview-image" style="display: none" onclick="showImage(this.src)" />
+                                    </div>
                                 </div>
 
 

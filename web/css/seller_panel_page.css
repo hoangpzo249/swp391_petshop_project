@@ -783,7 +783,7 @@ tbody tr:hover {
 
 textarea.form-control {
     resize: vertical;
-    min-height: 80px;
+    height: 203px;
 }
 
 /* Alert notification */
@@ -1532,8 +1532,12 @@ textarea.form-control {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .main-image {
@@ -1567,6 +1571,7 @@ textarea.form-control {
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
+    width:7%;
 }
 
 .btn-upload:hover {
@@ -1585,8 +1590,8 @@ textarea.form-control {
 }
 
 .form-proof {
-    display: flex;
-    align-items: center;
+    display: block ;
+    align-items: flex-start; /* Căn trái */
     gap: 10px;
     flex-wrap: wrap; /* Nếu màn nhỏ thì tự xuống dòng */
 }

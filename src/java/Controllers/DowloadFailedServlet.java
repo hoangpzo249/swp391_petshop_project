@@ -71,14 +71,14 @@ public class DowloadFailedServlet extends HttpServlet {
 
         List<Discount> failedDiscounts = (List<Discount>) request.getSession().getAttribute("failedDiscounts");
         if (failedDiscounts == null || failedDiscounts.isEmpty()) {
-            response.sendRedirect("update_failed_discount.jsp");
+            response.sendRedirect("retryadddiscount");
             return;
         }
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=failed_discounts.xlsx");
 
-        try (Workbook workbook = new XSSFWorkbook()) {
+        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Failed Discounts");
 
             Font headerFont = workbook.createFont();
