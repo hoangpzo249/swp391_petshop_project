@@ -720,6 +720,62 @@ public class OrderDAO {
         }
         return list;
     }
+    
+    public List<Order> getOrderShipperIdByStatus(int accId, String status) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DBContext db = new DBContext();
+        List<Order> list = new ArrayList<>();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
+                    + "                    o.customerAddress, o.shipperId\n"
+                    + "                    from ordertb o\n"
+                    + "                  \n"
+                    + "                    where shipperId = ? and o.orderstatus=?";
+
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, accId);
+            ps.setString(2, status);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Order o = new Order();
+                o.setOrderId(rs.getInt("orderId"));
+                o.setAccId(rs.getInt("accId"));
+                o.setOrderDate(rs.getTimestamp("orderDate"));
+                o.setDeliveryDate(rs.getTimestamp("deliveryDate"));
+                o.setOrderStatus(rs.getString("orderStatus"));
+                o.setCustomerName(rs.getString("customerName"));
+                o.setCustomerEmail(rs.getString("customerEmail"));
+                o.setCustomerPhone(rs.getString("customerPhone"));
+                o.setCustomerAddress(rs.getString("customerAddress"));
+                list.add(o);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+        return list;
+    }
 
     public List<Order> getOrderDetailProductShipperId(int shipperId, int orderId) {
         Connection conn = null;

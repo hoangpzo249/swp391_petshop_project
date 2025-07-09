@@ -89,6 +89,11 @@ public class Shipper_Panel_Servlet extends HttpServlet {
             request.setAttribute("orderDetail", orderDetail);
             request.setAttribute("orderListDetail", orderListDetail);
             request.getRequestDispatcher("shipper_orderDetail_page.jsp").forward(request, response);
+        } else if (action != null) {
+            List<Order> orderList = oDao.getOrderShipperIdByStatus(acc.getAccId(), action);
+            request.setAttribute("orderList", orderList);
+            request.setAttribute("action", action);
+            request.getRequestDispatcher("shipper_orderManage_page.jsp").forward(request, response);
 
         } else if ("pickup-order".equals(action) && id != null) {
             int idOrder = Integer.parseInt(id);

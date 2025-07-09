@@ -80,7 +80,7 @@
 
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý đơn hàng</h5>
-                        <a href="shipper_panel?action=pending" class="sidebar-link active">
+                        <a href="shipper_panel?action=Pending%20Shipper" class="sidebar-link ${action eq 'Pending Shipper' ? 'active' : ''}">
                             <i class="fas fa-clipboard-list"></i> Đơn hàng cần giao
                             <c:choose>
                                 <c:when test="${pendingCount eq 0}">
@@ -91,7 +91,7 @@
                                 </c:otherwise>
                             </c:choose>
                         </a>
-                        <a href="shipper_panel?action=delivering" class="sidebar-link">
+                        <a href="shipper_panel?action=Shipping" class="sidebar-link ${action eq 'Shipping' ? 'active' : ''}">
                             <i class="fas fa-truck"></i> Đang giao hàng
                             <c:choose>
                                 <c:when test="${shippingCount eq 0}">
@@ -101,7 +101,7 @@
                                 </c:otherwise>
                             </c:choose>
                         </a>
-                        <a href="shipper_panel?action=completed" class="sidebar-link">
+                        <a href="shipper_panel?action=Delivered" class="sidebar-link ${action eq 'Delivered' ? 'active' : ''}">
                             <i class="fas fa-check-circle"></i> Đã giao hàng
                         </a>
                     </div>
@@ -111,7 +111,7 @@
                         <a href="profile" class="sidebar-link">
                             <i class="fas fa-user-circle"></i> Thông tin cá nhân
                         </a>
-                        <a href="change-password" class="sidebar-link">
+                        <a href="profile?action=change-password" class="sidebar-link">
                             <i class="fas fa-key"></i> Đổi mật khẩu
                         </a>
                         <a href="logout" class="sidebar-link">
