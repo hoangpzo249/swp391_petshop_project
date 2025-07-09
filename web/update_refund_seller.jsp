@@ -146,7 +146,7 @@
                                 </div>
 
                                 <div class="form-group form-proof">
-                                    <label class="proof-label" for="proofImage">Hình ảnh bằng chứng đã thanh toán</label>
+                                    <label class="proof-label" for="proofImage">Hình ảnh chứng minh đã thanh toán</label>
                                     <input type="file" id="proofImage" name="proofImage" class="hidden-file-input" accept="image/*" />
                                     <label for="proofImage" class="btn-upload">Chọn tệp</label><br/>
                                     <c:choose>

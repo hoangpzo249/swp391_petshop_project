@@ -145,7 +145,7 @@
                                     <textarea id="refundReasonDescription" name="refundReasonDescription" class="form-control" rows="4" required style="height: 90px" readonly>${refundReasonDescription != null ? refundReasonDescription : refund.refundReasonDescription }</textarea>
                                 </div>  
                                 <div class="form-group">
-                                    <label for="proofImage">Hình ảnh bằng chứng đã thanh toán</label>
+                                    <label for="proofImage">Hình ảnh chứng minh đã thanh toán</label>
                                     <c:if test="${not empty sessionScope.previousImage}">
                                         <img id="previewImage" src="data:image/jpeg;base64,${sessionScope.previousImage}"  width="120" height="90px"  onclick="showImage(this.src)"/>
                                     </c:if>

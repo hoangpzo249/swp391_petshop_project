@@ -155,7 +155,7 @@ public class AddRefundServlet extends HttpServlet {
             }
 
             if (imageBytes == null) {
-                request.setAttribute("errMess", "Vui lòng tải lên hình ảnh bằng chứng.");
+                request.setAttribute("errMess", "Vui lòng tải lên hình ảnh chứng minh đã thanh toán.");
                 request.getRequestDispatcher("add_refund.jsp").forward(request, response);
                 return;
             }
