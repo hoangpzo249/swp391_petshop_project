@@ -80,7 +80,17 @@ public class Shipper_Panel_Servlet extends HttpServlet {
         int deliveredCount = oDao.countPendingShipperDelivered(acc.getAccId());
         request.setAttribute("deliveredCount", deliveredCount);
 
-        if ("view".equals(action) & id != null) {
+        if ("view".equals(action) && id != null) {
+            int idOrder = Integer.parseInt(id);
+
+            Order orderDetail = oDao.getOrderDetailShipperId(acc.getAccId(), idOrder);
+            List<Order> orderListDetail = oDao.getOrderDetailProductShipperId(acc.getAccId(), idOrder);
+
+            request.setAttribute("orderDetail", orderDetail);
+            request.setAttribute("orderListDetail", orderListDetail);
+            request.getRequestDispatcher("shipper_orderDetail_page.jsp").forward(request, response);
+
+        } else if ("pickup-order".equals(action) && id != null) {
             int idOrder = Integer.parseInt(id);
 
             Order orderDetail = oDao.getOrderDetailShipperId(acc.getAccId(), idOrder);
@@ -89,7 +99,15 @@ public class Shipper_Panel_Servlet extends HttpServlet {
             request.setAttribute("orderDetail", orderDetail);
             request.setAttribute("orderListDetail", orderListDetail);
             request.getRequestDispatcher("shipper_orderPickup_page.jsp").forward(request, response);
+        } else if ("delivered-order".equals(action) && id != null) {
+            int idOrder = Integer.parseInt(id);
 
+            Order orderDetail = oDao.getOrderDetailShipperId(acc.getAccId(), idOrder);
+            List<Order> orderListDetail = oDao.getOrderDetailProductShipperId(acc.getAccId(), idOrder);
+
+            request.setAttribute("orderDetail", orderDetail);
+            request.setAttribute("orderListDetail", orderListDetail);
+            request.getRequestDispatcher("shipper_orderDelivered_page.jsp").forward(request, response);
         } else {
             ShipperDAO shipDao = new ShipperDAO();
             Shipper shipper = shipDao.getShipperById(acc.getAccId());
@@ -153,7 +171,7 @@ public class Shipper_Panel_Servlet extends HttpServlet {
             request.setAttribute("orderList", orderList);
             String url = "shipper_panel?action=status";
             response.sendRedirect(url);
-        } else if ("view".equals(action) && id != null) {
+        } else if ("pickup-order".equals(action) && id != null) {
             int orderId = Integer.parseInt(id);
             Order orderDetail = oDao.getOrderDetailShipperId(acc.getAccId(), orderId);
             List<Order> orderListDetail = oDao.getOrderDetailProductShipperId(acc.getAccId(), orderId);
@@ -164,10 +182,10 @@ public class Shipper_Panel_Servlet extends HttpServlet {
                 session.setAttribute("errorMessage", "Bạn cần xác nhận thông tin trước khi nhận đơn");
                 request.setAttribute("orderDetail", orderDetail);
                 request.setAttribute("orderListDetail", orderListDetail);
-                String url = "shipper_panel?action=view&id=" + orderId;
+                String url = "shipper_panel?action=pickup-order&id=" + orderId;
                 response.sendRedirect(url);
                 return;
-                
+
             } else {
                 boolean updatePickupOrder = oDao.updatePickupOrder(orderId);
                 if (updatePickupOrder) {
@@ -183,7 +201,36 @@ public class Shipper_Panel_Servlet extends HttpServlet {
                 String url = "shipper_panel?action=view&id=" + orderId;
                 response.sendRedirect(url);
             }
+        } else if ("delivered-order".equals(action) && id != null) {
+            int orderId = Integer.parseInt(id);
+            Order orderDetail = oDao.getOrderDetailShipperId(acc.getAccId(), orderId);
+            List<Order> orderListDetail = oDao.getOrderDetailProductShipperId(acc.getAccId(), orderId);
 
+            String checkboxInfo = request.getParameter("confirmInfo");
+
+            if (checkboxInfo == null || checkboxInfo.trim().isEmpty()) {
+                session.setAttribute("errorMessage", "Bạn cần xác nhận thông tin trước khi xác nhận giao đơn");
+                request.setAttribute("orderDetail", orderDetail);
+                request.setAttribute("orderListDetail", orderListDetail);
+                String url = "shipper_panel?action=delivered-order&id=" + orderId;
+                response.sendRedirect(url);
+                return;
+
+            } else {
+                boolean updateDeliveredOrder = oDao.updateDeliveredOrder(orderId);
+                if (updateDeliveredOrder) {
+                    EmailSender.sendDeliveredOrderByShipper(orderDetail.getCustomerEmail(), orderId);
+                    session.setAttribute("successMessage", "Xác nhận giao đơn hàng thành công");
+                    request.setAttribute("orderDetail", orderDetail);
+                    request.setAttribute("orderListDetail", orderListDetail);
+                } else {
+                    session.setAttribute("errorMessage", "Giao đơn không thành công");
+                    request.setAttribute("orderDetail", orderDetail);
+                    request.setAttribute("orderListDetail", orderListDetail);
+                }
+                String url = "shipper_panel?action=view&id=" + orderId;
+                response.sendRedirect(url);
+            }
         } else {
             request.getRequestDispatcher("shipper_account_page.jsp").forward(request, response);
 

@@ -210,7 +210,7 @@ public class EmailSender {
             e.printStackTrace();
         }
     }
-    
+
     public static void sendShippingOrderByShipper(String receiveEmail, int orderId) {
         final String senderEmail = "fptpet@gmail.com";
         final String senderPassword = "mfjm zfut ledv svkn";
@@ -241,6 +241,47 @@ public class EmailSender {
 
             htmlContent.append("<p>Vui lòng chuẩn bị nhận hàng và kiểm tra thú cưng cẩn thận khi giao tới. Nếu có bất kỳ vấn đề gì, xin liên hệ với chúng tôi ngay lập tức.</p>");
             htmlContent.append("<p>Cảm ơn bạn đã tin tưởng và mua sắm tại PETFPT Shop.</p>");
+            htmlContent.append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>");
+            htmlContent.append("</body></html>");
+
+            mess.setContent(htmlContent.toString(), "text/html; charset=utf-8");
+            Transport.send(mess);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendDeliveredOrderByShipper(String receiveEmail, int orderId) {
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
+
+        Properties pro = new Properties();
+        pro.put("mail.smtp.auth", "true");
+        pro.put("mail.smtp.starttls.enable", "true");
+        pro.put("mail.smtp.host", "smtp.gmail.com");
+        pro.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(pro, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        try {
+            MimeMessage mess = new MimeMessage(session);
+            mess.setFrom(new InternetAddress(senderEmail));
+            mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiveEmail));
+            mess.setSubject("PETFPT Shop: Đơn hàng #" + orderId + " đã được giao thành công!", "UTF-8");
+
+            StringBuilder htmlContent = new StringBuilder();
+            htmlContent.append("<html><body style='font-family: Arial, sans-serif; color: #333;'>");
+            htmlContent.append("<h2 style='color: #28a745;'>Đơn hàng của bạn đã được giao thành công!</h2>");
+            htmlContent.append("<p>Xin chào,</p>");
+            htmlContent.append("<p>Chúng tôi xin thông báo rằng đơn hàng #").append(orderId)
+                    .append(" của bạn tại PETFPT Shop đã được giao đến thành công.</p>");
+            htmlContent.append("<p>Hy vọng bạn hài lòng với sản phẩm thú cưng đã nhận. Nếu có bất kỳ phản hồi hoặc vấn đề nào, đừng ngần ngại liên hệ với chúng tôi để được hỗ trợ kịp thời.</p>");
+            htmlContent.append("<p>Cảm ơn bạn đã tin tưởng và đồng hành cùng PETFPT Shop.</p>");
             htmlContent.append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>");
             htmlContent.append("</body></html>");
 

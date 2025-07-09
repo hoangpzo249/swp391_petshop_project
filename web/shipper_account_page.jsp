@@ -13,9 +13,9 @@
         <title>Shipper Dashboard - PETFPT Shop</title>
         <link href="css/shipper_account_page.css" rel="stylesheet" type="text/css"/>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     </head>
+
     <body>
         <div class="admin-header">
             <div class="logo-container">
@@ -273,19 +273,16 @@
                                                     </a>
                                                     <c:choose>
                                                         <c:when test="${order.orderStatus eq 'Pending Shipper'}">
-                                                            <a class="action-btn edit-btn" title="Nhận đơn" href="shipper_panel?action=pickup&id=${order.orderId}">
+                                                            <a class="action-btn edit-btn" title="Nhận đơn" href="shipper_panel?action=pickup-order&id=${order.orderId}">
                                                                 <i class="fas fa-truck-loading"></i>
                                                             </a>
                                                         </c:when>
                                                         <c:when test="${order.orderStatus eq 'Shipping'}">
-                                                            <a class="action-btn complete-btn" title="Hoàn thành" href="shipper_panel?action=complete&id=${order.orderId}">
+                                                            <a class="action-btn complete-btn" title="Hoàn thành" href="shipper_panel?action=delivered-order&id=${order.orderId}">
                                                                 <i class="fas fa-check"></i>
                                                             </a>
                                                         </c:when>
                                                     </c:choose>
-<!--                                                    <a class="action-btn note-btn" title="Ghi chú" href="shipper_panel?action=note&id=${order.orderId}">
-                                                        <i class="fas fa-sticky-note"></i>
-                                                    </a>-->
                                                 </div>
                                             </td>
                                         </tr>

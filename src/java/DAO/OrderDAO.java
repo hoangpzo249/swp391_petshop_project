@@ -921,6 +921,21 @@ public class OrderDAO {
         }
         return false;
     }
+    
+    public boolean updateDeliveredOrder(int orderId) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "update orderTb set orderstatus ='Delivered', deliveryDate = GETDATE(), paymentStatus = 'Paid' where orderId = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public boolean assignShipper(int orderId, int shipperId) {
         DBContext db = new DBContext();

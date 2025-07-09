@@ -139,11 +139,11 @@
                 <div class="pickup-container">
                     <div class="pickup-header">
                         <div class="pickup-icon">
-                            <i class="fas fa-truck-loading"></i>
+                            <i class="fas fa-box-open"></i>
                         </div>
                         <div class="pickup-title">
-                            <h2>Xác nhận nhận đơn hàng #${orderDetail.orderId}</h2>
-                            <p>Vui lòng kiểm tra thông tin đơn hàng trước khi xác nhận</p>
+                            <h2>Xác nhận giao đơn hàng #${orderDetail.orderId} thành công</h2>
+                            <p>Vui lòng xác nhận rằng bạn đã giao đơn hàng này cho khách</p>
                         </div>
                     </div>
 
@@ -237,13 +237,13 @@
                         </div>
                         <div class="shipper-note-section">
                             <form action="shipper_panel" method="post">
-                                <input type="hidden" name="action" value="pickup-order">
+                                <input type="hidden" name="action" value="delivered-order">
                                 <input type="hidden" name="id" value="${orderDetail.orderId}">
 
                                 <div class="confirm-checkbox">
                                     <input type="checkbox" name="confirmInfo">
                                     <label>
-                                        Tôi xác nhận đã kiểm tra thông tin giao hàng và sẵn sàng nhận đơn.
+                                        Tôi xác nhận đã giao hàng thành công cho khách hàng.
                                     </label>
                                 </div>
 
@@ -252,7 +252,7 @@
                                         <i class="fas fa-arrow-left"></i> Quay lại
                                     </a>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-truck-loading"></i> Xác nhận nhận đơn
+                                        <i class="fas fa-truck-loading"></i> Xác nhận giao đơn hàng thành công
                                     </button>
                                 </div>
                             </form>
