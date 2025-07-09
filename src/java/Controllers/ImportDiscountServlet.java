@@ -91,7 +91,7 @@ public class ImportDiscountServlet extends HttpServlet {
         DiscountDAO dao = new DiscountDAO();
         int successCount = 0, failCount = 0;
 
-        try (Workbook workbook = new XSSFWorkbook(inputStream)) {
+        try (XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(0);
             int rowNum = 0;
             Row firstRow = sheet.getRow(0);
@@ -113,22 +113,28 @@ public class ImportDiscountServlet extends HttpServlet {
                     rowNum++;
                     continue;
                 }
+                Discount d = new Discount();
+                boolean hasError = false;
+                Date fromDate = null;
+                Date toDate = null;
+
                 try {
-                    Discount d = new Discount();
-                    boolean hasError = false;
-
-                    Cell codeCell = row.getCell(0);
                     String code = "";
-
-                    if (codeCell != null) {
-                        if (codeCell.getCellType() == CellType.STRING) {
-                            code = codeCell.getStringCellValue().trim();
-                        } else if (codeCell.getCellType() == CellType.NUMERIC) {
-                            code = String.valueOf((long) codeCell.getNumericCellValue()).trim();
-                        } else {
-                            code = codeCell.toString().trim();
+                    try {
+                        Cell codeCell = row.getCell(0);
+                        if (codeCell != null) {
+                            if (codeCell.getCellType() == CellType.STRING) {
+                                code = codeCell.getStringCellValue().trim();
+                            } else if (codeCell.getCellType() == CellType.NUMERIC) {
+                                code = String.valueOf((long) codeCell.getNumericCellValue()).trim();
+                            } else {
+                                code = codeCell.toString().trim();
+                            }
                         }
+                    } catch (Exception e) {
+                        code = "";
                     }
+
                     d.setDiscountCode(code);
                     if (code.isEmpty()) {
                         d.setDiscountCodeErr("Mã giảm giá không được để trống.");
@@ -138,24 +144,41 @@ public class ImportDiscountServlet extends HttpServlet {
                         hasError = true;
                     }
 
-                    String type = row.getCell(1).getStringCellValue().trim();
-                    d.setDiscountType(type);
+                    try {
+                        String typeStr = row.getCell(1).getStringCellValue().trim();
+                        if ("Percent".equalsIgnoreCase(typeStr) || "Fixed".equalsIgnoreCase(typeStr)) {
+                            d.setDiscountType(typeStr);
+                        } else {
+                            d.setDiscountType("Percent");
+                        }
+                    } catch (Exception e) {
+                        d.setDiscountType("Percent");
+                    }
 
-                    double value = row.getCell(2).getNumericCellValue();
-                    d.setDiscountValue(value);
-                    if (value <= 0) {
-                        d.setDiscountValueErr("Giá trị giảm phải >0.");
-                        hasError = true;
-                    } else if ("Percent".equals(type) && value > 100) {
-                        d.setDiscountValueErr("Phần trăm giảm không vượt quá 100%.");
+                    try {
+                        double value = row.getCell(2).getNumericCellValue();
+                        d.setDiscountValue(value);
+                        if (value <= 0) {
+                            d.setDiscountValueErr("Giá trị giảm phải >0.");
+                            hasError = true;
+                        } else if ("Percent".equalsIgnoreCase(d.getDiscountType()) && value > 100) {
+                            d.setDiscountValueErr("Phần trăm giảm không vượt quá 100%.");
+                            hasError = true;
+                        }
+                    } catch (Exception e) {
+                        d.setDiscountValue(null);
+                        d.setDiscountValueErr("Trường 'Giá trị' sai định dạng. Vui lòng nhập lại.");
                         hasError = true;
                     }
 
-                    if (row.getCell(3) != null && row.getCell(3).getCellType() != CellType.BLANK) {
-                        d.setDescription(row.getCell(3).getStringCellValue().trim());
+                    try {
+                        if (row.getCell(3) != null && row.getCell(3).getCellType() != CellType.BLANK) {
+                            d.setDescription(row.getCell(3).getStringCellValue().trim());
+                        }
+                    } catch (Exception e) {
+                        d.setDescription("");
                     }
 
-                    Date fromDate, toDate;
                     try {
                         Cell fromCell = row.getCell(4);
                         if (fromCell.getCellType() == CellType.NUMERIC) {
@@ -164,11 +187,10 @@ public class ImportDiscountServlet extends HttpServlet {
                             fromDate = Date.valueOf(fromCell.getStringCellValue().trim());
                         }
                         d.setValidFrom(fromDate);
-                        d.setValidFromErr(null);
                     } catch (Exception e) {
-                        d.setValidFromErr("Ngày bắt đầu không hợp lệ.");
+                        d.setValidFrom(null);
+                        d.setValidFromErr("Trường 'Hiệu lực từ' sai định dạng. Vui lòng nhập lại.");
                         hasError = true;
-                        fromDate = null;
                     }
 
                     try {
@@ -185,54 +207,73 @@ public class ImportDiscountServlet extends HttpServlet {
                         } else if (toDate.before(new Date(System.currentTimeMillis()))) {
                             d.setValidToErr("Ngày kết thúc không được trong quá khứ.");
                             hasError = true;
-                        } else {
-                            d.setValidToErr(null);
                         }
                     } catch (Exception e) {
-                        d.setValidToErr("Ngày kết thúc không hợp lệ.");
+                        d.setValidTo(null);
+                        d.setValidToErr("Trường 'Tới ngày' sai định dạng. Vui lòng nhập lại.");
                         hasError = true;
                     }
 
-                    double minOrder = row.getCell(6).getNumericCellValue();
-                    d.setMinOrderAmount(minOrder);
-                    if (minOrder < 0) {
-                        d.setMinOrderAmountErr("Đơn hàng tối thiểu >=0.");
-                        hasError = true;
-                    }
-
-                    if (row.getCell(7) != null && row.getCell(7).getCellType() != CellType.BLANK) {
-                        int maxUsage = (int) row.getCell(7).getNumericCellValue();
-                        d.setMaxUsage(maxUsage);
-                        if (maxUsage <= 0) {
-                            d.setMaxUsageErr("Số lần dùng phải >0.");
+                    try {
+                        double minOrder = row.getCell(6).getNumericCellValue();
+                        d.setMinOrderAmount(minOrder);
+                        if (minOrder < 0) {
+                            d.setMinOrderAmountErr("Đơn hàng tối thiểu phải >= 0.");
                             hasError = true;
                         }
+                    } catch (Exception e) {
+                        d.setMinOrderAmount(null);
+                        d.setMinOrderAmountErr("Trường 'Đơn hàng tối thiểu' sai định dạng. Vui lòng nhập lại.");
+                        hasError = true;
                     }
 
-                    if (row.getCell(8) != null && row.getCell(8).getCellType() != CellType.BLANK) {
-                        Cell activeCell = row.getCell(8);
-                        boolean activeValue;
-                        if (activeCell.getCellType() == CellType.BOOLEAN) {
-                            activeValue = activeCell.getBooleanCellValue();
-                        } else if (activeCell.getCellType() == CellType.NUMERIC) {
-                            activeValue = activeCell.getNumericCellValue() != 0;
-                        } else {
-                            String activeStr = activeCell.getStringCellValue().trim();
-                            activeValue = activeStr.equalsIgnoreCase("true") || activeStr.equalsIgnoreCase("1");
+                    try {
+                        if (row.getCell(7) != null && row.getCell(7).getCellType() != CellType.BLANK) {
+                            int maxUsage = (int) row.getCell(7).getNumericCellValue();
+                            d.setMaxUsage(maxUsage);
+                            if (maxUsage <= 0) {
+                                d.setMaxUsageErr("Số lần dùng phải > 0.");
+                                hasError = true;
+                            }
                         }
-                        d.setActive(activeValue);
-                    } else {
+                    } catch (Exception e) {
+                        d.setMaxUsageErr("Trường 'Số lần dùng' sai định dạng. Vui lòng nhập lại.");
+                        hasError = true;
+                    }
+
+                    try {
+                        if (row.getCell(8) != null && row.getCell(8).getCellType() != CellType.BLANK) {
+                            Cell activeCell = row.getCell(8);
+                            boolean activeValue = false;
+                            if (activeCell.getCellType() == CellType.BOOLEAN) {
+                                activeValue = activeCell.getBooleanCellValue();
+                            } else if (activeCell.getCellType() == CellType.NUMERIC) {
+                                activeValue = activeCell.getNumericCellValue() != 0;
+                            } else {
+                                String activeStr = activeCell.getStringCellValue().trim();
+                                activeValue = activeStr.equalsIgnoreCase("true") || activeStr.equals("1");
+                            }
+                            d.setActive(activeValue);
+                        } else {
+                            d.setActive(false);
+                        }
+                    } catch (Exception e) {
                         d.setActive(false);
                     }
 
-                    if ("Percent".equals(type)) {
-                        if (row.getCell(9) != null && row.getCell(9).getCellType() != CellType.BLANK) {
-                            double maxValue = row.getCell(9).getNumericCellValue();
-                            d.setMaxValue(maxValue);
-                            if (maxValue <= 0) {
-                                d.setMaxValueErr("Giảm tối đa phải >0.");
-                                hasError = true;
+                    if ("Percent".equalsIgnoreCase(d.getDiscountType())) {
+                        try {
+                            if (row.getCell(9) != null && row.getCell(9).getCellType() != CellType.BLANK) {
+                                double maxValue = row.getCell(9).getNumericCellValue();
+                                d.setMaxValue(maxValue);
+                                if (maxValue <= 0) {
+                                    d.setMaxValueErr("Giảm tối đa phải > 0.");
+                                    hasError = true;
+                                }
                             }
+                        } catch (Exception e) {
+                            d.setMaxValueErr("Trường 'Giảm tối đa' sai định dạng. Vui lòng nhập lại.");
+                            hasError = true;
                         }
                     }
 
@@ -245,14 +286,12 @@ public class ImportDiscountServlet extends HttpServlet {
                         successCount++;
                     }
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                } catch (Exception rowEx) {
+                    rowEx.printStackTrace();
                     failCount++;
 
                 }
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errMess", "Lỗi đọc file: " + e.getMessage());

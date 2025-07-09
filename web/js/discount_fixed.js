@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const typeSelect = document.getElementById("type");
     const maxValue = document.getElementById("maxValue");
 
-    function hiddenMaxValueField() {
+    function onoffMaxValueField() {
         if (!typeSelect || !maxValue)
             return;
 
@@ -22,6 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    typeSelect.addEventListener("change", hiddenMaxValueField);
-    hiddenMaxValueField();
+    typeSelect.addEventListener("change", onoffMaxValueField);
+    onoffMaxValueField();
 });

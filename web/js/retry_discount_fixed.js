@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!typeSelect || !maxValue)
             return;
 
-        function toggleMaxValueField() {
+        function onoffMaxValueField() {
             const selectedType = typeSelect.value;
             if (selectedType === "Fixed") {
                 maxValue.readOnly = true;
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        typeSelect.addEventListener("change", toggleMaxValueField);
-        toggleMaxValueField();
+        typeSelect.addEventListener("change", onoffMaxValueField);
+        onoffMaxValueField();
     });
 });

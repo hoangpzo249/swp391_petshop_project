@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const reasonGroup = document.getElementById("reasonGroup");
     const rejectReason=document.getElementById("rejectReason");
 
-    function toggleReasonField() {
+    function onoffReasonField() {
         const selected = statusSelect.value;
         if (selected === "Rejected") {
             reasonGroup.style.display = "block";
@@ -38,15 +38,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (statusSelect) {
-        toggleReasonField();
-        statusSelect.addEventListener("change", toggleReasonField);
+        onoffReasonField();
+        statusSelect.addEventListener("change", onoffReasonField);
     }
 
     const proofRefundedGroup = document.getElementById("proofRefundedGroup");
     const proofRefundedInput = document.getElementById("proofRefundedImage");
     const proofRefundedPreview = document.getElementById("previewRefundedImage");
 
-    function toggleProofRefundedField() {
+    function onoffProofRefundedField() {
         if (!statusSelect || !proofRefundedGroup)
             return;
         const selected = statusSelect.value;
@@ -63,9 +63,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    toggleProofRefundedField();
+    onoffProofRefundedField();
     if (statusSelect) {
-        statusSelect.addEventListener("change", toggleProofRefundedField);
+        statusSelect.addEventListener("change", onoffProofRefundedField());
     }
 
     if (proofRefundedInput && proofRefundedPreview) {

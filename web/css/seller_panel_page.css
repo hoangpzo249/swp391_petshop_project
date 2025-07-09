@@ -1659,3 +1659,7 @@ textarea.form-control {
     display: block;
     object-fit: cover;
 }
+.field-error{
+    color: red;
+    font-size: 14px;
+}

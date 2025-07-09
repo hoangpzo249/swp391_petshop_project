@@ -13,12 +13,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Danh sách mã không import được - PETFPT Shop</title>
         <link href="css/manager_panel_page.css" rel="stylesheet" type="text/css"/>
-        <link href="css/seller_panel_page.css?v=5" rel="stylesheet" type="text/css"/>
+        <link href="css/seller_panel_page.css?v=12" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <script src="js/retry_discount_fixed.js"></script>
     </head>
     <body>
+        
         <div class="seller-header">
             <div class="logo-container">
                 <a href="homepage">
@@ -45,12 +46,7 @@
                 </div>
             </div>
         </div>
-        <c:if test="${not empty sessionScope.successMess}">
-            <div class="alert-message">
-                ${sessionScope.successMess}
-            </div>
-            <c:remove var="successMess" scope="session" />
-        </c:if>
+
 
 
 
@@ -91,9 +87,13 @@
                     </a>
 
                 </div>
+                <c:if test="${not empty successMess}">
+                    <div class="alert-message">
+                        ${successMess}
+                    </div>
+                </c:if>
                 <c:if test="${not empty errMess}">
                     <div class="alert-message error">${errMess}</div>
-                    <c:remove var="errMess" scope="session" />
                 </c:if>
 
                 <c:forEach var="d" items="${failedDiscounts}" varStatus="st">
