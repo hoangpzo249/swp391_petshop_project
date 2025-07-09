@@ -16,7 +16,7 @@
         <title>Duyệt Hoàn Tiền (Manager)</title>
         <link href="css/seller_panel_page.css?v=11" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        <script src="js/refund.js?v=2"></script>
+         <script src="js/refund.js?v=3"></script>
     </head>
     <body>
         <div class="seller-header">

@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     onoffProofRefundedField();
     if (statusSelect) {
-        statusSelect.addEventListener("change", onoffProofRefundedField());
+        statusSelect.addEventListener("change", onoffProofRefundedField);
     }
 
     if (proofRefundedInput && proofRefundedPreview) {

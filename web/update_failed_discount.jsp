@@ -85,6 +85,7 @@
                     <a href="downloadfailed" class="btn btn-outline">
                         <i class="fas fa-download"></i> Tải danh sách lỗi Excel
                     </a>
+                     <a href="import_discount.jsp" class="btn btn-outline"><i class="fas fa-file-upload"></i> Import mã từ Excel</a>
 
                 </div>
                 <c:if test="${not empty successMess}">

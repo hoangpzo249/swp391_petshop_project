@@ -16,7 +16,7 @@
         <link href="css/seller_panel_page.css?v=12" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        <script src="js/refund.js"></script>
+        <script src="js/refund.js?v=3"></script>
 
     </head>
     <body>
@@ -131,7 +131,7 @@
 
                                     <div class="preview">
                                         <c:if test="${not empty sessionScope.preview}">
-                                            <img id="previewImage" src="data:image/jpeg;base64,${sessionScope.preview}" class="preview-image" onclick="showImage(this.src)" />
+                                            <img src="data:image/jpeg;base64,${sessionScope.preview}" class="preview-image" onclick="showImage(this.src)" />
                                         </c:if>
                                         <img id="previewImage" src="" class="preview-image" style="display: none" onclick="showImage(this.src)" />
                                     </div>
