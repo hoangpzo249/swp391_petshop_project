@@ -745,7 +745,7 @@ public class EmailSender {
             html.append("<p><strong>Lý do: </strong>").append(reason).append("</p>");
         }
          if ("Completed".equalsIgnoreCase(status) && proofRefundedImage != null) {
-            
+            html.append("<p><strong>Ảnh bằng chứng đã hoàn tiền được đính kèm bên dưới.</strong></p>");
             MimeMultipart multipart = new MimeMultipart();
 
            

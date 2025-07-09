@@ -210,7 +210,6 @@ public class UpdateRefundManagerServlet extends HttpServlet {
             session.setAttribute("errMess", "Đã xảy ra lỗi xử lý dữ liệu.");
         }
         session.removeAttribute("previousImage");
-        session.removeAttribute("errMess");
         response.sendRedirect("displayrefund");
     }
 
