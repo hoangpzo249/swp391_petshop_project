@@ -163,13 +163,6 @@ public class AddRefundServlet extends HttpServlet {
                 String contentType = imagePart.getContentType();
                 long size = imagePart.getSize();
 
-                if (contentType == null || !contentType.toLowerCase().matches("image/(jpeg|jpg|png|webp)")) {
-                    request.setAttribute("errMess", "Ảnh bằng chứng phải là JPG, JPEG, PNG hoặc WEBP.");
-                    request.setAttribute("preview", preview);
-                    request.getRequestDispatcher("add_refund.jsp").forward(request, response);
-                    return;
-                }
-
                 if (size > 5 * 1024 * 1024) {
                     request.setAttribute("errMess", "Ảnh bằng chứng vượt quá 5MB.");
                     request.setAttribute("preview", preview);

@@ -122,10 +122,10 @@
                                 <div class="select-group">
                                     <select name="statusFilter">
                                         <option value="">Tất cả trạng thái</option>
-                                        <option value="Pending" ${param.statusFilter == 'Pending' ? 'selected' : ''}>Đang chờ</option>
-                                        <option value="Approved" ${param.statusFilter == 'Approved' ? 'selected' : ''}>Đã duyệt</option>
-                                        <option value="Rejected" ${param.statusFilter == 'Rejected' ? 'selected' : ''}>Từ chối</option>
-                                        <option value="Completed" ${param.statusFilter == 'Completed' ? 'selected' : ''}>Hoàn thành</option>
+                                        <option value="Pending" ${param.statusFilter == 'Pending' ? 'selected' : ''}>Pending</option>
+                                        <option value="Approved" ${param.statusFilter == 'Approved' ? 'selected' : ''}>Approved</option>
+                                        <option value="Rejected" ${param.statusFilter == 'Rejected' ? 'selected' : ''}>Rejected</option>
+                                        <option value="Completed" ${param.statusFilter == 'Completed' ? 'selected' : ''}>Completed</option>
                                     </select>
                                 </div>
                                 <div class="select-group">

@@ -204,6 +204,10 @@
         <servlet-name>UpdateRefundSellerServlet</servlet-name>
         <servlet-class>Controllers.UpdateRefundSellerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateRefundManagerServlet</servlet-name>
+        <servlet-class>Controllers.UpdateRefundManagerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -407,6 +411,10 @@
     <servlet-mapping>
         <servlet-name>UpdateRefundSellerServlet</servlet-name>
         <url-pattern>/updaterefundseller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateRefundManagerServlet</servlet-name>
+        <url-pattern>/updaterefundmanager</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>

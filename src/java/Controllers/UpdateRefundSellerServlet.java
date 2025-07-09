@@ -64,13 +64,7 @@ public class UpdateRefundSellerServlet extends HttpServlet {
             Part imagePart = request.getPart("proofImage");
             byte[] proofImage = null;
             if (imagePart != null && imagePart.getSize() > 0) {
-                String contentType = imagePart.getContentType();
                 long size = imagePart.getSize();
-                if (contentType == null || !contentType.toLowerCase().matches("image/(jpeg|jpg|png|webp)")) {
-                    request.setAttribute("errMess", "Ảnh phải là JPG, JPEG, PNG hoặc WEBP.");
-                    request.getRequestDispatcher("update_refund_seller.jsp").forward(request, response);
-                    return;
-                }
                 if (size > 5 * 1024 * 1024) {
                     request.setAttribute("errMess", "Ảnh vượt quá 5MB.");
                     request.getRequestDispatcher("update_refund_seller.jsp").forward(request, response);
