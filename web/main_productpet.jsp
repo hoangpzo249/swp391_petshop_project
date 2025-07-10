@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
+        <link href="css/ai_chat.css" rel="stylesheet" type="text/css"/>
         <link href="css/main_product.css?v=32" rel="stylesheet" type="text/css"/>
         <script src="js/readmore_product.js" type="text/javascript"></script>
 
@@ -51,46 +52,36 @@
                         <c:when test="${sessionScope.userAccount != null}">
                             <div class="account-dropdown">
                                 <a href="#" class="account-trigger">
-
                                     <img src="images/support button/account.png" width="50" height="50" alt="account"/>
                                     <p class="username">Tài khoản</p>
                                 </a>
                                 <div class="dropdown-content">
                                     <c:choose>
-
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Admin'}">
                                             <a href="admin-panel" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Admin</span>
                                             </a>
                                         </c:when>
-
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Manager'}">
                                             <a href="displaybreed" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Manager</span>
                                             </a>
                                         </c:when>
-
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Seller'}">
                                             <a href="displaysalesstatistic" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Seller</span>
                                             </a>
                                         </c:when>
-
-
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
                                             <a href="profile" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Shipper</span>
                                             </a>
                                         </c:when>
-
-                                        <c:otherwise>
-                                        </c:otherwise>
                                     </c:choose>
-
                                     <a href="profile" class="dropdown-item">
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
@@ -106,7 +97,6 @@
                                 </div>
                             </div>
                         </c:when>
-
                         <c:otherwise>
                             <div class="account">
                                 <a href="login">
@@ -116,6 +106,7 @@
                             </div>
                         </c:otherwise>
                     </c:choose>
+
                     <c:if test="${empty sessionScope.userAccount or sessionScope.userAccount.accRole eq 'Customer'}">
 
                         <div class="card">
@@ -306,23 +297,7 @@
             </c:if>
 
 
-            <div class="chat-scroll-container">
-                <button onclick="scroll()" id="scroll">
-                    <i class="fas fa-chevron-up"></i>
-                </button>
 
-                <div class="chat-container">
-                    <div id="chat-button" class="chat-button">
-                        <img src="images/scroll_chat/chat.png" alt=""/>
-                    </div>
-
-                    <div id="zalo-button" class="zalo-button">
-                        <a href="https://zalo.me/your-zalo-link" target="_blank">
-                            <img src="images/scroll_chat/zalo.jpg" alt=""/>
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
         <div class="about-section">
             <div class="about-column">
@@ -364,15 +339,31 @@
         <footer>
             © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
         </footer>
-        <script src="js/scroll_chat.js"></script>
-        <div id="lightbox" class="lightbox" onclick="this.style.display = 'none'">
-            <img id="lightbox-img" src="" />
+        <button class="chat-toggle-button" id="chatToggleButton" aria-label="Toggle AI Assistant Chat">
+            <i class="fas fa-comments"></i>
+        </button>
+
+        <div class="chatbox-container" id="chatboxContainer">
+            <div class="chatbox-header">
+                <h3>PetFPT</h3>
+                <button class="chatbox-close-button" id="chatboxCloseButton" aria-label="Close Chat">×</button>
+            </div>
+            <div class="chatbox-messages" id="chatboxMessages">
+            </div>
+            <div class="chatbox-input-area">
+                <form id="chatForm">
+                    <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" required>
+                    <button type="submit" id="chatSendButton" aria-label="Send Message"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
         </div>
+        <script src="js/ai_chat.js"></script>
+
         <script>
-            function showImage(src) {
-                document.getElementById("lightbox-img").src = src;
-                document.getElementById("lightbox").style.display = "flex";
-            }
+                                        function showImage(src) {
+                                            document.getElementById("lightbox-img").src = src;
+                                            document.getElementById("lightbox").style.display = "flex";
+                                        }
         </script>
 
     </body>

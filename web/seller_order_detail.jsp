@@ -121,7 +121,7 @@
                     </h1>
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
-                        <li><a href="comingsoon">Seller</a></li>
+                        <li><a href="displaysalesstatistic">Seller</a></li>
                         <li><a href="displayorder">Quản lý đơn hàng</a></li>
                         <li>Chi tiết đơn hàng</li>
                     </ul>

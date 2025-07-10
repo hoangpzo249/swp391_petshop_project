@@ -121,7 +121,7 @@
                     </h1>
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
-                        <li><a href="comingsoon">Seller</a></li>
+                        <li><a href="displaysalesstatistic">Seller</a></li>
                         <li>Quản lý đơn hàng</li>
                     </ul>
                 </div>
@@ -207,7 +207,16 @@
                                             </td>
                                             <td>
                                                 <span class="status-badge status-${order.orderStatus.toLowerCase()}">
-                                                    ${order.orderStatus}
+                                                    <c:choose>
+                                                        <c:when test="${order.orderStatus == 'Pending'}">Chờ xử lý</c:when>
+                                                        <c:when test="${order.orderStatus == 'Confirmed'}">Đã xác nhận</c:when>
+                                                        <c:when test="${order.orderStatus == 'Cancelled'}">Đã hủy</c:when>
+                                                        <c:when test="${order.orderStatus == 'Rejected'}">Bị từ chối</c:when>
+                                                        <c:when test="${order.orderStatus == 'Shipping'}">Đang giao</c:when>
+                                                        <c:when test="${order.orderStatus == 'Pending Shipper'}">Chờ Shipper</c:when>
+                                                        <c:when test="${order.orderStatus == 'Delivered'}">Đã giao</c:when>
+                                                        <c:otherwise>${order.orderStatus}</c:otherwise>
+                                                    </c:choose>
                                                 </span>
                                             </td>
                                             <td>
