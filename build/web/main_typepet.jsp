@@ -10,9 +10,10 @@
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link rel="icon" type="image/png" href="images/logo_banner/logo1.png">
-        <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="css/main_type.css?v=23" />
+        <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
         <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
+        <link href="css/ai_chat.css" rel="stylesheet" type="text/css"/>
         <link href="css/advance_footer.css?v=3" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -459,6 +460,26 @@
         <footer style="background: linear-gradient(to bottom, #fff3e6, #ffe5cc); color: black">
             © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
         </footer>
+
+        <button class="chat-toggle-button" id="chatToggleButton" aria-label="Toggle AI Assistant Chat">
+            <i class="fas fa-comments"></i>
+        </button>
+
+        <div class="chatbox-container" id="chatboxContainer">
+            <div class="chatbox-header">
+                <h3>PetFPT</h3>
+                <button class="chatbox-close-button" id="chatboxCloseButton" aria-label="Close Chat">×</button>
+            </div>
+            <div class="chatbox-messages" id="chatboxMessages">
+            </div>
+            <div class="chatbox-input-area">
+                <form id="chatForm">
+                    <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" required>
+                    <button type="submit" id="chatSendButton" aria-label="Send Message"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        <script src="js/ai_chat.js"></script>
 
     </body>
 </html>

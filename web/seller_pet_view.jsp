@@ -91,7 +91,7 @@
                     <h1 class="page-title"><i class="fas fa-dog"></i> Quản lý thú cưng</h1>
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
-                        <li><a href="comingsoon">Seller</a></li>
+                        <li><a href="displaysalesstatistic">Seller</a></li>
                         <li>Quản lý thú cưng</li>
                     </ul>
                 </div>

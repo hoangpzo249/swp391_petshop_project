@@ -14,6 +14,7 @@
         <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
         <script src="js/scroll_chat.js" type="text/javascript"></script>
         <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
+        <link href="css/ai_chat.css" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <script src="js/cart_selection.js?v=22" type="text/javascript"></script>
@@ -283,31 +284,14 @@
                     </div>
                 </div>
 
-                <!-- scroll_chat -->
-                <div class="chat-scroll-container">
-                    <button onclick="scroll()" id="scroll">
-                        <i class="fas fa-chevron-up"></i>
-                    </button>
 
-                    <div class="chat-container">
-                        <div id="chat-button" class="chat-button">
-                            <img src="images/scroll_chat/chat.png" alt=""/>
-                        </div>
-
-                        <div id="zalo-button" class="zalo-button">
-                            <a href="https://zalo.me/your-zalo-link" target="_blank">
-                                <img src="images/scroll_chat/zalo.jpg" alt=""/>
-                            </a>
-                        </div>
-                    </div>
-                </div>
                 <div id="toast" class="toast-message"></div> 
                 <c:if test="${not empty sessionScope.cartMessage}">
                     <div class="warning-message animate-shake">
                         <i class="fas fa-exclamation-triangle"></i>
                         ${cartMessage}
                     </div>
-                     <c:remove var="cartMessage" scope="session"/>
+                    <c:remove var="cartMessage" scope="session"/>
                 </c:if>
 
 
@@ -316,7 +300,25 @@
                     © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
                 </footer>
 
+                <button class="chat-toggle-button" id="chatToggleButton" aria-label="Toggle AI Assistant Chat">
+                    <i class="fas fa-comments"></i>
+                </button>
 
+                <div class="chatbox-container" id="chatboxContainer">
+                    <div class="chatbox-header">
+                        <h3>PetFPT</h3>
+                        <button class="chatbox-close-button" id="chatboxCloseButton" aria-label="Close Chat">×</button>
+                    </div>
+                    <div class="chatbox-messages" id="chatboxMessages">
+                    </div>
+                    <div class="chatbox-input-area">
+                        <form id="chatForm">
+                            <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" required>
+                            <button type="submit" id="chatSendButton" aria-label="Send Message"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+                <script src="js/ai_chat.js"></script>
 
 
                 </body>
