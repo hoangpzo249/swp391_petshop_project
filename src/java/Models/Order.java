@@ -6,6 +6,7 @@ package Models;
 
 import java.sql.Timestamp;
 import java.util.Base64;
+import java.util.Date;
 
 /**
  *
@@ -32,7 +33,16 @@ public class Order {
 
     private String petColor;
     private double petPrice;
+    private String petBreed;
+    private String petGender;
+    private Date petDob;
+    private String petOrigin;
+    private String petVacxin;
+
     private byte[] imageData;
+
+    private String shipperName;
+    private String shipperPhone;
 
     public Order() {
     }
@@ -220,6 +230,64 @@ public class Order {
         String base64Image = Base64.getEncoder().encodeToString(imageData);
         return "data:image/jpeg;base64," + base64Image;
     }
+
+    public String getShipperName() {
+        return shipperName;
+    }
+
+    public void setShipperName(String shipperName) {
+        this.shipperName = shipperName;
+    }
+
+    public String getShipperPhone() {
+        return shipperPhone;
+    }
+
+    public void setShipperPhone(String shipperPhone) {
+        this.shipperPhone = shipperPhone;
+    }
+
+    public String getPetBreed() {
+        return petBreed;
+    }
+
+    public void setPetBreed(String petBreed) {
+        this.petBreed = petBreed;
+    }
+
+    public String getPetGender() {
+        return petGender;
+    }
+
+    public void setPetGender(String petGender) {
+        this.petGender = petGender;
+    }
+
+    public Date getPetDob() {
+        return petDob;
+    }
+
+    public void setPetDob(Date petDob) {
+        this.petDob = petDob;
+    }
+
+    public String getPetOrigin() {
+        return petOrigin;
+    }
+
+    public void setPetOrigin(String petOrigin) {
+        this.petOrigin = petOrigin;
+    }
+
+    public String getPetVacxin() {
+        return petVacxin;
+    }
+
+    public void setPetVacxin(String petVacxin) {
+        this.petVacxin = petVacxin;
+    }
+    
+    
 
     @Override
     public String toString() {

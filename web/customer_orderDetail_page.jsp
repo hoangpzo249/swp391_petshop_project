@@ -79,7 +79,7 @@
                                         </c:when>
 
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
-<a href="shipper_panel" class="dropdown-item">
+                                            <a href="shipper_panel" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Shipper</span>
                                             </a>
@@ -166,22 +166,21 @@
             <div class="order-detail-container">
                 <div class="order-detail-card">
                     <div class="order-detail-header">
-                        <h1>Chi tiết đơn hàng #${order.orderId}</h1>
+                        <h1>Chi tiết đơn hàng #${orderDetail.orderId}</h1>
                         <div class="back-button">
-                            <a href="orders?status=${order.orderStatus}">
+                            <a href="orders?status=${orderDetail.orderStatus}">
                                 <i class="fas fa-arrow-left"></i> Quay lại
                             </a>
                         </div>
                     </div>
                     <div class="order-detail-content">
-                        Order Summary 
                         <div class="order-summary">
                             <div class="summary-item">
                                 <div class="summary-label">
                                     <i class="far fa-calendar-alt"></i> Ngày đặt hàng
                                 </div>
                                 <div class="summary-value">
-                                    <fmt:formatDate value="${order.orderDate}" pattern="HH:mm dd-MM-yyyy"/>
+                                    <fmt:formatDate value="${orderDetail.orderDate}" pattern="HH:mm dd-MM-yyyy"/>
                                 </div>
                             </div>
 
@@ -190,24 +189,24 @@
                                     <i class="fas fa-truck"></i> Trạng thái đơn hàng
                                 </div>
                                 <div class="summary-value">
-                                    <div class="status-badge ${order.orderStatus.toLowerCase()}">
+                                    <div class="status-badge ${orderDetail.orderStatus.toLowerCase()}">
                                         <c:choose>
-                                            <c:when test="${order.orderStatus eq 'Pending'}">
+                                            <c:when test="${orderDetail.orderStatus eq 'Pending'}">
                                                 <i class="fas fa-clock"></i> Chờ xác nhận
                                             </c:when>
-                                            <c:when test="${order.orderStatus eq 'Rejected'}">
+                                            <c:when test="${orderDetail.orderStatus eq 'Rejected'}">
                                                 <i class="fas fa-times"></i> Đã hủy
                                             </c:when>
-                                            <c:when test="${order.orderStatus eq 'Confirmed'}">
+                                            <c:when test="${orderDetail.orderStatus eq 'Confirmed'}">
                                                 <i class="fas fa-check"></i> Đã xác nhận
                                             </c:when>
-                                            <c:when test="${order.orderStatus eq 'PendingShipper'}">
+                                            <c:when test="${orderDetail.orderStatus eq 'Pending Shipper'}">
                                                 <i class="fas fa-user-clock"></i> Chờ shipper nhận
                                             </c:when>
-                                            <c:when test="${order.orderStatus eq 'Shipping'}">
+                                            <c:when test="${orderDetail.orderStatus eq 'Shipping'}">
                                                 <i class="fas fa-shipping-fast"></i> Đang giao
                                             </c:when>
-                                            <c:when test="${order.orderStatus eq 'Delivered'}">
+                                            <c:when test="${orderDetail.orderStatus eq 'Delivered'}">
                                                 <i class="fas fa-box-open"></i> Đã giao
                                             </c:when>
                                         </c:choose>
@@ -221,12 +220,12 @@
                                 </div>
                                 <div class="summary-value">
                                     <c:choose>
-                                        <c:when test="${order.paymentMethod eq 'Cash on Delivery'}">
+                                        <c:when test="${orderDetail.paymentMethod eq 'Cash on Delivery'}">
                                             <span class="payment-method cod">
                                                 <i class="fas fa-money-bill-wave"></i> Thanh toán khi nhận hàng
                                             </span>
                                         </c:when>
-                                        <c:when test="${order.paymentMethod eq 'Credit Card'}">
+                                        <c:when test="${orderDetail.paymentMethod eq 'Credit Card'}">
                                             <span class="payment-method card">
                                                 <i class="fas fa-credit-card"></i> Thẻ tín dụng
                                             </span>
@@ -241,12 +240,12 @@
                                 </div>
                                 <div class="summary-value">
                                     <c:choose>
-                                        <c:when test="${order.paymentStatus eq 'Paid'}">
+                                        <c:when test="${orderDetail.paymentStatus eq 'Paid'}">
                                             <span class="payment-status paid">
                                                 <i class="fas fa-check-circle"></i> Đã thanh toán
                                             </span>
                                         </c:when>
-                                        <c:when test="${order.paymentStatus eq 'Unpaid'}">
+                                        <c:when test="${orderDetail.paymentStatus eq 'Unpaid'}">
                                             <span class="payment-status unpaid">
                                                 <i class="fas fa-clock"></i> Chưa thanh toán
                                             </span>
@@ -256,60 +255,47 @@
                             </div>
                         </div>
 
-                        Order Progress 
                         <div class="order-progress">
                             <div class="progress-track">
-                                <div class="progress-step ${order.orderStatus eq 'Pending' || order.orderStatus eq 'Confirmed' || order.orderStatus eq 'PendingShipper' || order.orderStatus eq 'Shipping' || order.orderStatus eq 'Delivered' ? 'active' : ''}">
+                                <div class="progress-step ${orderDetail.orderStatus eq 'Pending' || orderDetail.orderStatus eq 'Confirmed' || orderDetail.orderStatus eq 'Pending Shipper' || orderDetail.orderStatus eq 'Shipping' || orderDetail.orderStatus eq 'Delivered' ? 'active' : ''}">
                                     <div class="step-icon">
                                         <i class="fas fa-clipboard-check"></i>
                                     </div>
                                     <div class="step-label">Đã đặt hàng</div>
                                     <div class="step-date">
-                                        <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/>
+                                        <fmt:formatDate value="${orderDetail.orderDate}" pattern="dd/MM/yyyy"/>
                                     </div>
                                 </div>
 
-                                <div class="progress-step ${order.orderStatus eq 'Confirmed' || order.orderStatus eq 'PendingShipper' || order.orderStatus eq 'Shipping' || order.orderStatus eq 'Delivered' ? 'active' : ''}">
+                                <div class="progress-step ${orderDetail.orderStatus eq 'Confirmed' || orderDetail.orderStatus eq 'Pending Shipper' || orderDetail.orderStatus eq 'Shipping' || orderDetail.orderStatus eq 'Delivered' ? 'active' : ''}">
                                     <div class="step-icon">
                                         <i class="fas fa-check"></i>
                                     </div>
                                     <div class="step-label">Đã xác nhận</div>
-                                    <div class="step-date">
-                                        <c:if test="${order.orderStatus eq 'Confirmed' || order.orderStatus eq 'PendingShipper' || order.orderStatus eq 'Shipping' || order.orderStatus eq 'Delivered'}">
-                                            <fmt:formatDate value="${order.confirmDate}" pattern="dd/MM/yyyy"/>
-                                        </c:if>
-                                    </div>
                                 </div>
 
-                                <div class="progress-step ${order.orderStatus eq 'Shipping' || order.orderStatus eq 'Delivered' ? 'active' : ''}">
+                                <div class="progress-step ${orderDetail.orderStatus eq 'Shipping' || orderDetail.orderStatus eq 'Delivered' ? 'active' : ''}">
                                     <div class="step-icon">
                                         <i class="fas fa-shipping-fast"></i>
                                     </div>
                                     <div class="step-label">Đang giao hàng</div>
-                                    <div class="step-date">
-                                        <c:if test="${order.orderStatus eq 'Shipping' || order.orderStatus eq 'Delivered'}">
-                                            <fmt:formatDate value="${order.shippingDate}" pattern="dd/MM/yyyy"/>
-                                        </c:if>
-                                    </div>
                                 </div>
 
-                                <div class="progress-step ${order.orderStatus eq 'Delivered' ? 'active' : ''}">
+                                <div class="progress-step ${orderDetail.orderStatus eq 'Delivered' ? 'active' : ''}">
                                     <div class="step-icon">
                                         <i class="fas fa-box-open"></i>
                                     </div>
                                     <div class="step-label">Đã giao hàng</div>
                                     <div class="step-date">
-                                        <c:if test="${order.orderStatus eq 'Delivered'}">
-                                            <fmt:formatDate value="${order.deliveryDate}" pattern="dd/MM/yyyy"/>
+                                        <c:if test="${orderDetail.orderStatus eq 'Delivered'}">
+                                            <fmt:formatDate value="${orderDetail.deliveryDate}" pattern="dd/MM/yyyy"/>
                                         </c:if>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        Order Info Sections 
                         <div class="order-info-sections">
-                            Product Information 
                             <div class="order-section">
                                 <div class="section-header">
                                     <h2><i class="fas fa-paw"></i> Thông tin thú cưng</h2>
@@ -321,7 +307,7 @@
                                         </div>
                                         <div class="pet-details">
                                             <h3 class="pet-name">${order.petName}</h3>
-                                            <p class="pet-info"><span>Loài:</span> ${order.petSpecies}</p>
+                                            <p class="pet-info"><span>Tên:</span> ${order.petSpecies}</p>
                                             <p class="pet-info"><span>Giống:</span> ${order.petBreed}</p>
                                             <p class="pet-info"><span>Giới tính:</span> ${order.petGender}</p>
                                             <p class="pet-info"><span>Màu sắc:</span> ${order.petColor}</p>
@@ -336,7 +322,6 @@
                                 </div>
                             </div>
 
-                            Customer Information 
                             <div class="order-section">
                                 <div class="section-header">
                                     <h2><i class="fas fa-user"></i> Thông tin khách hàng</h2>
@@ -345,21 +330,20 @@
                                     <div class="info-group">
                                         <div class="info-item">
                                             <div class="info-label"><i class="fas fa-user"></i> Họ và tên</div>
-                                            <div class="info-value">${order.customerName}</div>
+                                            <div class="info-value">${orderDetail.customerName}</div>
                                         </div>
                                         <div class="info-item">
                                             <div class="info-label"><i class="fas fa-phone"></i> Số điện thoại</div>
-                                            <div class="info-value">${order.customerPhone}</div>
+                                            <div class="info-value">${orderDetail.customerPhone}</div>
                                         </div>
                                         <div class="info-item">
                                             <div class="info-label"><i class="fas fa-envelope"></i> Email</div>
-                                            <div class="info-value">${order.customerEmail}</div>
+                                            <div class="info-value">${orderDetail.customerEmail}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            Delivery Information 
                             <div class="order-section">
                                 <div class="section-header">
                                     <h2><i class="fas fa-truck"></i> Thông tin giao hàng</h2>
@@ -368,24 +352,24 @@
                                     <div class="info-group">
                                         <div class="info-item full-width">
                                             <div class="info-label"><i class="fas fa-map-marker-alt"></i> Địa chỉ giao hàng</div>
-                                            <div class="info-value">${order.customerAddress}</div>
+                                            <div class="info-value">${orderDetail.customerAddress}</div>
                                         </div>
 
-                                        <c:if test="${order.orderStatus eq 'Shipping' || order.orderStatus eq 'Delivered'}">
+                                        <c:if test="${orderDetail.orderStatus eq 'Shipping' || orderDetail.orderStatus eq 'Delivered'}">
                                             <div class="info-item">
                                                 <div class="info-label"><i class="fas fa-user-tie"></i> Người giao hàng</div>
-                                                <div class="info-value">${order.shipperName}</div>
+                                                <div class="info-value">${orderDetail.shipperName}</div>
                                             </div>
                                             <div class="info-item">
                                                 <div class="info-label"><i class="fas fa-phone"></i> Số điện thoại</div>
-                                                <div class="info-value">${order.shipperPhone}</div>
+                                                <div class="info-value">${orderDetail.shipperPhone}</div>
                                             </div>
                                         </c:if>
 
-                                        <c:if test="${order.orderStatus eq 'Rejected'}">
+                                        <c:if test="${orderDetail.orderStatus eq 'Rejected'}">
                                             <div class="info-item full-width rejection-info">
                                                 <div class="info-label"><i class="fas fa-times-circle"></i> Lý do hủy</div>
-                                                <div class="info-value rejection-reason">${order.rejectionReason}</div>
+                                                <div class="info-value rejection-reason">${orderDetail.rejectionReason}</div>
                                             </div>
                                         </c:if>
                                     </div>
@@ -401,30 +385,23 @@
                                     <div class="price-summary">
                                         <div class="price-item">
                                             <div class="price-label">Giá thú cưng</div>
-                                            <div class="price-value"><fmt:formatNumber value="${order.petPrice}" pattern="#,##0"/> VNĐ</div>
+                                            <div class="price-value"><fmt:formatNumber value="${orderDetail.petPrice}" pattern="#,##0"/> VNĐ</div>
                                         </div>
-                                        <div class="price-item">
-                                            <div class="price-label">Phí vận chuyển</div>
-                                            <div class="price-value"><fmt:formatNumber value="${order.shippingFee}" pattern="#,##0"/> VNĐ</div>
+                                        <div class="price-item discount">
+                                            <div class="price-label">Giảm giá</div>
+                                            <div class="price-value">-<fmt:formatNumber value="${orderDetail.discountAmountAtApply}" pattern="#,##0"/> VNĐ</div>
                                         </div>
-                                        <c:if test="${order.discount > 0}">
-                                            <div class="price-item discount">
-                                                <div class="price-label">Giảm giá</div>
-                                                <div class="price-value">-<fmt:formatNumber value="${order.discount}" pattern="#,##0"/> VNĐ</div>
-                                            </div>
-                                        </c:if>
                                         <div class="price-item total">
                                             <div class="price-label">Tổng thanh toán</div>
-                                            <div class="price-value"><fmt:formatNumber value="${order.totalPrice}" pattern="#,##0"/> VNĐ</div>
+                                            <div class="price-value"><fmt:formatNumber value="${orderDetail.totalPrice}" pattern="#,##0"/> VNĐ</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        Order Actions 
                         <div class="order-actions">
-                            <a href="orders?status=${order.orderStatus}" class="btn back-btn">
+                            <a href="orders?status=${orderDetail.orderStatus}" class="btn back-btn">
                                 <i class="fas fa-arrow-left"></i> Quay lại
                             </a>
 
@@ -433,13 +410,6 @@
                                     <button type="button" class="btn cancel-btn" onclick="showCancelModal()">
                                         <i class="fas fa-times"></i> Hủy đơn hàng
                                     </button>
-                                </c:when>
-                                <c:when test="${order.orderStatus eq 'Delivered'}">
-                                    <c:if test="${!order.reviewed}">
-                                        <a href="review?orderId=${order.orderId}" class="btn review-btn">
-                                            <i class="fas fa-star"></i> Đánh giá
-                                        </a>
-                                    </c:if>
                                 </c:when>
                             </c:choose>
                         </div>

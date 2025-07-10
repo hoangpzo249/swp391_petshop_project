@@ -609,6 +609,73 @@ public class OrderDAO {
         return list;
     }
 
+    public Order getOrderCusDetail(int accId, String status, int orderId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DBContext db = new DBContext();
+        Order o = null;
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT o.orderId, o.accId, o.orderDate, o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
+                    + "o.customerAddress, o.shipperId, o.paymentMethod, o.paymentstatus, SUM(c.priceAtOrder) AS totalPrice, o.rejectionReason, o.discountAmountAtApply, acc.accFname + ' ' + acc.accLname AS fullName, acc.accPhoneNumber\n"
+                    + "from ordertb o\n"
+                    + "join OrderContentTB c on o.orderid=c.orderid\n"
+                    + "left join AccountTB acc on o.shipperId = acc.accId and (o.orderStatus = 'Delivered' or o.orderStatus = 'Shipping')\n"
+                    + "where o.accId =? and o.orderStatus = ? and o.orderId = ?\n"
+                    + "group by o.orderId, o.accId, o.orderDate,o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
+                    + "o.customerAddress, o.shipperId, o.paymentMethod,o.paymentstatus, o.rejectionReason, o.discountAmountAtApply, acc.accFname, acc.accLname, acc.accPhoneNumber";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, accId);
+            ps.setString(2, status);
+            ps.setInt(3, orderId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                o = new Order();
+                o.setOrderId(rs.getInt("orderId"));
+                o.setAccId(rs.getInt("accId"));
+                o.setOrderDate(rs.getTimestamp("orderDate"));
+                o.setDeliveryDate(rs.getTimestamp("deliveryDate"));
+                o.setOrderStatus(rs.getString("orderStatus"));
+                o.setCustomerName(rs.getString("customerName"));
+                o.setCustomerEmail(rs.getString("customerEmail"));
+                o.setCustomerPhone(rs.getString("customerPhone"));
+                o.setCustomerAddress(rs.getString("customerAddress"));
+                o.setShipperId((Integer) rs.getObject("shipperId"));
+                o.setPaymentMethod(rs.getString("paymentMethod"));
+                o.setPaymentStatus(rs.getString("paymentStatus"));
+                o.setRejectionReason(rs.getString("rejectionReason"));
+                o.setTotalPrice(rs.getDouble("totalPrice"));
+                Object discount = rs.getObject("discountAmountAtApply");
+                o.setDiscountAmountAtApply(discount != null ? (Double) discount : 0.0);
+                o.setShipperName(rs.getString("fullName"));
+                o.setShipperPhone(rs.getString("accPhoneNumber"));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+        return o;
+    }
+
     public List<Order> getOrderCusPet(int accId, String status) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -637,6 +704,72 @@ public class OrderDAO {
 
                 o.setPetPrice(rs.getDouble("petPrice"));
                 o.setPetColor(rs.getString("petColor"));
+                o.setImageData(rs.getBytes("imageData"));
+
+                list.add(o);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+        return list;
+    }
+
+    public List<Order> getOrderCusPetDetail(int accId, String status, int orderId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DBContext db = new DBContext();
+        List<Order> list = new ArrayList<>();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT oTb.orderId, otb.accId, p.petName, p.petPrice , p.petColor, b.breedName,p.petGender, p.petDob,p.petOrigin, p.petVaccination,\n"
+                    + "(select top 1 imageData from PetImageTB pImg\n"
+                    + "where pImg.petId=p.petId )  as imageData\n"
+                    + "                   from OrderContentTB oCt\n"
+                    + "                   join pettb p on p.petid=oCt.petid\n"
+                    + "				   join BreedTB b on b.breedId = p.breedId\n"
+                    + "				   join OrderTB oTb on oTb.orderId = oCt.orderId\n"
+                    + "				   join PetImageTB pImg on pImg.petId=p.petId\n"
+                    + "                    where accId =? and oTb.orderStatus = ? and oTb.orderId =?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, accId);
+            ps.setString(2, status);
+            ps.setInt(3, orderId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Order o = new Order();
+                o.setOrderId(rs.getInt("orderId"));
+                o.setAccId(rs.getInt("accId"));
+                o.setPetName(rs.getString("petName"));
+
+                o.setPetPrice(rs.getDouble("petPrice"));
+                o.setPetColor(rs.getString("petColor"));
+                o.setPetBreed(rs.getString("breedName"));
+                o.setPetGender(rs.getString("petGender"));
+                o.setPetDob(rs.getDate("petDob"));
+                o.setPetOrigin(rs.getString("petOrigin"));
+                o.setPetVacxin(rs.getString("petVaccination"));
+                
+                
                 o.setImageData(rs.getBytes("imageData"));
 
                 list.add(o);
@@ -720,7 +853,7 @@ public class OrderDAO {
         }
         return list;
     }
-    
+
     public List<Order> getOrderShipperIdByStatus(int accId, String status) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -1109,25 +1242,25 @@ public class OrderDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (Exception e) {
+        try {
+            if (rs != null) {
+                rs.close();
             }
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
+        } catch (Exception e) {
+        }
+        try {
+            if (ps != null) {
+                ps.close();
             }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
             }
-        
+        } catch (Exception e) {
+        }
+
         return discount;
     }
 
@@ -1185,7 +1318,7 @@ public class OrderDAO {
         return count;
     }
 
-     public boolean checkPenndingShippingShipper(int shipperId) {
+    public boolean checkPenndingShippingShipper(int shipperId) {
         DBContext db = new DBContext();
         try {
             conn = db.getConnection();

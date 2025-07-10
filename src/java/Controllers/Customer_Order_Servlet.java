@@ -87,7 +87,11 @@ public class Customer_Order_Servlet extends HttpServlet {
                 request.setAttribute("status", status);
                 request.getRequestDispatcher("customer_order_page.jsp").forward(request, response);
             }
-        } else if (status != null && view != null) {
+        } else if (status != null && view != null ) {
+            int orderId = Integer.parseInt(view);
+            Order order  =  odao.getOrderCusDetail(accId, status, orderId);
+            
+            request.setAttribute("orderDetail", order);
             request.getRequestDispatcher("customer_orderDetail_page.jsp").forward(request, response);
         } else {
             List<Order> orderList = odao.getOrderCus(accId, status);
