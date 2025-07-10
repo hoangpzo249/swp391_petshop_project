@@ -65,7 +65,7 @@
                 <div class="sidebar-menu">
                     <div class="menu-category">
                         <h5 class="category-title">Điều hướng</h5>
-                        <a href="comingsoon" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                        <a href="displayrevenuestatistic" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
@@ -90,7 +90,7 @@
                     <h1 class="page-title"><i class="fas fa-dna"></i> Quản lý giống thú cưng</h1>
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
-                        <li><a href="comingsoon">Manager</a></li>
+                        <li><a href="displayrevenuestatistic">Manager</a></li>
                         <li>Quản lý giống thú cưng</li>
                     </ul>
                 </div>
