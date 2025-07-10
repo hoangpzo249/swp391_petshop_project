@@ -92,6 +92,7 @@
                         <a href="displayallpet" class="sidebar-link">
                             <i class="fas fa-dog"></i> Quản lý thú cưng
                         </a>
+                        <a href="displayrefund" class="sidebar-link"><i class="fas fa-undo-alt"></i> Quản lý hoàn tiền</a>
                     </div>
 
                     <div class="menu-category">
@@ -99,6 +100,7 @@
                         <a href="addpet" class="sidebar-link">
                             <i class="fas fa-paw"></i> Đăng bán thú cưng
                         </a>
+                        <a href="add_refund.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Gửi yêu cầu hoàn tiền</a>
                         <a href="profile" class="sidebar-link">
                             <i class="fas fa-user-circle"></i> Tài khoản của tôi
                         </a>
