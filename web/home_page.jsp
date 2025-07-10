@@ -15,14 +15,25 @@
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        <%-- START: ADDED CSS FOR CHATBOX --%>
+        <%-- START: IMPROVED CSS FOR CHATBOX --%>
         <style>
+            :root {
+                --brand-color: #f26f21;
+                --brand-color-dark: #e0621a;
+                --brand-color-light: #f9bda0;
+                --text-light: #ffffff;
+                --text-dark: #333333;
+                --bg-light: #f5f7fa;
+                --border-color: #e5e7eb;
+            }
+
+            /* --- Toggle Button --- */
             .chat-toggle-button {
                 position: fixed;
                 bottom: 30px;
                 right: 30px;
-                background-color: #f26f21;
-                color: white;
+                background-color: var(--brand-color);
+                color: var(--text-light);
                 border: none;
                 border-radius: 50%;
                 width: 60px;
@@ -31,121 +42,214 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
                 cursor: pointer;
                 z-index: 1000;
-                transition: transform 0.2s ease, background-color 0.2s ease;
+                transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
             }
 
             .chat-toggle-button:hover {
                 transform: scale(1.1);
-                background-color: #e0621a;
+                background-color: var(--brand-color-dark);
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
             }
 
+            .chat-toggle-button.active {
+                transform: rotate(90deg);
+            }
+
+            /* --- Main Chatbox Container --- */
             .chatbox-container {
                 position: fixed;
-                bottom: 100px;
+                bottom: 110px;
                 right: 30px;
-                width: 370px;
-                max-height: 70vh;
-                background: #ffffff;
+                width: 380px;
+                max-height: 75vh;
+                background: var(--text-light);
                 border-radius: 15px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-                display: none; /* Initially hidden */
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                display: flex; /* Changed from none to flex */
                 flex-direction: column;
                 z-index: 1001;
                 overflow: hidden;
                 font-family: 'Asap', sans-serif;
-                animation: slideUp 0.3s ease-out;
-            }
 
-            @keyframes slideUp {
-                from {
-                    transform: translateY(20px);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateY(0);
-                    opacity: 1;
-                }
+                /* Visibility controlled by opacity and transform */
+                opacity: 0;
+                transform: translateY(20px);
+                pointer-events: none;
+                transition: opacity 0.3s ease-out, transform 0.3s ease-out;
             }
 
             .chatbox-container.active {
-                display: flex;
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
             }
 
+            /* --- Chatbox Header --- */
             .chatbox-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding: 12px 20px;
-                background-color: #f26f21;
-                color: white;
-                border-top-left-radius: 15px;
-                border-top-right-radius: 15px;
+                padding: 15px 20px;
+                background-color: var(--brand-color);
+                color: var(--text-light);
+                flex-shrink: 0;
             }
 
             .chatbox-header h3 {
                 margin: 0;
-                font-size: 18px;
+                font-size: 1.1rem;
+                font-weight: 600;
             }
 
             .chatbox-close-button {
                 background: none;
                 border: none;
-                color: white;
+                color: var(--text-light);
                 font-size: 24px;
                 cursor: pointer;
                 padding: 0;
                 line-height: 1;
+                opacity: 0.8;
+                transition: opacity 0.2s ease;
+            }
+            .chatbox-close-button:hover {
+                opacity: 1;
             }
 
+            /* --- Messages Area --- */
             .chatbox-messages {
                 flex-grow: 1;
                 padding: 20px;
                 overflow-y: auto;
                 display: flex;
                 flex-direction: column;
-                gap: 12px;
-                background-color: #f9f9f9;
+                gap: 18px;
+                background-color: var(--bg-light);
+                scroll-behavior: smooth;
+            }
+
+            .message-row {
+                display: flex;
+                align-items: flex-end; /* Aligns avatar and bubble bottom */
+                gap: 10px;
+                max-width: 90%;
+            }
+
+            .message-row.user {
+                justify-content: flex-end;
+                align-self: flex-end;
+            }
+
+            .message-row.ai {
+                align-self: flex-start;
+            }
+
+            .chat-avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                font-size: 16px;
+                background-color: #ccc;
+            }
+
+            .message-row.user .chat-avatar {
+                background-color: var(--brand-color);
+                color: var(--text-light);
+            }
+
+            .message-row.ai .chat-avatar {
+                background-color: #d1d5db;
+                color: #4b5563;
             }
 
             .message {
                 padding: 10px 15px;
-                border-radius: 20px;
-                max-width: 85%;
-                line-height: 1.4;
+                border-radius: 18px;
+                line-height: 1.5;
                 word-wrap: break-word;
+                animation: message-fade-in 0.3s ease;
+            }
+
+            @keyframes message-fade-in {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .user-message {
-                align-self: flex-end;
-                background-color: #f26f21;
-                color: white;
+                background-color: var(--brand-color);
+                color: var(--text-light);
                 border-bottom-right-radius: 5px;
             }
 
             .ai-message {
-                align-self: flex-start;
-                background-color: #e9e9eb;
-                color: #333;
+                background-color: var(--text-light);
+                color: var(--text-dark);
+                border: 1px solid var(--border-color);
                 border-bottom-left-radius: 5px;
             }
 
-            .ai-typing {
-                align-self: flex-start;
-                color: #888;
-                font-style: italic;
+            .ai-message.typing {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                padding: 12px 15px;
             }
 
-            .chatbox-input {
+            .ai-message.typing span {
+                height: 8px;
+                width: 8px;
+                border-radius: 50%;
+                background-color: #b0b0b0;
+                animation: typing-blink 1.4s infinite both;
+            }
+            .ai-message.typing span:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+            .ai-message.typing span:nth-child(3) {
+                animation-delay: 0.4s;
+            }
+
+            @keyframes typing-blink {
+                0% {
+                    opacity: 0.2;
+                }
+                20% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0.2;
+                }
+            }
+
+            .status-message {
+                text-align: center;
+                color: #888;
+                padding: 10px;
+            }
+
+            .chatbox-input-area {
                 padding: 15px 20px;
-                border-top: 1px solid #ddd;
+                border-top: 1px solid var(--border-color);
                 background-color: #fff;
+                flex-shrink: 0;
             }
 
             #chatForm {
                 display: flex;
+                align-items: center;
                 gap: 10px;
             }
 
@@ -153,18 +257,20 @@
                 flex-grow: 1;
                 border: 1px solid #ccc;
                 border-radius: 20px;
-                padding: 10px 15px;
+                padding: 10px 18px;
                 font-size: 14px;
                 outline: none;
+                transition: border-color 0.2s, box-shadow 0.2s;
             }
 
             #chatInput:focus {
-                border-color: #f26f21;
+                border-color: var(--brand-color);
+                box-shadow: 0 0 0 2px var(--brand-color-light);
             }
 
             #chatForm button {
-                background: #f26f21;
-                color: white;
+                background: var(--brand-color);
+                color: var(--text-light);
                 border: none;
                 border-radius: 50%;
                 width: 42px;
@@ -172,24 +278,25 @@
                 cursor: pointer;
                 font-size: 16px;
                 flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 transition: background-color 0.2s ease;
             }
 
             #chatForm button:hover {
-                background-color: #e0621a;
+                background-color: var(--brand-color-dark);
             }
 
             #chatForm button:disabled {
-                background-color: #f9bda0;
+                background-color: var(--brand-color-light);
                 cursor: not-allowed;
             }
         </style>
-        <%-- END: ADDED CSS FOR CHATBOX --%>
     </head>
     <body>
         <!-- header -->
         <div class="header">
-            <%-- (Your existing header content remains here) --%>
             <div class="header1">
 
                 <div>
@@ -316,8 +423,6 @@
             </div>
         </div>
 
-        <%-- (The rest of your page body content remains here) --%>
-
         <c:if test="${not empty loginSuccess}">
             <div class="login-success-alert">
                 ${loginSuccess}
@@ -397,7 +502,6 @@
             </div>
         </div>
 
-        <%-- (Your footer section remains here) --%>
         <div class="about-section">
             <div class="about-column newsletter-column">
                 <h3>Shop</h3>
@@ -407,7 +511,6 @@
                     <li><a href="">Dành Cho Chuột</a></li>
                 </ul>
 
-                <!-- Phần đăng ký email được gộp vào đây -->
                 <div class="newsletter-block">
                     <h3>Đăng Ký Nhận Tin</h3>
                     <p>Cập nhật thông tin về thú cưng và ưu đãi hấp dẫn</p>
@@ -452,25 +555,25 @@
             © 2025 FPTPet - Đồng hành cùng bạn và thú cưng mỗi ngày!
         </footer>
 
-        <button class="chat-toggle-button" id="chatToggleButton">
+        <button class="chat-toggle-button" id="chatToggleButton" aria-label="Toggle AI Assistant Chat">
             <i class="fas fa-comments"></i>
         </button>
 
         <div class="chatbox-container" id="chatboxContainer">
             <div class="chatbox-header">
-                <h3>AI Assistant</h3>
-                <button class="chatbox-close-button" id="chatboxCloseButton">×</button>
+                <h3>PetFPT</h3>
+                <button class="chatbox-close-button" id="chatboxCloseButton" aria-label="Close Chat">×</button>
             </div>
             <div class="chatbox-messages" id="chatboxMessages">
-                <%-- Messages will be dynamically inserted here by JavaScript --%>
             </div>
-            <div class="chatbox-input">
+            <div class="chatbox-input-area">
                 <form id="chatForm">
                     <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" required>
-                    <button type="submit" id="chatSendButton"><i class="fas fa-paper-plane"></i></button>
+                    <button type="submit" id="chatSendButton" aria-label="Send Message"><i class="fas fa-paper-plane"></i></button>
                 </form>
             </div>
         </div>
+
         <script>
             (function () {
                 const chatToggleButton = document.getElementById('chatToggleButton');
@@ -481,58 +584,129 @@
                 const chatSendButton = document.getElementById('chatSendButton');
                 const chatMessages = document.getElementById('chatboxMessages');
 
-                function initializeChat() {
-                    if (chatMessages.children.length === 0) {
-                        const welcomeDiv = document.createElement('div');
-                        welcomeDiv.className = 'message ai-message';
-                        welcomeDiv.textContent = 'Xin chào! Tôi có thể giúp gì bạn ngày hôm nay?';
-                        chatMessages.appendChild(welcomeDiv);
+                function createMessageRow(msg) {
+                    const isUser = msg.sender === 'user';
+
+                    const row = document.createElement('div');
+                    row.className = `message-row ${isUser ? 'user' : 'ai'}`;
+
+                    const avatar = document.createElement('div');
+                    avatar.className = 'chat-avatar';
+                    avatar.innerHTML = isUser ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+
+                    const msgDiv = document.createElement('div');
+                    const messageClass = isUser ? 'user-message' : 'ai-message';
+                    msgDiv.className = `message ${messageClass}`;
+                    msgDiv.innerHTML = msg.text.replace(/\n/g, '<br>'); // Render newlines
+
+                    if (isUser) {
+                        row.appendChild(msgDiv);
+                        row.appendChild(avatar);
+                    } else {
+                        row.appendChild(avatar);
+                        row.appendChild(msgDiv);
+                    }
+                    return row;
+                }
+
+                function showLoadingIndicator() {
+                    chatMessages.innerHTML = '';
+                    const loadingDiv = document.createElement('div');
+                    loadingDiv.className = 'status-message';
+                    loadingDiv.id = 'loading-indicator';
+                    loadingDiv.innerHTML = `<span><i class="fas fa-spinner fa-spin"></i> Đang tải...</span>`;
+                    chatMessages.appendChild(loadingDiv);
+                }
+
+                function removeLoadingIndicator() {
+                    const indicator = document.getElementById('loading-indicator');
+                    if (indicator)
+                        indicator.remove();
+                }
+
+                function showTypingIndicator() {
+                    if (document.getElementById('typing-indicator'))
+                        return;
+                    const typingDiv = document.createElement('div');
+                    typingDiv.className = 'message-row ai'; // Use the same row structure
+                    typingDiv.id = 'typing-indicator';
+                    typingDiv.innerHTML = `
+                <div class="chat-avatar"><i class="fas fa-robot"></i></div>
+                <div class="message ai-message typing">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+                    chatMessages.appendChild(typingDiv);
+                    scrollToBottom();
+                }
+
+                function removeTypingIndicator() {
+                    const indicator = document.getElementById('typing-indicator');
+                    if (indicator)
+                        indicator.remove();
+                }
+
+                function scrollToBottom() {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+
+                function renderChatHistory(history) {
+                    chatMessages.innerHTML = '';
+
+                    if (!history || history.length === 0) {
+                        const welcomeRow = createMessageRow({
+                            sender: 'ai',
+                            text: 'Xin chào! Hãy bắt đầu cuộc trò chuyện.'
+                        });
+                        chatMessages.appendChild(welcomeRow);
+                        return;
+                    }
+
+                    history.forEach(msg => {
+                        const messageRow = createMessageRow(msg);
+                        chatMessages.appendChild(messageRow);
+                    });
+
+                    scrollToBottom();
+                }
+
+
+                async function loadChatHistory() {
+                    showLoadingIndicator();
+                    try {
+                        const res = await fetch('aichat', {
+                            method: 'GET',
+                            headers: {'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest'}
+                        });
+                        if (!res.ok)
+                            throw new Error(`Server error: ${res.status}`);
+                        const history = await res.json();
+                        removeLoadingIndicator();
+                        renderChatHistory(history);
+                    } catch (err) {
+                        console.error('Failed to load chat history:', err);
+                        removeLoadingIndicator();
+                        const errorRow = createMessageRow({
+                            sender: 'ai',
+                            text: 'Không thể tải lịch sử trò chuyện. Vui lòng thử lại.'
+                        });
+                        chatMessages.appendChild(errorRow);
                     }
                 }
 
                 chatToggleButton.addEventListener('click', () => {
-                    chatboxContainer.classList.toggle('active');
-                    if (chatboxContainer.classList.contains('active')) {
-                        initializeChat();
+                    const isActive = chatboxContainer.classList.toggle('active');
+                    chatToggleButton.classList.toggle('active');
+                    if (isActive) {
+                        loadChatHistory();
                         chatInput.focus();
                     }
                 });
 
                 chatboxCloseButton.addEventListener('click', () => {
                     chatboxContainer.classList.remove('active');
+                    chatToggleButton.classList.remove('active');
                 });
-
-                function addUserMessage(message) {
-                    const msgDiv = document.createElement('div');
-                    msgDiv.className = 'message user-message';
-                    msgDiv.textContent = message;
-                    chatMessages.appendChild(msgDiv);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }
-
-                function showTypingIndicator() {
-                    const typingDiv = document.createElement('div');
-                    typingDiv.className = 'message ai-typing';
-                    typingDiv.id = 'typing-indicator'; // Give it an ID to remove it later
-                    typingDiv.textContent = 'PetFPT đang phản hồi...';
-                    chatMessages.appendChild(typingDiv);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }
-
-                function removeTypingIndicator() {
-                    const typingIndicator = document.getElementById('typing-indicator');
-                    if (typingIndicator) {
-                        typingIndicator.remove();
-                    }
-                }
-
-                function addAiMessage(message) {
-                    const msgDiv = document.createElement('div');
-                    msgDiv.className = 'message ai-message';
-                    msgDiv.innerHTML = message;
-                    chatMessages.appendChild(msgDiv);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }
 
                 chatForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
@@ -540,48 +714,45 @@
                     if (!query)
                         return;
 
-                    addUserMessage(query);
-                    chatInput.value = ''; // Clear input
+                    const userMsgRow = createMessageRow({sender: 'user', text: query});
+                    chatMessages.appendChild(userMsgRow);
+                    scrollToBottom();
 
+                    const originalInput = chatInput.value;
+                    chatInput.value = '';
                     chatInput.disabled = true;
                     chatSendButton.disabled = true;
                     showTypingIndicator();
 
                     try {
-                        const url = 'aichat?query=' + encodeURIComponent(query);
-
-                        const res = await fetch(url, {
+                        const res = await fetch('aichat?query=' + encodeURIComponent(originalInput), {
                             method: 'GET',
-                            headers: {
-                                'Accept': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
+                            headers: {'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest'}
                         });
 
-                        if (!res.ok) {
+                        if (!res.ok)
                             throw new Error(`Server error: ${res.status}`);
-                        }
-
-                        const data = await res.json();
 
                         removeTypingIndicator();
-
-                        if (data && data.response) {
-                            addAiMessage(data.response);
-                        } else {
-                            addAiMessage('Không nhận được phản hồi hợp lệ.');
-                        }
+                        const data = await res.json();
+                        renderChatHistory(data);
 
                     } catch (err) {
                         console.error('Chat error:', err);
                         removeTypingIndicator();
-                        addAiMessage('Có lỗi xảy ra. Xin thử lại.');
+                        const errorRow = createMessageRow({
+                            sender: 'ai',
+                            text: 'Có lỗi xảy ra. Xin thử lại.'
+                        });
+                        chatMessages.appendChild(errorRow);
                     } finally {
                         chatInput.disabled = false;
                         chatSendButton.disabled = false;
                         chatInput.focus();
+                        scrollToBottom();
                     }
                 });
+
             })();
         </script>
     </body>

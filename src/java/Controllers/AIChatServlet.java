@@ -64,40 +64,73 @@ public class AIChatServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String query = request.getParameter("query");
-
-        HttpSession session = request.getSession();
-        List<Conversation> chatHistory = (List<Conversation>) session.getAttribute("chatHistory");
-        if (chatHistory == null) {
-            chatHistory = new ArrayList<>();
-        }
-
-        chatHistory.add(new Conversation("user", query));
-
-        StringBuilder promptBuilder = new StringBuilder();
-        promptBuilder.append(getPrompt()).append("\n");
-        for (Conversation msg : chatHistory) {
-            promptBuilder.append(msg.getSender()).append(": ").append(msg.getText()).append("\n");
-        }
-
-        final String API_KEY = System.getenv("API_KEY");
-        Client client = Client.builder().apiKey(API_KEY).build();
-        GenerateContentResponse AI_response = client.models.generateContent(
-                "gemini-2.5-flash",
-                promptBuilder.toString(),
-                null);
-        String reply = AI_response.text();
-        
-        System.out.println("==========DEBUG: "+reply);
-
-        chatHistory.add(new Conversation("ai", reply));
-        session.setAttribute("chatHistory", chatHistory);
-
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
 
-        try (PrintWriter out = response.getWriter()) {
-            String json = convertToJson(chatHistory);
-            out.print(json);
+        HttpSession session = request.getSession();
+        String query = request.getParameter("query");
+
+        // Use a synchronized block to prevent race conditions with the session attribute
+        synchronized (session) {
+            @SuppressWarnings("unchecked")
+            List<Conversation> chatHistory = (List<Conversation>) session.getAttribute("chatHistory");
+
+            // FIX: Initialize chat history with a welcome message if it doesn't exist.
+            if (chatHistory == null) {
+                chatHistory = new ArrayList<>();
+                String welcomeMessage = "Xin chào! Tôi là trợ lý ảo của PetFPT. Tôi có thể giúp gì cho bạn ngày hôm nay?";
+                chatHistory.add(new Conversation(welcomeMessage, "ai"));
+                session.setAttribute("chatHistory", chatHistory);
+            }
+
+            // If a query is provided, process it. Otherwise, just return the existing history.
+            if (query != null && !query.trim().isEmpty()) {
+                chatHistory.add(new Conversation(query, "user"));
+
+                // --- Your existing AI call logic ---
+                StringBuilder promptBuilder = new StringBuilder();
+                promptBuilder.append(getPrompt()).append("\n\nConversation History:\n");
+                for (Conversation msg : chatHistory) {
+                    // Use a clear role identifier for the model
+                    String role = "ai".equals(msg.getSender()) ? "assistant" : "user";
+                    promptBuilder.append(role).append(": ").append(msg.getText()).append("\n");
+                }
+                promptBuilder.append("assistant: "); // Prompt the model to respond
+
+                try {
+                    // It's better to manage the API key securely, e.g., environment variables
+                    final String API_KEY = System.getenv("API_KEY");
+                    if (API_KEY == null || API_KEY.isEmpty()) {
+                        throw new ServletException("API_KEY environment variable not set.");
+                    }
+
+                    Client client = Client.builder().apiKey(API_KEY).build();
+                    GenerateContentResponse AI_response = client.models.generateContent(
+                            "gemini-1.5-flash", // Using a recent model
+                            promptBuilder.toString(),
+                            null);
+                    String reply = AI_response.text();
+
+                    System.out.println("==========AI REPLY: " + reply);
+
+                    chatHistory.add(new Conversation(reply.trim(), "ai"));
+
+                } catch (Exception e) {
+                    e.printStackTrace(); // Log the actual error
+                    String errorMessage = "Rất tiếc, tôi đang gặp sự cố. Vui lòng thử lại sau.";
+                    chatHistory.add(new Conversation(errorMessage, "ai"));
+                }
+                // --- End of AI call logic ---
+
+                session.setAttribute("chatHistory", chatHistory);
+            }
+
+            // Finally, send the current state of the chat history back to the client.
+            try (PrintWriter out = response.getWriter()) {
+                String jsonResponse = convertToJson(chatHistory);
+                out.print(jsonResponse);
+                out.flush();
+            }
         }
     }
 
