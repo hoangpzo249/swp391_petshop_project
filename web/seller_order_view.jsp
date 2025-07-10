@@ -76,27 +76,23 @@
                 <div class="sidebar-menu">
                     <div class="menu-category">
                         <h5 class="category-title">Điều hướng</h5>
-<<<<<<< HEAD
                         <a href="displaysalesstatistic" class="sidebar-link">
                             <i class="fas fa-tachometer-alt"></i> Tổng quan
                         </a>
                         <a href="sellerdisplayinvoice" class="sidebar-link">
                             <i class="fas fa-file-invoice"></i> Danh sách hóa đơn
                         </a>
-=======
-                        <a href="comingsoon" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
->>>>>>> nam
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>
-                            <a href="displayorder" class="sidebar-link active"><i class="fas fa-bag-shopping"></i> Quản lý đơn hàng</a>
-                            <a href="displayallpet" class="sidebar-link"><i class="fas fa-dog"></i> Quản lý thú cưng</a>
+                        <a href="displayorder" class="sidebar-link active"><i class="fas fa-bag-shopping"></i> Quản lý đơn hàng</a>
+                        <a href="displayallpet" class="sidebar-link"><i class="fas fa-dog"></i> Quản lý thú cưng</a>
                         <a href="displayrefund" class="sidebar-link"><i class="fas fa-undo-alt"></i> Quản lý hoàn tiền</a>
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Thao tác</h5>
-                            <a href="addpet" class="sidebar-link"><i class="fas fa-paw"></i> Đăng bán thú cưng</a>
-                            <a href="add_refund.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Gửi yêu cầu hoàn tiền</a>
+                        <a href="addpet" class="sidebar-link"><i class="fas fa-paw"></i> Đăng bán thú cưng</a>
+                        <a href="add_refund.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Gửi yêu cầu hoàn tiền</a>
                         <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
                         <a href="profile?action=change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
                         <a href="logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
@@ -113,7 +109,7 @@
                     </h1>
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
-                        <li><a href="comingsoon">Seller</a></li>
+                        <li><a href="displaysalesstatistic">Seller</a></li>
                         <li>Quản lý đơn hàng</li>
                     </ul>
                 </div>
@@ -199,12 +195,25 @@
                                             </td>
                                             <td>
                                                 <span class="status-badge status-${order.orderStatus.toLowerCase()}">
-                                                    ${order.orderStatus}
+                                                    <c:choose>
+                                                        <c:when test="${order.orderStatus == 'Pending'}">Chờ xử lý</c:when>
+                                                        <c:when test="${order.orderStatus == 'Confirmed'}">Đã xác nhận</c:when>
+                                                        <c:when test="${order.orderStatus == 'Cancelled'}">Đã hủy</c:when>
+                                                        <c:when test="${order.orderStatus == 'Rejected'}">Bị từ chối</c:when>
+                                                        <c:when test="${order.orderStatus == 'Shipping'}">Đang giao</c:when>
+                                                        <c:when test="${order.orderStatus == 'Pending Shipper'}">Chờ Shipper</c:when>
+                                                        <c:when test="${order.orderStatus == 'Delivered'}">Đã giao</c:when>
+                                                        <c:otherwise>${order.orderStatus}</c:otherwise>
+                                                    </c:choose>
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="status-badge status-payment-${order.paymentStatus.toLowerCase()}">
-                                                    ${order.paymentStatus}
+                                                    <c:choose>
+                                                        <c:when test="${order.paymentStatus == 'Paid'}">Đã thanh toán</c:when>
+                                                        <c:when test="${order.paymentStatus == 'Unpaid'}">Chưa thanh toán</c:when>
+                                                        <c:otherwise>${order.paymentStatus}</c:otherwise>
+                                                    </c:choose>
                                                 </span>
                                             </td>
                                             <td>

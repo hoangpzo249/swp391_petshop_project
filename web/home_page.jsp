@@ -12,6 +12,7 @@
         <title>JSP Page</title>
         <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
         <link href="css/home_page.css" rel="stylesheet" type="text/css"/>
+        <link href="css/ai_chat.css" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     </head>
@@ -206,14 +207,14 @@
             <h2 class="text-favo-item">Boss nào hợp với bạn?</h2>
             <div class="pet-match-section">
                 <div class="pet-options-container">
-                    <a href="listshoppet?species=Cat&sort=popular" class="pet-option">
+                    <a href="listshoppet?species=Mèo&sort=popular" class="pet-option">
                         <div class="pet-image">
                             <img src="images/cat.png" alt="Mèo" class="pet-img">
                         </div>
                         <span class="pet-name">Mèo</span>
                     </a>
 
-                    <a href="listshoppet?species=Dog&sort=popular" class="pet-option">
+                    <a href="listshoppet?species=Chó&sort=popular" class="pet-option">
                         <div class="pet-image">
                             <img src="images/dog.png" alt="Chó" class="pet-img">
                         </div>
@@ -222,7 +223,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="about-section">
             <div class="about-column newsletter-column">
@@ -233,7 +233,6 @@
                     <li><a href="">Dành Cho Chuột</a></li>
                 </ul>
 
-                <!-- Phần đăng ký email được gộp vào đây -->
                 <div class="newsletter-block">
                     <h3>Đăng Ký Nhận Tin</h3>
                     <p>Cập nhật thông tin về thú cưng và ưu đãi hấp dẫn</p>
@@ -245,9 +244,6 @@
                             </div>
                         </form>
                     </div>
-                    <!--                    <div class="newsletter-note">
-                                            <p>Bằng việc đăng ký, bạn đồng ý với <a href="">chính sách bảo mật</a> của chúng tôi</p>
-                                        </div>-->
                 </div>
             </div>
 
@@ -280,5 +276,25 @@
         <footer>
             © 2025 FPTPet - Đồng hành cùng bạn và thú cưng mỗi ngày!
         </footer>
+
+        <button class="chat-toggle-button" id="chatToggleButton" aria-label="Toggle AI Assistant Chat">
+            <i class="fas fa-comments"></i>
+        </button>
+
+        <div class="chatbox-container" id="chatboxContainer">
+            <div class="chatbox-header">
+                <h3>PetFPT</h3>
+                <button class="chatbox-close-button" id="chatboxCloseButton" aria-label="Close Chat">×</button>
+            </div>
+            <div class="chatbox-messages" id="chatboxMessages">
+            </div>
+            <div class="chatbox-input-area">
+                <form id="chatForm">
+                    <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" required>
+                    <button type="submit" id="chatSendButton" aria-label="Send Message"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        <script src="js/ai_chat.js"></script>
     </body>
 </html>

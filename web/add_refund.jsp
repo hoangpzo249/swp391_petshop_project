@@ -66,15 +66,16 @@
                 <div class="sidebar-menu">
                     <div class="menu-category">
                         <h5 class="category-title">Điều hướng</h5>
-                        <a href="comingsoon" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                        <a href="displaysalesstatistics" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                        <a href="sellerdisplayinvoice" class="sidebar-link"><i class="fas fa-file-invoice"></i> Danh sách hóa đơn</a>
                     </div>
-                    <div class="menu-category">
-                        <h5 class="category-title">Quản lý</h5>
+                    <div class="menu-category"><h5 class="category-title">Quản lý</h5>
                         <a href="displayorder" class="sidebar-link"><i class="fas fa-bag-shopping"></i> Quản lý đơn hàng</a>
+                        <a href="displayallpet" class="sidebar-link"><i class="fas fa-dog"></i> Quản lý thú cưng</a>
                         <a href="displayrefund" class="sidebar-link"><i class="fas fa-undo-alt"></i> Quản lý hoàn tiền</a>
                     </div>
-                    <div class="menu-category">
-                        <h5 class="category-title">Thao tác</h5>
+                    <div class="menu-category"><h5 class="category-title">Thao tác</h5>
+                        <a href="addpet" class="sidebar-link"><i class="fas fa-paw"></i> Đăng bán thú cưng</a>
                         <a href="addrefund" class="sidebar-link active"><i class="fas fa-plus-circle"></i> Gửi yêu cầu hoàn tiền</a>
                         <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
                         <a href="profile?action=change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>

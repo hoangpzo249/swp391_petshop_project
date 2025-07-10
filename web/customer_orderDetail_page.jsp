@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
         <link href="css/customer_orderDetail_page.css" rel="stylesheet" type="text/css"/>
+        <link href="css/ai_chat.css" rel="stylesheet" type="text/css"/>
     </head>
 
     <body>
@@ -460,5 +461,24 @@
         <footer>
             © 2025 FPTPet - Đồng hành cùng bạn và thú cưng mỗi ngày!
         </footer>
+        <button class="chat-toggle-button" id="chatToggleButton" aria-label="Toggle AI Assistant Chat">
+            <i class="fas fa-comments"></i>
+        </button>
+
+        <div class="chatbox-container" id="chatboxContainer">
+            <div class="chatbox-header">
+                <h3>PetFPT</h3>
+                <button class="chatbox-close-button" id="chatboxCloseButton" aria-label="Close Chat">×</button>
+            </div>
+            <div class="chatbox-messages" id="chatboxMessages">
+            </div>
+            <div class="chatbox-input-area">
+                <form id="chatForm">
+                    <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" required>
+                    <button type="submit" id="chatSendButton" aria-label="Send Message"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        <script src="js/ai_chat.js"></script>
     </body>
 </html>
