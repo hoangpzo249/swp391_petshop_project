@@ -69,10 +69,6 @@
         <servlet-class>Controllers.SellerAddPetServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SellerQuickLoginServlet</servlet-name>
-        <servlet-class>Controllers.SellerQuickLoginServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>SellerPetImageActionServlet</servlet-name>
         <servlet-class>Controllers.SellerPetImageActionServlet</servlet-class>
     </servlet>
@@ -232,6 +228,14 @@
         <servlet-name>AIChatServlet</servlet-name>
         <servlet-class>Controllers.AIChatServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ExportSalesStatisticServlet</servlet-name>
+        <servlet-class>Controllers.ExportSalesStatisticServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ExportRevenueStatisticServlet</servlet-name>
+        <servlet-class>Controllers.ExportRevenueStatisticServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListShopPetServlet</servlet-name>
         <url-pattern>/listshoppet</url-pattern>
@@ -327,10 +331,6 @@
     <servlet-mapping>
         <servlet-name>AddPetServlet</servlet-name>
         <url-pattern>/addpet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>SellerQuickLoginServlet</servlet-name>
-        <url-pattern>/quicklogin</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SellerPetImageActionServlet</servlet-name>
@@ -463,6 +463,14 @@
     <servlet-mapping>
         <servlet-name>AIChatServlet</servlet-name>
         <url-pattern>/aichat</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExportSalesStatisticServlet</servlet-name>
+        <url-pattern>/exportsalesstatistic</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExportRevenueStatisticServlet</servlet-name>
+        <url-pattern>/exportrevenuestatistic</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>15</session-timeout>

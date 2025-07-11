@@ -801,26 +801,22 @@
     cursor: pointer;
     font-weight: bold;
     color: #333;
-    
-<<<<<<< Updated upstream
-    .modal-content {
-        width: 95%;
-        margin: 5% auto;
-    }
-    
-    .order-detail-container {
-        padding: 0 10px;
-    }
-    
-    .order-detail-content {
-        padding: 30px 15px;
-    }
+}
+.modal-content {
+    width: 95%;
+    margin: 5% auto;
+}
+
+.order-detail-container {
+    padding: 0 10px;
+}
+
+.order-detail-content {
+    padding: 30px 15px;
 }
 
 .invoice-content {
     flex: 1;
     padding: 30px;
     overflow-x: hidden;
-=======
->>>>>>> Stashed changes
 }

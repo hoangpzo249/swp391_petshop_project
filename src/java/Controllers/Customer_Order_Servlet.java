@@ -74,7 +74,7 @@ public class Customer_Order_Servlet extends HttpServlet {
         int accId = acc.getAccId();
 //        System.err.println(accId);
         OrderDAO odao = new OrderDAO();
-        InvoiceDAO _invoicedao=new InvoiceDAO();
+        InvoiceDAO _invoicedao = new InvoiceDAO();
         if (status != null && keyword != null && !keyword.trim().isEmpty()) {
             try {
                 int key = Integer.parseInt(keyword);
@@ -96,13 +96,10 @@ public class Customer_Order_Servlet extends HttpServlet {
         } else if (status != null && view != null) {
             int orderId = Integer.parseInt(view);
             Order order = odao.getOrderCusDetail(accId, status, orderId);
-<<<<<<< Updated upstream
             Invoice invoice = _invoicedao.getInvoiceDetailById(_invoicedao.getInvoiceIdByOrderId(orderId));
             request.setAttribute("invoice", invoice);
 
-=======
             List<Order> orderPet = odao.getOrderCusPetDetail(accId, status, orderId);
->>>>>>> Stashed changes
             request.setAttribute("orderDetail", order);
             request.setAttribute("orderPet", orderPet);
             request.getRequestDispatcher("customer_orderDetail_page.jsp").forward(request, response);

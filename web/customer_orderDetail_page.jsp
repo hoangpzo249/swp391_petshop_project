@@ -431,7 +431,7 @@
                                         </div>
                                         <div class="price-item total">
                                             <div class="price-label">Tổng thanh toán</div>
-                                            <div class="price-value"><fmt:formatNumber value="${orderDetail.totalPrice}" pattern="#,##0"/> VNĐ</div>
+                                            <div class="price-value"><fmt:formatNumber value="${orderDetail.totalPrice - orderDetail.discountAmountAtApply}" pattern="#,##0"/> VNĐ</div>
                                         </div>
                                     </div>
                                 </div>
@@ -613,110 +613,110 @@
         </div>
         <script src="js/ai_chat.js"></script>
         <script>
-                                        document.addEventListener('DOMContentLoaded', function () {
-                                            const itemsTbody = document.getElementById('invoice-items-body');
-                                            if (!itemsTbody)
-                                                return;
+            document.addEventListener('DOMContentLoaded', function () {
+                const itemsTbody = document.getElementById('invoice-items-body');
+                if (!itemsTbody)
+                    return;
 
-                                            const invoiceElement = document.getElementById('invoice-paper-container');
-                                            const items = Array.from(itemsTbody.getElementsByTagName('tr'));
-                                            const paginationContainer = document.getElementById('detail-pagination');
-                                            const downloadBtn = document.getElementById('downloadBtn');
-                                            const invoiceId = "${invoice.invoiceId}";
+                const invoiceElement = document.getElementById('invoice-paper-container');
+                const items = Array.from(itemsTbody.getElementsByTagName('tr'));
+                const paginationContainer = document.getElementById('detail-pagination');
+                const downloadBtn = document.getElementById('downloadBtn');
+                const invoiceId = "${invoice.invoiceId}";
 
-                                            const ITEMS_PER_PAGE = 7;
-                                            const totalItems = items.length;
-                                            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-                                            let currentPage = 1;
+                const ITEMS_PER_PAGE = 7;
+                const totalItems = items.length;
+                const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+                let currentPage = 1;
 
-                                            function showPage(page) {
-                                                currentPage = page;
-                                                const startIndex = (page - 1) * ITEMS_PER_PAGE;
-                                                const endIndex = startIndex + ITEMS_PER_PAGE;
-                                                items.forEach((item, i) => {
-                                                    item.style.display = (i >= startIndex && i < endIndex) ? '' : 'none';
-                                                });
-                                                updatePaginationControls();
-                                            }
+                function showPage(page) {
+                    currentPage = page;
+                    const startIndex = (page - 1) * ITEMS_PER_PAGE;
+                    const endIndex = startIndex + ITEMS_PER_PAGE;
+                    items.forEach((item, i) => {
+                        item.style.display = (i >= startIndex && i < endIndex) ? '' : 'none';
+                    });
+                    updatePaginationControls();
+                }
 
-                                            function updatePaginationControls() {
-                                                paginationContainer.innerHTML = '';
-                                                if (totalPages <= 1)
-                                                    return;
+                function updatePaginationControls() {
+                    paginationContainer.innerHTML = '';
+                    if (totalPages <= 1)
+                        return;
 
-                                                for (let i = 1; i <= totalPages; i++) {
-                                                    const pageLink = document.createElement('a');
-                                                    pageLink.className = 'page-nav';
-                                                    if (i === currentPage) {
-                                                        pageLink.classList.add('active');
-                                                    }
-                                                    pageLink.href = '#';
-                                                    pageLink.innerText = i;
-                                                    pageLink.addEventListener('click', e => {
-                                                        e.preventDefault();
-                                                        showPage(i);
-                                                    });
-                                                    paginationContainer.appendChild(pageLink);
-                                                }
-                                            }
+                    for (let i = 1; i <= totalPages; i++) {
+                        const pageLink = document.createElement('a');
+                        pageLink.className = 'page-nav';
+                        if (i === currentPage) {
+                            pageLink.classList.add('active');
+                        }
+                        pageLink.href = '#';
+                        pageLink.innerText = i;
+                        pageLink.addEventListener('click', e => {
+                            e.preventDefault();
+                            showPage(i);
+                        });
+                        paginationContainer.appendChild(pageLink);
+                    }
+                }
 
-                                            function waitForRender() {
-                                                return new Promise(resolve => requestAnimationFrame(resolve));
-                                            }
+                function waitForRender() {
+                    return new Promise(resolve => requestAnimationFrame(resolve));
+                }
 
-                                            async function downloadInvoiceAsPdf() {
-                                                downloadBtn.disabled = true;
-                                                downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tạo PDF...';
+                async function downloadInvoiceAsPdf() {
+                    downloadBtn.disabled = true;
+                    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tạo PDF...';
 
-                                                const {jsPDF} = window.jspdf;
-                                                const pdf = new jsPDF('p', 'mm', 'a4');
-                                                const pdfWidth = pdf.internal.pageSize.getWidth();
-                                                const pdfHeight = pdf.internal.pageSize.getHeight();
+                    const {jsPDF} = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
 
-                                                const originalPaginationDisplay = paginationContainer.style.display;
-                                                if (totalPages > 1) {
-                                                    paginationContainer.style.display = 'none';
-                                                }
+                    const originalPaginationDisplay = paginationContainer.style.display;
+                    if (totalPages > 1) {
+                        paginationContainer.style.display = 'none';
+                    }
 
-                                                for (let i = 1; i <= totalPages; i++) {
-                                                    showPage(i);
-                                                    await waitForRender();
+                    for (let i = 1; i <= totalPages; i++) {
+                        showPage(i);
+                        await waitForRender();
 
-                                                    const canvas = await html2canvas(invoiceElement, {scale: 2, useCORS: true});
-                                                    const imgData = canvas.toDataURL('image/png');
+                        const canvas = await html2canvas(invoiceElement, {scale: 2, useCORS: true});
+                        const imgData = canvas.toDataURL('image/png');
 
-                                                    const imgProps = pdf.getImageProperties(imgData);
-                                                    const imgWidth = imgProps.width;
-                                                    const imgHeight = imgProps.height;
-                                                    const ratio = Math.min((pdfWidth - 10) / imgWidth, (pdfHeight - 10) / imgHeight);
-                                                    const finalImgWidth = imgWidth * ratio;
-                                                    const finalImgHeight = imgHeight * ratio;
-                                                    const x = (pdfWidth - finalImgWidth) / 2;
-                                                    const y = (pdfHeight - finalImgHeight) / 2;
+                        const imgProps = pdf.getImageProperties(imgData);
+                        const imgWidth = imgProps.width;
+                        const imgHeight = imgProps.height;
+                        const ratio = Math.min((pdfWidth - 10) / imgWidth, (pdfHeight - 10) / imgHeight);
+                        const finalImgWidth = imgWidth * ratio;
+                        const finalImgHeight = imgHeight * ratio;
+                        const x = (pdfWidth - finalImgWidth) / 2;
+                        const y = (pdfHeight - finalImgHeight) / 2;
 
-                                                    if (i > 1) {
-                                                        pdf.addPage();
-                                                    }
-                                                    pdf.addImage(imgData, 'PNG', x, y, finalImgWidth, finalImgHeight);
-                                                }
+                        if (i > 1) {
+                            pdf.addPage();
+                        }
+                        pdf.addImage(imgData, 'PNG', x, y, finalImgWidth, finalImgHeight);
+                    }
 
-                                                if (totalPages > 1) {
-                                                    paginationContainer.style.display = originalPaginationDisplay;
-                                                }
+                    if (totalPages > 1) {
+                        paginationContainer.style.display = originalPaginationDisplay;
+                    }
 
-                                                pdf.save(`hoa-don-${orderDetail.orderId}.pdf`);
+                    pdf.save(`hoa-don-${orderDetail.orderId}.pdf`);
 
-                                                showPage(1);
-                                                downloadBtn.disabled = false;
-                                                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (PDF)';
-                                            }
+                    showPage(1);
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (PDF)';
+                }
 
-                                            if (downloadBtn) {
-                                                downloadBtn.addEventListener('click', downloadInvoiceAsPdf);
-                                            }
+                if (downloadBtn) {
+                    downloadBtn.addEventListener('click', downloadInvoiceAsPdf);
+                }
 
-                                            showPage(1);
-                                        });
+                showPage(1);
+            });
         </script>
     </body>
 </html>

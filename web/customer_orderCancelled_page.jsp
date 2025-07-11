@@ -352,7 +352,7 @@
                                         </div>
                                         <div class="price-item total">
                                             <div class="price-label">Tổng thanh toán</div>
-                                            <div class="price-value"><fmt:formatNumber value="${orderDetail.totalPrice}" pattern="#,##0"/> VNĐ</div>
+                                            <div class="price-value"><fmt:formatNumber value="${orderDetail.totalPrice - orderDetail.discountAmountAtApply}" pattern="#,##0"/> VNĐ</div>
                                         </div>
                                     </div>
                                 </div>
@@ -364,14 +364,14 @@
                                 <input type="hidden" name="status" value="Pending">
                                 <input type="hidden" name="action" value="Cancelled">
                                 <input type="hidden" name="id" value="${orderDetail.orderId}">
-                                
+
                                 <div class="confirm-checkbox">
                                     <input type="checkbox" name="confirmInfo">
                                     <label>
                                         Tôi xác nhận hủy đơn hàng.
                                     </label>
                                 </div>
-                                
+
                                 <a href="orders?status=${orderDetail.orderStatus}" class="btn back-btn">
                                     <i class="fas fa-arrow-left"></i> Quay lại
                                 </a>    

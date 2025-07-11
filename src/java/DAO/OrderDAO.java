@@ -582,8 +582,8 @@ public class OrderDAO {
                 o.setPaymentStatus(rs.getString("paymentStatus"));
                 o.setRejectionReason(rs.getString("rejectionReason"));
                 o.setTotalPrice(rs.getDouble("totalPrice"));
-                Object discount = rs.getObject("discountAmountAtApply");
-                o.setDiscountAmountAtApply(discount != null ? (Double) discount : 0.0);
+                BigDecimal discount = rs.getBigDecimal("discountAmountAtApply");
+                o.setDiscountAmountAtApply(discount != null ? discount.doubleValue() * 1000 : 0.0);
                 list.add(o);
             }
         } catch (Exception ex) {
@@ -648,8 +648,8 @@ public class OrderDAO {
                 o.setPaymentStatus(rs.getString("paymentStatus"));
                 o.setRejectionReason(rs.getString("rejectionReason"));
                 o.setTotalPrice(rs.getDouble("totalPrice"));
-                Object discount = rs.getObject("discountAmountAtApply");
-                o.setDiscountAmountAtApply(discount != null ? (Double) discount : 0.0);
+                BigDecimal discount = rs.getBigDecimal("discountAmountAtApply");
+                o.setDiscountAmountAtApply(discount != null ? discount.doubleValue() * 1000 : 0.0);
                 o.setShipperName(rs.getString("fullName"));
                 o.setShipperPhone(rs.getString("accPhoneNumber"));
             }
@@ -770,7 +770,7 @@ public class OrderDAO {
                 o.setPetDob(rs.getDate("petDob"));
                 o.setPetOrigin(rs.getString("petOrigin"));
                 o.setPetVacxin(rs.getString("petVaccination"));
-                
+
                 o.setImageData(rs.getBytes("imageData"));
 
                 list.add(o);
@@ -1111,7 +1111,7 @@ public class OrderDAO {
         }
         return false;
     }
-    
+
     public boolean updateCancelledOrderByCus(int orderId) {
         DBContext db = new DBContext();
         try {
@@ -1348,7 +1348,7 @@ public class OrderDAO {
             e.printStackTrace();
         }
         return false;
-    }    
+    }
 
     public List<Order> getTopPricedOrders(Date startDate, Date endDate, int limit) {
         DBContext db = new DBContext();
