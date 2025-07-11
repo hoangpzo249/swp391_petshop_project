@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -150,29 +151,42 @@ public class Customer_Order_Servlet extends HttpServlet {
 
             String checkboxInfo = request.getParameter("confirmInfo");
 
-            if (checkboxInfo == null || checkboxInfo.trim().isEmpty()) {
-                session.setAttribute("errorMessage", "Bạn cần xác nhận thông tin trước khi hủy đơn");
-                request.setAttribute("orderDetail", order);
-                request.setAttribute("orderPet", orderPet);
-                String url = "orders?status=Pending&action=Cancelled&id=" + orderId;
-                response.sendRedirect(url);
-                return;
+            Timestamp timeOrder = order.getOrderDate();
+            Timestamp timeCancelled = new Timestamp(System.currentTimeMillis());
+            long time = 12 * 60 * 60 * 1000;
 
-            } else {
-                boolean updateCancelledOrder = odao.updateCancelledOrderByCus(orderId);
-                if (updateCancelledOrder) {
-//                    EmailSender.sendShippingOrderByShipper(orderDetail.getCustomerEmail(), orderId);
-                    session.setAttribute("successMessage", "Hủy đơn thành công");
+            Timestamp deadline = new Timestamp(timeOrder.getTime() + time);
+
+            if (timeCancelled.before(deadline)) {
+                if (checkboxInfo == null || checkboxInfo.trim().isEmpty()) {
+                    session.setAttribute("errorMessage", "Bạn cần xác nhận thông tin trước khi hủy đơn");
                     request.setAttribute("orderDetail", order);
                     request.setAttribute("orderPet", orderPet);
+                    String url = "orders?status=Pending&action=Cancelled&id=" + orderId;
+                    response.sendRedirect(url);
+                    return;
+
                 } else {
-                    session.setAttribute("errorMessage", "Hủy đơn không thành công");
-                    request.setAttribute("orderDetail", order);
-                    request.setAttribute("orderPet", orderPet);
+                    boolean updateCancelledOrder = odao.updateCancelledOrderByCus(orderId);
+                    if (updateCancelledOrder) {
+//                    EmailSender.sendShippingOrderByShipper(orderDetail.getCustomerEmail(), orderId);
+                        session.setAttribute("successMessage", "Hủy đơn thành công");
+                        request.setAttribute("orderDetail", order);
+                        request.setAttribute("orderPet", orderPet);
+                    } else {
+                        session.setAttribute("errorMessage", "Hủy đơn không thành công");
+                        request.setAttribute("orderDetail", order);
+                        request.setAttribute("orderPet", orderPet);
+                    }
+                    String url = "orders?status=Pending";
+                    response.sendRedirect(url);
                 }
+            } else {
+                session.setAttribute("errorMessage", "Bạn không thể hủy đơn sau 12 tiếng");
                 String url = "orders?status=Pending";
                 response.sendRedirect(url);
             }
+
         } else {
             request.getRequestDispatcher("customer_order_page.jsp").forward(request, response);
         }
