@@ -52,7 +52,13 @@
                 <div class="sidebar-menu">
                     <div class="menu-category">
                         <h5 class="category-title">Điều hướng</h5>
-                        <a href="comingsoon" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                        <c:if test="${role ne 'Manager'}">
+                            <a href="displaysalesstatistic" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                            <a href="sellerdisplayinvoice" class="sidebar-link"><i class="fas fa-file-invoice"></i> Danh sách hóa đơn</a>
+                        </c:if>
+                        <c:if test="${role eq 'Manager'}">
+                            <a href="displayrevenuestatistic" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                        </c:if>
                     </div>
                     <div class="menu-category">
                         <h5 class="category-title">Quản lý</h5>

@@ -81,6 +81,13 @@ public class SellerUpdatePetServlet extends HttpServlet {
         PetImageDAO _daoimage = new PetImageDAO();
         HttpSession session = request.getSession();
 
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Seller")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
+
         int petId = Integer.parseInt(request.getParameter("id"));
 
         int pendingOrderId = _daopet.getPendingOrderIdForPet(petId);

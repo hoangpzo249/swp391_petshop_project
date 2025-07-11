@@ -230,13 +230,13 @@
 
                                                     <c:choose>
                                                         <c:when test="${pet.petStatus == 1}">
-                                                            <a class="action-btn block-btn" title="Ẩn thú cưng" 
+                                                            <a class="action-btn unhide-btn" title="Ẩn thú cưng" 
                                                                href="updatepetstatus?petId=${pet.petId}&status=0">
                                                                 <i class="fas fa-toggle-off"></i>
                                                             </a>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <a class="action-btn unhide-btn" title="Hiện thú cưng" 
+                                                            <a class="action-btn block-btn" title="Hiện thú cưng" 
                                                                href="updatepetstatus?petId=${pet.petId}&status=1">
                                                                 <i class="fas fa-toggle-on"></i>
                                                             </a>

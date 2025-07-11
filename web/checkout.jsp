@@ -62,7 +62,7 @@
                                         </c:when>
 
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Manager'}">
-                                            <a href="displaybreed" class="dropdown-item">
+                                            <a href="displayrevenuestatistic" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Manager</span>
                                             </a>

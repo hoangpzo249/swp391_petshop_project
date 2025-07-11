@@ -7,6 +7,7 @@ package Controllers;
 import DAO.BreedDAO;
 import DAO.OrderDAO;
 import DAO.PetDAO;
+import Models.Account;
 import Models.Breed;
 import Models.Pagination;
 import Models.Pet;
@@ -66,11 +67,18 @@ public class SellerDisplaySalesStatisticServlet extends HttpServlet {
             throws ServletException, IOException {
         final int PAGE_SIZE = 10;
         final int MAX_PAGE_NUMBERS_TO_SHOW = 5;
+        
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Seller")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
 
         PetDAO _petdao = new PetDAO();
         BreedDAO _breeddao = new BreedDAO();
         OrderDAO _orderdao = new OrderDAO();
-        HttpSession session = request.getSession();
         String referer = request.getHeader("referer");
         referer = referer == null ? "homepage" : referer;
         String startDateStr = request.getParameter("startDate");

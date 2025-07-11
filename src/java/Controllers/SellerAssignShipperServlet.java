@@ -6,6 +6,7 @@ package Controllers;
 
 import DAO.AccountDAO;
 import DAO.OrderDAO;
+import Models.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -62,6 +63,12 @@ public class SellerAssignShipperServlet extends HttpServlet {
         AccountDAO _accountdao = new AccountDAO();
         HttpSession session = request.getSession();
         String action = request.getParameter("action");
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Seller")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
 
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         String referer = request.getHeader("referer");

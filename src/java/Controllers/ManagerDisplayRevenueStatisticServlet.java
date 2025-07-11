@@ -6,6 +6,7 @@ package Controllers;
 
 import DAO.BreedDAO;
 import DAO.OrderDAO;
+import Models.Account;
 import Models.Breed;
 import Models.Order;
 import Models.Revenue;
@@ -73,6 +74,12 @@ public class ManagerDisplayRevenueStatisticServlet extends HttpServlet {
         long diffInDays = 0;
 
         HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Manager")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
         String referer = request.getHeader("referer");
         if (referer == null) {
             referer = "displayrevenuestatistic";
@@ -89,14 +96,29 @@ public class ManagerDisplayRevenueStatisticServlet extends HttpServlet {
                 endDate = Date.valueOf(endDateStr);
             }
         } catch (IllegalArgumentException e) {
-            session.setAttribute("errMess", "Đã có lỗi xảy ra khi xử lý dử liệu ngày.");
+            session.setAttribute("errMess", "Invalid date format. Please use YYYY-MM-DD.");
             response.sendRedirect(referer);
+            return;
         }
-        if (startDate != null && endDate != null) {
+
+        if (startDate != null && endDate == null) {
+            endDate = new Date(new java.util.Date().getTime());
+            long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());
+            diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+        } else if (startDate == null && endDate != null) {
+            diffInDays = 181;
+
+        } else if (startDate != null && endDate != null) {
+            if (startDate.after(endDate)) {
+                session.setAttribute("errMess", "Ngày bắt đầu không thể ở sau ngày kết thúc.");
+                response.sendRedirect(referer);
+                return;
+            }
             long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());
             diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
         } else {
-            diffInDays = 30;
+            diffInDays = 181;
         }
 
         int totalOrders = _orderdao.totalOrdersFulfilled(startDate, endDate);
@@ -106,17 +128,16 @@ public class ManagerDisplayRevenueStatisticServlet extends HttpServlet {
         List<Order> topHighValueOrders = _orderdao.getTopPricedOrders(startDate, endDate, 10);
         List<Revenue> revenueByDay = new ArrayList<>();
         String chartTimeUnit;
+
         if (diffInDays > 180) {
             revenueByDay = _orderdao.getRevenueByMonth(startDate, endDate);
             chartTimeUnit = "month";
         } else if (diffInDays > 60) {
             revenueByDay = _orderdao.getRevenueByWeek(startDate, endDate);
             chartTimeUnit = "week";
-
         } else {
             revenueByDay = _orderdao.getRevenueByDay(startDate, endDate);
             chartTimeUnit = "day";
-
         }
 
         request.setAttribute("totalOrders", totalOrders);
@@ -126,6 +147,9 @@ public class ManagerDisplayRevenueStatisticServlet extends HttpServlet {
         request.setAttribute("topHighValueOrders", topHighValueOrders);
         request.setAttribute("revenueByDay", revenueByDay);
         request.setAttribute("chartTimeUnit", chartTimeUnit);
+
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
 
         request.getRequestDispatcher("manager_revenue_statistic.jsp")
                 .forward(request, response);

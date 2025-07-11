@@ -102,13 +102,11 @@
                     <form action="addpet" method="POST" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="form-grid">
-                                <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="petName">Tên thú cưng</label>
                                     <input type="text" id="petName" name="petName" class="form-control" placeholder="Ví dụ: Lạp Xưởng Vàng" value="${petName}" required>
                                 </div>
 
-                                <%-- Right Column --%>
                                 <div class="form-group">
                                     <label for="petGender">Giới tính</label>
                                     <select id="petGender" name="petGender" class="form-control">
@@ -118,7 +116,6 @@
                                 </div>
 
 
-                                <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="breedId">Giống</label>
                                     <select id="breedId" name="breedId" class="form-control" required>
@@ -129,7 +126,6 @@
                                     </select>
                                 </div>
 
-                                <%-- Right Column --%>
                                 <div class="form-group">
                                     <label for="colorInput">Màu sắc</label>
                                     <div class="autocomplete-container">
@@ -138,13 +134,11 @@
                                         <div id="color-autocomplete-list" class="autocomplete-items"></div>
                                     </div>
                                 </div>
-                                <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="petDob">Ngày sinh</label>
                                     <input type="date" id="petDob" name="petDob" class="form-control" value="${petDob}" required>
                                 </div>
 
-                                <%-- Right Column --%>
                                 <div class="form-group">
                                     <label for="originInput">Nguồn gốc</label>
                                     <div class="autocomplete-container">
@@ -154,7 +148,6 @@
                                     </div>
                                 </div>
 
-                                <%-- Left Column --%>
                                 <div class="form-group">
                                     <label for="priceDisplay">Giá bán (₫)</label>
 
@@ -171,15 +164,12 @@
                                            value="${pet.petPrice}">
                                 </div>
 
-                                <%-- Right Column (empty for alignment, or add another field here) --%>
                                 <div></div>
 
 
-                                <%-- Full Width Section for the Statuses --%>
                                 <div class="form-full-width">
                                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
 
-                                        <%-- Trạng thái bán --%>
                                         <div class="form-group">
                                             <label for="petAvailability">Trạng thái bán</label>
                                             <select id="petAvailability" name="petAvailability" class="form-control">
@@ -188,7 +178,6 @@
                                             </select>
                                         </div>
 
-                                        <%-- Trạng thái đăng --%>
                                         <div class="form-group">
                                             <label for="petStatus">Trạng thái đăng</label>
                                             <select id="petStatus" name="petStatus" class="form-control">
@@ -197,7 +186,6 @@
                                             </select>
                                         </div>
 
-                                        <%-- Tiêm phòng --%>
                                         <div class="form-group">
                                             <label for="petVaccination">Tiêm phòng</label>
                                             <select id="petVaccination" name="petVaccination" class="form-control">
