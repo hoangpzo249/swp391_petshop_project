@@ -1098,3 +1098,14 @@ textarea.form-control {
         opacity: 1;
     }
 }
+
+.btn-success {
+    background: linear-gradient(45deg, #2ecc71, #6ee7b7);
+    color: white;
+    box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+}
+
+.btn-success:hover {
+    box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
+    transform: translateY(-2px);
+}

@@ -176,13 +176,13 @@
                                                     </a>
                                                     <c:choose>
                                                         <c:when test="${b.getBreedStatus()==1}">
-                                                            <a class="action-btn block-btn" title="Ẩn giống" 
+                                                            <a class="action-btn unhide-btn" title="Ẩn giống" 
                                                                href="updatebreedstatus?breedId=${b.breedId}&status=0">
                                                                 <i class="fas fa-toggle-off"></i>
                                                             </a>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <a class="action-btn unhide-btn" title="Hiện giống" 
+                                                            <a class="action-btn block-btn" title="Hiện giống" 
                                                                href="updatebreedstatus?breedId=${b.breedId}&status=1">
                                                                 <i class="fas fa-toggle-on"></i>
                                                             </a>

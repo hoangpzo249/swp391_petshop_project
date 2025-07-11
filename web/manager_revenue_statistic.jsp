@@ -69,19 +69,19 @@
                         <a href="displayrevenuestatistic" class="sidebar-link active"><i class="fas fa-chart-pie"></i> Tổng quan</a>
                     </div>
                     <div class="menu-category">
-                            <h5 class="category-title">Quản lý</h5>
-                            <a href="displaybreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
-                            <a href="discountmanager" class="sidebar-link"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
-                            <a href="displayrefund" class="sidebar-link "><i class="fas fa-undo-alt"></i> Quản lý hoàn tiền</a>
-                        </div>
-                        <div class="menu-category">
-                            <h5 class="category-title">Thao tác</h5>
-                            <a href="addbreed" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm giống mới</a>
-                            <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã giảm giá mới</a>
-                            <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
-                            <a href="profile?action=change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
-                            <a href="logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-                        </div>
+                        <h5 class="category-title">Quản lý</h5>
+                        <a href="displaybreed" class="sidebar-link"><i class="fas fa-dna"></i> Quản lý giống thú cưng</a>
+                        <a href="discountmanager" class="sidebar-link"><i class="fas fa-tags"></i> Quản lý mã giảm giá</a>
+                        <a href="displayrefund" class="sidebar-link "><i class="fas fa-undo-alt"></i> Quản lý hoàn tiền</a>
+                    </div>
+                    <div class="menu-category">
+                        <h5 class="category-title">Thao tác</h5>
+                        <a href="addbreed" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm giống mới</a>
+                        <a href="adddiscount.jsp" class="sidebar-link"><i class="fas fa-plus-circle"></i> Thêm mã giảm giá mới</a>
+                        <a href="profile" class="sidebar-link"><i class="fas fa-user-circle"></i> Tài khoản của tôi</a>
+                        <a href="profile?action=change-password" class="sidebar-link"><i class="fas fa-key"></i> Đổi mật khẩu</a>
+                        <a href="logout" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                    </div>
                 </div>
             </div>
 
@@ -110,9 +110,17 @@
                                     <button type="button" class="btn btn-outline btn-sm" onclick="setRange('thisMonth')">Tháng Này</button>
                                 </div>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
-                                <button type="button" class="btn btn-success" onclick="exportFinancialSummary()">
-                                    <i class="fas fa-file-export"></i> Xuất Báo Cáo
-                                </button>
+                                <c:url value="exportrevenuestatistic" var="exportUrl">
+                                    <c:if test="${not empty param.startDate}">
+                                        <c:param name="startDate" value="${param.startDate}" />
+                                    </c:if>
+                                    <c:if test="${not empty param.endDate}">
+                                        <c:param name="endDate" value="${param.endDate}" />
+                                    </c:if>
+                                </c:url>
+                                <a href="${exportUrl}" class="btn btn-success" style="text-decoration: none;">
+                                    <i class="fas fa-file-excel"></i> Xuất Excel
+                                </a>
                             </div>
                         </form>
                     </div>

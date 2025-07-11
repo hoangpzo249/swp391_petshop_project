@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAO.InvoiceDAO;
+import Models.Account;
 import Models.Invoice;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -59,6 +60,13 @@ public class Seller_DIsplayInvoiceDetailServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+        
+        Account account = (Account) session.getAttribute("userAccount");
+        if (account == null || !account.getAccRole().equals("Seller")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
         InvoiceDAO _invoicedao = new InvoiceDAO();
         String referer = request.getHeader("referer");
         if (referer == null) {

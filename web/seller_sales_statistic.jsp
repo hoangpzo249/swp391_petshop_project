@@ -112,9 +112,17 @@
                                     <button type="button" class="btn btn-outline btn-sm" onclick="setRange('thisMonth')">Tháng Này</button>
                                 </div>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
-                                <button type="button" class="btn btn-success" onclick="exportToCSV()">
-                                    <i class="fas fa-file-export"></i> Xuất CSV
-                                </button>
+                                <c:url value="exportsalesstatistic" var="exportExcelUrl">
+                                    <c:if test="${not empty param.startDate}">
+                                        <c:param name="startDate" value="${param.startDate}" />
+                                    </c:if>
+                                    <c:if test="${not empty param.endDate}">
+                                        <c:param name="endDate" value="${param.endDate}" />
+                                    </c:if>
+                                </c:url>
+                                <a href="${exportExcelUrl}" class="btn btn-success" style="text-decoration: none;">
+                                    <i class="fas fa-file-excel"></i> Xuất Excel
+                                </a>
                             </div>
                         </form>
                     </div>
@@ -364,46 +372,6 @@
                 document.querySelector('input[name="endDate"]').value = endDate.toISOString().split('T')[0];
 
                 document.getElementById('statsFilterForm').submit();
-            }
-
-            function exportToCSV() {
-                const csvHeader = "Mã Pet,Tên Thú Cưng,Giống,Ngày Bán,Giá Bán\n";
-                let csvBody = "";
-
-                const table = document.getElementById("recentSalesTable");
-                const rows = table.querySelectorAll("tbody tr");
-
-                rows.forEach(row => {
-                    if (row.querySelector('td[colspan="5"]')) {
-                        return;
-                    }
-
-                    const cols = row.querySelectorAll("td");
-                    const rowData = Array.from(cols).map(col => `"\${col.innerText.replace(/"/g, '""')}"`);
-                    csvBody += rowData.join(",") + "\n";
-                });
-
-                if (csvBody.trim() === "") {
-                    csvBody = "Không có dữ liệu bán hàng trong khoảng thời gian này.\n";
-                }
-
-                const bom = "\uFEFF";
-                const fullCsvContent = bom + csvHeader + csvBody;
-
-                const blob = new Blob([fullCsvContent], {type: 'text/csv;charset=utf-8;'});
-
-                const link = document.createElement("a");
-                if (link.download !== undefined) {
-                    const url = URL.createObjectURL(blob);
-                    link.setAttribute("href", url);
-                    link.setAttribute("download", "sales_statistics.csv");
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
-                }
             }
         </script>
     </body>
