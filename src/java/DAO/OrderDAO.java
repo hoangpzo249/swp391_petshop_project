@@ -771,7 +771,6 @@ public class OrderDAO {
                 o.setPetOrigin(rs.getString("petOrigin"));
                 o.setPetVacxin(rs.getString("petVaccination"));
                 
-                
                 o.setImageData(rs.getBytes("imageData"));
 
                 list.add(o);
@@ -1103,6 +1102,21 @@ public class OrderDAO {
         try {
             conn = db.getConnection();
             String sql = "update orderTb set orderstatus ='Shipping' where orderId = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean updateCancelledOrderByCus(int orderId) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "update orderTb set orderstatus ='Cancelled' where orderId = ?";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, orderId);
             int row = ps.executeUpdate();

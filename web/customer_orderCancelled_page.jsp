@@ -1,9 +1,8 @@
 <%-- 
-    Document   : customer_orderDetail_page
-    Created on : 30 June 2025, 8:41:37 am
+    Document   : customer_orderCancelled_page
+    Created on : 11 July 2025, 12:46:31 am
     Author     : HuyHoang
 --%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -11,15 +10,12 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Lịch sử đơn hàng</title>
+        <title>Xác nhận hủy đơn hàng</title>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
         <link href="css/customer_orderDetail_page.css" rel="stylesheet" type="text/css"/>
-        <link href="css/invoice.css" rel="stylesheet" type="text/css"/>
         <link href="css/ai_chat.css" rel="stylesheet" type="text/css"/>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     </head>
 
     <body>
@@ -69,7 +65,7 @@
                                         </c:when>
 
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Manager'}">
-                                            <a href="displayrevenuestatistic" class="dropdown-item">
+                                            <a href="displaybreed" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Manager</span>
                                             </a>
@@ -170,7 +166,7 @@
             <div class="order-detail-container">
                 <div class="order-detail-card">
                     <div class="order-detail-header">
-                        <h1>Chi tiết đơn hàng #${orderDetail.orderId}</h1>
+                        <h1>Xác nhận hủy đơn hàng #${orderDetail.orderId}</h1>
                         <div class="back-button">
                             <a href="orders?status=${orderDetail.orderStatus}">
                                 <i class="fas fa-arrow-left"></i> Quay lại
@@ -262,46 +258,6 @@
                             </div>
                         </div>
 
-                        <div class="order-progress">
-                            <div class="progress-track">
-                                <div class="progress-step ${orderDetail.orderStatus eq 'Pending' || orderDetail.orderStatus eq 'Confirmed' || orderDetail.orderStatus eq 'Pending Shipper' || orderDetail.orderStatus eq 'Shipping' || orderDetail.orderStatus eq 'Delivered' ? 'active' : ''}">
-                                    <div class="step-icon">
-                                        <i class="fas fa-clipboard-check"></i>
-                                    </div>
-                                    <div class="step-label">Đã đặt hàng</div>
-                                    <div class="step-date">
-                                        <fmt:formatDate value="${orderDetail.orderDate}" pattern="dd/MM/yyyy"/>
-                                    </div>
-                                </div>
-
-                                <div class="progress-step ${orderDetail.orderStatus eq 'Confirmed' || orderDetail.orderStatus eq 'Pending Shipper' || orderDetail.orderStatus eq 'Shipping' || orderDetail.orderStatus eq 'Delivered' ? 'active' : ''}">
-                                    <div class="step-icon">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                    <div class="step-label">Đã xác nhận</div>
-                                </div>
-
-                                <div class="progress-step ${orderDetail.orderStatus eq 'Shipping' || orderDetail.orderStatus eq 'Delivered' ? 'active' : ''}">
-                                    <div class="step-icon">
-                                        <i class="fas fa-shipping-fast"></i>
-                                    </div>
-                                    <div class="step-label">Đang giao hàng</div>
-                                </div>
-
-                                <div class="progress-step ${orderDetail.orderStatus eq 'Delivered' ? 'active' : ''}">
-                                    <div class="step-icon">
-                                        <i class="fas fa-box-open"></i>
-                                    </div>
-                                    <div class="step-label">Đã giao hàng</div>
-                                    <div class="step-date">
-                                        <c:if test="${orderDetail.orderStatus eq 'Delivered'}">
-                                            <fmt:formatDate value="${orderDetail.deliveryDate}" pattern="dd/MM/yyyy"/>
-                                        </c:if>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="order-info-sections">
                             <div class="order-section">
                                 <div class="section-header">
@@ -368,45 +324,10 @@
                                             <div class="info-label"><i class="fas fa-envelope"></i> Email</div>
                                             <div class="info-value">${orderDetail.customerEmail}</div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="order-section">
-                                <div class="section-header">
-                                    <h2><i class="fas fa-truck"></i> Thông tin giao hàng</h2>
-                                </div>
-                                <div class="section-content">
-                                    <div class="info-group">
                                         <div class="info-item full-width">
                                             <div class="info-label"><i class="fas fa-map-marker-alt"></i> Địa chỉ giao hàng</div>
                                             <div class="info-value">${orderDetail.customerAddress}</div>
                                         </div>
-
-                                        <c:if test="${orderDetail.orderStatus eq 'Shipping' || orderDetail.orderStatus eq 'Delivered'}">
-                                            <div class="info-item">
-                                                <div class="info-label"><i class="fas fa-user-tie"></i> Người giao hàng</div>
-                                                <div class="info-value">${orderDetail.shipperName}</div>
-                                            </div>
-                                            <div class="info-item">
-                                                <div class="info-label"><i class="fas fa-phone"></i> Số điện thoại</div>
-                                                <div class="info-value">${orderDetail.shipperPhone}</div>
-                                            </div>
-                                        </c:if>
-
-                                        <c:if test="${orderDetail.orderStatus eq 'Rejected'}">
-                                            <div class="info-item full-width rejection-info">
-                                                <div class="info-label"><i class="fas fa-times-circle"></i> Lý do hủy</div>
-                                                <div class="info-value rejection-reason">${orderDetail.rejectionReason}</div>
-                                            </div>
-                                        </c:if>
-
-                                        <c:if test="${orderDetail.orderStatus eq 'Cancelled'}">
-                                            <div class="info-item full-width rejection-info">
-                                                <div class="info-label"><i class="fas fa-user-times-circle"></i> Lý do hủy</div>
-                                                <div class="info-value rejection-reason">${orderDetail.rejectionReason}</div>
-                                            </div>
-                                        </c:if>
                                     </div>
                                 </div>
                             </div>
@@ -438,113 +359,27 @@
                             </div>
                         </div>
 
-                        <div class="invoice-content">
-                            <c:choose>
-                                <c:when test="${not empty invoice}">
-                                    <div class="invoice-actions">
-                                        <button id="downloadBtn" class="btn btn-primary">
-                                            <i class="fas fa-download"></i> Tải hóa đơn (PDF)
-                                        </button>
-                                    </div>
-
-                                    <div id="invoice-paper-container" class="invoice-paper">
-                                        <div class="invoice-header">
-                                            <div class="logo-section">
-                                                <img src="images/logo_banner/logo2.png" alt="PETFPT Shop Logo"/>
-                                                <p style="font-weight: 600; margin-top:10px;">PETFPT Shop</p>
-                                                <p>Lô E2a-7, Đường D1, Khu Công nghệ cao, Long Thạnh Mỹ, Thành Phố Thủ Đức, Thành phố Hồ Chí Minh</p>
-                                            </div>
-                                            <div class="invoice-title-section">
-                                                <h2>HÓA ĐƠN BÁN HÀNG</h2>
-                                                <p>Mã hóa đơn: <strong>#${invoice.invoiceId}</strong></p>
-                                                <p>Mã đơn hàng: #${invoice.order.orderId}</p>
-                                                <p>Ngày xuất: <fmt:formatDate value="${invoice.issueDate}" pattern="HH:mm, dd/MM/yyyy"/></p>
-                                            </div>
-                                        </div>
-                                        <div class="invoice-body">
-                                            <div class="invoice-details">
-                                                <div class="shop-details">
-                                                    <h3 class="section-title">Thông tin người bán</h3>
-                                                    <p><strong>Cửa hàng:</strong> PETFPT Shop</p>
-                                                    <p><strong>Điện thoại:</strong> 0767.676.770</p>
-                                                    <p><strong>Email:</strong> fptpet@gmail.com</p>
-                                                </div>
-                                                <div class="customer-details">
-                                                    <h3 class="section-title">Thông tin khách hàng</h3>
-                                                    <p><strong>Tên khách hàng:</strong> ${invoice.order.customerName}</p>
-                                                    <p><strong>Địa chỉ:</strong> ${invoice.order.customerAddress}</p>
-                                                    <p><strong>Điện thoại:</strong> ${invoice.order.customerPhone}</p>
-                                                    <p><strong>Email:</strong> ${invoice.order.customerEmail}</p>
-                                                </div>
-                                            </div>
-                                            <table class="items-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>STT</th>
-                                                        <th>Sản phẩm</th>
-                                                        <th class="text-right">Giá</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="invoice-items-body">
-                                                    <c:forEach var="item" items="${invoice.invoiceContents}" varStatus="loop">
-                                                        <tr>
-                                                            <td>${loop.count}</td>
-                                                            <td>
-                                                                <strong>${item.petName}</strong><br>
-                                                                <small>Giống: ${item.petBreed} - Giới tính: ${item.petGender}</small>
-                                                            </td>
-                                                            <td class="text-right"><fmt:formatNumber value="${item.priceAtInvoice}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
-                                                        </tr>
-                                                    </c:forEach>
-                                                </tbody>
-                                            </table>
-                                            <div id="detail-pagination" class="invoice-pagination"></div>
-                                        </div>
-                                        <div class="invoice-summary">
-                                            <div class="payment-method-section">
-                                                <h3 class="section-title">Phương thức thanh toán</h3>
-                                                <p>${invoice.paymentMethod}</p>
-                                            </div>
-                                            <div class="invoice-totals">
-                                                <table>
-                                                    <tr>
-                                                        <td class="label">Tổng tiền hàng:</td>
-                                                        <td class="text-right"><fmt:formatNumber value="${invoice.totalAmount + invoice.order.discountAmountAtApply}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="label">Giảm giá:</td>
-                                                        <td class="text-right">- <fmt:formatNumber value="${invoice.order.discountAmountAtApply}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
-                                                    </tr>
-                                                    <tr class="grand-total">
-                                                        <td class="label">TỔNG CỘNG:</td>
-                                                        <td class="text-right"><fmt:formatNumber value="${invoice.totalAmount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div class="invoice-footer">
-                                            <p>Cảm ơn quý khách đã mua sắm tại <strong class="shop-name">PETFPT Shop</strong>!</p>
-                                        </div>
-                                    </div>
-                                </c:when>
-                                <c:otherwise>
-                                    <div class="alert-message error">Không tìm thấy thông tin hóa đơn. Vui lòng thử lại.</div>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
-
                         <div class="order-actions">
-                            <a href="orders?status=${orderDetail.orderStatus}" class="btn back-btn">
-                                <i class="fas fa-arrow-left"></i> Quay lại
-                            </a>
+                            <form action="orders" method="post">
+                                <input type="hidden" name="status" value="Pending">
+                                <input type="hidden" name="action" value="Cancelled">
+                                <input type="hidden" name="id" value="${orderDetail.orderId}">
+                                
+                                <div class="confirm-checkbox">
+                                    <input type="checkbox" name="confirmInfo">
+                                    <label>
+                                        Tôi xác nhận hủy đơn hàng.
+                                    </label>
+                                </div>
+                                
+                                <a href="orders?status=${orderDetail.orderStatus}" class="btn back-btn">
+                                    <i class="fas fa-arrow-left"></i> Quay lại
+                                </a>    
 
-                            <c:choose>
-                                <c:when test="${orderDetail.orderStatus eq 'Pending'}">
-                                    <a href="orders?status=${orderDetail.orderStatus}&action=Cancelled&id=${orderDetail.orderId}" class="btn cancel-btn">
-                                        <i class="fas fa-times"></i> Hủy đơn hàng
-                                    </a>
-                                </c:when>
-                            </c:choose>
+                                <button type="submit" class="btn cancel-btn">
+                                    <i class="fas fa-times"></i> Hủy đơn hàng
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -612,111 +447,5 @@
             </div>
         </div>
         <script src="js/ai_chat.js"></script>
-        <script>
-                                        document.addEventListener('DOMContentLoaded', function () {
-                                            const itemsTbody = document.getElementById('invoice-items-body');
-                                            if (!itemsTbody)
-                                                return;
-
-                                            const invoiceElement = document.getElementById('invoice-paper-container');
-                                            const items = Array.from(itemsTbody.getElementsByTagName('tr'));
-                                            const paginationContainer = document.getElementById('detail-pagination');
-                                            const downloadBtn = document.getElementById('downloadBtn');
-                                            const invoiceId = "${invoice.invoiceId}";
-
-                                            const ITEMS_PER_PAGE = 7;
-                                            const totalItems = items.length;
-                                            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-                                            let currentPage = 1;
-
-                                            function showPage(page) {
-                                                currentPage = page;
-                                                const startIndex = (page - 1) * ITEMS_PER_PAGE;
-                                                const endIndex = startIndex + ITEMS_PER_PAGE;
-                                                items.forEach((item, i) => {
-                                                    item.style.display = (i >= startIndex && i < endIndex) ? '' : 'none';
-                                                });
-                                                updatePaginationControls();
-                                            }
-
-                                            function updatePaginationControls() {
-                                                paginationContainer.innerHTML = '';
-                                                if (totalPages <= 1)
-                                                    return;
-
-                                                for (let i = 1; i <= totalPages; i++) {
-                                                    const pageLink = document.createElement('a');
-                                                    pageLink.className = 'page-nav';
-                                                    if (i === currentPage) {
-                                                        pageLink.classList.add('active');
-                                                    }
-                                                    pageLink.href = '#';
-                                                    pageLink.innerText = i;
-                                                    pageLink.addEventListener('click', e => {
-                                                        e.preventDefault();
-                                                        showPage(i);
-                                                    });
-                                                    paginationContainer.appendChild(pageLink);
-                                                }
-                                            }
-
-                                            function waitForRender() {
-                                                return new Promise(resolve => requestAnimationFrame(resolve));
-                                            }
-
-                                            async function downloadInvoiceAsPdf() {
-                                                downloadBtn.disabled = true;
-                                                downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tạo PDF...';
-
-                                                const {jsPDF} = window.jspdf;
-                                                const pdf = new jsPDF('p', 'mm', 'a4');
-                                                const pdfWidth = pdf.internal.pageSize.getWidth();
-                                                const pdfHeight = pdf.internal.pageSize.getHeight();
-
-                                                const originalPaginationDisplay = paginationContainer.style.display;
-                                                if (totalPages > 1) {
-                                                    paginationContainer.style.display = 'none';
-                                                }
-
-                                                for (let i = 1; i <= totalPages; i++) {
-                                                    showPage(i);
-                                                    await waitForRender();
-
-                                                    const canvas = await html2canvas(invoiceElement, {scale: 2, useCORS: true});
-                                                    const imgData = canvas.toDataURL('image/png');
-
-                                                    const imgProps = pdf.getImageProperties(imgData);
-                                                    const imgWidth = imgProps.width;
-                                                    const imgHeight = imgProps.height;
-                                                    const ratio = Math.min((pdfWidth - 10) / imgWidth, (pdfHeight - 10) / imgHeight);
-                                                    const finalImgWidth = imgWidth * ratio;
-                                                    const finalImgHeight = imgHeight * ratio;
-                                                    const x = (pdfWidth - finalImgWidth) / 2;
-                                                    const y = (pdfHeight - finalImgHeight) / 2;
-
-                                                    if (i > 1) {
-                                                        pdf.addPage();
-                                                    }
-                                                    pdf.addImage(imgData, 'PNG', x, y, finalImgWidth, finalImgHeight);
-                                                }
-
-                                                if (totalPages > 1) {
-                                                    paginationContainer.style.display = originalPaginationDisplay;
-                                                }
-
-                                                pdf.save(`hoa-don-${orderDetail.orderId}.pdf`);
-
-                                                showPage(1);
-                                                downloadBtn.disabled = false;
-                                                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tải hóa đơn (PDF)';
-                                            }
-
-                                            if (downloadBtn) {
-                                                downloadBtn.addEventListener('click', downloadInvoiceAsPdf);
-                                            }
-
-                                            showPage(1);
-                                        });
-        </script>
     </body>
 </html>

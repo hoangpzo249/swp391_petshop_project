@@ -780,59 +780,29 @@
     }
 }
 
-/* Responsive styles */
-@media (max-width: 992px) {
-    .pet-image {
-        flex: 0 0 100%;
-        max-width: 100%;
-        height: 250px;
-    }
-    
-    .progress-track {
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-    
-    .progress-track::before {
-        display: none;
-    }
-    
-    .progress-step {
-        flex: 0 0 calc(50% - 10px);
-    }
-    
-    .summary-item {
-        flex: 0 0 calc(50% - 15px);
-    }
+
+
+.confirm-checkbox {
+    margin-bottom: 15px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-@media (max-width: 768px) {
-    .order-detail-header {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-    }
-    
-    .summary-item, .info-item {
-        flex: 0 0 100%;
-    }
-    
-    .order-actions {
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
-    }
-    
-    .btn {
-        width: 100%;
-    }
+.confirm-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: orange;
 }
 
-@media (max-width: 576px) {
-    .progress-step {
-        flex: 0 0 100%;
-    }
+.confirm-checkbox label {
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
     
+<<<<<<< Updated upstream
     .modal-content {
         width: 95%;
         margin: 5% auto;
@@ -851,4 +821,6 @@
     flex: 1;
     padding: 30px;
     overflow-x: hidden;
+=======
+>>>>>>> Stashed changes
 }

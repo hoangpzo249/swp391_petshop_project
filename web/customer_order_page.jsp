@@ -148,18 +148,18 @@
         </div>
 
         <!-- Notification alerts -->
-        <c:if test="${not empty requestScope.successMessage}">
+        <c:if test="${not empty successMessage}">
             <div class="success-alert">
-                <i class="fas fa-check-circle"></i> ${requestScope.successMessage}
+                <i class="fas fa-check-circle"></i> ${successMessage}
             </div>
-            <c:remove var="successMessage" scope="request" />
+            <c:remove var="successMessage" scope="session" />
         </c:if>
 
-        <c:if test="${not empty requestScope.errorMessage}">
+        <c:if test="${not empty errorMessage}">
             <div class="error-alert">
-                <i class="fas fa-exclamation-triangle"></i> ${requestScope.errorMessage}
+                <i class="fas fa-exclamation-triangle"></i> ${errorMessage}
             </div>
-            <c:remove var="errorMessage" scope="request" />
+            <c:remove var="errorMessage" scope="session" />
         </c:if>
 
         <div class="orders-container">
@@ -185,6 +185,9 @@
                         </a>
                         <a href="orders?status=Delivered" class="${status eq 'Delivered' ? 'active' : ''}">
                             <i class="fas fa-box-open"></i> Đã giao
+                        </a>
+                        <a href="orders?status=Cancelled" class="${status eq 'Cancelled'? 'active' : ''}">
+                            <i class="fas fa-user-times"></i> Từ chối
                         </a>
                         <a href="orders?status=Rejected" class="${status eq 'Rejected' ? 'active' : ''}">
                             <i class="fas fa-times"></i> Đã hủy
@@ -226,6 +229,11 @@
                                         <c:when test="${order.orderStatus eq 'Rejected'}">
                                             <div class="order-status rejected">
                                                 <i class="fas fa-times"></i>Đã hủy
+                                            </div>
+                                        </c:when>
+                                        <c:when test="${order.orderStatus eq 'Cancelled'}">
+                                            <div class="order-status rejected">
+                                                <i class="fas fa-user-times"></i>Từ chối
                                             </div>
                                         </c:when>
                                         <c:when test="${order.orderStatus eq 'Confirmed'}">
@@ -330,11 +338,17 @@
                                     </a>
                                     <c:choose>
                                         <c:when test="${order.orderStatus eq 'Pending'}">
-                                            <a href="#" class="btn cancel-btn">
+                                            <a href="orders?status=${order.orderStatus}&action=Cancelled&id=${order.orderId}" class="btn cancel-btn">
                                                 <i class="fas fa-times"></i> Hủy đơn hàng
                                             </a>
                                         </c:when>
                                         <c:when test="${order.orderStatus eq 'Rejected'}">
+                                            <div class="rejection-reason">
+                                                <span class="label">Lý do hủy:</span>
+                                                <span class="value">${order.rejectionReason}</span>
+                                            </div>
+                                        </c:when>
+                                        <c:when test="${order.orderStatus eq 'Cancelled'}">
                                             <div class="rejection-reason">
                                                 <span class="label">Lý do hủy:</span>
                                                 <span class="value">${order.rejectionReason}</span>

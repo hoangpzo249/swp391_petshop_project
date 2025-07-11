@@ -9,6 +9,7 @@ import DAO.OrderDAO;
 import Models.Account;
 import Models.Invoice;
 import Models.Order;
+import Utils.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -67,6 +68,8 @@ public class Customer_Order_Servlet extends HttpServlet {
         String keyword = request.getParameter("keyword");
         String view = request.getParameter("view");
 
+        String action = request.getParameter("action");
+        String id = request.getParameter("id");
         Account acc = (Account) session.getAttribute("userAccount");
         int accId = acc.getAccId();
 //        System.err.println(accId);
@@ -93,11 +96,23 @@ public class Customer_Order_Servlet extends HttpServlet {
         } else if (status != null && view != null) {
             int orderId = Integer.parseInt(view);
             Order order = odao.getOrderCusDetail(accId, status, orderId);
+<<<<<<< Updated upstream
             Invoice invoice = _invoicedao.getInvoiceDetailById(_invoicedao.getInvoiceIdByOrderId(orderId));
             request.setAttribute("invoice", invoice);
 
+=======
+            List<Order> orderPet = odao.getOrderCusPetDetail(accId, status, orderId);
+>>>>>>> Stashed changes
             request.setAttribute("orderDetail", order);
+            request.setAttribute("orderPet", orderPet);
             request.getRequestDispatcher("customer_orderDetail_page.jsp").forward(request, response);
+        } else if ("Pending".equals(status) && "Cancelled".equals(action) && id != null) {
+            int orderId = Integer.parseInt(id);
+            Order order = odao.getOrderCusDetail(accId, status, orderId);
+            List<Order> orderPet = odao.getOrderCusPetDetail(accId, status, orderId);
+            request.setAttribute("orderDetail", order);
+            request.setAttribute("orderPet", orderPet);
+            request.getRequestDispatcher("customer_orderCancelled_page.jsp").forward(request, response);
         } else {
             List<Order> orderList = odao.getOrderCus(accId, status);
 
@@ -123,7 +138,47 @@ public class Customer_Order_Servlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String status = request.getParameter("status");
+        String action = request.getParameter("action");
+        String id = request.getParameter("id");
+        HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("userAccount");
+        OrderDAO odao = new OrderDAO();
+        int accId = acc.getAccId();
+
+        if ("Pending".equals(status) && "Cancelled".equals(action) && id != null) {
+            int orderId = Integer.parseInt(id);
+            Order order = odao.getOrderCusDetail(accId, status, orderId);
+            List<Order> orderPet = odao.getOrderCusPetDetail(accId, status, orderId);
+
+            String checkboxInfo = request.getParameter("confirmInfo");
+
+            if (checkboxInfo == null || checkboxInfo.trim().isEmpty()) {
+                session.setAttribute("errorMessage", "Bạn cần xác nhận thông tin trước khi hủy đơn");
+                request.setAttribute("orderDetail", order);
+                request.setAttribute("orderPet", orderPet);
+                String url = "orders?status=Pending&action=Cancelled&id=" + orderId;
+                response.sendRedirect(url);
+                return;
+
+            } else {
+                boolean updateCancelledOrder = odao.updateCancelledOrderByCus(orderId);
+                if (updateCancelledOrder) {
+//                    EmailSender.sendShippingOrderByShipper(orderDetail.getCustomerEmail(), orderId);
+                    session.setAttribute("successMessage", "Hủy đơn thành công");
+                    request.setAttribute("orderDetail", order);
+                    request.setAttribute("orderPet", orderPet);
+                } else {
+                    session.setAttribute("errorMessage", "Hủy đơn không thành công");
+                    request.setAttribute("orderDetail", order);
+                    request.setAttribute("orderPet", orderPet);
+                }
+                String url = "orders?status=Pending";
+                response.sendRedirect(url);
+            }
+        } else {
+            request.getRequestDispatcher("customer_order_page.jsp").forward(request, response);
+        }
     }
 
     /**
