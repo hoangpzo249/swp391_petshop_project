@@ -4,8 +4,10 @@
  */
 package Controllers;
 
+import DAO.InvoiceDAO;
 import DAO.OrderDAO;
 import Models.Account;
+import Models.Invoice;
 import Models.Order;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -69,6 +71,7 @@ public class Customer_Order_Servlet extends HttpServlet {
         int accId = acc.getAccId();
 //        System.err.println(accId);
         OrderDAO odao = new OrderDAO();
+        InvoiceDAO _invoicedao=new InvoiceDAO();
         if (status != null && keyword != null && !keyword.trim().isEmpty()) {
             try {
                 int key = Integer.parseInt(keyword);
@@ -87,10 +90,12 @@ public class Customer_Order_Servlet extends HttpServlet {
                 request.setAttribute("status", status);
                 request.getRequestDispatcher("customer_order_page.jsp").forward(request, response);
             }
-        } else if (status != null && view != null ) {
+        } else if (status != null && view != null) {
             int orderId = Integer.parseInt(view);
-            Order order  =  odao.getOrderCusDetail(accId, status, orderId);
-            
+            Order order = odao.getOrderCusDetail(accId, status, orderId);
+            Invoice invoice = _invoicedao.getInvoiceDetailById(_invoicedao.getInvoiceIdByOrderId(orderId));
+            request.setAttribute("invoice", invoice);
+
             request.setAttribute("orderDetail", order);
             request.getRequestDispatcher("customer_orderDetail_page.jsp").forward(request, response);
         } else {

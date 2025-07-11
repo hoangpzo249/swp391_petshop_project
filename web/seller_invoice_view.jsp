@@ -125,8 +125,8 @@
                                 <div class="select-group">
                                     <select name="paymentMethod" onchange="this.form.submit()">
                                         <option value="" ${empty param.paymentMethod ? 'selected' : ''}>Tất cả phương thức TT</option>
-                                        <option value="Thanh toán khi nhận hàng" ${param.paymentMethod == 'Thanh toán khi nhận hàng' ? 'selected' : ''}>Thanh toán khi nhận hàng</option>
-                                        <option value="Thanh toán qua VNPAY" ${param.paymentMethod == 'Thanh toán qua VNPAY' ? 'selected' : ''}>Thanh toán qua VNPAY</option>
+                                        <option value="Cash on Delivery" ${param.paymentMethod == 'Cash on Delivery' ? 'selected' : ''}>Tiền mặt</option>
+                                        <option value="Credit Card" ${param.paymentMethod == 'Credit Card' ? 'selected' : ''}>Thẻ tín dụng</option>
                                     </select>
                                 </div>
 
@@ -170,7 +170,13 @@
                                                     <fmt:formatNumber value="${invoice.totalAmount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                                 </span>
                                             </td>
-                                            <td>${invoice.paymentMethod}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${invoice.paymentMethod == 'Cash'}">Tiền mặt</c:when>
+                                                    <c:when test="${invoice.paymentMethod == 'Credit Card'}">Thẻ tín dụng</c:when>
+                                                    <c:otherwise>${invoice.paymentMethod}</c:otherwise>
+                                                </c:choose>
+                                            </td>
                                             <td>
                                                 <div class="table-actions">
                                                     <a class="action-btn view-btn" title="Xem hóa đơn" href="sellerdisplayinvoicedetail?invoiceId=${invoice.invoiceId}">

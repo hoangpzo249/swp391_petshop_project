@@ -50,10 +50,9 @@ public class InvoiceDAO {
     public Invoice getInvoiceDetailById(int invoiceId) {
         Invoice invoice = null;
         String sql = "SELECT i.*, o.* FROM InvoiceTB i JOIN OrderTB o ON i.orderId = o.orderId WHERE i.invoiceId = ?";
-        
-        try (Connection conn = new DBContext().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-             
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, invoiceId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -85,12 +84,12 @@ public class InvoiceDAO {
                     invoice.setTotalAmount(rs.getBigDecimal("totalAmount"));
                     invoice.setPaymentMethod(rs.getString("paymentMethod"));
                     invoice.setOrder(order);
-                    
+
                     invoice.setInvoiceContents(getInvoiceContents(invoiceId));
-                    
+
                     java.math.BigDecimal calculatedTotal = invoice.getInvoiceContents().stream()
-                        .map(InvoiceContent::getPriceAtInvoice)
-                        .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+                            .map(InvoiceContent::getPriceAtInvoice)
+                            .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
                     invoice.setTotalAmount(calculatedTotal);
                 }
             }
@@ -103,9 +102,8 @@ public class InvoiceDAO {
     private List<InvoiceContent> getInvoiceContents(int invoiceId) {
         List<InvoiceContent> contents = new ArrayList<>();
         String sql = "SELECT * FROM InvoiceContentTB WHERE invoiceId = ?";
-        try (Connection conn = new DBContext().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-             
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, invoiceId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -129,9 +127,9 @@ public class InvoiceDAO {
 
     private StringBuilder buildInvoiceFilterQuery(String orderId, String paymentMethod, Date startDate, Date endDate) {
         StringBuilder sql = new StringBuilder(
-            " FROM InvoiceTB i JOIN OrderTB o ON i.orderId = o.orderId "
-            + "LEFT JOIN (SELECT orderId, SUM(priceAtOrder) as calculatedTotal FROM OrderContentTB GROUP BY orderId) oc ON o.orderId = oc.orderId "
-            + "WHERE 1=1 "
+                " FROM InvoiceTB i JOIN OrderTB o ON i.orderId = o.orderId "
+                + "LEFT JOIN (SELECT orderId, SUM(priceAtOrder) as calculatedTotal FROM OrderContentTB GROUP BY orderId) oc ON o.orderId = oc.orderId "
+                + "WHERE 1=1 "
         );
 
         if (orderId != null && orderId.matches("\\d+")) {
@@ -151,19 +149,34 @@ public class InvoiceDAO {
 
     public int countFilteredInvoices(String orderId, String paymentMethod, Date startDate, Date endDate) {
         StringBuilder sqlBase = new StringBuilder("SELECT COUNT(i.invoiceId) FROM InvoiceTB i JOIN OrderTB o ON i.orderId = o.orderId WHERE 1=1 ");
-        if (orderId != null && orderId.matches("\\d+")) { sqlBase.append("AND o.orderId = ? "); }
-        if (paymentMethod != null && !paymentMethod.trim().isEmpty()) { sqlBase.append("AND i.paymentMethod = ? "); }
-        if (startDate != null) { sqlBase.append("AND CAST(i.issueDate AS DATE) >= ? "); }
-        if (endDate != null) { sqlBase.append("AND CAST(i.issueDate AS DATE) <= ? "); }
+        if (orderId != null && orderId.matches("\\d+")) {
+            sqlBase.append("AND o.orderId = ? ");
+        }
+        if (paymentMethod != null && !paymentMethod.trim().isEmpty()) {
+            sqlBase.append("AND i.paymentMethod = ? ");
+        }
+        if (startDate != null) {
+            sqlBase.append("AND CAST(i.issueDate AS DATE) >= ? ");
+        }
+        if (endDate != null) {
+            sqlBase.append("AND CAST(i.issueDate AS DATE) <= ? ");
+        }
 
-        try (Connection conn = new DBContext().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sqlBase.toString())) {
-            
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sqlBase.toString())) {
+
             int paramIndex = 1;
-            if (orderId != null && orderId.matches("\\d+")) { ps.setInt(paramIndex++, Integer.parseInt(orderId)); }
-            if (paymentMethod != null && !paymentMethod.trim().isEmpty()) { ps.setString(paramIndex++, paymentMethod); }
-            if (startDate != null) { ps.setDate(paramIndex++, new java.sql.Date(startDate.getTime())); }
-            if (endDate != null) { ps.setDate(paramIndex++, new java.sql.Date(endDate.getTime())); }
+            if (orderId != null && orderId.matches("\\d+")) {
+                ps.setInt(paramIndex++, Integer.parseInt(orderId));
+            }
+            if (paymentMethod != null && !paymentMethod.trim().isEmpty()) {
+                ps.setString(paramIndex++, paymentMethod);
+            }
+            if (startDate != null) {
+                ps.setDate(paramIndex++, new java.sql.Date(startDate.getTime()));
+            }
+            if (endDate != null) {
+                ps.setDate(paramIndex++, new java.sql.Date(endDate.getTime()));
+            }
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -179,20 +192,27 @@ public class InvoiceDAO {
     public List<Invoice> filterInvoices(String orderId, String paymentMethod, Date startDate, Date endDate, int pageNumber, int pageSize) {
         List<Invoice> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-            "SELECT i.invoiceId, i.issueDate, i.paymentMethod, o.orderId, o.customerName, o.discountAmountAtApply, "
-            + "(ISNULL(oc.calculatedTotal, 0) - ISNULL(o.discountAmountAtApply, 0)) AS finalAmount "
+                "SELECT i.invoiceId, i.issueDate, i.paymentMethod, o.orderId, o.customerName, o.discountAmountAtApply, "
+                + "(ISNULL(oc.calculatedTotal, 0) - ISNULL(o.discountAmountAtApply, 0)) AS finalAmount "
         );
         sql.append(buildInvoiceFilterQuery(orderId, paymentMethod, startDate, endDate));
         sql.append("ORDER BY i.issueDate DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
-        try (Connection conn = new DBContext().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
             int paramIndex = 1;
-            if (orderId != null && orderId.matches("\\d+")) { ps.setInt(paramIndex++, Integer.parseInt(orderId)); }
-            if (paymentMethod != null && !paymentMethod.trim().isEmpty()) { ps.setString(paramIndex++, paymentMethod); }
-            if (startDate != null) { ps.setDate(paramIndex++, new java.sql.Date(startDate.getTime())); }
-            if (endDate != null) { ps.setDate(paramIndex++, new java.sql.Date(endDate.getTime())); }
+            if (orderId != null && orderId.matches("\\d+")) {
+                ps.setInt(paramIndex++, Integer.parseInt(orderId));
+            }
+            if (paymentMethod != null && !paymentMethod.trim().isEmpty()) {
+                ps.setString(paramIndex++, paymentMethod);
+            }
+            if (startDate != null) {
+                ps.setDate(paramIndex++, new java.sql.Date(startDate.getTime()));
+            }
+            if (endDate != null) {
+                ps.setDate(paramIndex++, new java.sql.Date(endDate.getTime()));
+            }
 
             int offset = (pageNumber - 1) * pageSize;
             ps.setInt(paramIndex++, offset);
@@ -208,7 +228,7 @@ public class InvoiceDAO {
         }
         return list;
     }
-    
+
     public boolean invoiceIdExists(int invoiceId) {
         DBContext db = new DBContext();
         try {
@@ -246,5 +266,44 @@ public class InvoiceDAO {
             }
         }
         return false;
+    }
+
+    public int getInvoiceIdByOrderId(int id) {
+        DBContext db = new DBContext();
+        try {
+            conn = db.getConnection();
+            String sql = "SELECT invoiceId FROM InvoiceTB WHERE orderId=?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("invoiceId");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(InvoiceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
     }
 }
