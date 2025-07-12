@@ -508,15 +508,60 @@
     font-weight: 700;
 }
 
-/* Order Actions */
+/* Container */
+.order-actions-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Form group */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.cancel-textarea {
+    resize: vertical;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    min-height: 80px;
+}
+
+/* Confirm checkbox */
+.confirm-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.confirm-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #F26F21;
+}
+
+/* Order Actions (buttons) */
 .order-actions {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: 15px;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
+/* Buttons style (giữ nguyên như bạn có) */
 .btn {
     display: inline-flex;
     align-items: center;

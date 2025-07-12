@@ -149,6 +149,7 @@ public class Customer_Order_Servlet extends HttpServlet {
             Order order = odao.getOrderCusDetail(accId, status, orderId);
             List<Order> orderPet = odao.getOrderCusPetDetail(accId, status, orderId);
 
+            String reasonCancel = request.getParameter("reasonCancel");
             String checkboxInfo = request.getParameter("confirmInfo");
 
             Timestamp timeOrder = order.getOrderDate();
@@ -167,22 +168,31 @@ public class Customer_Order_Servlet extends HttpServlet {
                     return;
 
                 } else {
-                    boolean updateCancelledOrder = odao.updateCancelledOrderByCus(orderId);
-                    if (updateCancelledOrder) {
-//                    EmailSender.sendShippingOrderByShipper(orderDetail.getCustomerEmail(), orderId);
-                        session.setAttribute("successMessage", "Hủy đơn thành công");
-                        request.setAttribute("orderDetail", order);
-                        request.setAttribute("orderPet", orderPet);
+                    if ("Cash on Delivery".equals(order.getPaymentMethod())) {
+                        boolean updateCancelledOrder = odao.updateCancelledOrderByCus(orderId, reasonCancel);
+                        if (updateCancelledOrder) {
+                            EmailSender.sendCancelledOrder(order.getCustomerEmail(), orderId);
+                            session.setAttribute("successMessage", "Hủy đơn thành công");
+                        } else {
+                            session.setAttribute("errorMessage", "Hủy đơn không thành công");
+
+                        }
                     } else {
-                        session.setAttribute("errorMessage", "Hủy đơn không thành công");
-                        request.setAttribute("orderDetail", order);
-                        request.setAttribute("orderPet", orderPet);
+                        boolean updateCancelledOrderBanked = odao.updateCancelledOrderByCus(orderId, reasonCancel);
+                        if (updateCancelledOrderBanked) {
+                            EmailSender.sendCancelledOrderBanked(order.getCustomerEmail(), orderId);
+                            session.setAttribute("successMessage", "Hủy đơn thành công, vui lòng kiểm tra Email để được hoàn tiền");
+                        } else {
+                            session.setAttribute("errorMessage", "Hủy đơn không thành công");
+                        }
                     }
+                    request.setAttribute("orderDetail", order);
+                    request.setAttribute("orderPet", orderPet);
                     String url = "orders?status=Pending";
                     response.sendRedirect(url);
                 }
             } else {
-                session.setAttribute("errorMessage", "Bạn không thể hủy đơn sau 12 tiếng");
+                session.setAttribute("errorMessage", "Bạn không thể hủy đơn sau 12 tiếng kể từ lúc đặt hàng");
                 String url = "orders?status=Pending";
                 response.sendRedirect(url);
             }

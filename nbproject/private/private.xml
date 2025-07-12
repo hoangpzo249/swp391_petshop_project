@@ -5,7 +5,8 @@
         <group>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/DAO/OrderDAO.java</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Controllers/Customer_Order_Servlet.java</file>
-            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Models/Order.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/customer_orderCancelled_page.jsp</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Utils/EmailSender.java</file>
         </group>
     </open-files>
 </project-private>

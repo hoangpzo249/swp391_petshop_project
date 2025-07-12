@@ -295,6 +295,89 @@ public class EmailSender {
         }
     }
 
+    public static void sendCancelledOrder(String receiveEmail, int orderId) {
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
+
+        Properties pro = new Properties();
+        pro.put("mail.smtp.auth", "true");
+        pro.put("mail.smtp.starttls.enable", "true");
+        pro.put("mail.smtp.host", "smtp.gmail.com");
+        pro.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(pro, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        try {
+            MimeMessage mess = new MimeMessage(session);
+            mess.setFrom(new InternetAddress(senderEmail));
+            mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiveEmail));
+            mess.setSubject("PETFPT Shop: Đơn hàng #" + orderId + " đã được hủy theo yêu cầu của bạn", "UTF-8");
+
+            StringBuilder htmlContent = new StringBuilder();
+            htmlContent.append("<html><body style='font-family: Arial, sans-serif; color: #333;'>");
+            htmlContent.append("<h2 style='color: #dc3545;'>Đơn hàng đã được hủy thành công</h2>");
+            htmlContent.append("<p>Xin chào,</p>");
+            htmlContent.append("<p>Đơn hàng <strong>#").append(orderId).append("</strong> của bạn tại <strong>PETFPT Shop</strong> đã được hủy thành công theo yêu cầu.</p>");
+            htmlContent.append("<p>Vì đơn hàng này sử dụng phương thức <strong>thanh toán khi nhận hàng (COD)</strong>, nên bạn không cần thực hiện thêm bất kỳ thao tác nào.</p>");
+            htmlContent.append("<p>Nếu bạn có bất kỳ câu hỏi hay cần hỗ trợ thêm, đừng ngần ngại liên hệ với chúng tôi.</p>");
+            htmlContent.append("<p>Chúng tôi hy vọng sẽ tiếp tục được phục vụ bạn trong thời gian tới.</p>");
+            htmlContent.append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>");
+            htmlContent.append("</body></html>");
+
+            mess.setContent(htmlContent.toString(), "text/html; charset=utf-8");
+            Transport.send(mess);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendCancelledOrderBanked(String receiveEmail, int orderId) {
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
+
+        Properties pro = new Properties();
+        pro.put("mail.smtp.auth", "true");
+        pro.put("mail.smtp.starttls.enable", "true");
+        pro.put("mail.smtp.host", "smtp.gmail.com");
+        pro.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(pro, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        try {
+            MimeMessage mess = new MimeMessage(session);
+            mess.setFrom(new InternetAddress(senderEmail));
+            mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiveEmail));
+            mess.setSubject("PETFPT Shop: Hủy đơn hàng #" + orderId + " thành công – Cung cấp thông tin hoàn tiền", "UTF-8");
+
+            StringBuilder htmlContent = new StringBuilder();
+            htmlContent.append("<html><body style='font-family: Arial, sans-serif; color: #333;'>");
+            htmlContent.append("<h2 style='color: #dc3545;'>Hủy đơn hàng thành công</h2>");
+            htmlContent.append("<p>Xin chào,</p>");
+            htmlContent.append("<p>Chúng tôi xác nhận rằng đơn hàng <strong>#").append(orderId).append("</strong> của bạn tại <strong>PETFPT Shop</strong> đã được hủy thành công.</p>");
+            htmlContent.append("<p>Vì bạn đã thanh toán trước cho đơn hàng này, chúng tôi cần bạn cung cấp thông tin tài khoản để thực hiện hoàn tiền.</p>");
+            htmlContent.append("<p>Vui lòng điền biểu mẫu tại liên kết dưới đây để chúng tôi xử lý hoàn tiền cho bạn:</p>");
+            htmlContent.append("<p><a href='https://docs.google.com/forms/d/e/1FAIpQLSelI0Ic97jVlEEvtDBADrbjvGHW4vkjT369P8KjQgCT5mvKkw/viewform?usp=sharing&ouid=110330081905382109968' ")
+                    .append("style='color: #f26f21; font-weight: bold;' target='_blank'>→ Điền thông tin hoàn tiền tại đây</a></p>");
+            htmlContent.append("<p>Sau khi nhận được thông tin, chúng tôi sẽ xử lý hoàn tiền trong vòng 3-5 ngày làm việc.</p>");
+            htmlContent.append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>");
+            htmlContent.append("</body></html>");
+
+            mess.setContent(htmlContent.toString(), "text/html; charset=utf-8");
+            Transport.send(mess);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void sendOTP(String receiveEmail, String otp) throws MessagingException {
         final String senderEmail = "fptpet@gmail.com";
         final String senderPassword = "mfjm zfut ledv svkn";

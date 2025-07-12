@@ -359,28 +359,36 @@
                             </div>
                         </div>
 
-                        <div class="order-actions">
-                            <form action="orders" method="post">
+                        <div class="order-actions-container">
+                            <form action="orders" method="post" class="order-cancel-form">
                                 <input type="hidden" name="status" value="Pending">
                                 <input type="hidden" name="action" value="Cancelled">
                                 <input type="hidden" name="id" value="${orderDetail.orderId}">
 
+                                <div class="form-group">
+                                    <label for="reasonCancel">Lý do hủy đơn hàng:</label>
+                                    <textarea name="reasonCancel" rows="4" required placeholder="Nhập lý do hủy đơn..." class="cancel-textarea"></textarea>
+                                </div>
+
                                 <div class="confirm-checkbox">
-                                    <input type="checkbox" name="confirmInfo">
-                                    <label>
+                                    <input type="checkbox" name="confirmInfo" id="confirmInfo" required>
+                                    <label for="confirmInfo">
                                         Tôi xác nhận hủy đơn hàng.
                                     </label>
                                 </div>
 
-                                <a href="orders?status=${orderDetail.orderStatus}" class="btn back-btn">
-                                    <i class="fas fa-arrow-left"></i> Quay lại
-                                </a>    
+                                <div class="order-actions">
+                                    <a href="orders?status=${orderDetail.orderStatus}" class="btn back-btn">
+                                        <i class="fas fa-arrow-left"></i> Quay lại
+                                    </a>
 
-                                <button type="submit" class="btn cancel-btn">
-                                    <i class="fas fa-times"></i> Hủy đơn hàng
-                                </button>
+                                    <button type="submit" class="btn cancel-btn">
+                                        <i class="fas fa-times"></i> Hủy đơn hàng
+                                    </button>
+                                </div>
                             </form>
                         </div>
+
                     </div>
                 </div>
 

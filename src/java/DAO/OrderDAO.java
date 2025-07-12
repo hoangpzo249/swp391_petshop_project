@@ -1112,13 +1112,14 @@ public class OrderDAO {
         return false;
     }
 
-    public boolean updateCancelledOrderByCus(int orderId) {
+    public boolean updateCancelledOrderByCus(int orderId, String reason) {
         DBContext db = new DBContext();
         try {
             conn = db.getConnection();
-            String sql = "update orderTb set orderstatus ='Cancelled' where orderId = ?";
+            String sql = "update orderTb set orderstatus ='Cancelled', rejectionReason= ? where orderId = ?";
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, orderId);
+            ps.setString(1, reason);
+            ps.setInt(2, orderId);
             int row = ps.executeUpdate();
             return row > 0;
         } catch (Exception e) {
