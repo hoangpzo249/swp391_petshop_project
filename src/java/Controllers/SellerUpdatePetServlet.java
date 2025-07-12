@@ -90,7 +90,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
 
         int petId = Integer.parseInt(request.getParameter("id"));
 
-        int pendingOrderId = _daopet.getPendingOrderIdForPet(petId);
+        int pendingOrderId = _daopet.getOrderIdForPet(petId);
 
         if (pendingOrderId == 0) {
             Pet pet = _daopet.getPetById(petId);
@@ -119,7 +119,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
                     .forward(request, response);
         } else {
             String referer = request.getHeader("referer");
-            session.setAttribute("errMess", "Không thể chỉnh sửa thú cưng #" + petId + ". Thú cưng ở trong đơn hàng chờ xác nhận #" + pendingOrderId);
+            session.setAttribute("errMess", "Không thể chỉnh sửa thú cưng #" + petId + ". Thú cưng ở trong đơn hàng #" + pendingOrderId);
 
             if (referer != null) {
                 response.sendRedirect(referer);

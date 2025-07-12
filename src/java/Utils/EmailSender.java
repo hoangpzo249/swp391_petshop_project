@@ -786,75 +786,127 @@ public class EmailSender {
             e.printStackTrace();
         }
     }
-    public static void sendRefundStatusUpdate(String receiveEmail, int orderId, String status, String reason,byte [] proofRefundedImage) {
-    final String senderEmail = "fptpet@gmail.com";
-    final String senderPassword = "mfjm zfut ledv svkn";
 
-    Properties pro = new Properties();
-    pro.put("mail.smtp.auth", "true");
-    pro.put("mail.smtp.starttls.enable", "true");
-    pro.put("mail.smtp.host", "smtp.gmail.com");
-    pro.put("mail.smtp.port", "587");
+    public static void sendRefundStatusUpdate(String receiveEmail, int orderId, String status, String reason, byte[] proofRefundedImage) {
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
 
-    Session session = Session.getInstance(pro, new Authenticator() {
-        protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(senderEmail, senderPassword);
+        Properties pro = new Properties();
+        pro.put("mail.smtp.auth", "true");
+        pro.put("mail.smtp.starttls.enable", "true");
+        pro.put("mail.smtp.host", "smtp.gmail.com");
+        pro.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(pro, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        try {
+            MimeMessage mess = new MimeMessage(session);
+            mess.setFrom(new InternetAddress(senderEmail));
+            mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiveEmail));
+            mess.setSubject("Cập nhật trạng thái hoàn tiền cho đơn hàng #" + orderId, "UTF-8");
+
+            String statusText = switch (status) {
+                case "Approved" ->
+                    "<span style='color: green; font-weight: bold;'>ĐÃ DUYỆT</span>";
+                case "Rejected" ->
+                    "<span style='color: red; font-weight: bold;'>TỪ CHỐI</span>";
+                case "Completed" ->
+                    "<span style='color: blue; font-weight: bold;'>THÀNH CÔNG</span>";
+                case "Incomplete" ->
+                    "<span style='color: orange; font-weight: bold;'>KHÔNG THÀNH CÔNG</span>";
+                default ->
+                    "<span style='color: gray;'>ĐANG CHỜ</span>";
+            };
+
+            StringBuilder html = new StringBuilder();
+            html.append("<html><body style='font-family: Arial, sans-serif;'>")
+                    .append("<h2 style='color: #f26f21;'>PETFPT Shop - Cập nhật hoàn tiền</h2>")
+                    .append("<p>Xin chào,</p>")
+                    .append("<p>Yêu cầu hoàn tiền của bạn cho đơn hàng <strong>#").append(orderId).append("</strong> đã được cập nhật:</p>")
+                    .append("<p><strong>Trạng thái mới: </strong>").append(statusText).append("</p>");
+
+            if (reason != null && !reason.trim().isEmpty()) {
+                html.append("<p><strong>Lý do: </strong>").append(reason).append("</p>");
+            }
+            if ("Completed".equalsIgnoreCase(status) && proofRefundedImage != null) {
+                html.append("<p><strong>Ảnh bằng chứng đã hoàn tiền được đính kèm bên dưới.</strong></p>");
+                MimeMultipart multipart = new MimeMultipart();
+
+                MimeBodyPart htmlPart = new MimeBodyPart();
+                htmlPart.setContent(html.toString(), "text/html; charset=utf-8");
+                multipart.addBodyPart(htmlPart);
+
+                MimeBodyPart imagePart = new MimeBodyPart();
+                imagePart.setFileName("proof_refunded_image.jpg");
+                imagePart.setContent(proofRefundedImage, "image/jpeg");
+                multipart.addBodyPart(imagePart);
+
+                mess.setContent(multipart);
+            } else {
+                mess.setContent(html.toString(), "text/html; charset=utf-8");
+            }
+
+            html.append("<p>Vui lòng đăng nhập để xem chi tiết.</p>")
+                    .append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>")
+                    .append("</body></html>");
+
+            Transport.send(mess);
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
-    });
-
-    try {
-        MimeMessage mess = new MimeMessage(session);
-        mess.setFrom(new InternetAddress(senderEmail));
-        mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiveEmail));
-        mess.setSubject("Cập nhật trạng thái hoàn tiền cho đơn hàng #" + orderId, "UTF-8");
-
-        String statusText = switch (status) {
-            case "Approved" -> "<span style='color: green; font-weight: bold;'>ĐÃ DUYỆT</span>";
-            case "Rejected" -> "<span style='color: red; font-weight: bold;'>TỪ CHỐI</span>";
-            case "Completed" -> "<span style='color: blue; font-weight: bold;'>THÀNH CÔNG</span>";
-            case "Incomplete" -> "<span style='color: orange; font-weight: bold;'>KHÔNG THÀNH CÔNG</span>";
-            default -> "<span style='color: gray;'>ĐANG CHỜ</span>";
-        };
-
-        StringBuilder html = new StringBuilder();
-        html.append("<html><body style='font-family: Arial, sans-serif;'>")
-            .append("<h2 style='color: #f26f21;'>PETFPT Shop - Cập nhật hoàn tiền</h2>")
-            .append("<p>Xin chào,</p>")
-            .append("<p>Yêu cầu hoàn tiền của bạn cho đơn hàng <strong>#").append(orderId).append("</strong> đã được cập nhật:</p>")
-            .append("<p><strong>Trạng thái mới: </strong>").append(statusText).append("</p>");
-
-        if (reason != null && !reason.trim().isEmpty()) {
-            html.append("<p><strong>Lý do: </strong>").append(reason).append("</p>");
-        }
-         if ("Completed".equalsIgnoreCase(status) && proofRefundedImage != null) {
-            html.append("<p><strong>Ảnh bằng chứng đã hoàn tiền được đính kèm bên dưới.</strong></p>");
-            MimeMultipart multipart = new MimeMultipart();
-
-           
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(html.toString(), "text/html; charset=utf-8");
-            multipart.addBodyPart(htmlPart);
-
-            
-            MimeBodyPart imagePart = new MimeBodyPart();
-            imagePart.setFileName("proof_refunded_image.jpg"); 
-            imagePart.setContent(proofRefundedImage, "image/jpeg"); 
-            multipart.addBodyPart(imagePart);
-
-            mess.setContent(multipart);
-        }
-         else{
-             mess.setContent(html.toString(), "text/html; charset=utf-8");
-         }
-
-        html.append("<p>Vui lòng đăng nhập để xem chi tiết.</p>")
-            .append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>")
-            .append("</body></html>");
-
-        
-        Transport.send(mess);
-    } catch (MessagingException e) {
-        e.printStackTrace();
     }
-}
+
+    public static void sendNewDeliveryAssignment(String shipperEmail, int orderId) {
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
+
+        Properties pro = new Properties();
+        pro.put("mail.smtp.auth", "true");
+        pro.put("mail.smtp.starttls.enable", "true");
+        pro.put("mail.smtp.host", "smtp.gmail.com");
+        pro.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(pro, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        try {
+            MimeMessage mess = new MimeMessage(session);
+
+            mess.setFrom(new InternetAddress(senderEmail));
+            mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(shipperEmail));
+            mess.setSubject("Thông báo Giao hàng Mới - Đơn hàng #" + orderId, "UTF-8");
+
+            StringBuilder htmlContent = new StringBuilder();
+            htmlContent.append("<html><body style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>");
+            htmlContent.append("<div style='max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;'>");
+            htmlContent.append("<h2 style='color: #007bff;'>Bạn có một đơn hàng giao mới!</h2>");
+            htmlContent.append("<p>Xin chào,</p>");
+            htmlContent.append("<p>Bạn vừa được chỉ định để thực hiện giao hàng cho đơn hàng có mã số sau:</p>");
+            htmlContent.append("<h3 style='background-color: #f2f2f2; padding: 15px; border-left: 5px solid #007bff; font-size: 1.2em;'>Mã đơn hàng: #")
+                    .append(orderId)
+                    .append("</h3>");
+            htmlContent.append("<p>Vui lòng truy cập vào trang quản lý (dashboard) của bạn để xem thông tin chi tiết về địa chỉ giao hàng và các sản phẩm trong đơn.</p>");
+            htmlContent.append("<p style='text-align: center; margin: 30px 0;'>");
+            htmlContent.append("<a href='http://localhost:8080/PetShopFPT/shipper_panel' style='background-color: #28a745; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;'>Xem chi tiết trên Dashboard</a>");
+            htmlContent.append("</p>");
+            htmlContent.append("<p>Cảm ơn sự hợp tác của bạn.</p>");
+            htmlContent.append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>");
+            htmlContent.append("</div>");
+            htmlContent.append("</body></html>");
+
+            mess.setContent(htmlContent.toString(), "text/html; charset=utf-8");
+            Transport.send(mess);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
 }
