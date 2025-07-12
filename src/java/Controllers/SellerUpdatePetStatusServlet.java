@@ -70,6 +70,7 @@ public class SellerUpdatePetStatusServlet extends HttpServlet {
         int petId = Integer.parseInt(request.getParameter("petId"));
         int targetStatus = Integer.parseInt(request.getParameter("status"));
         String referer = request.getHeader("referer");
+        boolean petInOrder=_daopet.isPetInActiveOrder(petId);
         int pendingOrderId = _daopet.getOrderIdForPet(petId);
 
         switch (targetStatus) {
@@ -81,7 +82,7 @@ public class SellerUpdatePetStatusServlet extends HttpServlet {
                 }
                 break;
             case 0:
-                if (pendingOrderId == 0) {
+                if (!petInOrder) {
                     if (_daopet.updatePetStatusById(petId, targetStatus)) {
                         session.setAttribute("successMess", "Thú cưng #" + petId + " đã ẩn thành công.");
                     } else {

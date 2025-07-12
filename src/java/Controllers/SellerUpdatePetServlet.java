@@ -90,9 +90,9 @@ public class SellerUpdatePetServlet extends HttpServlet {
 
         int petId = Integer.parseInt(request.getParameter("id"));
 
-        int pendingOrderId = _daopet.getOrderIdForPet(petId);
+        boolean petInOrder = _daopet.isPetInActiveOrder(petId);
 
-        if (pendingOrderId == 0) {
+        if (!petInOrder) {
             Pet pet = _daopet.getPetById(petId);
             List<Breed> breedList = _daobreed.getAllBreeds();
             List<PetImage> imageList = _daoimage.getPetImagesById(petId);
@@ -112,13 +112,14 @@ public class SellerUpdatePetServlet extends HttpServlet {
             request.setAttribute("imageList", imageList);
             request.setAttribute("colorList", colorList);
             request.setAttribute("originList", originList);
-            
-            System.out.println("=====Debug: "+pet.getPetPrice());
+
+            System.out.println("=====Debug: " + pet.getPetPrice());
 
             request.getRequestDispatcher("seller_pet_edit.jsp")
                     .forward(request, response);
         } else {
             String referer = request.getHeader("referer");
+            int pendingOrderId = _daopet.getOrderIdForPet(petId);
             session.setAttribute("errMess", "Không thể chỉnh sửa thú cưng #" + petId + ". Thú cưng ở trong đơn hàng #" + pendingOrderId);
 
             if (referer != null) {

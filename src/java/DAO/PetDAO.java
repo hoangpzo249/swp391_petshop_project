@@ -600,6 +600,24 @@ public class PetDAO {
         return 0;
     }
 
+    public boolean isPetInActiveOrder(int petId) {
+        String sql = "SELECT 1 "
+                + "FROM OrderContentTB oc "
+                + "JOIN OrderTB o ON oc.orderId = o.orderId "
+                + "LEFT JOIN RefundTB r ON o.orderId = r.orderId AND r.refundStatus = 'Completed' "
+                + "WHERE oc.petId = ? AND r.orderId IS NULL";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, petId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, "Error checking if pet is in an active order", ex);
+        }
+        return false;
+    }
+
     public List<Pet> get6PetNew() {
         List<Pet> listPet = new ArrayList<>();
         String sql = "SELECT TOP 18 * FROM PetTB \n"
