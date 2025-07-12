@@ -895,4 +895,21 @@ public class AccountDAO extends DBContext {
         }
         return null;
     }
+    
+    public String getEmailById(int accId) {
+        DBContext db = new DBContext();
+        try {
+            con = db.getConnection();
+            String sql = "SELECT accEmail FROM AccountTB WHERE accId=?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, accId);
+            rs=ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("accEmail");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

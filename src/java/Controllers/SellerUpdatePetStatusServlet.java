@@ -70,7 +70,7 @@ public class SellerUpdatePetStatusServlet extends HttpServlet {
         int petId = Integer.parseInt(request.getParameter("petId"));
         int targetStatus = Integer.parseInt(request.getParameter("status"));
         String referer = request.getHeader("referer");
-        int pendingOrderId = _daopet.getPendingOrderIdForPet(petId);
+        int pendingOrderId = _daopet.getOrderIdForPet(petId);
 
         switch (targetStatus) {
             case 1:
@@ -88,7 +88,7 @@ public class SellerUpdatePetStatusServlet extends HttpServlet {
                         session.setAttribute("errMess", "Ẩn thú cưng #" + petId + " thất bại");
                     }
                 } else {
-                    session.setAttribute("errMess", "Không thể ẩn thú cưng #" + petId + ", Thú cưng ở trong đơn hàng chờ xác nhận #" + pendingOrderId);
+                    session.setAttribute("errMess", "Không thể ẩn thú cưng #" + petId + ", Thú cưng ở trong đơn hàng #" + pendingOrderId);
                 }
                 break;
             default:

@@ -43,7 +43,7 @@
 ////    }
 //    
 //    private static int petInPendingOrder(int id) {
-//        return _dao.getPendingOrderIdForPet(id);
+//        return _dao.getOrderIdForPet(id);
 //    }
 //    
 //    private static boolean updateStatus(int id, int status) {

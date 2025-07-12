@@ -583,10 +583,10 @@ public class PetDAO {
         }
     }
 
-    public int getPendingOrderIdForPet(int petId) {
+    public int getOrderIdForPet(int petId) {
         String sql = "SELECT o.orderId FROM OrderContentTB oc "
                 + "JOIN OrderTB o ON oc.orderId = o.orderId "
-                + "WHERE oc.petId = ? AND o.orderStatus = 'Pending'";
+                + "WHERE oc.petId = ?";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, petId);
             try (ResultSet rs = ps.executeQuery()) {

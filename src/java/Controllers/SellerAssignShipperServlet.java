@@ -7,6 +7,7 @@ package Controllers;
 import DAO.AccountDAO;
 import DAO.OrderDAO;
 import Models.Account;
+import Utils.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -118,6 +119,8 @@ public class SellerAssignShipperServlet extends HttpServlet {
         } else {
             if (_orderdao.assignShipper(orderId, shipperId)) {
                 session.setAttribute("successMess", "Đã chỉ định đơn hàng #" + orderId + " cho " + fullname);
+                EmailSender.sendNewDeliveryAssignment(_accountdao.getEmailById(shipperId), orderId);
+
                 response.sendRedirect(referer != null ? referer : "displayorder");
             } else {
                 session.setAttribute("errMess", "Đã có lỗi xảy ra trong quá trình chỉ định đơn hàng");
