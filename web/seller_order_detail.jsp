@@ -177,16 +177,39 @@
                                         <div class="detail-value"><fmt:formatDate value="${order.orderDate}" pattern="HH:mm, dd-MM-yyyy"/></div>
 
                                         <div class="detail-label">Phương thức TT</div>
-                                        <div class="detail-value">${order.paymentMethod}</div>
+                                        <div class="detail-value">
+                                            <c:choose>
+                                                <c:when test="${order.paymentMethod == 'Cash on Delivery'}">Tiền mặt</c:when>
+                                                <c:when test="${order.paymentMethod == 'Credit Card'}">Thẻ tín dụng</c:when>
+                                                <c:otherwise>${order.paymentMethod}</c:otherwise>
+                                            </c:choose>
+                                        </div>
 
                                         <div class="detail-label">Trạng thái TT</div>
                                         <div class="detail-value">
-                                            <span class="status-badge status-payment-${order.paymentStatus.toLowerCase()}">${order.paymentStatus}</span>
+                                            <span class="status-badge status-payment-${order.paymentStatus.toLowerCase()}">
+                                                <c:choose>
+                                                    <c:when test="${order.paymentStatus == 'Paid'}">Đã thanh toán</c:when>
+                                                    <c:when test="${order.paymentStatus == 'Unpaid'}">Chưa thanh toán</c:when>
+                                                    <c:otherwise>${order.paymentStatus}</c:otherwise>
+                                                </c:choose>
+                                            </span>
                                         </div>
 
                                         <div class="detail-label">Trạng thái ĐH</div>
                                         <div class="detail-value">
-                                            <span class="status-badge status-${order.orderStatus.toLowerCase()}">${order.orderStatus}</span>
+                                            <span class="status-badge status-${order.orderStatus.toLowerCase()}">
+                                                <c:choose>
+                                                    <c:when test="${order.orderStatus == 'Pending'}">Chờ xử lý</c:when>
+                                                    <c:when test="${order.orderStatus == 'Confirmed'}">Đã xác nhận</c:when>
+                                                    <c:when test="${order.orderStatus == 'Cancelled'}">Đã hủy</c:when>
+                                                    <c:when test="${order.orderStatus == 'Rejected'}">Bị từ chối</c:when>
+                                                    <c:when test="${order.orderStatus == 'Shipping'}">Đang giao</c:when>
+                                                    <c:when test="${order.orderStatus == 'Pending Shipper'}">Chờ Shipper</c:when>
+                                                    <c:when test="${order.orderStatus == 'Delivered'}">Đã giao</c:when>
+                                                    <c:otherwise>${order.orderStatus}</c:otherwise>
+                                                </c:choose>
+                                            </span>
                                         </div>
 
                                         <div class="detail-label">Shipper ID</div>
