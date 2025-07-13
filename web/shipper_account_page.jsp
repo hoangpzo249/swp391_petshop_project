@@ -209,21 +209,10 @@
                     </div>
                     <div class="card-body">
                         <div class="filter-controls">
-                            <form action="shipper-dashboard" method="get">
+                            <form action="shipper_panel" method="get">
                                 <div class="input-group">
                                     <i class="fas fa-search"></i>
-                                    <input type="text" name="search" placeholder="Tìm kiếm đơn hàng..." value="${param.search}">
-                                </div>
-                            </form>
-
-                            <form action="shipper-dashboard" method="get">
-                                <div class="select-group">
-                                    <select name="status" onchange="this.form.submit()">
-                                        <option value="">Tất cả trạng thái</option>
-                                        <option value="confirmed" ${param.status == 'confirmed' ? 'selected' : ''}>Đã xác nhận</option>
-                                        <option value="delivering" ${param.status == 'shipping' ? 'selected' : ''}>Đang giao</option>
-                                        <option value="completed" ${param.status == 'delivered' ? 'selected' : ''}>Đã giao</option>
-                                    </select>
+                                    <input type="text" name="search" placeholder="Tìm kiếm đơn hàng..." value="${keyword}">
                                 </div>
                             </form>
                         </div>
