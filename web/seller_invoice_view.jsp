@@ -172,7 +172,7 @@
                                             </td>
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${invoice.paymentMethod == 'Cash'}">Tiền mặt</c:when>
+                                                    <c:when test="${invoice.paymentMethod == 'Cash on Delivery'}">Tiền mặt</c:when>
                                                     <c:when test="${invoice.paymentMethod == 'Credit Card'}">Thẻ tín dụng</c:when>
                                                     <c:otherwise>${invoice.paymentMethod}</c:otherwise>
                                                 </c:choose>

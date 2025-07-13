@@ -91,7 +91,7 @@
                                 <div class="logo-section">
                                     <img src="images/logo_banner/logo2.png" alt="PETFPT Shop Logo"/>
                                     <p style="font-weight: 600; margin-top:10px;">PETFPT Shop</p>
-                                    <p>Lô E2a-7, Đường D1, Khu Công nghệ cao, Long Thạnh Mỹ, Thành Phố Thủ Đức, Thành phố Hồ Chí Minh</p>
+                                    <p>Khu Công nghệ cao Hòa Lạc Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
                                 </div>
                                 <div class="invoice-title-section">
                                     <h2>HÓA ĐƠN BÁN HÀNG</h2>
