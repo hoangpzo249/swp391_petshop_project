@@ -282,7 +282,7 @@
                                         <a href="shipper_panel?action=pickup-order&id=${orderDetail.orderId}" class="btn btn-primary">
                                             <i class="fas fa-truck-loading"></i> Xác nhận nhận đơn
                                         </a>
-                                        <a class="btn cancel-btn" href="shipper_panel?action=reject-order&id=${order.orderId}">
+                                        <a class="btn cancel-btn" href="shipper_panel?action=reject-order&id=${orderDetail.orderId}">
                                             <i class="fas fa-times-circle"></i> Từ chối nhận đơn
                                         </a>
                                     </c:when>
