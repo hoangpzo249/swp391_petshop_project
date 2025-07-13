@@ -102,9 +102,6 @@
                             <button class="btn btn-primary" onclick="location.href = 'addbreed'">
                                 <i class="fas fa-plus-circle"></i> Thêm giống mới
                             </button>
-                            <button class="btn btn-outline">
-                                <i class="fas fa-file-export"></i> Xuất dữ liệu
-                            </button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -177,13 +174,15 @@
                                                     <c:choose>
                                                         <c:when test="${b.getBreedStatus()==1}">
                                                             <a class="action-btn unhide-btn" title="Ẩn giống" 
-                                                               href="updatebreedstatus?breedId=${b.breedId}&status=0">
+                                                               href="updatebreedstatus?breedId=${b.breedId}&status=0"
+                                                               onclick="showConfirmationModal(event, 'ẩn giống #${b.breedId} - ${b.breedName}', this.href, 'btn-danger')">
                                                                 <i class="fas fa-toggle-off"></i>
                                                             </a>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <a class="action-btn block-btn" title="Hiện giống" 
-                                                               href="updatebreedstatus?breedId=${b.breedId}&status=1">
+                                                               href="updatebreedstatus?breedId=${b.breedId}&status=1"
+                                                               onclick="showConfirmationModal(event, 'hiển thị lại giống #${b.breedId} - ${b.breedName}', this.href, 'btn-success')">
                                                                 <i class="fas fa-toggle-on"></i>
                                                             </a>
                                                         </c:otherwise>
@@ -271,8 +270,24 @@
                 </div>
             </div>
         </div>
+        <div class="modal-backdrop" id="confirmationModal">
+            <div class="modal-dialog">
+                <div class="modal-header">
+                    <h3 class="modal-title">Xác nhận hành động</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalText">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeModal()">Hủy bỏ</button>
+                    <button id="modalConfirmButton" class="btn">Xác nhận</button>
+                </div>
+            </div>
+        </div>
         <div class="manager-footer">
             © 2025 PETFPT Shop - Hệ thống quản lý
         </div>
+        <script src="js/modal_confirmation.js"></script>
     </body>
 </html>

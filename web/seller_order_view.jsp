@@ -119,11 +119,6 @@
                         <h3 class="card-title">
                             <i class="fas fa-list-ul"></i> Danh sách đơn hàng
                         </h3>
-                        <div class="card-tools">
-                            <button class="btn btn-outline">
-                                <i class="fas fa-file-export"></i> Xuất dữ liệu
-                            </button>
-                        </div>
                     </div>
                     <div class="card-body">
                         <form action="displayorder" method="GET" id="filterForm">
@@ -351,10 +346,9 @@
                         <textarea id="rejectionReason" class="form-control" rows="3" placeholder="Nhập lý do từ chối đơn hàng..."></textarea>
                         <div class="checkbox-container">
                             <input type="checkbox" id="hidePetsCheckbox" name="hidePets">
-                            <label for="hidePetsCheckbox">Đồng thời ẩn các thú cưng trong đơn hàng này.</label>
+                            <label for="hidePetsCheckbox">Ẩn các thú cưng trong đơn hàng này.</label>
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-outline" onclick="closeModal()">Hủy bỏ</button>
