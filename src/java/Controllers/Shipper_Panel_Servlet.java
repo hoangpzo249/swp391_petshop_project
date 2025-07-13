@@ -80,6 +80,8 @@ public class Shipper_Panel_Servlet extends HttpServlet {
         int deliveredCount = oDao.countPendingShipperDelivered(acc.getAccId());
         request.setAttribute("deliveredCount", deliveredCount);
 
+        String search = request.getParameter("search");
+
         if ("view".equals(action) && id != null) {
             int idOrder = Integer.parseInt(id);
 
@@ -113,6 +115,16 @@ public class Shipper_Panel_Servlet extends HttpServlet {
             request.setAttribute("orderDetail", orderDetail);
             request.setAttribute("orderListDetail", orderListDetail);
             request.getRequestDispatcher("shipper_orderDelivered_page.jsp").forward(request, response);
+        } else if (search != null && !search.trim().isEmpty()) {
+            ShipperDAO shipDao = new ShipperDAO();
+            Shipper shipper = shipDao.getShipperById(acc.getAccId());
+            request.setAttribute("shipper", shipper);
+
+            List< Order> orderList = oDao.getOrderShipperIdBySearch(acc.getAccId(), search);
+            
+            request.setAttribute("orderList", orderList);
+            request.setAttribute("keyword", search);
+            request.getRequestDispatcher("shipper_account_page.jsp").forward(request, response);
         } else {
             ShipperDAO shipDao = new ShipperDAO();
             Shipper shipper = shipDao.getShipperById(acc.getAccId());
