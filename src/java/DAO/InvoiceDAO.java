@@ -7,6 +7,7 @@ package DAO;
 import Models.Invoice;
 import Models.InvoiceContent;
 import Models.Order;
+import Models.Pet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -305,5 +306,104 @@ public class InvoiceDAO {
             }
         }
         return 0;
+    }
+
+    public void addInvoice(int orderId, String paymentMethod) {
+        DBContext db = new DBContext();
+        Connection conn = null;
+        PreparedStatement psInvoice = null;
+        PreparedStatement psContent = null;
+        ResultSet rs = null;
+
+        try {
+            conn = db.getConnection();
+
+            String selectSql = "SELECT oc.petId, oc.priceAtOrder, p.petName, b.breedName, p.petGender, p.petDob "
+                    + "FROM OrderContentTB oc "
+                    + "JOIN PetTB p ON oc.petId = p.petId "
+                    + "JOIN BreedTB b ON p.breedId = b.breedId "
+                    + "WHERE oc.orderId = ?";
+            PreparedStatement psSelect = conn.prepareStatement(selectSql);
+            psSelect.setInt(1, orderId);
+            ResultSet rsPets = psSelect.executeQuery();
+
+            List<InvoiceContent> contents = new ArrayList<>();
+            double totalAmount = 0;
+
+            while (rsPets.next()) {
+                InvoiceContent item = new InvoiceContent();
+                item.setPetId(rsPets.getInt("petId"));
+                item.setPetName(rsPets.getString("petName"));
+                item.setPetBreed(rsPets.getString("breedName"));
+                item.setPetGender(rsPets.getString("petGender"));
+                item.setPetDob(rsPets.getDate("petDob"));
+                item.setPriceAtInvoice(rsPets.getBigDecimal("priceAtOrder"));
+                totalAmount += item.getPriceAtInvoice().doubleValue();
+                contents.add(item);
+            }
+            rsPets.close();
+            psSelect.close();
+
+            OrderDAO orderDAO = new OrderDAO();
+            Double discount = orderDAO.getDiscountAmountAtApply(orderId);
+            if (discount != null) {
+                totalAmount -= discount;
+            }
+
+            String sqlInvoice = "INSERT INTO InvoiceTB (orderId, issueDate, totalAmount, paymentMethod) VALUES (?, GETDATE(), ?, ?)";
+            psInvoice = conn.prepareStatement(sqlInvoice, PreparedStatement.RETURN_GENERATED_KEYS);
+            psInvoice.setInt(1, orderId);
+            psInvoice.setDouble(2, totalAmount);
+            psInvoice.setString(3, paymentMethod);
+            psInvoice.executeUpdate();
+
+            rs = psInvoice.getGeneratedKeys();
+            int invoiceId = 0;
+            if (rs.next()) {
+                invoiceId = rs.getInt(1);
+            }
+
+            String sqlContent = "INSERT INTO InvoiceContentTB (invoiceId, petId, petName, petBreed, petGender, petDob, priceAtInvoice) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            for (InvoiceContent ic : contents) {
+                psContent = conn.prepareStatement(sqlContent);
+                psContent.setInt(1, invoiceId);
+                psContent.setInt(2, ic.getPetId());
+                psContent.setString(3, ic.getPetName());
+                psContent.setString(4, ic.getPetBreed());
+                psContent.setString(5, ic.getPetGender());
+                psContent.setDate(6, new java.sql.Date(ic.getPetDob().getTime()));
+                psContent.setBigDecimal(7, ic.getPriceAtInvoice());
+                psContent.executeUpdate();
+                psContent.close();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (psInvoice != null) {
+                psInvoice.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (psContent != null) {
+                psContent.close();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+        }
+
     }
 }

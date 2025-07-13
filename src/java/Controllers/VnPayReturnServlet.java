@@ -4,12 +4,11 @@
  */
 package Controllers;
 
-import DAO.CartDAO;
 import DAO.DiscountDAO;
+import DAO.InvoiceDAO;
 import DAO.OrderDAO;
 import DAO.PetDAO;
 import Models.Account;
-import Models.Cart;
 import Models.Order;
 import Models.Pet;
 import Utils.EmailSender;
@@ -22,7 +21,6 @@ import jakarta.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -125,6 +123,7 @@ public class VnPayReturnServlet extends HttpServlet {
                     order.setDiscountId(null);
                 }
                 int orderId = dao.addOrder(order);
+                
 
                 List<Pet> orderedPets = new ArrayList<>();
                 if (selectedPetIds != null) {
@@ -136,6 +135,8 @@ public class VnPayReturnServlet extends HttpServlet {
                         orderedPets.add(p);
                     }
                 }
+                InvoiceDAO invoiceDAO = new InvoiceDAO();
+                invoiceDAO.addInvoice(orderId, "Credit Card");
                 EmailSender.sendConfirmOrderCustomer(email, orderId, orderedPets, discountAmount, totalPrice);
                 session.removeAttribute("selectedPets");
                 session.removeAttribute("discountAmount");

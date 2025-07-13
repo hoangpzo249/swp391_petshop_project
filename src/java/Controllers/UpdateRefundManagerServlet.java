@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAO.OrderDAO;
+import DAO.PetDAO;
 import DAO.RefundDAO;
 import Models.Account;
 import Models.Refund;
@@ -21,6 +22,7 @@ import jakarta.servlet.http.Part;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Base64;
+import java.util.List;
 
 /**
  *
@@ -100,7 +102,7 @@ public class UpdateRefundManagerServlet extends HttpServlet {
         try {
             int refundId = Integer.parseInt(request.getParameter("refundId"));
             String orderIdStr = request.getParameter("orderId");
-            int orderId=Integer.parseInt(orderIdStr);
+            int orderId = Integer.parseInt(orderIdStr);
             String accountHolderName = request.getParameter("accountHolderName");
             String bankName = request.getParameter("bankName");
             String bankAccountNumber = request.getParameter("bankAccountNumber");
@@ -125,14 +127,13 @@ public class UpdateRefundManagerServlet extends HttpServlet {
                 request.getRequestDispatcher("update_refund_manager.jsp").forward(request, response);
                 return;
             }
-            
+
             if (!"Approved".equalsIgnoreCase(previousStatus) && "Completed".equalsIgnoreCase(refundStatus)) {
                 request.setAttribute("errMess", "Vui lòng chuyển trạng thái sang 'Approved' trước khi sang 'Completed' ");
-                request.setAttribute("refundStatus", previousStatus); 
+                request.setAttribute("refundStatus", previousStatus);
                 request.getRequestDispatcher("update_refund_manager.jsp").forward(request, response);
                 return;
             }
-            
 
             String rejectReason = request.getParameter("rejectReason");
             if ("Rejected".equalsIgnoreCase(refundStatus)) {
@@ -185,6 +186,16 @@ public class UpdateRefundManagerServlet extends HttpServlet {
 
             if (success) {
                 session.setAttribute("successMess", "Cập nhật hoàn tiền thành công.");
+                if ("Completed".equalsIgnoreCase(refundStatus)) {
+                    String orderStatus = orderDAO.getOrderById(orderId).getOrderStatus();
+                    if ("Cancelled".equalsIgnoreCase(orderStatus)) {
+                        PetDAO petDAO = new PetDAO();
+                        List<Integer> petIds = orderDAO.getOrderContentById(orderId);
+                        for (Integer petId : petIds) {
+                            petDAO.updatePetAvailability(petId, 1);  
+                        }
+                    }
+                }
                 if (!refundStatus.equalsIgnoreCase(previousStatus)) {
                     String customerEmail = orderDAO.getOrderById(orderId).getCustomerEmail();
                     if (customerEmail != null && !customerEmail.isEmpty()) {

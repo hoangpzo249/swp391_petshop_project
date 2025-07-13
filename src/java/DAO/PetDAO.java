@@ -523,12 +523,16 @@ public class PetDAO {
                 default ->
                     sqlBuilder.append(" ORDER BY p.petName ASC");
             }
+        } else {
+            sqlBuilder.append(" ORDER BY p.petId DESC");
         }
+
 
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sqlBuilder.toString())) {
             int i = 1;
             ps.setString(i++, finalSearch);
             ps.setString(i++, finalSearch);
+
             if (breed != null && !breed.isEmpty()) {
                 ps.setInt(i++, Integer.parseInt(breed));
             }
@@ -557,6 +561,115 @@ public class PetDAO {
             if (vaccinationStatus != null && !vaccinationStatus.isEmpty()) {
                 ps.setInt(i++, vaccinationStatus.equals("Đã tiêm") ? 1 : 0);
             }
+
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Pet pet = PetInfo(rs);
+                    pet.setBreedName(rs.getString("breedName"));
+                    pet.setImages(getImageDataByPetId(pet.getPetId()));
+                    listPet.add(pet);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return listPet;
+    }
+    public List<Pet> filterPetsPaging(String breed, String species, String search, int num1, int num2, String sort,
+            String gender, String color, String origin, String dobFrom, String dobTo, String vaccinationStatus,
+            int pageNumber, int pageSize) {
+
+        List<Pet> listPet = new ArrayList<>();
+        String finalSearch = (search == null || search.isEmpty()) ? "%" : "%" + search + "%";
+
+        StringBuilder sqlBuilder = new StringBuilder("SELECT p.*, b.breedName FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
+                + "WHERE p.petAvailability = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?) AND p.petStatus=1");
+
+        if (breed != null && !breed.isEmpty()) {
+            sqlBuilder.append(" AND b.breedId = ?");
+        }
+        if (species != null && !species.isEmpty()) {
+            sqlBuilder.append(" AND b.breedSpecies = ?");
+        }
+        if (num1 != 0 || num2 != 0) {
+            sqlBuilder.append(" AND p.petPrice BETWEEN ? AND ?");
+        }
+        if (gender != null && !gender.isEmpty()) {
+            sqlBuilder.append(" AND p.petGender = ?");
+        }
+        if (color != null && !color.isEmpty()) {
+            sqlBuilder.append(" AND p.petColor = ?");
+        }
+        if (origin != null && !origin.isEmpty()) {
+            sqlBuilder.append(" AND p.petOrigin = ?");
+        }
+        if (dobFrom != null && !dobFrom.isEmpty()) {
+            sqlBuilder.append(" AND p.petDob >= ?");
+        }
+        if (dobTo != null && !dobTo.isEmpty()) {
+            sqlBuilder.append(" AND p.petDob <= ?");
+        }
+        if (vaccinationStatus != null && !vaccinationStatus.isEmpty()) {
+            sqlBuilder.append(" AND p.petVaccination = ?");
+        }
+
+        if (sort != null && !sort.isEmpty()) {
+            switch (sort) {
+                case "az" ->
+                    sqlBuilder.append(" ORDER BY p.petName ASC");
+                case "za" ->
+                    sqlBuilder.append(" ORDER BY p.petName DESC");
+                case "price-asc" ->
+                    sqlBuilder.append(" ORDER BY p.petPrice ASC");
+                case "price-desc" ->
+                    sqlBuilder.append(" ORDER BY p.petPrice DESC");
+                default ->
+                    sqlBuilder.append(" ORDER BY p.petName ASC");
+            }
+        } else {
+            sqlBuilder.append(" ORDER BY p.petId DESC");
+        }
+
+        sqlBuilder.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sqlBuilder.toString())) {
+            int i = 1;
+            ps.setString(i++, finalSearch);
+            ps.setString(i++, finalSearch);
+
+            if (breed != null && !breed.isEmpty()) {
+                ps.setInt(i++, Integer.parseInt(breed));
+            }
+            if (species != null && !species.isEmpty()) {
+                ps.setString(i++, species);
+            }
+            if (num1 != 0 || num2 != 0) {
+                ps.setInt(i++, Math.min(num1, num2));
+                ps.setInt(i++, Math.max(num1, num2));
+            }
+            if (gender != null && !gender.isEmpty()) {
+                ps.setString(i++, gender);
+            }
+            if (color != null && !color.isEmpty()) {
+                ps.setString(i++, color);
+            }
+            if (origin != null && !origin.isEmpty()) {
+                ps.setString(i++, origin);
+            }
+            if (dobFrom != null && !dobFrom.isEmpty()) {
+                ps.setDate(i++, java.sql.Date.valueOf(dobFrom));
+            }
+            if (dobTo != null && !dobTo.isEmpty()) {
+                ps.setDate(i++, java.sql.Date.valueOf(dobTo));
+            }
+            if (vaccinationStatus != null && !vaccinationStatus.isEmpty()) {
+                ps.setInt(i++, vaccinationStatus.equals("Đã tiêm") ? 1 : 0);
+            }
+
+            int offset = (pageNumber - 1) * pageSize;
+            ps.setInt(i++, offset);
+            ps.setInt(i++, pageSize);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
