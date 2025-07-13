@@ -151,24 +151,11 @@ public class UpdateRefundManagerServlet extends HttpServlet {
                     request.getRequestDispatcher("update_refund_manager.jsp").forward(request, response);
                     return;
                 } else {
-                    String contentType = refundedImagePart.getContentType();
-                    if (contentType == null || !contentType.toLowerCase().matches("image/(jpeg|jpg|png|webp)")) {
-                        request.setAttribute("errMess", "Ảnh hoàn tiền chỉ chấp nhận JPG, JPEG, PNG hoặc WEBP.");
-                        request.getRequestDispatcher("update_refund_manager.jsp").forward(request, response);
-                        return;
-                    }
-                    if (refundedImagePart.getSize() > 5 * 1024 * 1024) {
-                        request.setAttribute("errMess", "Ảnh hoàn tiền không được lớn hơn 5MB.");
-                        request.getRequestDispatcher("update_refund_manager.jsp").forward(request, response);
-                        return;
-                    }
                     try (InputStream is = refundedImagePart.getInputStream()) {
                         proofRefundedImage = is.readAllBytes();
                     }
                 }
-            } else {
-                proofRefundedImage = dao.getRefundById(refundId).getProofRefundedImage();
-            }
+            } 
 
             Timestamp processedDate = null;
             if ("Manager".equalsIgnoreCase(role) && !refundStatus.equalsIgnoreCase(previousStatus)) {

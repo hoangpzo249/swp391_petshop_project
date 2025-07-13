@@ -68,12 +68,8 @@ public class DeactivateDiscountServlet extends HttpServlet {
                         ? "Đã kích hoạt mã giảm giá."
                         : "Đã tạm ngưng mã giảm giá.";
                 request.getSession().setAttribute("successMess", message);
-            } else {
-                request.getSession().setAttribute("errMess", "Không thể cập nhật trạng thái.");
-            }
+            } 
         } catch (Exception e) {
-            e.printStackTrace();
-            request.getSession().setAttribute("errMess", "Lỗi hệ thống: " + e.getMessage());
         }
         response.sendRedirect("discountmanager");
     }
