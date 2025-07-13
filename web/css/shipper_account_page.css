@@ -754,6 +754,17 @@ tbody tr:hover {
     background-color: #d68910;
 }
 
+.cancel-btn {
+    background-color: #dc3545;
+    color: white;
+    border: 1px solid #dc3545;
+}
+
+.cancel-btn:hover {
+    background-color: #c82333;
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+
 .complete-btn {
     background-color: #2ecc71;
 }

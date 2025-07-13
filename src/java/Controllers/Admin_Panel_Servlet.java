@@ -656,10 +656,50 @@ public class Admin_Panel_Servlet extends HttpServlet {
                     return;
                 }
 
+                String fNameCheck = fNameCus.trim().replaceAll("\\s+", " ");
+                String lNameCheck = lNameCus.trim().replaceAll("\\s+", " ");
+
+                if (!fNameCus.matches(fNameCheck) || !lNameCus.matches(lNameCheck)) {
+                    session.setAttribute("errMess", "Họ và Tên không được chứa nhiều khoảng trắng liên tiếp");
+
+                    session.setAttribute("usernameCus", usernameCus);
+                    session.setAttribute("emailCus", emailCus);
+                    session.setAttribute("passCus", passCus);
+                    session.setAttribute("comfirmPassCus", comfirmPassCus);
+                    session.setAttribute("fNameCus", fNameCus);
+                    session.setAttribute("lNameCus", lNameCus);
+                    session.setAttribute("phoneCus", phoneCus);
+                    session.setAttribute("dobCus", dobCus);
+                    session.setAttribute("addressCus", addressCus);
+
+                    String url = "admin-panel?action=create-account&type=customer";
+                    response.sendRedirect(url);
+                    return;
+                }
+
                 boolean checkPhoneCus = isValidPhone(phoneCus);
                 if (!checkPhoneCus) {
                     session.setAttribute("errMess", "Số điện thoại không hợp lệ");
 
+                    session.setAttribute("usernameCus", usernameCus);
+                    session.setAttribute("emailCus", emailCus);
+                    session.setAttribute("passCus", passCus);
+                    session.setAttribute("comfirmPassCus", comfirmPassCus);
+                    session.setAttribute("fNameCus", fNameCus);
+                    session.setAttribute("lNameCus", lNameCus);
+                    session.setAttribute("phoneCus", phoneCus);
+                    session.setAttribute("dobCus", dobCus);
+                    session.setAttribute("addressCus", addressCus);
+
+                    String url = "admin-panel?action=create-account&type=customer";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                String addressCheck = addressCus.trim().replaceAll("\\s+", " ");
+
+                if (!addressCus.matches(addressCheck)) {
+                    session.setAttribute("errMess", "Địa chỉ không được chứa nhiều khoảng trắng liên tiếp");
                     session.setAttribute("usernameCus", usernameCus);
                     session.setAttribute("emailCus", emailCus);
                     session.setAttribute("passCus", passCus);
@@ -932,6 +972,49 @@ public class Admin_Panel_Servlet extends HttpServlet {
                 if (!fNameStaff.matches(checkName) || !lNameStaff.matches(checkName)) {
 
                     session.setAttribute("errMess", "Họ và Tên của bạn không được chứa kí tự đặc biệt và số");
+                    session.setAttribute("usernameStaff", usernameStaff);
+                    session.setAttribute("emailStaff", emailStaff);
+                    session.setAttribute("passStaff", passStaff);
+                    session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                    session.setAttribute("fNameStaff", fNameStaff);
+                    session.setAttribute("lNameStaff", lNameStaff);
+                    session.setAttribute("phoneStaff", phoneStaff);
+                    session.setAttribute("dobStaff", dobStaff);
+                    session.setAttribute("addressStaff", addressStaff);
+                    session.setAttribute("roleStaff", roleStaff);
+                    session.setAttribute("statusStaff", statusStaff);
+
+                    String url = "admin-panel?action=create-account&type=staff";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                String fNameCheck = fNameStaff.trim().replaceAll("\\s+", " ");
+                String lNameCheck = lNameStaff.trim().replaceAll("\\s+", " ");
+
+                if (!fNameStaff.matches(fNameCheck) || !lNameStaff.matches(lNameCheck)) {
+                    session.setAttribute("errMess", "Họ và Tên không được chứa nhiều khoảng trắng liên tiếp");
+                    session.setAttribute("usernameStaff", usernameStaff);
+                    session.setAttribute("emailStaff", emailStaff);
+                    session.setAttribute("passStaff", passStaff);
+                    session.setAttribute("comfirmPassStaff", comfirmPassStaff);
+                    session.setAttribute("fNameStaff", fNameStaff);
+                    session.setAttribute("lNameStaff", lNameStaff);
+                    session.setAttribute("phoneStaff", phoneStaff);
+                    session.setAttribute("dobStaff", dobStaff);
+                    session.setAttribute("addressStaff", addressStaff);
+                    session.setAttribute("roleStaff", roleStaff);
+                    session.setAttribute("statusStaff", statusStaff);
+
+                    String url = "admin-panel?action=create-account&type=staff";
+                    response.sendRedirect(url);
+                    return;
+                }
+
+                String addressCheck = addressStaff.trim().replaceAll("\\s+", " ");
+
+                if (!addressStaff.matches(addressCheck)) {
+                    session.setAttribute("errMess", "Địa chỉ không được chứa nhiều khoảng trắng liên tiếp");
                     session.setAttribute("usernameStaff", usernameStaff);
                     session.setAttribute("emailStaff", emailStaff);
                     session.setAttribute("passStaff", passStaff);

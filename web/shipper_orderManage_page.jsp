@@ -201,6 +201,9 @@
                                                             <a class="action-btn edit-btn" title="Nhận đơn" href="shipper_panel?action=pickup-order&id=${order.orderId}">
                                                                 <i class="fas fa-truck-loading"></i>
                                                             </a>
+                                                            <a class="action-btn cancel-btn" title="Từ chối nhận đơn" href="shipper_panel?action=reject-order&id=${order.orderId}">
+                                                                <i class="fas fa-times-circle"></i>
+                                                            </a>
                                                         </c:when>
                                                         <c:when test="${order.orderStatus eq 'Shipping'}">
                                                             <a class="action-btn complete-btn" title="Hoàn thành" href="shipper_panel?action=delivered-order&id=${order.orderId}">

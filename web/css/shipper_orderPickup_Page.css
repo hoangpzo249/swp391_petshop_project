@@ -662,6 +662,17 @@ img {
     transform: translateY(-2px);
 }
 
+.cancel-btn {
+    background: linear-gradient(45deg, red, #ff8c42);
+    color: white;
+    box-shadow: 0 4px 10px rgba(242, 111, 33, 0.3);
+}
+
+.cancel-btn:hover {
+    box-shadow: 0 6px 15px rgba(242, 111, 33, 0.4);
+    transform: translateY(-2px);
+}
+
 .btn-outline {
     background: white;
     color: #555;

@@ -1,6 +1,6 @@
 <%-- 
-    Document   : shipper_orderDetail_page
-    Created on : 9 July 2025, 11:19:22 am
+    Document   : shipper_orderReject_page
+    Created on : 13 July 2025, 10:04:05 pm
     Author     : HuyHoang
 --%>
 <%@taglib  prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Xem chi tiết đơn hàng - PETFPT Shop</title>
+        <title>Từ chối đơn Hàng - PETFPT Shop</title>
         <link href="css/shipper_orderPickup_Page.css" rel="stylesheet" type="text/css"/>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -126,12 +126,12 @@
                 <!-- Order Pickup Header -->
                 <div class="page-header">
                     <h1 class="page-title">
-                        <i class="fas fa-clipboard-list"></i> Xem chi tiết đơn hàng
+                        <i class="fas fa-clipboard-list"></i> Từ chối nhận đơn hàng
                     </h1>
                     <ul class="breadcrumb">
                         <li><a href="homepage">Trang chủ</a></li>
                         <li><a href="shipper_panel">Shipper</a></li>
-                        <li>Xem chi tiết đơn hàng</li>
+                        <li>Từ chối nhận đơn hàng</li>
                     </ul>
                 </div>
 
@@ -139,11 +139,11 @@
                 <div class="pickup-container">
                     <div class="pickup-header">
                         <div class="pickup-icon">
-                            <i class="fas fa-eye"></i>
+                            <i class="fas fa-truck-loading"></i>
                         </div>
                         <div class="pickup-title">
-                            <h2>Xem chi tiết đơn hàng #${orderDetail.orderId}</h2>
-                            <p>Vui lòng kiểm tra thông tin đơn hàng trước khi tiếp tục</p>
+                            <h2>Xác nhận từ chối nhận đơn hàng #${orderDetail.orderId}</h2>
+                            <p>Vui lòng kiểm tra thông tin đơn hàng trước khi từ chối đơn hàng</p>
                         </div>
                     </div>
 
@@ -160,7 +160,6 @@
                                         <div class="detail-label">Ngày đặt hàng</div>
                                         <div class="detail-value"><fmt:formatDate value="${orderDetail.orderDate}" pattern="HH:mm dd-MM-yyyy"/></div>
                                     </div>
-
                                 </div>
                                 <div class="detail-row">
                                     <div class="detail-group">
@@ -182,18 +181,9 @@
                                             <span class="status-badge ${orderDetail.paymentStatus eq 'Paid' ? 'status-completed' : 'status-pending'}">
                                                 ${orderDetail.paymentStatus eq 'Paid' ? 'Đã thanh toán' : 'Chưa thanh toán'}
                                             </span>
-                                            <c:if test="${orderDetail.deliveryDate != null}">
-                                                <br><br><div class="detail-label">Ngày giao thành công</div>
-                                                <div class="detail-value"><fmt:formatDate value="${orderDetail.deliveryDate}" pattern="HH:mm dd-MM-yyyy"/></div>
-                                            </c:if>
                                         </div>
-
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="order-detail-section">
-                                <h3 class="section-title"><i class="fas fa-user"></i> Thông tin khách hàng</h3>
                                 <div class="detail-row">
                                     <div class="detail-group">
                                         <div class="detail-label">Tên khách hàng</div>
@@ -219,17 +209,11 @@
                                     <c:forEach items="${orderListDetail}" var="order">
                                         <c:if test="${order.orderId == orderDetail.orderId}">
                                             <div class="order-item">
-                                                <div class="item-image">
-                                                    <img src="${order.getImage()}" alt="${order.getImage()}">
-                                                </div>
                                                 <div class="item-details">
                                                     <div class="item-name">${order.petName}</div>
-                                                    <div class="item-options">
-                                                        <span class="item-option">Màu: ${order.petColor}</span>
-                                                    </div>
-                                                    <div class="item-price-qty">
-                                                        <span class="item-price"><fmt:formatNumber value="${order.petPrice}" pattern="#,###" /> ₫</span>
-                                                    </div>
+                                                </div>
+                                                <div class="item-total">
+                                                    <span><fmt:formatNumber value="${order.petPrice}" pattern="#,###" /> ₫</span>
                                                 </div>
                                             </div>
                                         </c:if>
@@ -250,49 +234,28 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Collection Information -->
-                            <div class="order-detail-section">
-                                <h3 class="section-title"><i class="fas fa-store"></i> Thông tin lấy hàng</h3>
-                                <div class="detail-row">
-                                    <div class="detail-group">
-                                        <div class="detail-label">Cửa hàng</div>
-                                        <div class="detail-value">PETFPT Shop</div>
-                                    </div>
-                                    <div class="detail-group">
-                                        <div class="detail-label">Địa chỉ lấy hàng</div>
-                                        <div class="detail-value">Thạch Hoà, Thạch Thất, Hà Nội</div>
-                                    </div>
-                                </div>
-                                <div class="detail-row">
-                                    <div class="detail-group">
-                                        <div class="detail-label">Liên hệ</div>
-                                        <div class="detail-value">0767676770</div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="shipper-note-section">
-                            <div class="pickup-actions">
-                                <a href="shipper_panel?action=all" class="btn btn-outline">
-                                    <i class="fas fa-arrow-left"></i> Quay lại
-                                </a>
-                                <c:choose>
-                                    <c:when test="${orderDetail.orderStatus eq 'Pending Shipper'}">
-                                        <a href="shipper_panel?action=pickup-order&id=${orderDetail.orderId}" class="btn btn-primary">
-                                            <i class="fas fa-truck-loading"></i> Xác nhận nhận đơn
-                                        </a>
-                                        <a class="btn cancel-btn" href="shipper_panel?action=reject-order&id=${order.orderId}">
-                                            <i class="fas fa-times-circle"></i> Từ chối nhận đơn
-                                        </a>
-                                    </c:when>
-                                    <c:when test="${orderDetail.orderStatus eq 'Shipping'}">
-                                        <a href="shipper_panel?action=delivered-order&id=${orderDetail.orderId}" class="btn btn-primary">
-                                            <i class="fas fa-box-open"></i> Xác nhận đã giao đơn thành công
-                                        </a>
-                                    </c:when>
-                                </c:choose>
-                            </div>
+                            <form action="shipper_panel" method="post">
+                                <input type="hidden" name="action" value="reject-order">
+                                <input type="hidden" name="id" value="${orderDetail.orderId}">
+                                
+                                <div class="confirm-checkbox">
+                                    <input type="checkbox" name="confirmInfo">
+                                    <label>
+                                        Tôi xác nhận từ chối nhận đơn.
+                                    </label>
+                                </div>
+
+                                <div class="pickup-actions">
+                                    <a href="shipper_panel?action=all" class="btn btn-outline">
+                                        <i class="fas fa-arrow-left"></i> Quay lại
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-truck-loading"></i> Xác nhận từ chối đơn hàng
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
