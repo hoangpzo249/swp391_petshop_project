@@ -119,11 +119,11 @@ public class ListShopPetServlet extends HttpServlet {
         );
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
 
-        int displayPageCount = 5;
+        int displayPageCount = 3;
         int startPage = Math.max(1, page - 1);
         int endPage = Math.min(totalPages, page + 1);
 
-        if (page <= 2) {
+        if (page == 1) {
             startPage = 1;
             endPage = Math.min(totalPages, displayPageCount);
         } else if (page >= totalPages - 1) {
