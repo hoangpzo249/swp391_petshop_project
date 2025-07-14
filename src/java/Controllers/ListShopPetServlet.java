@@ -105,16 +105,19 @@ public class ListShopPetServlet extends HttpServlet {
         }
         int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
         int pageSize = 12;
-        List<Pet> petListNoPaging = petDAO.filterPets(
-                breed, species, search, giapet1, giapet2,
-                sort, gender, color, origin, dobFrom, dobTo, vaccination);
-
-        int totalPages = (int) Math.ceil((double) petListNoPaging.size() / pageSize);
+        
         List<Pet> petList = petDAO.filterPetsPaging(
-                breed, species, search,
-                giapet1, giapet2, sort, gender, color, origin, dobFrom, dobTo, vaccination,
-                page, pageSize 
+                breed, species, search, giapet1, giapet2,
+                sort, gender, color, origin, dobFrom, dobTo, vaccination,
+                page, pageSize
         );
+
+
+        int totalItems = petDAO.countFilteredPets(
+                breed, species, search, giapet1, giapet2,
+                gender, color, origin, dobFrom, dobTo, vaccination
+        );
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
 
         int displayPageCount = 5;
         int startPage = Math.max(1, page - 1);
