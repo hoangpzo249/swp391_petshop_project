@@ -465,7 +465,7 @@ public class PetDAO {
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int status = rs.getInt("petVaccination");
-                list.add(status == 1 ? "Đã tiêm" : "Chưa tiêm");
+                list.add(status == 1 ? "Ä�Ã£ tiÃªm" : "ChÆ°a tiÃªm");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -558,7 +558,7 @@ public class PetDAO {
                 ps.setDate(i++, java.sql.Date.valueOf(dobTo));
             }
             if (vaccinationStatus != null && !vaccinationStatus.isEmpty()) {
-                ps.setInt(i++, vaccinationStatus.equals("Đã tiêm") ? 1 : 0);
+                ps.setInt(i++, vaccinationStatus.equals("Ä�Ã£ tiÃªm") ? 1 : 0);
             }
 
             try (ResultSet rs = ps.executeQuery()) {
