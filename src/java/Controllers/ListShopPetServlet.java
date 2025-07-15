@@ -112,7 +112,6 @@ public class ListShopPetServlet extends HttpServlet {
                 page, pageSize
         );
 
-
         int totalItems = petDAO.countFilteredPets(
                 breed, species, search, giapet1, giapet2,
                 gender, color, origin, dobFrom, dobTo, vaccination
