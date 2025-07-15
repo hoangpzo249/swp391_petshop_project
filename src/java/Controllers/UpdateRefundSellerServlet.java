@@ -166,7 +166,6 @@ public class UpdateRefundSellerServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("errMess", "Lỗi xử lý.");
         }
         session.removeAttribute("previousImage");
         response.sendRedirect("displayrefund");

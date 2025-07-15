@@ -132,7 +132,7 @@
 
                                     <div class="preview">
                                         <c:if test="${not empty sessionScope.preview}">
-                                            <img src="data:image/jpeg;base64,${sessionScope.preview}" class="preview-image" onclick="showImage(this.src)" />
+                                            <img id="previewImage" src="data:image/jpeg;base64,${sessionScope.preview}" class="preview-image" onclick="showImage(this.src)" />
                                         </c:if>
                                         <img id="previewImage" src="" class="preview-image" style="display: none" onclick="showImage(this.src)" />
                                     </div>

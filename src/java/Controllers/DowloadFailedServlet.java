@@ -120,14 +120,14 @@ public class DowloadFailedServlet extends HttpServlet {
 
                 row.createCell(0).setCellValue(d.getDiscountCode() != null ? d.getDiscountCode() : "");
                 row.createCell(1).setCellValue(d.getDiscountType() != null ? d.getDiscountType() : "");
-                row.createCell(2).setCellValue(d.getDiscountValue());
+                row.createCell(2).setCellValue(d.getDiscountValue() != null ? String.valueOf(d.getDiscountValue()) : "" );
                 row.createCell(3).setCellValue(d.getDescription() != null ? d.getDescription() : "");
                 row.createCell(4).setCellValue(d.getValidFrom() != null ? d.getValidFrom().toString() : "");
                 row.createCell(5).setCellValue(d.getValidTo() != null ? d.getValidTo().toString() : "");
-                row.createCell(6).setCellValue(d.getMinOrderAmount());
-                row.createCell(7).setCellValue(d.getMaxUsage() != null ? d.getMaxUsage() : 0);
+                row.createCell(6).setCellValue(d.getMinOrderAmount() != null ? String.valueOf(d.getMinOrderAmount()) : "");
+                row.createCell(7).setCellValue(d.getMaxUsage() != null ? String.valueOf(d.getMaxUsage()) : "");
                 row.createCell(8).setCellValue(d.isActive() ? "Active" : "Deactive");
-                row.createCell(9).setCellValue(d.getMaxValue() != null ? d.getMaxValue() : 0);
+                row.createCell(9).setCellValue(d.getMaxValue() != null ? String.valueOf(d.getMaxValue()) : "");
 
                 String errorMsg = "";
                 if (d.getDiscountCodeErr() != null) {

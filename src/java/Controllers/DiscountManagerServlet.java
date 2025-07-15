@@ -82,7 +82,7 @@ public class DiscountManagerServlet extends HttpServlet {
         if (page == 1) {
             startPage = 1;
             endPage = Math.min(totalPages, displayPageCount);
-        } else if (page >= totalPages - 1) {
+        } else if (page == totalPages) {
             endPage = totalPages;
             startPage = Math.max(1, totalPages - displayPageCount + 1);
         }

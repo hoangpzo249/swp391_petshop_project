@@ -210,7 +210,6 @@ public class AddRefundServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            request.getSession().setAttribute("errMess", "Lỗi xử lý dữ liệu.");
         }
         session.removeAttribute("preview");
         response.sendRedirect("displayrefund");

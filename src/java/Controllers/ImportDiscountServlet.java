@@ -156,13 +156,19 @@ public class ImportDiscountServlet extends HttpServlet {
                     }
 
                     try {
-                        double value = row.getCell(2).getNumericCellValue();
-                        d.setDiscountValue(value);
-                        if (value <= 0) {
-                            d.setDiscountValueErr("Giá trị giảm phải >0.");
-                            hasError = true;
-                        } else if ("Percent".equalsIgnoreCase(d.getDiscountType()) && value > 100) {
-                            d.setDiscountValueErr("Phần trăm giảm không vượt quá 100%.");
+                        if (row.getCell(2) != null && row.getCell(2).getCellType() != CellType.BLANK) {
+                            double value = row.getCell(2).getNumericCellValue();
+                            d.setDiscountValue(value);
+                            if (value <= 0) {
+                                d.setDiscountValueErr("Giá trị giảm phải >0.");
+                                hasError = true;
+                            } else if ("Percent".equalsIgnoreCase(d.getDiscountType()) && value > 100) {
+                                d.setDiscountValueErr("Phần trăm giảm không vượt quá 100%.");
+                                hasError = true;
+                            }
+                        } else {
+                            d.setDiscountValue(null);
+                            d.setDiscountValueErr("Trường 'Giá trị' không được để trống. Vui lòng nhập lại.");
                             hasError = true;
                         }
                     } catch (Exception e) {
@@ -180,13 +186,19 @@ public class ImportDiscountServlet extends HttpServlet {
                     }
 
                     try {
-                        Cell fromCell = row.getCell(4);
-                        if (fromCell.getCellType() == CellType.NUMERIC) {
-                            fromDate = new Date(fromCell.getDateCellValue().getTime());
+                        if (row.getCell(4) != null && row.getCell(4).getCellType() != CellType.BLANK) {
+                            Cell fromCell = row.getCell(4);
+                            if (fromCell.getCellType() == CellType.NUMERIC) {
+                                fromDate = new Date(fromCell.getDateCellValue().getTime());
+                            } else {
+                                fromDate = Date.valueOf(fromCell.getStringCellValue().trim());
+                            }
+                            d.setValidFrom(fromDate);
                         } else {
-                            fromDate = Date.valueOf(fromCell.getStringCellValue().trim());
+                            d.setValidFrom(null);
+                            d.setValidFromErr("Trường 'Hiệu lực từ' không được để trống. Vui lòng nhập lại.");
+                            hasError = true;
                         }
-                        d.setValidFrom(fromDate);
                     } catch (Exception e) {
                         d.setValidFrom(null);
                         d.setValidFromErr("Trường 'Hiệu lực từ' sai định dạng. Vui lòng nhập lại.");
@@ -194,18 +206,26 @@ public class ImportDiscountServlet extends HttpServlet {
                     }
 
                     try {
-                        Cell toCell = row.getCell(5);
-                        if (toCell.getCellType() == CellType.NUMERIC) {
-                            toDate = new Date(toCell.getDateCellValue().getTime());
+                        if (row.getCell(5) != null && row.getCell(5).getCellType() != CellType.BLANK) {
+
+                            Cell toCell = row.getCell(5);
+                            if (toCell.getCellType() == CellType.NUMERIC) {
+                                toDate = new Date(toCell.getDateCellValue().getTime());
+                            } else {
+                                toDate = Date.valueOf(toCell.getStringCellValue().trim());
+                            }
+                            d.setValidTo(toDate);
+
+                            if (fromDate != null && !toDate.after(fromDate)) {
+                                d.setValidToErr("Ngày kết thúc phải sau ngày bắt đầu.");
+                                hasError = true;
+                            } else if (toDate.before(new Date(System.currentTimeMillis()))) {
+                                d.setValidToErr("Ngày kết thúc không được trong quá khứ.");
+                                hasError = true;
+                            }
                         } else {
-                            toDate = Date.valueOf(toCell.getStringCellValue().trim());
-                        }
-                        d.setValidTo(toDate);
-                        if (fromDate != null && !toDate.after(fromDate)) {
-                            d.setValidToErr("Ngày kết thúc phải sau ngày bắt đầu.");
-                            hasError = true;
-                        } else if (toDate.before(new Date(System.currentTimeMillis()))) {
-                            d.setValidToErr("Ngày kết thúc không được trong quá khứ.");
+                            d.setValidTo(null);
+                            d.setValidToErr("Trường 'Tới ngày' không được để trống. Vui lòng nhập lại.");
                             hasError = true;
                         }
                     } catch (Exception e) {
@@ -215,10 +235,16 @@ public class ImportDiscountServlet extends HttpServlet {
                     }
 
                     try {
-                        double minOrder = row.getCell(6).getNumericCellValue();
-                        d.setMinOrderAmount(minOrder);
-                        if (minOrder < 0) {
-                            d.setMinOrderAmountErr("Đơn hàng tối thiểu phải >= 0.");
+                        if (row.getCell(6) != null && row.getCell(6).getCellType() != CellType.BLANK) {
+                            double minOrder = row.getCell(6).getNumericCellValue();
+                            d.setMinOrderAmount(minOrder);
+                            if (minOrder < 0) {
+                                d.setMinOrderAmountErr("Đơn hàng tối thiểu phải >= 0.");
+                                hasError = true;
+                            }
+                        } else {
+
+                            d.setMinOrderAmountErr("Trường 'Giá trị đơn hàng tối thiểu' không được để trống. Vui lòng nhập lại.");
                             hasError = true;
                         }
                     } catch (Exception e) {
@@ -235,9 +261,13 @@ public class ImportDiscountServlet extends HttpServlet {
                                 d.setMaxUsageErr("Số lần dùng phải > 0.");
                                 hasError = true;
                             }
+                        } else {
+                            
+                            d.setMaxUsageErr("Trường 'Số lần dùng tối đa' không được để trống. Vui lòng nhập lại.");
+                            hasError = true;
                         }
                     } catch (Exception e) {
-                        d.setMaxUsageErr("Trường 'Số lần dùng' sai định dạng. Vui lòng nhập lại.");
+                        d.setMaxUsageErr("Trường 'Số lần dùng tối đa ' sai định dạng. Vui lòng nhập lại.");
                         hasError = true;
                     }
 
@@ -270,6 +300,9 @@ public class ImportDiscountServlet extends HttpServlet {
                                     d.setMaxValueErr("Giảm tối đa phải > 0.");
                                     hasError = true;
                                 }
+                            } else {
+                                d.setMaxValueErr("Trường 'Giảm tối đa' không được để trống. Vui lòng nhập lại.");
+                                hasError = true;
                             }
                         } catch (Exception e) {
                             d.setMaxValueErr("Trường 'Giảm tối đa' sai định dạng. Vui lòng nhập lại.");
@@ -294,7 +327,6 @@ public class ImportDiscountServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errMess", "Lỗi đọc file: " + e.getMessage());
             request.getRequestDispatcher("import_discount.jsp").forward(request, response);
             return;
         }

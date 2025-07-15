@@ -134,7 +134,7 @@
                                 </div>
                                 <div class="form-full-width">
                                     <label for="description">Mô tả</label>
-                                    <textarea id="description" name="description" class="form-control" rows="4" required>${description}</textarea>
+                                    <textarea id="description" name="description" class="form-control" rows="4" >${description}</textarea>
                                 </div>
                             </div>
                         </div>
