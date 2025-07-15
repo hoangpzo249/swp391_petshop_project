@@ -729,3 +729,9 @@ body {
     background-color: #f9f9f9;
     border-color: #eee;
 }
+.page-link.active {
+    background: linear-gradient(45deg, #f26f21, #ff8c42);
+    color: white;
+    border-color: #f26f21;
+    box-shadow: 0 4px 10px rgba(242, 111, 33, 0.3);
+}

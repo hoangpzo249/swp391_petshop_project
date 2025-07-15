@@ -188,7 +188,6 @@
                                                 </c:choose>
 
                                             </td>
-
                                             <td>${d.usageCount}/${d.maxUsage != null ? d.maxUsage : '∞'}</td>
 
                                             <td>
@@ -207,7 +206,7 @@
                                                         <i class="fas fa-pencil-alt"></i>
                                                     </a>
                                                     <a class="action-btn ${d.active ? 'toggle-btn-active' : 'toggle-btn-inactive'}"
-                                                       href="deactivatediscount?id=${d.discountId}" >
+                                                       href="deactivatediscount?id=${d.discountId}&searchKey=${searchKey}&type=${type}&status=${status}&fromDate=${fromDate}&toDate=${toDate}&sortBy=${sortBy}&page=${currentPage}">
                                                         <i class="fas ${d.active ? 'fa-check-square' : 'fa-ban'} fa-fw"></i>
                                                     </a>
                                                     <a class="action-btn reset-btn " href="resetdiscountusage?id=${d.discountId}" style="background: red" >
@@ -226,6 +225,29 @@
                             </table>
                         </div>
                     </div>
+                    <c:if test="${totalPages > 1}">
+                        <div class="pagination">
+                            <c:if test="${currentPage > 1}">
+                                <a class="page-link ${currentPage == 1 ? 'disabled' : ''}" href="discountmanager?page=${currentPage - 1}&searchKey=${searchKey}&type=${type}&status=${status}&fromDate=${fromDate}&toDate=${toDate}&sortBy=${sortBy}">«</a>
+                            </c:if>
+
+                            <c:forEach var="i" begin="${startPage}" end="${endPage}">
+                                <c:choose>
+                                    <c:when test="${i == currentPage}">
+                                        <span class="active">${i}</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="discountmanager?page=${i}&searchKey=${searchKey}&type=${type}&status=${status}&fromDate=${fromDate}&toDate=${toDate}&sortBy=${sortBy}">${i}</a>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+
+                            <c:if test="${currentPage < totalPages}">
+                                <a href="discountmanager?page=${currentPage + 1}&searchKey=${searchKey}&type=${type}&status=${status}&fromDate=${fromDate}&toDate=${toDate}&sortBy=${sortBy}">»</a>
+                            </c:if>
+                        </div>
+                    </c:if>
+
                 </div>
             </div>
         </div>

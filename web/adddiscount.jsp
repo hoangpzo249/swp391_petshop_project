@@ -17,7 +17,6 @@
         <link href="css/seller_panel_page.css?v=4" rel="stylesheet" type="text/css"/>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        <script src="js/add_discount_validate.js?v=2"></script>
         <script src="js/discount_fixed.js?v=4"></script>
     </head>
     <body>
@@ -135,7 +134,7 @@
                                 </div>
                                 <div class="form-full-width">
                                     <label for="description">Mô tả</label>
-                                    <textarea id="description" name="description" class="form-control" rows="4">${description}</textarea>
+                                    <textarea id="description" name="description" class="form-control" rows="4" required>${description}</textarea>
                                 </div>
                             </div>
                         </div>

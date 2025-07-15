@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-
+        <c:set var="discountType" value="${param.type != null ? param.type : discount.discountType}" />
         <c:if test="${not empty errMess}">
             <div class="alert-message error">${errMess}</div>
             <c:remove var="errMess" scope="request" />
@@ -107,22 +107,50 @@
 
                                     </select>
                                 </div>
+                                <c:set var="discountValue" value="${param.value != null ? param.value : discount.discountValue}" />
+                                <c:choose>
+                                    <c:when test="${discountType eq 'Fixed'}">
+                                        <c:set var="formattedValue">
+                                            <fmt:formatNumber value="${discountValue}" type="number" groupingUsed="true"/>
+                                        </c:set>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="formattedValue" value="${discountValue}" />
+                                    </c:otherwise>
+                                </c:choose>
+
                                 <div class="form-group">
                                     <label for="value">Giá trị</label>
                                     <input type="text" id="value" name="value" class="form-control"
-                                           value="${param.value != null ? param.value : discount.discountValue}" required>
-
+                                           value="${formattedValue}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="minAmount">Đơn hàng tối thiểu (₫)</label>
-                                    <input type="text" id="minAmount" name="minAmount" class="form-control"
-                                           value="${param.minAmount != null ? param.minAmount : discount.minOrderAmount}">
+                                    <c:choose>
+                                        <c:when test="${param.minAmount != null}">
+                                            <input type="text" id="minAmount" name="minAmount" class="form-control"
+                                                   value="${param.minAmount}" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <input type="text" id="minAmount" name="minAmount" class="form-control"
+                                                   value="<fmt:formatNumber value='${discount.minOrderAmount}' type='number' groupingUsed="true"  />" />
+                                        </c:otherwise>
+                                    </c:choose>
 
                                 </div>
                                 <div class="form-group">
                                     <label for="maxValue">Giảm tối đa (₫)</label>
-                                    <input type="text" id="maxValue" name="maxValue" class="form-control"
-                                           value="${param.maxValue != null ? param.maxValue : (discount.maxValue != null ? discount.maxValue : '')}">
+                                    <c:choose>
+                                        <c:when test="${param.maxValue != null}">
+                                            <input type="text" id="maxValue" name="maxValue" class="form-control"
+                                                   value="${param.maxValue}" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <input type="text" id="maxValue" name="maxValue" class="form-control"
+                                                   value="<fmt:formatNumber value='${discount.maxValue}' type='number' groupingUsed="true"  />" />
+                                        </c:otherwise>
+                                    </c:choose>
+
 
                                 </div>
                                 <div class="form-group">

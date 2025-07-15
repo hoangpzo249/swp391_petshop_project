@@ -62,9 +62,6 @@ public class ResetDiscountUsageServlet extends HttpServlet {
             int discountId = Integer.parseInt(id.trim());
             DiscountDAO dao = new DiscountDAO();
             Discount d = dao.getDiscountById(discountId);
-            if (!d.isActive()){
-                dao.updateStatus(discountId);
-            }
             if (d.getUsageCount()==0){
                 request.getSession().setAttribute("errMess", "Số lượt sử dụng đã là 0 , không cần reset");
                 response.sendRedirect("discountmanager");

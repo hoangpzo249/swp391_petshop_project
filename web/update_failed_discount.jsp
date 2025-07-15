@@ -19,7 +19,7 @@
         <script src="js/retry_discount_fixed.js"></script>
     </head>
     <body>
-        
+
         <div class="seller-header">
             <div class="logo-container">
                 <a href="homepage">
@@ -85,7 +85,7 @@
                     <a href="downloadfailed" class="btn btn-outline">
                         <i class="fas fa-download"></i> Tải danh sách lỗi Excel
                     </a>
-                     <a href="import_discount.jsp" class="btn btn-outline"><i class="fas fa-file-upload"></i> Import mã từ Excel</a>
+                    <a href="import_discount.jsp" class="btn btn-outline"><i class="fas fa-file-upload"></i> Import mã từ Excel</a>
 
                 </div>
                 <c:if test="${not empty successMess}">
@@ -114,27 +114,56 @@
                                     <div class="form-group">
                                         <label>Loại giảm</label>
                                         <select name="type" class="form-control">
-                                            <option value="Percent" ${d.discountType=='Percent'?'selected':''}>Percent</option>
-                                            <option value="Fixed" ${d.discountType=='Fixed'?'selected':''}>Fixed</option>
+                                            <option value="Percent" ${d.discountType eq 'Percent'?'selected':''}>Percent</option>
+                                            <option value="Fixed" ${d.discountType eq 'Fixed'?'selected':''}>Fixed</option>
                                         </select>
                                     </div>
+                                    <c:set var="discountValue" value="${param.value != null ? param.value : d.discountValue}" />
+                                    <c:choose>
+                                        <c:when test="${d.discountType eq 'Fixed'}">
+                                            <c:set var="formattedValue">
+                                                <fmt:formatNumber value="${discountValue}" type="number" groupingUsed="true"/>
+                                            </c:set>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="formattedValue" value="${discountValue}" />
+                                        </c:otherwise>
+                                    </c:choose>
                                     <div class="form-group">
                                         <label>Giá trị</label>
-                                        <input type="text" name="value" class="form-control" value="${d.discountValue}">
+                                        <input type="text" name="value" class="form-control" value="${formattedValue}">
                                         <c:if test="${not empty d.discountValueErr}">
                                             <div class="field-error">${d.discountValueErr}</div>
                                         </c:if>
                                     </div>
                                     <div class="form-group">
                                         <label>Đơn hàng tối thiểu (₫)</label>
-                                        <input type="text" name="minAmount" class="form-control" value="${d.minOrderAmount}">
+                                        <c:choose>
+                                            <c:when test="${param.minAmount != null}">
+                                                <input type="text" id="minAmount" name="minAmount" class="form-control"
+                                                       value="${param.minAmount}" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="text" id="minAmount" name="minAmount" class="form-control"
+                                                       value="<fmt:formatNumber value='${d.minOrderAmount}' type='number' groupingUsed="true"  />" />
+                                            </c:otherwise>
+                                        </c:choose>
                                         <c:if test="${not empty d.minOrderAmountErr}">
                                             <div class="field-error">${d.minOrderAmountErr}</div>
                                         </c:if>
                                     </div>
                                     <div class="form-group">
                                         <label>Giảm tối đa (₫)</label>
-                                        <input type="text" name="maxValue" class="form-control" value="${d.maxValue}">
+                                        <c:choose>
+                                            <c:when test="${param.maxValue != null}">
+                                                <input type="text" id="maxValue" name="maxValue" class="form-control"
+                                                       value="${param.maxValue}" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="text" id="maxValue" name="maxValue" class="form-control"
+                                                       value="<fmt:formatNumber value='${d.maxValue}' type='number' groupingUsed="true"  />" />
+                                            </c:otherwise>
+                                        </c:choose>
                                         <c:if test="${not empty d.maxValueErr}">
                                             <div class="field-error">${d.maxValueErr}</div>
                                         </c:if>

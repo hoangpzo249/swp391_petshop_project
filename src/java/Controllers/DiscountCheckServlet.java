@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -141,8 +142,14 @@ public class DiscountCheckServlet extends HttpServlet {
                 isValid = true;
                 message = "Áp dụng mã thành công!";
                 request.setAttribute("discountCode", d.getDiscountCode());
-                if (d.getDescription() != null || !d.getDescription().isEmpty()) {
-                    message = message + " " + d.getDescription();
+                Locale localeVN = new Locale("vi", "VN");
+                if ("Percent".equalsIgnoreCase(d.getDiscountType())){
+                    message=message +" "+ "Giảm "+d.getDiscountValue()+"%. ";
+                    if (d.getMaxValue()!=null){
+                         message += " Giảm tối đa " + String.format(localeVN, "%,.0f", d.getMaxValue()) + "đ";
+                    }
+                }else{
+                     message += "Giảm " + String.format(localeVN, "%,.0f", d.getDiscountValue()) + "đ";
                 }
             }
 

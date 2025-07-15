@@ -110,16 +110,25 @@ public class AddDiscountServlet extends HttpServlet {
             d.setDiscountType(type);
             d.setActive("1".equals(status));
 
-            double val;
+            double val = 0;
             try {
-                val = Double.parseDouble(value.trim());
+                if ("Fixed".equalsIgnoreCase(d.getDiscountType())) {
+                    if (value.contains(".")) {
+                        if (!value.matches("^\\d{1,3}(\\.\\d{3})*$")) {
+                            request.setAttribute("errMess", "Giá trị giảm không đúng định dạng (ví dụ đúng: 1.000.000 hoặc 1000000).");
+                            request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                            return;
+                        }
+                        val = Double.parseDouble(value.trim().replaceAll("\\.", ""));
+                    } else {
+                        val = Double.parseDouble(value.trim());
+                    }
+                } else {
+                    val = Double.parseDouble(value.trim());
+                }
+
                 if (val <= 0) {
                     request.setAttribute("errMess", "Giá trị giảm phải lớn hơn 0.");
-                    request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
-                    return;
-                }
-                if ("Percent".equals(type) && val > 100) {
-                    request.setAttribute("errMess", "Phần trăm giảm không được vượt quá 100%.");
                     request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                     return;
                 }
@@ -128,13 +137,37 @@ public class AddDiscountServlet extends HttpServlet {
                 request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                 return;
             }
+            if ("Percent".equals(type) && val > 100) {
+                request.setAttribute("errMess", "Phần trăm giảm không được vượt quá 100%.");
+                request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                return;
+            }
+            if (val > 1000000000.00) {
+                request.setAttribute("errMess", "Giá trị giảm không được vượt quá 1,000,000,000.00.");
+                request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                return;
+            }
             d.setDiscountValue(val);
 
             double minAmt;
             try {
-                minAmt = Double.parseDouble(min.trim());
+                if (min.contains(".")) {
+                    if (!min.matches("^\\d{1,3}(\\.\\d{3})*$")) {
+                        request.setAttribute("errMess", "Giá trị đơn hàng tối thiểu không đúng định dạng (ví dụ đúng: 1.000.000 hoặc 1000000).");
+                        request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                        return;
+                    }
+                    minAmt = Double.parseDouble(min.trim().replaceAll("\\.", ""));
+                } else {
+                    minAmt = Double.parseDouble(min.trim());
+                }
                 if (minAmt < 0) {
                     request.setAttribute("errMess", "Đơn hàng tối thiểu không được nhỏ hơn 0.");
+                    request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                    return;
+                }
+                if (minAmt > 1000000000.00) {
+                    request.setAttribute("errMess", "Giá trị đơn hàng tối thiểu không được lớn hơn 1,000,000,000.00.");
                     request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                     return;
                 }
@@ -143,46 +176,76 @@ public class AddDiscountServlet extends HttpServlet {
                 request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                 return;
             }
+
             d.setMinOrderAmount(minAmt);
 
-            double maxVal;
-            if ("Percent".equals(type)) {
-                if (maxValue != null && !maxValue.trim().isEmpty()) {
-                    try {
-                        maxVal = Double.parseDouble(maxValue.trim());
-                        if (maxVal <= 0) {
-                            request.setAttribute("errMess", "Giảm tối đa phải là số dương.");
+            if (maxValue != null && !maxValue.trim().isEmpty()) {
+                try {
+                    double maxVal;
+                    if (maxValue.contains(".")) {
+                        if (!maxValue.matches("^\\d{1,3}(\\.\\d{3})*$")) {
+                            request.setAttribute("errMess", "Giảm tối đa không đúng định dạng (ví dụ đúng: 1.000.000 hoặc 1000000).");
                             request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                             return;
                         }
-                    } catch (NumberFormatException e) {
-                        request.setAttribute("errMess", "Giảm tối đa không hợp lệ. Vui lòng nhập số.");
+                        maxVal = Double.parseDouble(maxValue.trim().replaceAll("\\.", ""));
+                    } else {
+                        maxVal = Double.parseDouble(maxValue.trim());
+                    }
+
+                    if (maxVal <= 0) {
+                        request.setAttribute("errMess", "Giảm tối đa phải là số dương.");
+                        request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                        return;
+                    }
+                    if (maxVal > 1000000000.00) {
+                        request.setAttribute("errMess", "Giá trị giảm tối đa không được lớn hơn 1,000,000,000.00.");
                         request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                         return;
                     }
                     d.setMaxValue(maxVal);
-                } else {
-                    d.setMaxValue(null);
+                } catch (NumberFormatException e) {
+                    request.setAttribute("errMess", "Giảm tối đa không hợp lệ. Vui lòng nhập số.");
+                    request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                    return;
                 }
-            } else {
-                d.setMaxValue(null);
             }
 
-            int maxUse;
             if (maxUsage != null && !maxUsage.trim().isEmpty()) {
                 try {
-                    maxUse = Integer.parseInt(maxUsage.trim());
+                    int maxUse;
+                    maxUsage = maxUsage.trim();
+
+                    if (maxUsage.contains(".")) {
+                        if (!maxUsage.matches("^\\d{1,3}(\\.\\d{3})*$")) {
+                            request.setAttribute("errMess", "Số lần sử dụng phải đúng định dạng nhóm 3 chữ số khi có dấu chấm (ví dụ: 1.000.000).");
+                            request.getRequestDispatcher("update_discount.jsp").forward(request, response);
+                            return;
+                        }
+                        maxUsage = maxUsage.replaceAll("\\.", "");
+                    }
+
+                    maxUse = Integer.parseInt(maxUsage);
+
                     if (maxUse <= 0) {
                         request.setAttribute("errMess", "Số lần sử dụng phải lớn hơn 0.");
                         request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                         return;
                     }
+
+                    if (maxUse > 999999999) {
+                        request.setAttribute("errMess", "Số lần sử dụng không được vượt quá 999.999.999.");
+                        request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
+                        return;
+                    }
+
+                    d.setMaxUsage(maxUse);
+
                 } catch (NumberFormatException e) {
                     request.setAttribute("errMess", "Số lần sử dụng không hợp lệ. Vui lòng nhập số nguyên.");
                     request.getRequestDispatcher("adddiscount.jsp").forward(request, response);
                     return;
                 }
-                d.setMaxUsage(maxUse);
             }
 
             Date fromDate, toDate;

@@ -106,7 +106,7 @@ public class RetryAddDiscountServlet extends HttpServlet {
 
         DiscountDAO dao = new DiscountDAO();
         String indexParam = request.getParameter("index");
-        int index=Integer.parseInt(indexParam);
+        int index = Integer.parseInt(indexParam);
         Discount d = failedDiscounts.get(index);
         d.setActive("1".equals(status));
         d.setDescription(description);
@@ -124,16 +124,32 @@ public class RetryAddDiscountServlet extends HttpServlet {
         }
 
         try {
-            double val = Double.parseDouble(value.trim());
-            d.setDiscountValue(val);
-            if (val <= 0) {
-                d.setDiscountValueErr("Giá trị giảm phải lớn hơn 0.");
-                hasError = true;
-            } else if ("Percent".equals(type) && val > 100) {
-                d.setDiscountValueErr("Phần trăm giảm không được vượt quá 100%.");
-                hasError = true;
-            } else {
-                d.setDiscountValueErr(null);
+            if ("Fixed".equalsIgnoreCase(d.getDiscountType())){
+            value = value.trim();
+            if (value.contains(".")) {
+                if (!value.matches("^\\d{1,3}(\\.\\d{3})*$")) {
+                    d.setDiscountValueErr("Giá trị giảm không đúng định dạng (ví dụ đúng: 1.000.000 hoặc 1000000).");
+                    hasError = true;
+                } else {
+                    value = value.replaceAll("\\.", "");
+                }
+            }
+            }
+            if (!hasError) {
+                double val = Double.parseDouble(value);
+                d.setDiscountValue(val);
+                if (val <= 0) {
+                    d.setDiscountValueErr("Giá trị giảm phải lớn hơn 0.");
+                    hasError = true;
+                } else if ("Percent".equals(type) && val > 100) {
+                    d.setDiscountValueErr("Phần trăm giảm không được vượt quá 100%.");
+                    hasError = true;
+                } else if (val > 1000000000.00) {
+                    d.setDiscountValueErr("Giá trị giảm không được vượt quá 1,000,000,000.");
+                    hasError = true;
+                } else {
+                    d.setDiscountValueErr(null);
+                }
             }
         } catch (NumberFormatException e) {
             d.setDiscountValueErr("Giá trị giảm không hợp lệ.");
@@ -141,13 +157,27 @@ public class RetryAddDiscountServlet extends HttpServlet {
         }
 
         try {
-            double minAmt = Double.parseDouble(min.trim());
-            d.setMinOrderAmount(minAmt);
-            if (minAmt < 0) {
-                d.setMinOrderAmountErr("Đơn hàng tối thiểu phải >= 0.");
-                hasError = true;
-            } else {
-                d.setMinOrderAmountErr(null);
+            min = min.trim();
+            if (min.contains(".")) {
+                if (!min.matches("^\\d{1,3}(\\.\\d{3})*$")) {
+                    d.setMinOrderAmountErr("Giá trị đơn hàng tối thiểu không đúng định dạng (ví dụ đúng: 1.000.000 hoặc 1000000).");
+                    hasError = true;
+                } else {
+                    min = min.replaceAll("\\.", "");
+                }
+            }
+            if (!hasError) {
+                double minAmt = Double.parseDouble(min);
+                d.setMinOrderAmount(minAmt);
+                if (minAmt < 0) {
+                    d.setMinOrderAmountErr("Đơn hàng tối thiểu phải >= 0.");
+                    hasError = true;
+                } else if (minAmt > 1000000000.00) {
+                    d.setMinOrderAmountErr("Giá trị đơn hàng tối thiểu không được lớn hơn 1,000,000,000.");
+                    hasError = true;
+                } else {
+                    d.setMinOrderAmountErr(null);
+                }
             }
         } catch (NumberFormatException e) {
             d.setMinOrderAmountErr("Đơn hàng tối thiểu không hợp lệ.");
@@ -157,13 +187,27 @@ public class RetryAddDiscountServlet extends HttpServlet {
         if ("Percent".equals(type)) {
             if (maxValue != null && !maxValue.trim().isEmpty()) {
                 try {
-                    double maxVal = Double.parseDouble(maxValue.trim());
-                    d.setMaxValue(maxVal);
-                    if (maxVal <= 0) {
-                        d.setMaxValueErr("Giảm tối đa phải lớn hơn 0.");
-                        hasError = true;
-                    } else {
-                        d.setMaxValueErr(null);
+                    maxValue = maxValue.trim();
+                    if (maxValue.contains(".")) {
+                        if (!maxValue.matches("^\\d{1,3}(\\.\\d{3})*$")) {
+                            d.setMaxValueErr("Giảm tối đa không đúng định dạng (ví dụ đúng: 1.000.000 hoặc 1000000).");
+                            hasError = true;
+                        } else {
+                            maxValue = maxValue.replaceAll("\\.", "");
+                        }
+                    }
+                    if (!hasError) {
+                        double maxVal = Double.parseDouble(maxValue);
+                        d.setMaxValue(maxVal);
+                        if (maxVal <= 0) {
+                            d.setMaxValueErr("Giảm tối đa phải lớn hơn 0.");
+                            hasError = true;
+                        } else if (maxVal > 1000000000.00) {
+                            d.setMaxValueErr("Giá trị giảm tối đa không được lớn hơn 1,000,000,000.");
+                            hasError = true;
+                        } else {
+                            d.setMaxValueErr(null);
+                        }
                     }
                 } catch (NumberFormatException e) {
                     d.setMaxValueErr("Giảm tối đa không hợp lệ.");
@@ -180,13 +224,27 @@ public class RetryAddDiscountServlet extends HttpServlet {
 
         if (maxUsage != null && !maxUsage.trim().isEmpty()) {
             try {
-                int maxUse = Integer.parseInt(maxUsage.trim());
-                d.setMaxUsage(maxUse);
-                if (maxUse <= 0) {
-                    d.setMaxUsageErr("Số lần sử dụng phải lớn hơn 0.");
-                    hasError = true;
-                } else {
-                    d.setMaxUsageErr(null);
+                maxUsage = maxUsage.trim();
+                if (maxUsage.contains(".")) {
+                    if (!maxUsage.matches("^\\d{1,3}(\\.\\d{3})*$")) {
+                        d.setMaxUsageErr("Số lần sử dụng phải đúng định dạng nhóm 3 chữ số khi có dấu chấm (ví dụ: 1.000.000).");
+                        hasError = true;
+                    } else {
+                        maxUsage = maxUsage.replaceAll("\\.", "");
+                    }
+                }
+                if (!hasError) {
+                    int maxUse = Integer.parseInt(maxUsage);
+                    d.setMaxUsage(maxUse);
+                    if (maxUse <= 0) {
+                        d.setMaxUsageErr("Số lần sử dụng phải lớn hơn 0.");
+                        hasError = true;
+                    } else if (maxUse > 999999999) {
+                        d.setMaxUsageErr("Số lần sử dụng không được vượt quá 999.999.999.");
+                        hasError = true;
+                    } else {
+                        d.setMaxUsageErr(null);
+                    }
                 }
             } catch (NumberFormatException e) {
                 d.setMaxUsageErr("Số lần sử dụng không hợp lệ.");

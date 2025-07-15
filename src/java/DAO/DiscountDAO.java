@@ -449,6 +449,165 @@ public class DiscountDAO extends DBContext {
         return list;
     }
 
+    public List<Discount> getFilteredDiscountsPaging(String searchKey, String type, String status, String fromDate, String toDate, String sortBy, int page, int pageSize) {
+        List<Discount> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String sql = "SELECT * FROM DiscountTB WHERE 1=1 ";
+        if (searchKey != null && !searchKey.trim().isEmpty()) {
+            sql += "AND (discountCode LIKE ? OR description LIKE ?) ";
+        }
+        if (type != null && !type.isEmpty()) {
+            sql += "AND discountType = ? ";
+        }
+        if (status != null && !status.isEmpty()) {
+            sql += "AND isActive = ? ";
+        }
+        if (fromDate != null && !fromDate.isEmpty()) {
+            sql += "AND validTo >= ? ";
+        }
+        if (toDate != null && !toDate.isEmpty()) {
+            sql += "AND validTo <= ? ";
+        }
+
+        if (sortBy == null || sortBy.isEmpty()) {
+            sql += "ORDER BY discountId DESC ";
+        } else {
+            switch (sortBy) {
+                case "validTo_asc":
+                    sql += "ORDER BY validTo ASC ";
+                    break;
+                case "validTo_desc":
+                    sql += "ORDER BY validTo DESC ";
+                    break;
+                case "usageCount_asc":
+                    sql += "ORDER BY usageCount ASC ";
+                    break;
+                case "usageCount_desc":
+                    sql += "ORDER BY usageCount DESC ";
+                    break;
+                default:
+                    sql += "ORDER BY discountId DESC ";
+            }
+        }
+
+        sql += "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+
+            int i = 1;
+            if (searchKey != null && !searchKey.trim().isEmpty()) {
+                ps.setString(i++, "%" + searchKey.trim() + "%");
+                ps.setString(i++, "%" + searchKey.trim() + "%");
+            }
+            if (type != null && !type.isEmpty()) {
+                ps.setString(i++, type);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setBoolean(i++, "1".equals(status));
+            }
+            if (fromDate != null && !fromDate.isEmpty()) {
+                ps.setDate(i++, java.sql.Date.valueOf(fromDate));
+            }
+            if (toDate != null && !toDate.isEmpty()) {
+                ps.setDate(i++, java.sql.Date.valueOf(toDate));
+            }
+
+            ps.setInt(i++, (page - 1) * pageSize);
+            ps.setInt(i, pageSize);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Discount d = new Discount();
+                d.setDiscountId(rs.getInt("discountId"));
+                d.setDiscountCode(rs.getString("discountCode"));
+                d.setDiscountType(rs.getString("discountType"));
+                d.setDiscountValue(rs.getDouble("discountValue"));
+                d.setDescription(rs.getString("description"));
+                d.setValidFrom(rs.getDate("validFrom"));
+                d.setValidTo(rs.getDate("validTo"));
+                d.setMinOrderAmount(rs.getDouble("minOrderAmount"));
+                d.setMaxUsage(rs.getObject("maxUsage") != null ? rs.getInt("maxUsage") : null);
+                d.setUsageCount(rs.getInt("usageCount"));
+                d.setActive(rs.getBoolean("isActive"));
+                d.setMaxValue(rs.getObject("maxValue") != null ? rs.getDouble("maxValue") : null);
+                list.add(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return list;
+    }
+
+    public int countFilteredDiscounts(String searchKey, String type, String status, String fromDate, String toDate) {
+        String sql = "SELECT COUNT(*) FROM DiscountTB WHERE 1=1 ";
+        if (searchKey != null && !searchKey.trim().isEmpty()) {
+            sql += "AND (discountCode LIKE ? OR description LIKE ?) ";
+        }
+        if (type != null && !type.isEmpty()) {
+            sql += "AND discountType = ? ";
+        }
+        if (status != null && !status.isEmpty()) {
+            sql += "AND isActive = ? ";
+        }
+        if (fromDate != null && !fromDate.isEmpty()) {
+            sql += "AND validTo >= ? ";
+        }
+        if (toDate != null && !toDate.isEmpty()) {
+            sql += "AND validTo <= ? ";
+        }
+
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            int i = 1;
+            if (searchKey != null && !searchKey.trim().isEmpty()) {
+                ps.setString(i++, "%" + searchKey.trim() + "%");
+                ps.setString(i++, "%" + searchKey.trim() + "%");
+            }
+            if (type != null && !type.isEmpty()) {
+                ps.setString(i++, type);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setBoolean(i++, "1".equals(status));
+            }
+            if (fromDate != null && !fromDate.isEmpty()) {
+                ps.setDate(i++, java.sql.Date.valueOf(fromDate));
+            }
+            if (toDate != null && !toDate.isEmpty()) {
+                ps.setDate(i++, java.sql.Date.valueOf(toDate));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     public boolean resetUsageCountById(int discountId) {
         String sql = "UPDATE DiscountTB SET usageCount = 0 WHERE discountId = ?";

@@ -1211,3 +1211,90 @@ textarea.form-control {
     justify-content: flex-end;
     gap: 10px;
 }
+
+.pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 25px;
+}
+
+.pagination {
+    display: flex;
+    gap: 5px;
+}
+
+.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    color: #555;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.page-link:hover {
+    background-color: #f5f7fa;
+    border-color: #ddd;
+}
+
+.page-link.active {
+    background: linear-gradient(45deg, #f26f21, #ff8c42);
+    color: white;
+    border-color: #f26f21;
+    box-shadow: 0 4px 10px rgba(242, 111, 33, 0.3);
+}
+
+.page-link.disabled {
+    color: #ccc;
+    pointer-events: none;
+    border-color: #eee;
+}
+
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 25px;
+    gap: 5px;
+    margin-right: 70px;
+    margin-bottom: 40px;    
+}
+
+.pagination a,
+.pagination span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    font-size: 14px;
+    text-decoration: none;
+    color: #555;
+    transition: all 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #f5f7fa;
+    border-color: #ddd;
+}
+
+/* Active page */
+.pagination .active {
+    background: linear-gradient(45deg, #f26f21, #ff8c42);
+    color: white;
+    border-color: #f26f21;
+    box-shadow: 0 4px 10px rgba(242, 111, 33, 0.3);
+}
+
+/* Disabled buttons */
+.pagination a.disabled {
+    color: #ccc;
+    pointer-events: none;
+    border-color: #eee;
+}

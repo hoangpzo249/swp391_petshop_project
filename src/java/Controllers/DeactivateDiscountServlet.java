@@ -71,7 +71,14 @@ public class DeactivateDiscountServlet extends HttpServlet {
             } 
         } catch (Exception e) {
         }
-        response.sendRedirect("discountmanager");
+        String searchKey = request.getParameter("searchKey");
+        String type = request.getParameter("type");
+        String status = request.getParameter("status");
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
+        String sortBy = request.getParameter("sortBy");
+        response.sendRedirect("discountmanager?searchKey=" + (searchKey != null ? searchKey : "") + "&type=" + (type != null ? type : "") + "&status=" + (status != null ? status : "") + "&fromDate=" + (fromDate != null ? fromDate : "") + "&toDate=" + (toDate != null ? toDate : "") + "&sortBy=" + (sortBy != null ? sortBy : ""));
+
     }
 
     /**
