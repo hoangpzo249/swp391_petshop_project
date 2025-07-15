@@ -274,7 +274,7 @@
                         </div>
                         <div class="shipper-note-section">
                             <div class="pickup-actions">
-                                <a href="shipper_panel?action=all" class="btn btn-outline">
+                                <a href="shipper_panel" class="btn btn-outline">
                                     <i class="fas fa-arrow-left"></i> Quay lại
                                 </a>
                                 <c:choose>

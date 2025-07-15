@@ -276,6 +276,7 @@ public class Shipper_Panel_Servlet extends HttpServlet {
             } else {
                 boolean updateRejectOrder = oDao.updateRejectOrder(orderId);
                 if (updateRejectOrder) {
+                    EmailSender.sendShipperRejectOrder("fptpet@gmail.com", orderId);
                     session.setAttribute("successMessage", "Xác nhận hủy giao đơn hàng thành công");
                     request.setAttribute("orderDetail", orderDetail);
                     request.setAttribute("orderListDetail", orderListDetail);

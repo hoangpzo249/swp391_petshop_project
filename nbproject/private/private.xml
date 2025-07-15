@@ -3,34 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< Updated upstream
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/src/java/DAO/DiscountDAO.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/src/java/Controllers/DiscountManagerServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/web/manager_discount_view.jsp</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/web/seller_pet_view.jsp</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/web/css/seller_panel_page.css</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/web/css/manager_panel_page.css</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/src/java/Controllers/DeactivateDiscountServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/web/main_typepet.jsp</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/web/css/main_type.css</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/web/adddiscount.jsp</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/src/java/Controllers/purchaseServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/src/java/Controllers/DiscountCheckServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/web/checkout.jsp</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/web/js/discount_value.js</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/src/java/Controllers/AddDiscountServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/web/update_discount.jsp</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/src/java/Controllers/UpdateDiscountServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/src/java/Controllers/ResetDiscountUsageServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/src/java/Controllers/DisplayAllRefundServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/web/update_failed_discount.jsp</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/bản%20chính%20157/swp391_petshop_project/src/java/Controllers/RetryAddDiscountServlet.java</file>
-=======
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/DAO/OrderDAO.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/shipper_orderManage_page.jsp</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Controllers/Customer_Order_Servlet.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/shipper_orderDelivered_page.jsp</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/shipper_orderDetail_page.jsp</file>
             <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Controllers/Shipper_Panel_Servlet.java</file>
->>>>>>> Stashed changes
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Utils/EmailSender.java</file>
         </group>
     </open-files>
 </project-private>

@@ -254,6 +254,49 @@ public class EmailSender {
         }
     }
 
+    public static void sendShipperRejectOrder(String receiveEmail, int orderId) {
+        final String senderEmail = "fptpet@gmail.com";
+        final String senderPassword = "mfjm zfut ledv svkn";
+
+        Properties pro = new Properties();
+        pro.put("mail.smtp.auth", "true");
+        pro.put("mail.smtp.starttls.enable", "true");
+        pro.put("mail.smtp.host", "smtp.gmail.com");
+        pro.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(pro, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        try {
+            MimeMessage mess = new MimeMessage(session);
+            mess.setFrom(new InternetAddress(senderEmail));
+            mess.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiveEmail));
+            mess.setSubject("PETFPT Shop: Đơn hàng #" + orderId + " đã bị từ chối nhận vận chuyển", "UTF-8");
+
+            StringBuilder htmlContent = new StringBuilder();
+            htmlContent.append("<html><body style='font-family: Arial, sans-serif; color: #333;'>");
+            htmlContent.append("<h2 style='color: #e74c3c;'>Thông báo: Đơn hàng bị từ chối vận chuyển</h2>");
+            htmlContent.append("<p>Xin chào Quý Nhà Bán,</p>");
+            htmlContent.append("<p>Chúng tôi xin thông báo rằng đơn hàng <strong>#").append(orderId).append("</strong> đã bị <strong>Shipper từ chối nhận vận chuyển</strong>.</p>");
+
+            htmlContent.append("<p>Lý do từ chối có thể liên quan đến kích thước hàng hóa, thời gian giao không phù hợp, hoặc lý do khác. Vui lòng kiểm tra lại thông tin đơn hàng và thực hiện điều phối lại đơn vị vận chuyển nếu cần thiết.</p>");
+            htmlContent.append("<p>Quý Nhà Bán có thể truy cập hệ thống PETFPT để kiểm tra chi tiết và tiến hành các bước xử lý tiếp theo.</p>");
+
+            htmlContent.append("<p>Chúng tôi xin lỗi vì sự bất tiện này và cảm ơn sự hợp tác của Quý Nhà Bán.</p>");
+            htmlContent.append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>");
+            htmlContent.append("</body></html>");
+
+            mess.setContent(htmlContent.toString(), "text/html; charset=utf-8");
+            Transport.send(mess);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void sendDeliveredOrderByShipper(String receiveEmail, int orderId) {
         final String senderEmail = "fptpet@gmail.com";
         final String senderPassword = "mfjm zfut ledv svkn";
