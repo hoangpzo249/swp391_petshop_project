@@ -303,7 +303,7 @@
                                 </c:if>
 
                             <c:if test="${startPage > 1}">
-                               <a class="page-link" href="listshoppet?page=1&species=${species}&breed=${breed}&search=${param.search}&gender=${param.gender}&color=${param.color}&origin=${param.origin}&dobFrom=${param.dobFrom}&dobTo=${param.dobTo}&priceRange=${param.priceRange}  &vaccination=${param.vaccination}&sortpet=${param.sortpet}">
+                                <a class="page-link" href="listshoppet?page=1&species=${species}&breed=${breed}&search=${param.search}&gender=${param.gender}&color=${param.color}&origin=${param.origin}&dobFrom=${param.dobFrom}&dobTo=${param.dobTo}&priceRange=${param.priceRange}  &vaccination=${param.vaccination}&sortpet=${param.sortpet}">
                                     1</a>
 
                                 <c:if test="${startPage >= 3}">
@@ -318,10 +318,10 @@
                                     </c:when>
                                     <c:otherwise>
                                         <a class="page-link" href="listshoppet?page=${i}&species=${species}&breed=${breed}&search=${param.search}&gender=${param.gender}&color=${param.color}&origin=${param.origin}&dobFrom=${param.dobFrom}&dobTo=${param.dobTo}&priceRange=${param.priceRange}  &vaccination=${param.vaccination}&sortpet=${param.sortpet}">
-                                    ${i}</a>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
+                                            ${i}</a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
 
                             <c:if test="${endPage < totalPages}">
                                 <c:if test="${endPage < totalPages - 1}">
@@ -329,12 +329,12 @@
                                 </c:if>
                                 <a class="page-link" href="listshoppet?page=${totalPages}&species=${species}&breed=${breed}&search=${param.search}&gender=${param.gender}&color=${param.color}&origin=${param.origin}&dobFrom=${param.dobFrom}&dobTo=${param.dobTo}&priceRange=${param.priceRange}  &vaccination=${param.vaccination}&sortpet=${param.sortpet}">
                                     ${totalPages}</a>
-                            </c:if>
+                                </c:if>
 
                             <c:if test="${currentPage < totalPages}">
                                 <a class="page-link" href="listshoppet?page=${currentPage + 1}&species=${species}&breed=${breed}&search=${param.search}&gender=${param.gender}&color=${param.color}&origin=${param.origin}&dobFrom=${param.dobFrom}&dobTo=${param.dobTo}&priceRange=${param.priceRange}  &vaccination=${param.vaccination}&sortpet=${param.sortpet}">
-                                   »</a>
-                            </c:if>
+                                    »</a>
+                                </c:if>
 
                         </div>
                     </div>
@@ -399,25 +399,32 @@
             © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
         </footer>
 
-        <button class="chat-toggle-button" id="chatToggleButton" aria-label="Toggle AI Assistant Chat">
-            <i class="fas fa-comments"></i>
-        </button>
+        <c:choose>
+            <c:when test="${sessionScope.userAccount.accRole eq 'Admin' or sessionScope.userAccount.accRole eq 'Shipper' or sessionScope.userAccount.accRole eq 'Manager' or sessionScope.userAccount.accRole eq 'Seller'}">
 
-        <div class="chatbox-container" id="chatboxContainer">
-            <div class="chatbox-header">
-                <h3>PetFPT</h3>
-                <button class="chatbox-close-button" id="chatboxCloseButton" aria-label="Close Chat">×</button>
-            </div>
-            <div class="chatbox-messages" id="chatboxMessages">
-            </div>
-            <div class="chatbox-input-area">
-                <form id="chatForm">
-                    <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" required>
-                    <button type="submit" id="chatSendButton" aria-label="Send Message"><i class="fas fa-paper-plane"></i></button>
-                </form>
-            </div>
-        </div>
-        <script src="js/ai_chat.js"></script>
+            </c:when>
+            <c:otherwise>
+                <button class="chat-toggle-button" id="chatToggleButton" aria-label="Toggle AI Assistant Chat">
+                    <i class="fas fa-comments"></i>
+                </button>
+
+                <div class="chatbox-container" id="chatboxContainer">
+                    <div class="chatbox-header">
+                        <h3>PetFPT</h3>
+                        <button class="chatbox-close-button" id="chatboxCloseButton" aria-label="Close Chat">×</button>
+                    </div>
+                    <div class="chatbox-messages" id="chatboxMessages">
+                    </div>
+                    <div class="chatbox-input-area">
+                        <form id="chatForm">
+                            <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" required>
+                            <button type="submit" id="chatSendButton" aria-label="Send Message"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+                <script src="js/ai_chat.js"></script>
+            </c:otherwise>
+        </c:choose>
 
     </body>
 </html>
