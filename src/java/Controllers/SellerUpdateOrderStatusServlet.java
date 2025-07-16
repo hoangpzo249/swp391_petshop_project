@@ -111,12 +111,6 @@ public class SellerUpdateOrderStatusServlet extends HttpServlet {
                         EmailSender.sendRejectOrder(email, id, listpet, _daoorder.getOrderPriceById(id), reason);
                     }
                     break;
-                case "Shipping":
-                    session.setAttribute("successMess", "Cập nhật trạng thái đơn hàng " + id + " thành công.");
-                    if (email != null) {
-                        EmailSender.sendShippingOrder(email, id, listpet, _daoorder.getOrderPriceById(id));
-                    }
-                    break;
                 default:
                     throw new AssertionError();
             }

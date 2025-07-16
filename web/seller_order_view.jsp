@@ -225,7 +225,7 @@
                                                         </a>
                                                         <a class="action-btn reject-btn" title="Từ chối đơn hàng" 
                                                            href="#" 
-                                                           onclick="showConfirmationModal(event, 'từ chối đơn hàng này', 'updateorderstatus?action=reject&status=Rejected&orderId=${order.orderId}', 'btn-danger', true)"> <%-- ADDED 'true' --%>
+                                                           onclick="showConfirmationModal(event, 'từ chối đơn hàng này', 'updateorderstatus?action=reject&status=Rejected&orderId=${order.orderId}', 'btn-danger', true)">
                                                             <i class="fas fa-times"></i>
                                                         </a>
                                                     </c:if>

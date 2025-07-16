@@ -4,6 +4,8 @@
  */
 package Utils;
 
+import DAO.OrderDAO;
+import Models.Order;
 import Models.Pet;
 import java.text.NumberFormat;
 import java.util.List;
@@ -135,6 +137,11 @@ public class EmailSender {
                     .append("</span></h3>");
 
             htmlContent.append("<p>Nếu bạn đã thanh toán trước cho đơn hàng này, khoản tiền sẽ được hoàn lại cho bạn trong thời gian sớm nhất. Vui lòng liên hệ với bộ phận hỗ trợ của chúng tôi nếu bạn có bất kỳ câu hỏi nào.</p>");
+            Order order = new OrderDAO().getOrderById(orderId);
+            if (order.getPaymentMethod().equals("Credit Card")) {
+                htmlContent.append("Xin vui lòng điền vào form này để được hoàn tiền.");
+                htmlContent.append("<p><a href='https://docs.google.com/forms/d/e/1FAIpQLSelI0Ic97jVlEEvtDBADrbjvGHW4vkjT369P8KjQgCT5mvKkw/viewform?usp=sharing&ouid=110330081905382109968' ");
+            }
             htmlContent.append("<p>Chúng tôi thành thật xin lỗi vì sự bất tiện này và mong có cơ hội phục vụ bạn trong tương lai.</p>");
             htmlContent.append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>");
             htmlContent.append("</body></html>");

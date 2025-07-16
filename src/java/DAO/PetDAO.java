@@ -410,7 +410,7 @@ public class PetDAO {
                     pet.setImages(getImageDataByPetId(pet.getPetId()));
                     Breed breed = new Breed();
                     breed.setBreedId(rs.getInt("breedId"));
-                    breed.setBreedName(rs.getString("breedName"));
+                    pet.setBreedName(rs.getString("breedName"));
                     pet.setBreed(breed);
                 }
             }
