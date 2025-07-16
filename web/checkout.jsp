@@ -155,7 +155,7 @@
                     <thead>
                         <tr class="cart-header">
                             <th>Sản phẩm</th>
-                            <th>Số lượng</th>
+                            <!--<th>Số lượng</th>-->
                             <th>Tạm tính</th>
                         </tr>
                     </thead>
@@ -173,9 +173,9 @@
                                         </div>
                                     </a>
                                 </td>
-                                <td>
-                                    <input type="number" value="1" class="qty-input" readonly="readonly" />
-                                </td>
+                                <!--                                <td>
+                                                                    <input type="number" value="1" class="qty-input" readonly="readonly" />
+                                                                </td>-->
                                 <td>
                                     <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" />
                                 </td>

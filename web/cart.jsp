@@ -106,10 +106,17 @@
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="orders?status=Pending" class="dropdown-item">
-                                        <i class="fas fa-shopping-bag"></i> 
-                                        <span>Đơn hàng đã mua</span>
-                                    </a>
+
+                                    <c:choose>
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Customer'}">
+                                            <a href="orders?status=Pending" class="dropdown-item">
+                                                <i class="fas fa-shopping-bag"></i> 
+                                                <span>Đơn hàng đã mua</span>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+
                                     <a href="logout" class="dropdown-item logout">
                                         <i class="fas fa-sign-out-alt"></i> 
                                         <span>Đăng xuất</span>
@@ -177,7 +184,7 @@
 
                             <th>Chọn</th> 
                             <th>Sản phẩm</th>
-                            <th>Số lượng</th>
+                            <!--<th>Số lượng</th>-->
                             <th>Tạm tính</th>
                             <th>Hành động</th>
                         </tr>
@@ -204,9 +211,9 @@
                                         </div>
                                     </a>
                                 </td>
-                                <td>
-                                    <input type="number" name="quantity" value="1" class="qty-input" readonly="readonly" />
-                                </td>
+                                <!--                                <td>
+                                                                    <input type="number" name="quantity" value="1" class="qty-input" readonly="readonly" />
+                                                                </td>-->
                                 <td> <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></td>
 
 
