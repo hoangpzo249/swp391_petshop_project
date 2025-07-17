@@ -288,7 +288,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
     public static String validatePetInput(String name, String color, String origin, String description, String vaccine) {
         StringBuilder stringCheck = new StringBuilder();
 
-        if (name.isEmpty() || name.length() > 100 || !name.matches("^[\\p{L}\\p{N}\\s\\-']+$")) {
+        if (name.isEmpty() || name.length() > 100 || !name.matches("^[\\p{L}\\s\\-']+$")) {
             stringCheck.append("tên, ");
         }
 
