@@ -168,6 +168,10 @@ public class SellerUpdatePetServlet extends HttpServlet {
             int petVaccination = Integer.parseInt(request.getParameter("petVaccination"));
             int petStatus = Integer.parseInt(request.getParameter("petStatus"));
             String petDescription = request.getParameter("petDescription").trim();
+            String petVaccineInfo = request.getParameter("petVaccineInfo").trim();
+            if (petVaccination == 0) {
+                petVaccineInfo = "Chưa được tiêm";
+            }
             String petPriceStr = request.getParameter("petPrice");
             double petPrice = Double.parseDouble(petPriceStr);
             int breedId = Integer.parseInt(request.getParameter("breedId"));
@@ -194,12 +198,13 @@ public class SellerUpdatePetServlet extends HttpServlet {
             petToUpdate.setPetVaccination(petVaccination);
             petToUpdate.setPetStatus(petStatus);
             petToUpdate.setPetDescription(petDescription);
+            petToUpdate.setPetVaccineInfo(petVaccineInfo);
             petToUpdate.setPetPrice(petPrice);
             petToUpdate.setBreedId(breedId);
 
             request.setAttribute("pet", petToUpdate);
 
-            String infoValidation = validatePetInput(petName, petColor, petOrigin, petDescription);
+            String infoValidation = validatePetInput(petName, petColor, petOrigin, petDescription, petVaccineInfo);
             if (infoValidation.length() != 0) {
                 errMess.append(infoValidation);
             }
@@ -280,7 +285,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
         }
     }
 
-    public static String validatePetInput(String name, String color, String origin, String description) {
+    public static String validatePetInput(String name, String color, String origin, String description, String vaccine) {
         StringBuilder stringCheck = new StringBuilder();
 
         if (name.isEmpty() || name.length() > 100 || !name.matches("^[\\p{L}\\p{N}\\s\\-']+$")) {
@@ -297,6 +302,9 @@ public class SellerUpdatePetServlet extends HttpServlet {
 
         if (description.isEmpty() || description.length() > 2000 || description.contains("\0")) {
             stringCheck.append("mô tả, ");
+        }
+        if (vaccine.isEmpty() || vaccine.length() > 2000 || vaccine.contains("\0")) {
+            stringCheck.append("thông tin vắc-xin, ");
         }
 
         if (stringCheck.length() > 0) {

@@ -131,8 +131,9 @@ public class SellerAddPetServlet extends HttpServlet {
             String petColor = request.getParameter("petColor").trim();
             int petVaccination = Integer.parseInt(request.getParameter("petVaccination"));
             int petStatus = Integer.parseInt(request.getParameter("petStatus"));
-            String petDescription = request.getParameter("petDescription").trim();
             double petPrice = Double.parseDouble(request.getParameter("petPrice"));
+            String petDescription = request.getParameter("petDescription").trim();
+            String petVaccineInfo = request.getParameter("petVaccineInfo").trim();
             int breedId = Integer.parseInt(request.getParameter("breedId"));
             int creatorid = ((Account) session.getAttribute("userAccount")).getAccId();
 
@@ -148,11 +149,16 @@ public class SellerAddPetServlet extends HttpServlet {
             request.setAttribute("petVaccination", petVaccination);
             request.setAttribute("petStatus", petStatus);
             request.setAttribute("petDescription", petDescription);
+            request.setAttribute("petVaccineInfo", petVaccineInfo);
             request.setAttribute("petPrice", new BigDecimal(request.getParameter("petPrice")));
             request.setAttribute("breedId", breedId);
             request.setAttribute("petDob", petDobStr);
 
-            String infoValidation = validatePetInput(petName, petColor, petOrigin, petDescription);
+            if (petVaccination == 0) {
+                petVaccineInfo = "Chưa được tiêm";
+            }
+            
+            String infoValidation = validatePetInput(petName, petColor, petOrigin, petDescription, petVaccineInfo);
 
             if (infoValidation.length() != 0) {
                 errMess.append(infoValidation);
@@ -203,6 +209,7 @@ public class SellerAddPetServlet extends HttpServlet {
             pet.setPetVaccination(petVaccination);
             pet.setPetStatus(petStatus);
             pet.setPetDescription(petDescription);
+            pet.setPetVaccineInfo(petVaccineInfo);
             pet.setPetPrice(petPrice);
             pet.setBreedId(breedId);
             pet.setCreatedBy(creatorid);
@@ -263,10 +270,10 @@ public class SellerAddPetServlet extends HttpServlet {
         }
     }
 
-    public static String validatePetInput(String name, String color, String origin, String description) {
+    public static String validatePetInput(String name, String color, String origin, String description, String vaccine) {
         StringBuilder stringCheck = new StringBuilder();
 
-        if (name.isEmpty() || name.length() > 100 || !name.matches("^[\\p{L}\\p{N}\\s\\-']+$")) {
+        if (name.isEmpty() || name.length() > 100 || !name.matches("^[\\p{L}\\s\\-']+$")) {
             stringCheck.append("tên, ");
         }
 
@@ -280,6 +287,10 @@ public class SellerAddPetServlet extends HttpServlet {
 
         if (description.isEmpty() || description.length() > 2000 || description.contains("\0")) {
             stringCheck.append("mô tả, ");
+        }
+
+        if (vaccine.isEmpty() || vaccine.length() > 2000 || vaccine.contains("\0")) {
+            stringCheck.append("thông tin vắc-xin, ");
         }
 
         if (stringCheck.length() > 0) {

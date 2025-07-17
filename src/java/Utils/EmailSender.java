@@ -834,7 +834,7 @@ public class EmailSender {
             for (Pet pet : listpet) {
                 htmlContent.append("<tr>");
                 htmlContent.append("<td>").append(pet.getPetName()).append("</td>");
-                htmlContent.append("<td>").append(pet.getBreed().getBreedName()).append("</td>");
+                htmlContent.append("<td>").append(pet.getBreedName()).append("</td>");
                 double price = (pet.getPriceAtOrder() > 0) ? pet.getPriceAtOrder() : pet.getPetPrice();
                 htmlContent.append("<td style='text-align: right;'>").append(currencyFormatter.format(price)).append("</td>");
                 htmlContent.append("</tr>");
@@ -849,7 +849,7 @@ public class EmailSender {
                     .append(currencyFormatter.format(totalPrice))
                     .append("</span></h3>");
 
-            htmlContent.append("<p>Chúng tôi sẽ thông báo cho bạn khi đơn hàng được vận chuyển. Bạn có thể theo dõi trạng thái đơn hàng trong mục 'Lịch sử mua hàng' trên website của chúng tôi.</p>");
+            htmlContent.append("<p>Chúng tôi sẽ thông báo cho bạn khi đơn hàng được vận chuyển.</p>");
             htmlContent.append("<p>Cảm ơn bạn một lần nữa!</p>");
             htmlContent.append("<p>Trân trọng,<br>Đội ngũ PETFPT Shop</p>");
             htmlContent.append("</body></html>");

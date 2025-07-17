@@ -42,8 +42,8 @@ public class PetDAO {
         String sql = "INSERT INTO PetTB ("
                 + "petName, petDob, petOrigin, petGender, petAvailability, "
                 + "petColor, petVaccination, petDescription, petPrice, "
-                + "breedId, createdBy, petStatus) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "breedId, createdBy, petStatus, petVaccineInfo) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = db.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -59,18 +59,19 @@ public class PetDAO {
             ps.setInt(10, pet.getBreedId());
             ps.setInt(11, pet.getCreatedBy());
             ps.setInt(12, pet.getPetStatus());
+            ps.setString(13, pet.getPetVaccineInfo());
 
             int affectedRows = ps.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new Exception("Creating pet failed, no rows affected.");
+                throw new Exception("Tạo thú cưng thất bại.");
             }
 
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     return generatedKeys.getInt(1);
                 } else {
-                    throw new Exception("Creating pet failed, no ID obtained.");
+                    throw new Exception("Tạo thú cưng thất bại.");
                 }
             }
         } catch (Exception ex) {
@@ -85,7 +86,7 @@ public class PetDAO {
                 + "SET "
                 + "petName = ?, petDob = ?, petOrigin = ?, petGender = ?, petAvailability = ?, "
                 + "petColor = ?, petVaccination = ?, petDescription = ?, petPrice = ?, "
-                + "breedId = ?, createdBy = ?, petStatus = ? "
+                + "breedId = ?, createdBy = ?, petStatus = ?, petVaccineInfo = ? "
                 + "WHERE petId = ?";
         try (Connection conn = db.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, pet.getPetName());
@@ -100,7 +101,8 @@ public class PetDAO {
             ps.setInt(10, pet.getBreedId());
             ps.setInt(11, pet.getCreatedBy());
             ps.setInt(12, pet.getPetStatus());
-            ps.setInt(13, id);
+            ps.setString(13, pet.getPetVaccineInfo());
+            ps.setInt(14, id);
             ps.executeUpdate();
             return true;
         } catch (Exception ex) {
@@ -407,6 +409,7 @@ public class PetDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     pet = PetInfo(rs);
+                    pet.setPetVaccineInfo(rs.getString("petVaccineInfo"));
                     pet.setImages(getImageDataByPetId(pet.getPetId()));
                     Breed breed = new Breed();
                     breed.setBreedId(rs.getInt("breedId"));
@@ -465,7 +468,7 @@ public class PetDAO {
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int status = rs.getInt("petVaccination");
-                list.add(status == 1 ? "Ä�Ã£ tiÃªm" : "ChÆ°a tiÃªm");
+                list.add(status == 1 ? "Đã tiêm" : "Chưa tiêm");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -558,7 +561,7 @@ public class PetDAO {
                 ps.setDate(i++, java.sql.Date.valueOf(dobTo));
             }
             if (vaccinationStatus != null && !vaccinationStatus.isEmpty()) {
-                ps.setInt(i++, vaccinationStatus.equals("Ä�Ã£ tiÃªm") ? 1 : 0);
+                ps.setInt(i++, vaccinationStatus.equals("Đã tiêm") ? 1 : 0);
             }
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -583,7 +586,7 @@ public class PetDAO {
         String finalSearch = (search == null || search.isEmpty()) ? "%" : "%" + search + "%";
 
         String sql = "SELECT p.*, b.breedName FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
-                + "WHERE p.petAvailability = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?) AND p.petStatus = 1";
+                + "WHERE p.petAvailability = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?) AND p.petStatus = 1 AND b.breedStatus=1";
 
         if (breed != null && !breed.isEmpty()) {
             sql += " AND b.breedId = ?";
@@ -913,7 +916,7 @@ public class PetDAO {
 
         int count = 0;
         String sql = "SELECT COUNT(*) FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
-                + "WHERE p.petAvailability = 1 AND p.petStatus = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?)";
+                + "WHERE p.petAvailability = 1 AND b.breedStatus=1 AND p.petStatus = 1 AND (p.petName LIKE ? OR b.breedName LIKE ?)";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
