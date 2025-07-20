@@ -207,6 +207,13 @@
 
                                 <div class="form-full-width">
                                     <div class="form-group">
+                                        <label for="petVaccineInfo">Các vắc-xin mà thú cưng đã được tiêm (nếu áp dụng)</label>
+                                        <textarea id="petVaccineInfo" name="petVaccineInfo" class="form-control" rows="5" placeholder="Nhập các vắc-xin mà thú cưng đã được tiêm...">${petVaccineInfo}</textarea>
+                                    </div>
+                                </div>
+                                    
+                                <div class="form-full-width">
+                                    <div class="form-group">
                                         <label for="petDescription">Mô tả</label>
                                         <textarea id="petDescription" name="petDescription" class="form-control" rows="5" placeholder="Nhập mô tả chi tiết về thú cưng...">${petDescription}</textarea>
                                     </div>

@@ -128,7 +128,7 @@
                                 <div class="form-group form-proof">
                                     <label class="proof-label" for="proofImage">Hình ảnh chứng minh đã thanh toán</label>
                                     <input type="file" id="proofImage" name="proofImage" class="hidden-file-input" accept="image/*" />
-                                    <label for="proofImage" class="btn-upload">Chọn tệp</label><br/>
+                                    <label for="proofImage" class="btn-upload" style="width: 70px;">Chọn tệp</label><br/>
 
                                     <div class="preview">
                                         <c:if test="${not empty sessionScope.preview}">

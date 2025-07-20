@@ -129,9 +129,9 @@
                             <button class="btn btn-primary" onclick="location.href = 'admin-panel?action=create-account&type=customer'">
                                 <i class="fas fa-user-plus"></i> Tạo tài khoản mới
                             </button>
-                            <button class="btn btn-outline">
+<!--                            <button class="btn btn-outline">
                                 <i class="fas fa-file-export"></i> Xuất dữ liệu
-                            </button>
+                            </button>-->
                         </div>
                     </div>
                     <div class="card-body">

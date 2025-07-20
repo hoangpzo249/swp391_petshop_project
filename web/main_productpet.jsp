@@ -181,7 +181,7 @@
                     <h1 class="product-title">${pet.petName}</h1>
                     <div class="price-section">
                         <span class="price">
-                            <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                            <fmt:formatNumber value="${pet.petPrice}"  groupingUsed="true"/>đ
                         </span>
 
                     </div>
@@ -224,6 +224,11 @@
                                 <c:otherwise>Chưa tiêm</c:otherwise>
                             </c:choose>
                         </p>
+                        <c:choose>
+                            <c:when test="${pet.petVaccination == 1}">
+                                <p><strong>Các vắn-xin đã tiêm:</strong> ${pet.petVaccineInfo}</p>
+                            </c:when>
+                        </c:choose>
                     </div>
 
 
@@ -365,12 +370,14 @@
                 <script src="js/ai_chat.js"></script>
             </c:otherwise>
         </c:choose>
-
+        <div id="lightbox" class="lightbox" onclick="this.style.display = 'none'">
+            <img id="lightbox-img" src="" />
+        </div>
         <script>
-                                        function showImage(src) {
-                                            document.getElementById("lightbox-img").src = src;
-                                            document.getElementById("lightbox").style.display = "flex";
-                                        }
+            function showImage(src) {
+                document.getElementById("lightbox-img").src = src;
+                document.getElementById("lightbox").style.display = "flex";
+            }
         </script>
 
     </body>

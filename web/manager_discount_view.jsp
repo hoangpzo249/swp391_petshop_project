@@ -226,27 +226,52 @@
                         </div>
                     </div>
                     <c:if test="${totalPages > 1}">
-                        <div class="pagination">
-                            <c:if test="${currentPage > 1}">
-                                <a class="page-link ${currentPage == 1 ? 'disabled' : ''}" href="discountmanager?page=${currentPage - 1}&searchKey=${searchKey}&type=${type}&status=${status}&fromDate=${fromDate}&toDate=${toDate}&sortBy=${sortBy}">«</a>
-                            </c:if>
+                        <div class="pagination-container">
+                            <div class="pagination">
 
-                            <c:forEach var="i" begin="${startPage}" end="${endPage}">
-                                <c:choose>
-                                    <c:when test="${i == currentPage}">
-                                        <span class="active">${i}</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="discountmanager?page=${i}&searchKey=${searchKey}&type=${type}&status=${status}&fromDate=${fromDate}&toDate=${toDate}&sortBy=${sortBy}">${i}</a>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
+                                <c:if test="${currentPage > 1}">
+                                    <a class="page-link"
+                                       href="discountmanager?page=${currentPage - 1}&searchKey=${param.searchKey}&type=${param.type}&status=${param.status}&fromDate=${param.fromDate}&toDate=${param.toDate}&sortBy=${param.sortBy}">«</a>
+                                </c:if>
 
-                            <c:if test="${currentPage < totalPages}">
-                                <a href="discountmanager?page=${currentPage + 1}&searchKey=${searchKey}&type=${type}&status=${status}&fromDate=${fromDate}&toDate=${toDate}&sortBy=${sortBy}">»</a>
-                            </c:if>
+                                <c:if test="${startPage > 1}">
+                                    <a class="page-link"
+                                       href="discountmanager?page=1&searchKey=${param.searchKey}&type=${param.type}&status=${param.status}&fromDate=${param.fromDate}&toDate=${param.toDate}&sortBy=${param.sortBy}">1</a>
+
+                                    <c:if test="${startPage >= 3}">
+                                        <span class="page-link disabled">...</span>
+                                    </c:if>
+                                </c:if>
+
+                                <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                                    <c:choose>
+                                        <c:when test="${i == currentPage}">
+                                            <span class="page-link active">${i}</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a class="page-link"
+                                               href="discountmanager?page=${i}&searchKey=${param.searchKey}&type=${param.type}&status=${param.status}&fromDate=${param.fromDate}&toDate=${param.toDate}&sortBy=${param.sortBy}">${i}</a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+
+                                <c:if test="${endPage < totalPages}">
+                                    <c:if test="${endPage < totalPages - 1}">
+                                        <span class="page-link disabled">...</span>
+                                    </c:if>
+                                    <a class="page-link"
+                                       href="discountmanager?page=${totalPages}&searchKey=${param.searchKey}&type=${param.type}&status=${param.status}&fromDate=${param.fromDate}&toDate=${param.toDate}&sortBy=${param.sortBy}">${totalPages}</a>
+                                </c:if>
+
+                                <c:if test="${currentPage < totalPages}">
+                                    <a class="page-link"
+                                       href="discountmanager?page=${currentPage + 1}&searchKey=${param.searchKey}&type=${param.type}&status=${param.status}&fromDate=${param.fromDate}&toDate=${param.toDate}&sortBy=${param.sortBy}">»</a>
+                                </c:if>
+
+                            </div>
                         </div>
                     </c:if>
+
 
                 </div>
             </div>

@@ -207,14 +207,14 @@
                                         <img src="${pet.getFirstImage()}" alt="${pet.petName}" class="cart-img" />
                                         <div>
                                             <div class="item-title">${pet.petName}</div>
-                                            <div class="item-price">Giá: <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></div>
+                                            <div class="item-price">Giá:  <fmt:formatNumber value="${pet.petPrice}"  groupingUsed="true"/>đ</div>
                                         </div>
                                     </a>
                                 </td>
                                 <!--                                <td>
                                                                     <input type="number" name="quantity" value="1" class="qty-input" readonly="readonly" />
                                                                 </td>-->
-                                <td> <fmt:formatNumber value="${pet.petPrice}" type="currency" currencySymbol="₫" groupingUsed="true" /></td>
+                                <td>  <fmt:formatNumber value="${pet.petPrice}"  groupingUsed="true"/>đ</td>
 
 
 
@@ -251,92 +251,92 @@
                     </c:if>
                 </form>
 
+            </div>
 
-
-                <div class="about-section">
-                    <div class="about-column">
-                        <h3>Shop</h3>
-                        <ul>
-                            <li><a href="dog.jsp">Dành Cho Chó</a></li>
-                            <li><a href="cat.jsp">Dành Cho Mèo</a></li>
-                            <li><a href="petaccessory.jsp">Phụ kiện cho Chó & Mèo</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="about-column">
-                        <h3>PETFPT Shop</h3>
-                        <ul>
-                            <li><a href="menu_about.jsp">Giới Thiệu</a></li>
-                            <li><a href="footer_policy.jsp">Chính sách</a></li>
-                            <li><a href="footer_paymentmethod.jsp">Phương Thức Thanh Toán</a></li>
-                            <li><a href="footer_termofuse.jsp">Điều Khoản Sử Dụng</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="about-column">
-                        <h3>Liên Hệ</h3>
-                        <p class="contactpet">PETFPT Shop</p>
-                        <p><i class="fas fa-phone"></i>0767676770</p>
-                        <p><i class="fas fa-map-marker-alt"></i>Khu Công nghệ cao Hòa Lạc <br>
-                            Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
-                        <p><i class="fas fa-envelope email"></i>
-                            <a href="mailto:hoangnhhe181051@fpt.edu.vn">hoangnhhe181051@fpt.edu.vn</a>
-                        </p>
-
-                        <div class="social-container">
-                            <a href="https://www.facebook.com/petfptshop" target="_blank" class="social-icon">
-                                <i class="fab fa-facebook fa-2x"></i>
-                            </a>
-                        </div>
-                    </div>
+            <div class="about-section">
+                <div class="about-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="dog.jsp">Dành Cho Chó</a></li>
+                        <li><a href="cat.jsp">Dành Cho Mèo</a></li>
+                        <li><a href="petaccessory.jsp">Phụ kiện cho Chó & Mèo</a></li>
+                    </ul>
                 </div>
 
+                <div class="about-column">
+                    <h3>PETFPT Shop</h3>
+                    <ul>
+                        <li><a href="menu_about.jsp">Giới Thiệu</a></li>
+                        <li><a href="footer_policy.jsp">Chính sách</a></li>
+                        <li><a href="footer_paymentmethod.jsp">Phương Thức Thanh Toán</a></li>
+                        <li><a href="footer_termofuse.jsp">Điều Khoản Sử Dụng</a></li>
+                    </ul>
+                </div>
 
-                <div id="toast" class="toast-message"></div> 
-                <c:if test="${not empty sessionScope.cartMessage}">
-                    <div class="warning-message animate-shake">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        ${cartMessage}
+                <div class="about-column">
+                    <h3>Liên Hệ</h3>
+                    <p class="contactpet">PETFPT Shop</p>
+                    <p><i class="fas fa-phone"></i>0767676770</p>
+                    <p><i class="fas fa-map-marker-alt"></i>Khu Công nghệ cao Hòa Lạc <br>
+                        Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
+                    <p><i class="fas fa-envelope email"></i>
+                        <a href="mailto:hoangnhhe181051@fpt.edu.vn">hoangnhhe181051@fpt.edu.vn</a>
+                    </p>
+
+                    <div class="social-container">
+                        <a href="https://www.facebook.com/petfptshop" target="_blank" class="social-icon">
+                            <i class="fab fa-facebook fa-2x"></i>
+                        </a>
                     </div>
-                    <c:remove var="cartMessage" scope="session"/>
-                </c:if>
+                </div>
+            </div>
+
+
+            <div id="toast" class="toast-message"></div> 
+            <c:if test="${not empty sessionScope.cartMessage}">
+                <div class="warning-message animate-shake">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    ${cartMessage}
+                </div>
+                <c:remove var="cartMessage" scope="session"/>
+            </c:if>
 
 
 
-                <footer>
-                    © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
-                </footer>
+            <footer>
+                © 2025 PETFPT - Đồng hành cùng bạn và thú cưng mỗi ngày!
+            </footer>
 
-                <c:choose>
-                    <c:when test="${sessionScope.userAccount.accRole eq 'Admin' or sessionScope.userAccount.accRole eq 'Shipper' or sessionScope.userAccount.accRole eq 'Manager' or sessionScope.userAccount.accRole eq 'Seller'}">
+            <c:choose>
+                <c:when test="${sessionScope.userAccount.accRole eq 'Admin' or sessionScope.userAccount.accRole eq 'Shipper' or sessionScope.userAccount.accRole eq 'Manager' or sessionScope.userAccount.accRole eq 'Seller'}">
 
-                    </c:when>
-                    <c:otherwise>
-                        <button class="chat-toggle-button" id="chatToggleButton" aria-label="Toggle AI Assistant Chat">
-                            <i class="fas fa-comments"></i>
-                        </button>
+                </c:when>
+                <c:otherwise>
+                    <button class="chat-toggle-button" id="chatToggleButton" aria-label="Toggle AI Assistant Chat">
+                        <i class="fas fa-comments"></i>
+                    </button>
 
-                        <div class="chatbox-container" id="chatboxContainer">
-                            <div class="chatbox-header">
-                                <h3>PetFPT</h3>
-                                <button class="chatbox-close-button" id="chatboxCloseButton" aria-label="Close Chat">×</button>
-                            </div>
-                            <div class="chatbox-messages" id="chatboxMessages">
-                            </div>
-                            <div class="chatbox-input-area">
-                                <form id="chatForm">
-                                    <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" required>
-                                    <button type="submit" id="chatSendButton" aria-label="Send Message"><i class="fas fa-paper-plane"></i></button>
-                                </form>
-                            </div>
+                    <div class="chatbox-container" id="chatboxContainer">
+                        <div class="chatbox-header">
+                            <h3>PetFPT</h3>
+                            <button class="chatbox-close-button" id="chatboxCloseButton" aria-label="Close Chat">×</button>
                         </div>
-                        <script src="js/ai_chat.js"></script>
-                    </c:otherwise>
-                </c:choose>
+                        <div class="chatbox-messages" id="chatboxMessages">
+                        </div>
+                        <div class="chatbox-input-area">
+                            <form id="chatForm">
+                                <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" required>
+                                <button type="submit" id="chatSendButton" aria-label="Send Message"><i class="fas fa-paper-plane"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                    <script src="js/ai_chat.js"></script>
+                </c:otherwise>
+            </c:choose>
 
 
-                </body>
-                </html>
+    </body>
+</html>
 
 
 

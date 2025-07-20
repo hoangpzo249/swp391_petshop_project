@@ -25,6 +25,7 @@ public class Pet {
     private String petColor;
     private int petVaccination;
     private String petDescription;
+    private String petVaccineInfo;
     private double petPrice;
     private int breedId;
     private int createdBy;
@@ -200,6 +201,16 @@ public class Pet {
     public void setImages(List<byte[]> images) {
         this.images = images;
     }
+
+    public String getPetVaccineInfo() {
+        return petVaccineInfo;
+    }
+
+    public void setPetVaccineInfo(String petVaccineInfo) {
+        this.petVaccineInfo = petVaccineInfo;
+    }
+    
+    
 
     @Override
     public String toString() {

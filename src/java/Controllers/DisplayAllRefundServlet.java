@@ -58,11 +58,36 @@ public class DisplayAllRefundServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+
         String statusFilter = request.getParameter("statusFilter");
         String sortByDate = request.getParameter("sortByDate");
+
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int pageSize = 10;
+
         RefundDAO dao = new RefundDAO();
-        List<Refund> refundList = dao.getFilteredRefunds(statusFilter, sortByDate);
+        List<Refund> refundList = dao.getFilteredRefundsPaging(statusFilter, sortByDate, page, pageSize);
+        int totalItems = dao.countFilteredRefunds(statusFilter);
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+
+        int displayPageCount = 3;
+        int startPage = Math.max(1, page - 1);
+        int endPage = Math.min(totalPages, page + 1);
+        if (page == 1) {
+            startPage = 1;
+            endPage = Math.min(totalPages, displayPageCount);
+        } else if (page == totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(1, totalPages - displayPageCount + 1);
+        }
+
         request.setAttribute("refundList", refundList);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("startPage", startPage);
+        request.setAttribute("endPage", endPage);
         request.setAttribute("statusFilter", statusFilter);
         request.setAttribute("sortByDate", sortByDate);
 

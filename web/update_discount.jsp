@@ -20,6 +20,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <script src="js/add_discount_validate.js?v=2"></script>
         <script src="js/discount_fixed.js?v=4"></script>
+        <script src="js/money.js?"></script>
     </head>
     <body>
         <div class="seller-header">

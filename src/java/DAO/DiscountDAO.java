@@ -114,7 +114,11 @@ public class DiscountDAO extends DBContext {
             ps.setString(1, d.getDiscountCode());
             ps.setString(2, d.getDiscountType());
             ps.setDouble(3, d.getDiscountValue());
-            ps.setString(4, d.getDescription());
+            if (d.getDescription() != null) {
+                ps.setString(4, d.getDescription());
+            } else {
+                ps.setNull(4, Types.NVARCHAR);
+            }
             ps.setDate(5, d.getValidFrom());
             ps.setDate(6, d.getValidTo());
             ps.setDouble(7, d.getMinOrderAmount());
