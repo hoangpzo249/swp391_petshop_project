@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="css/checkout.css?v=9" rel="stylesheet" type="text/css"/>
         <link href="css/term.css?v=5" rel="stylesheet" type="text/css"/>
-        <script src="js/validate_input.js?v=11" type="text/javascript"></script>
+        <script src="js/validate_input.js?v=12" type="text/javascript"></script>
 
 
     </head>

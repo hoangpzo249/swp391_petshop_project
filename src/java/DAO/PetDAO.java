@@ -630,7 +630,7 @@ public class PetDAO {
                     sql += " ORDER BY p.petName ASC";
             }
         } else {
-            sql += " ORDER BY p.petId DESC";
+            sql += " ORDER BY p.petId ASC";
         }
 
         sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";

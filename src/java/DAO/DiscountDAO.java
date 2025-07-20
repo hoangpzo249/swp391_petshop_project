@@ -48,7 +48,12 @@ public class DiscountDAO extends DBContext {
                 d.setValidFrom(rs.getDate("validFrom"));
                 d.setValidTo(rs.getDate("validTo"));
                 d.setMinOrderAmount(rs.getDouble("minOrderAmount"));
-                d.setMaxUsage(rs.getInt("maxUsage"));
+                Integer maxUsage = rs.getInt("maxUsage");
+                if (rs.wasNull()) {
+                    d.setMaxUsage(null);
+                } else {
+                    d.setMaxUsage(maxUsage);
+                }
                 d.setUsageCount(rs.getInt("usageCount"));
                 d.setActive(rs.getBoolean("isActive"));
                 d.setMaxValue(rs.getDouble("maxValue"));
