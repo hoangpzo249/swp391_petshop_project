@@ -156,6 +156,47 @@ public class BreedDAO {
         return list;
     }
 
+    public List<Breed> getAllBreedsSeller() {
+        List<Breed> list = new ArrayList<>();
+        String sql = "SELECT breedId, breedName FROM BreedTB ORDER BY breedName ASC";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Breed breed = new Breed();
+                breed.setBreedId(rs.getInt("breedId"));
+                breed.setBreedName(rs.getString("breedName"));
+                list.add(breed);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
+    }
+
     public List<String> getAllSpecies() {
         List<String> list = new ArrayList<>();
         String sql = "SELECT DISTINCT breedSpecies FROM BreedTB WHERE breedStatus = 1 ORDER BY breedSpecies ASC";

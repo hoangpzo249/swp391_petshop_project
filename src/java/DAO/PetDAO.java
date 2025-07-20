@@ -747,7 +747,9 @@ public class PetDAO {
                 + "FROM OrderContentTB oc "
                 + "JOIN OrderTB o ON oc.orderId = o.orderId "
                 + "LEFT JOIN RefundTB r ON o.orderId = r.orderId AND r.refundStatus = 'Completed' "
-                + "WHERE oc.petId = ? AND r.orderId IS NULL";
+                + "WHERE oc.petId = ? "
+                + "AND r.orderId IS NULL "
+                + "AND o.orderStatus NOT IN ('Cancelled', 'Rejected')";
 
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, petId);
