@@ -87,7 +87,7 @@ public class SellerAddPetServlet extends HttpServlet {
         BreedDAO _daobreed = new BreedDAO();
         PetDAO _daopet = new PetDAO();
 
-        List<Breed> breedList = _daobreed.getAllBreeds();
+        List<Breed> breedList = _daobreed.getAllBreedsSeller();
         List<String> colorList = _daopet.getAllColors();
         List<String> originList = _daopet.getAllOrigins();
 
@@ -117,7 +117,7 @@ public class SellerAddPetServlet extends HttpServlet {
         PetImageDAO _daoimage = new PetImageDAO();
         StringBuilder errMess = new StringBuilder();
         BreedDAO _daobreed = new BreedDAO();
-        List<Breed> breedList = _daobreed.getAllBreeds();
+        List<Breed> breedList = _daobreed.getAllBreedsSeller();
         request.setAttribute("breedList", breedList);
 
         try {

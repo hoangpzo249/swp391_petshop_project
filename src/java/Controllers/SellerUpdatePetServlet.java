@@ -94,7 +94,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
 
         if (!petInOrder) {
             Pet pet = _daopet.getPetById(petId);
-            List<Breed> breedList = _daobreed.getAllBreeds();
+            List<Breed> breedList = _daobreed.getAllBreedsSeller();
             List<PetImage> imageList = _daoimage.getPetImagesById(petId);
             List<String> colorList = _daopet.getAllColors();
             List<String> originList = _daopet.getAllOrigins();
@@ -180,7 +180,7 @@ public class SellerUpdatePetServlet extends HttpServlet {
             java.util.Date utilPetDob = sdf.parse(petDobStr);
             java.sql.Date sqlPetDob = new java.sql.Date(utilPetDob.getTime());
 
-            List<Breed> breedList = _daobreed.getAllBreeds();
+            List<Breed> breedList = _daobreed.getAllBreedsSeller();
             List<PetImage> imageList = _daoimage.getPetImagesById(petId);
 
             request.setAttribute("breedList", breedList);
