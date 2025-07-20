@@ -280,10 +280,11 @@ public class BreedDAO {
     public List<Breed> get6BreedHot() {
         List<Breed> listbreed = new ArrayList<>();
         String sql = "SELECT TOP 6 b.breedId, b.breedName, b.breedSpecies, b.breedImage, COUNT(p.petId) AS petCount\n"
-                + "FROM BreedTB b\n"
-                + "JOIN PetTB p ON b.breedId = p.breedId\n"
-                + "GROUP BY b.breedId, b.breedName, b.breedSpecies, b.breedImage\n"
-                + "ORDER BY petCount DESC;";
+                + "                FROM BreedTB b\n"
+                + "                JOIN PetTB p ON b.breedId = p.breedId\n"
+                + "				where breedStatus = 1\n"
+                + "                GROUP BY b.breedId, b.breedName, b.breedSpecies, b.breedImage\n"
+                + "                ORDER BY petCount DESC;";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);

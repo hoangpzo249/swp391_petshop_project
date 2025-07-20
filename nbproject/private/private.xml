@@ -3,15 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/207/swp391_petshop_project/src/java/Controllers/purchaseServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/207/swp391_petshop_project/web/js/validate_input.js</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/207/swp391_petshop_project/src/java/Controllers/VnPayReturnServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/207/swp391_petshop_project/src/java/Controllers/CheckoutServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/207/swp391_petshop_project/src/java/Controllers/DisplayCartServlet.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/207/swp391_petshop_project/web/cart.jsp</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/207/swp391_petshop_project/src/java/DAO/DiscountDAO.java</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/207/swp391_petshop_project/web/adddiscount.jsp</file>
-            <file>file:/C:/Users/ADMIN/Desktop/bản%20chính/207/swp391_petshop_project/web/js/money.js</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/DAO/OrderDAO.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/customer_order_page.jsp</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/admin_accRole_page.jsp</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Controllers/Shipper_Panel_Servlet.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/src/java/Controllers/Homepage_Servlet.java</file>
+            <file>file:/C:/Users/HuyHoang/Desktop/PetShopFPT/web/customer_orderCancelled_page.jsp</file>
         </group>
     </open-files>
 </project-private>
