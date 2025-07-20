@@ -160,7 +160,7 @@ public class PetDAO {
         return images;
     }
 
-    private StringBuilder buildFilterQuery(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus) {
+    private StringBuilder buildFilterQuery(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus, String breedStatus) {
         StringBuilder sql = new StringBuilder(
                 " FROM PetTB p JOIN BreedTB b ON p.breedId = b.breedId "
                 + " WHERE 1=1 "
@@ -191,16 +191,19 @@ public class PetDAO {
         if (petStatus != null && !petStatus.isEmpty()) {
             sql.append("AND p.petStatus = ? ");
         }
+        if (breedStatus != null && !breedStatus.isEmpty()) {
+            sql.append("AND b.breedStatus = ? ");
+        }
         return sql;
     }
 
-    public int countFilteredPetsForSeller(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus) {
+    public int countFilteredPetsForSeller(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus, String breedStatus) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         StringBuilder sqlBase = new StringBuilder("SELECT COUNT(p.petId) ");
-        sqlBase.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus));
+        sqlBase.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus,breedStatus));
 
         try {
             conn = new DBContext().getConnection();
@@ -232,6 +235,9 @@ public class PetDAO {
             if (petStatus != null && !petStatus.isEmpty()) {
                 ps.setString(paramIndex++, petStatus);
             }
+            if (breedStatus != null && !breedStatus.isEmpty()) {
+                ps.setString(paramIndex++, breedStatus);
+            }
 
             rs = ps.executeQuery();
             if (rs.next()) {
@@ -257,14 +263,14 @@ public class PetDAO {
         return 0;
     }
 
-    public List<Pet> filterPetsForSeller(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus, int pageNumber, int pageSize) {
+    public List<Pet> filterPetsForSeller(String searchKey, String availability, String species, String breedId, String gender, String vaccination, String petStatus, String breedStatus, int pageNumber, int pageSize) {
         List<Pet> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        StringBuilder sql = new StringBuilder("SELECT p.*, b.breedName ");
-        sql.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus));
+        StringBuilder sql = new StringBuilder("SELECT p.*, b.breedName, b.breedStatus ");
+        sql.append(buildFilterQuery(searchKey, availability, species, breedId, gender, vaccination, petStatus,breedStatus));
         sql.append("ORDER BY p.petId DESC ");
         sql.append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
@@ -298,6 +304,9 @@ public class PetDAO {
             if (petStatus != null && !petStatus.isEmpty()) {
                 ps.setString(paramIndex++, petStatus);
             }
+            if (breedStatus != null && !breedStatus.isEmpty()) {
+                ps.setString(paramIndex++, breedStatus);
+            }
 
             int offset = (pageNumber - 1) * pageSize;
             ps.setInt(paramIndex++, offset);
@@ -309,6 +318,7 @@ public class PetDAO {
                 Breed breed = new Breed();
                 breed.setBreedId(rs.getInt("breedId"));
                 breed.setBreedName(rs.getString("breedName"));
+                breed.setBreedStatus(rs.getInt("breedStatus"));
                 pet.setBreed(breed);
                 pet.setImages(getImageDataByPetId(pet.getPetId()));
                 list.add(pet);

@@ -84,6 +84,7 @@ public class SellerDisplayAllPetServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         String vaccination = request.getParameter("vaccination");
         String petStatus = request.getParameter("petStatus");
+        String breedStatus = request.getParameter("breedStatus");
         String pageStr = request.getParameter("page");
 
         int currentPage = 1;
@@ -92,24 +93,24 @@ public class SellerDisplayAllPetServlet extends HttpServlet {
         }
 
         PetDAO petDAO = new PetDAO();
-        int totalRecords = petDAO.countFilteredPetsForSeller(searchKey, availability, species, breedId, gender, vaccination, petStatus);
+        int totalRecords = petDAO.countFilteredPetsForSeller(searchKey, availability, species, breedId, gender, vaccination, petStatus, breedStatus);
 
         Pagination pagination = new Pagination(totalRecords, currentPage, PAGE_SIZE, MAX_PAGE_NUMBERS_TO_SHOW);
-        
+
         if (currentPage > pagination.getTotalPages() && pagination.getTotalPages() > 0) {
             currentPage = pagination.getTotalPages();
             pagination = new Pagination(totalRecords, currentPage, PAGE_SIZE, MAX_PAGE_NUMBERS_TO_SHOW);
         }
 
         List<Pet> petList = petDAO.filterPetsForSeller(
-                searchKey, availability, species, breedId, gender, vaccination, petStatus,
+                searchKey, availability, species, breedId, gender, vaccination, petStatus, breedStatus,
                 pagination.getCurrentPage(),
                 pagination.getPageSize()
         );
 
         BreedDAO breedDAO = new BreedDAO();
         List<String> speciesList = breedDAO.getAllSpecies();
-        List<Breed> breedList = breedDAO.getAllBreeds();
+        List<Breed> breedList = breedDAO.getAllBreedsSeller();
 
         request.setAttribute("petList", petList);
         request.setAttribute("speciesList", speciesList);
