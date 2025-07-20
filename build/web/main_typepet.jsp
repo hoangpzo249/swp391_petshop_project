@@ -283,10 +283,7 @@
                             </a>
                             <div class="tym-item">
                                 <p class="price">
-                                    <fmt:formatNumber value="${x.petPrice}"
-                                                      type="currency"
-                                                      currencySymbol="₫"
-                                                      groupingUsed="true" />
+                                     <fmt:formatNumber value="${x.petPrice}"  groupingUsed="true"/>đ
                                 </p>
                             </div>
                         </div>

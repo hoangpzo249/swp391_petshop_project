@@ -370,12 +370,14 @@
                 <script src="js/ai_chat.js"></script>
             </c:otherwise>
         </c:choose>
-
+        <div id="lightbox" class="lightbox" onclick="this.style.display = 'none'">
+            <img id="lightbox-img" src="" />
+        </div>
         <script>
-                                        function showImage(src) {
-                                            document.getElementById("lightbox-img").src = src;
-                                            document.getElementById("lightbox").style.display = "flex";
-                                        }
+            function showImage(src) {
+                document.getElementById("lightbox-img").src = src;
+                document.getElementById("lightbox").style.display = "flex";
+            }
         </script>
 
     </body>

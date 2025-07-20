@@ -376,4 +376,129 @@ public class RefundDAO {
         return r;
     }
 
+    public List<Refund> getFilteredRefundsPaging(String statusFilter, String sortByDate, int page, int pageSize) {
+        List<Refund> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DBContext db = new DBContext();
+
+        String sql = "SELECT * FROM RefundTB WHERE 1=1 ";
+        if (statusFilter != null && !statusFilter.isEmpty()) {
+            sql += "AND refundStatus = ? ";
+        }
+
+        if (sortByDate == null || sortByDate.isEmpty()) {
+            sql += "ORDER BY refundRequestDate DESC ";
+        } else if ("asc".equalsIgnoreCase(sortByDate)) {
+            sql += "ORDER BY refundRequestDate ASC ";
+        } else {
+            sql += "ORDER BY refundRequestDate DESC ";
+        }
+
+        sql += "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+
+            int i = 1;
+            if (statusFilter != null && !statusFilter.isEmpty()) {
+                ps.setString(i++, statusFilter);
+            }
+
+            ps.setInt(i++, (page - 1) * pageSize);
+            ps.setInt(i, pageSize);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Refund r = new Refund();
+                r.setRefundId(rs.getInt("refundId"));
+                r.setOrderId(rs.getInt("orderId"));
+                r.setAccountHolderName(rs.getString("accountHolderName"));
+                r.setBankName(rs.getString("bankName"));
+                r.setBankAccountNumber(rs.getString("bankAccountNumber"));
+                r.setRefundAmount(rs.getDouble("refundAmount"));
+                r.setRefundStatus(rs.getString("refundStatus"));
+                r.setRefundRequestDate(rs.getTimestamp("refundRequestDate"));
+                r.setRefundProcessedDate(rs.getTimestamp("refundProcessedDate"));
+                r.setProofImage(rs.getBytes("proofImage"));
+                r.setRejectReason(rs.getString("rejectReason"));
+                r.setProofRefundedImage(rs.getBytes("proofRefundedImage"));
+                r.setRefundReasonDescription(rs.getString("refundReasonDescription"));
+                list.add(r);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+
+        return list;
+    }
+
+    public int countFilteredRefunds(String statusFilter) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DBContext db = new DBContext();
+        String sql = "SELECT COUNT(*) FROM RefundTB ";
+        if (statusFilter != null && !statusFilter.isEmpty()) {
+            sql += "WHERE refundStatus = ? ";
+        }
+
+         try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            if (statusFilter != null && !statusFilter.isEmpty()) {
+                ps.setString(1, statusFilter);
+            }
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+         }
+
+        return 0;
+    }
+
 }

@@ -241,6 +241,54 @@
                                 </tbody>
                             </table>
                         </div>
+                        <c:if test="${totalPages > 1}">
+                            <div class="pagination-container">
+                                <div class="pagination">
+
+                                    <c:if test="${currentPage > 1}">
+                                        <a class="page-link"
+                                           href="displayrefund?page=${currentPage - 1}&statusFilter=${param.statusFilter}&sortByDate=${param.sortByDate}">«</a>
+                                    </c:if>
+
+                                    <c:if test="${startPage > 1}">
+                                        <a class="page-link"
+                                           href="displayrefund?page=1&statusFilter=${param.statusFilter}&sortByDate=${param.sortByDate}">1</a>
+
+                                        <c:if test="${startPage >= 3}">
+                                            <span class="page-link disabled">...</span>
+                                        </c:if>
+                                    </c:if>
+
+                                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                                        <c:choose>
+                                            <c:when test="${i == currentPage}">
+                                                <span class="page-link active">${i}</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="page-link"
+                                                   href="displayrefund?page=${i}&statusFilter=${param.statusFilter}&sortByDate=${param.sortByDate}">${i}</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+
+                                    <c:if test="${endPage < totalPages}">
+                                        <c:if test="${endPage < totalPages - 1}">
+                                            <span class="page-link disabled">...</span>
+                                        </c:if>
+                                        <a class="page-link"
+                                           href="displayrefund?page=${totalPages}&statusFilter=${param.statusFilter}&sortByDate=${param.sortByDate}">${totalPages}</a>
+                                    </c:if>
+
+                                    <c:if test="${currentPage < totalPages}">
+                                        <a class="page-link"
+                                           href="displayrefund?page=${currentPage + 1}&statusFilter=${param.statusFilter}&sortByDate=${param.sortByDate}">»</a>
+                                    </c:if>
+
+                                </div>
+                            </div>
+                        </c:if>
+
+
                     </div>
                 </div>
             </div>

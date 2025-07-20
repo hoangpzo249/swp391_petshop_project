@@ -36,10 +36,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (option === "discount") {
                 return;
             }
-            const guestName = document.getElementById('guestName');
-            const guestPhone = document.getElementById('guestPhone');
-            const guestEmail = document.getElementById('email');
-            const guestAddress = document.getElementById('guestAddress');
+            const guestName = document.getElementById('guestName').trim();
+            const guestPhone = document.getElementById('guestPhone').trim();
+            const guestEmail = document.getElementById('email').trim();
+            const guestAddress = document.getElementById('guestAddress').trim();
 
 
 

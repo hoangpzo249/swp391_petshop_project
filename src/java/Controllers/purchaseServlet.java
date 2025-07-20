@@ -59,10 +59,51 @@ public class purchaseServlet extends HttpServlet {
         double discountAmount = Double.parseDouble((String) session.getAttribute("discountAmount"));
         String discountCode = (String) session.getAttribute("discountCode");
 
-        session.setAttribute("guestName", name);
-        session.setAttribute("email", email);
-        session.setAttribute("guestPhone", phone);
-        session.setAttribute("guestAddress", address);
+        String nameRegex = "^[A-ZÀ-Ỹa-zà-ỹ\\s'\\-]+$";
+        String phoneRegex = "^(0\\d{9}|\\+84\\d{9})$";
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        String addressRegex = "^[A-Za-zÀ-Ỵà-ỹ0-9\\s,.'\\-\\/]{2,}$";
+
+        name = name != null ? name.trim() : "";
+        phone = phone != null ? phone.trim() : "";
+        email = email != null ? email.trim() : "";
+        address = address != null ? address.trim() : "";
+
+        if (!name.matches(nameRegex)) {
+            session.setAttribute("errorMessage", "Tên người nhận không được chứa số, ký tự lạ hoặc để trống.");
+            resp.sendRedirect("checkout.jsp");
+            return;
+        }
+        if (phone.toLowerCase().contains("chưa cập nhật")) {
+            session.setAttribute("errorMessage", "Vui lòng cập nhật lại số điện thoại.");
+            resp.sendRedirect("checkout.jsp");
+            return;
+        }
+        if (!phone.matches(phoneRegex)) {
+            session.setAttribute("errorMessage", "Số điện thoại không hợp lệ. Phải có 10 chữ số (bắt đầu bằng 0) hoặc theo định dạng +84.");
+            resp.sendRedirect("checkout.jsp");
+            return;
+        }
+        if (!email.matches(emailRegex)) {
+            session.setAttribute("errorMessage", "Email phải có dạng 'abc@domain.cde'. Trong đó 'cde' phải có ít nhất 2 ký tự.");
+            resp.sendRedirect("checkout.jsp");
+            return;
+        }
+        if (address.toLowerCase().contains("chưa cập nhật")) {
+            session.setAttribute("errorMessage", "Vui lòng cập nhật lại địa chỉ.");
+            resp.sendRedirect("checkout.jsp");
+            return;
+        }
+        if (!address.matches(addressRegex)) {
+            session.setAttribute("errorMessage", "Địa chỉ không hợp lệ. Phải có ít nhất 2 ký tự, không chứa ký tự lạ.");
+            resp.sendRedirect("checkout.jsp");
+            return;
+        }
+
+        session.setAttribute("guestName", name.trim());
+        session.setAttribute("email", email.trim());
+        session.setAttribute("guestPhone", phone.trim());
+        session.setAttribute("guestAddress", address.trim());
         session.setAttribute("accId", accId);
 
         PetDAO petDao = new PetDAO();
@@ -94,10 +135,10 @@ public class purchaseServlet extends HttpServlet {
             OrderDAO dao = new OrderDAO();
             Order order = new Order();
             order.setAccId(accId);
-            order.setCustomerName(name);
-            order.setCustomerEmail(email);
-            order.setCustomerPhone(phone);
-            order.setCustomerAddress(address);
+            order.setCustomerName(name.trim());
+            order.setCustomerEmail(email.trim());
+            order.setCustomerPhone(phone.trim());
+            order.setCustomerAddress(address.trim());
             order.setShipperId(null);
             order.setPaymentMethod("Cash on Delivery");
             order.setPaymentStatus("Unpaid");

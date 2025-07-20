@@ -63,10 +63,10 @@ public class VnPayReturnServlet extends HttpServlet {
                 OrderDAO dao = new OrderDAO();
                 Order order = new Order();
                 order.setAccId(accId);
-                order.setCustomerName(name);
-                order.setCustomerEmail(email);
-                order.setCustomerPhone(phone);
-                order.setCustomerAddress(address);
+                order.setCustomerName(name.trim());
+                order.setCustomerEmail(email.trim());
+                order.setCustomerPhone(phone.trim());
+                order.setCustomerAddress(address.trim());
                 order.setShipperId(null);
                 order.setPaymentMethod("Credit Card");
                 order.setPaymentStatus("Paid");
@@ -123,7 +123,6 @@ public class VnPayReturnServlet extends HttpServlet {
                     order.setDiscountId(null);
                 }
                 int orderId = dao.addOrder(order);
-                
 
                 List<Pet> orderedPets = new ArrayList<>();
                 if (selectedPetIds != null) {
