@@ -422,7 +422,7 @@ body {
 .toast-warning {
     background: linear-gradient(135deg, #fffdf0, #fff6d6);
     border-left: 6px solid #f1c40f;
-    color: #8a6d00;
+    color: red;
 }
 
 .toast-warning i {
@@ -556,4 +556,8 @@ body {
 /* --- ABOUT SECTION VÀ FOOTER ĐỒNG BỘ MÀU --- */
 .about-section {
     background-color: #fff3e6;
+}
+
+.alert-message.error {
+    margin-top: 60px; /* hoặc giá trị lớn hơn nếu bạn muốn nó thấp hơn nữa */
 }

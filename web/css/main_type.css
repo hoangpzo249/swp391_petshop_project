@@ -606,9 +606,9 @@ body {
 /* Giống thú (breed) */
 .item-favo-name span {
     display: block;
-    font-size: 13px;
+    font-size: 17px;
     font-weight: normal;
-    color: #999;
+    color: black;
     font-style: italic;
     margin-top: 2px;
 }

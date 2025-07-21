@@ -76,7 +76,7 @@ public class AddToCartServlet extends HttpServlet {
                 int accId = acc.getAccId();
                
                 if (dao.petInCart(accId, petId)) {
-                    session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
+                    session.setAttribute("errMess", "Thú cưng đã tồn tại trong giỏ hàng!");
                 } else {
                     dao.addToPetCart(accId, petId);
                     session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
@@ -95,7 +95,7 @@ public class AddToCartServlet extends HttpServlet {
                     }
                 }
                 if (exists) {
-                    session.setAttribute("cartMessage", "Thú cưng đã tồn tại trong giỏ hàng!");
+                    session.setAttribute("errMess", "Thú cưng đã tồn tại trong giỏ hàng!");
                 } else {
                     guestCart.add(new Cart(-1, petId, 1, petDAO.getPetById(petId).getPetPrice()));
                     session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");

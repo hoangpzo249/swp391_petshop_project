@@ -10,7 +10,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link rel="icon" type="image/png" href="images/logo_banner/logo1.png">
-        <link rel="stylesheet" href="css/main_type.css?v=23" />
+        <link rel="stylesheet" href="css/main_type.css?v=24" />
         <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
         <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
         <link href="css/ai_chat.css" rel="stylesheet" type="text/css"/>

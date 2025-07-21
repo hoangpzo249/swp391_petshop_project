@@ -18,7 +18,7 @@
 
 
         <link href="css/ai_chat.css" rel="stylesheet" type="text/css"/>
-        <link href="css/main_product.css?v=32" rel="stylesheet" type="text/css"/>
+        <link href="css/main_product.css?v=33" rel="stylesheet" type="text/css"/>
         <script src="js/readmore_product.js" type="text/javascript"></script>
 
 
