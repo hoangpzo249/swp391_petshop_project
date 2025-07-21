@@ -774,9 +774,10 @@ public class PetDAO {
 
     public List<Pet> get6PetNew() {
         List<Pet> listPet = new ArrayList<>();
-        String sql = "SELECT TOP 18 * FROM PetTB \n"
-                + "WHERE petStatus = 1 and petAvailability =1\n"
-                + "ORDER BY petId DESC";
+        String sql = "SELECT TOP 18 p.* FROM PetTB p\n"
+           + "JOIN BreedTB b ON p.breedId = b.breedId\n"
+           + "WHERE p.petStatus = 1 AND p.petAvailability = 1 AND b.breedStatus = 1\n"
+           + "ORDER BY p.petId DESC";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Pet pet = new Pet();
