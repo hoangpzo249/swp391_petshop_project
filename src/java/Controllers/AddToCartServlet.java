@@ -79,7 +79,7 @@ public class AddToCartServlet extends HttpServlet {
                     session.setAttribute("errMess", "Thú cưng đã tồn tại trong giỏ hàng!");
                 } else {
                     dao.addToPetCart(accId, petId);
-                    session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
+                    session.setAttribute("successMess", "Đã thêm thú cưng vào giỏ hàng!");
                 }
 
             } else {
@@ -98,7 +98,7 @@ public class AddToCartServlet extends HttpServlet {
                     session.setAttribute("errMess", "Thú cưng đã tồn tại trong giỏ hàng!");
                 } else {
                     guestCart.add(new Cart(-1, petId, 1, petDAO.getPetById(petId).getPetPrice()));
-                    session.setAttribute("cartMessage", "Đã thêm thú cưng vào giỏ hàng!");
+                    session.setAttribute("successMess", "Đã thêm thú cưng vào giỏ hàng!");
                 }
                 session.setAttribute("guestCart", guestCart);
             }
