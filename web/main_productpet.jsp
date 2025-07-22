@@ -9,16 +9,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>PETFPT Shop</title>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
+        <link href="css/main_product.css?v=33" rel="stylesheet" type="text/css"/>
+        <link href="css/head_about.css?v=2" rel="stylesheet" type="text/css"/>
         <script src="js/scroll_chat.js" type="text/javascript"></script>
         <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
-        <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
         <link href="css/ai_chat.css" rel="stylesheet" type="text/css"/>
-        <link href="css/main_product.css?v=33" rel="stylesheet" type="text/css"/>
         <script src="js/readmore_product.js" type="text/javascript"></script>
 
 

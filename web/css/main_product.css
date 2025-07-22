@@ -24,10 +24,10 @@ body {
     padding: 30px;
     border-radius: 16px;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-    animation: fadeInUp 0.6s ease;
+    animation: fadeInUpPet 0.6s ease;
 }
 
-@keyframes fadeInUp {
+@keyframes fadeInUpPet {
     0% { opacity: 0; transform: translateY(20px); }
     100% { opacity: 1; transform: translateY(0); }
 }
@@ -189,7 +189,7 @@ body {
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
-    animation: fadeInUp 0.5s ease;
+    animation: fadeInUpPet 0.5s ease;
 }
 
 .description-section h2 {
@@ -561,3 +561,4 @@ body {
 .alert-message.error {
     margin-top: 60px; /* hoặc giá trị lớn hơn nếu bạn muốn nó thấp hơn nữa */
 }
+
