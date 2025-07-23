@@ -72,6 +72,13 @@ public class Customer_Order_Servlet extends HttpServlet {
         String action = request.getParameter("action");
         String id = request.getParameter("id");
         Account acc = (Account) session.getAttribute("userAccount");
+
+        if (acc == null || !acc.getAccRole().equals("Customer")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
+
         int accId = acc.getAccId();
 //        System.err.println(accId);
         OrderDAO odao = new OrderDAO();

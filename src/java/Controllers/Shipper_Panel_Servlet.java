@@ -4,6 +4,7 @@
  */
 package Controllers;
 
+import DAO.InvoiceDAO;
 import DAO.OrderDAO;
 import DAO.ShipperDAO;
 import Models.Account;
@@ -223,6 +224,8 @@ public class Shipper_Panel_Servlet extends HttpServlet {
                 boolean updatePickupOrder = oDao.updatePickupOrder(orderId);
                 if (updatePickupOrder) {
                     EmailSender.sendShippingOrderByShipper(orderDetail.getCustomerEmail(), orderId);
+                    InvoiceDAO iDao = new InvoiceDAO();
+                    iDao.addInvoice(orderId, orderDetail.getPaymentMethod());
                     session.setAttribute("successMessage", "Nhận đơn thành công");
                     request.setAttribute("orderDetail", orderDetail);
                     request.setAttribute("orderListDetail", orderListDetail);

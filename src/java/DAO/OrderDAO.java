@@ -561,7 +561,8 @@ public class OrderDAO {
                     + "                   join OrderContentTB c on o.orderid=c.orderid\n"
                     + "                    where accId =? and orderStatus = ?\n"
                     + "                  group by o.orderId, o.accId, o.orderDate,o.deliveryDate, o.orderStatus, o.customerName, o.customerEmail, o.customerPhone,\n"
-                    + "                   o.customerAddress, o.shipperId, o.paymentMethod,o.paymentstatus, o.rejectionReason, o.discountAmountAtApply";
+                    + "                   o.customerAddress, o.shipperId, o.paymentMethod,o.paymentstatus, o.rejectionReason, o.discountAmountAtApply\n"
+                    + "order by o.orderDate DESC";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, accId);
             ps.setString(2, status);
@@ -967,7 +968,7 @@ public class OrderDAO {
         }
         return list;
     }
-    
+
     public List<Order> getOrderDetailProductShipperId(int shipperId, int orderId) {
         Connection conn = null;
         PreparedStatement ps = null;
