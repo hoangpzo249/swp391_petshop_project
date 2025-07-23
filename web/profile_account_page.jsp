@@ -535,7 +535,7 @@
                     </div>
                     <div class="chatbox-input-area">
                         <form id="chatForm">
-                            <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" required>
+                            <input type="text" id="chatInput" placeholder="Hỏi tôi bất kỳ điều gì..." autocomplete="off" required>
                             <button type="submit" id="chatSendButton" aria-label="Send Message"><i class="fas fa-paper-plane"></i></button>
                         </form>
                     </div>

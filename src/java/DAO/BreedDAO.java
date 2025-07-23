@@ -864,11 +864,16 @@ public class BreedDAO {
         StringBuilder prompt = new StringBuilder();
         try {
             conn = db.getConnection();
-            String sql = "SELECT breedId, breedName FROM BreedTB WHERE breedStatus=1";
+            String sql = "SELECT b.breedId, b.breedName, COUNT(p.petId) AS petCount " +
+                     "FROM BreedTB b " +
+                     "LEFT JOIN PetTB p ON b.breedId = p.breedId " +
+                     "   AND p.petStatus = 1 AND p.petAvailability = 1 " +
+                     "WHERE b.breedStatus = 1 " +
+                     "GROUP BY b.breedId, b.breedName";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
-                String breed = rs.getString("breedName") + " (ID: " + rs.getInt("breedId") + ")<br>\n";
+                String breed = rs.getString("breedName") + " (ID: " + rs.getInt("breedId") + ", Pet count: " + rs.getInt("petCount") + ")<br>\n";
                 prompt.append(breed);
             }
             return prompt.toString();
