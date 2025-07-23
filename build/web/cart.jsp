@@ -92,7 +92,7 @@
                                         </c:when>
 
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
-                                            <a href="profile" class="dropdown-item">
+                                            <a href="shipper_panel" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Shipper</span>
                                             </a>

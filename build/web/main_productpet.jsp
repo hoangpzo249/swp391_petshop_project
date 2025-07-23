@@ -74,7 +74,7 @@
                                             </a>
                                         </c:when>
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
-                                            <a href="profile" class="dropdown-item">
+                                            <a href="shipper_panel" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Shipper</span>
                                             </a>
@@ -84,10 +84,15 @@
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="orders?status=Pending" class="dropdown-item">
-                                        <i class="fas fa-shopping-bag"></i> 
-                                        <span>Đơn hàng đã mua</span>
-                                    </a>
+                                    <c:choose>
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Customer'}">
+                                            <a href="orders?status=Pending" class="dropdown-item">
+                                                <i class="fas fa-shopping-bag"></i> 
+                                                <span>Đơn hàng đã mua</span>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
                                     <a href="logout" class="dropdown-item logout">
                                         <i class="fas fa-sign-out-alt"></i> 
                                         <span>Đăng xuất</span>

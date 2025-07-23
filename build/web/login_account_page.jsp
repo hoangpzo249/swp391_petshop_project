@@ -65,7 +65,7 @@ request.setAttribute("passwordLogin", password);
 
                     <div class="login-options">
                         <div class="remember-password">
-                            <input type="checkbox" id="remember" name="remember" value="on" checked>
+                            <input type="checkbox" id="remember" name="remember" value="on">
                             <label for="remember">Nhớ mật khẩu</label>
                         </div>
                         <a href="recover" class="forgot-password">Bạn quên mật khẩu?</a>

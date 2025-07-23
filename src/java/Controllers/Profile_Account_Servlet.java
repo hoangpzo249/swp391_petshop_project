@@ -15,24 +15,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -80,6 +69,15 @@ public class Profile_Account_Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("userAccount");
+
+        if (acc == null) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
 
 //        String action = request.getParameter("action");
 //        String taget = request.getParameter("taget");
