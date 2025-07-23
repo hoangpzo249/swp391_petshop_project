@@ -24,10 +24,10 @@ body {
     padding: 30px;
     border-radius: 16px;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-    animation: fadeInUp 0.6s ease;
+    animation: fadeInUpPet 0.6s ease;
 }
 
-@keyframes fadeInUp {
+@keyframes fadeInUpPet {
     0% { opacity: 0; transform: translateY(20px); }
     100% { opacity: 1; transform: translateY(0); }
 }
@@ -189,7 +189,7 @@ body {
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
-    animation: fadeInUp 0.5s ease;
+    animation: fadeInUpPet 0.5s ease;
 }
 
 .description-section h2 {
@@ -422,7 +422,7 @@ body {
 .toast-warning {
     background: linear-gradient(135deg, #fffdf0, #fff6d6);
     border-left: 6px solid #f1c40f;
-    color: #8a6d00;
+    color: red;
 }
 
 .toast-warning i {
@@ -556,4 +556,35 @@ body {
 /* --- ABOUT SECTION VÀ FOOTER ĐỒNG BỘ MÀU --- */
 .about-section {
     background-color: #fff3e6;
+}
+
+.alert-message.error {
+    margin-top: 60px; /* hoặc giá trị lớn hơn nếu bạn muốn nó thấp hơn nữa */
+}
+
+.alert-message {
+     margin-top: 60px;
+    background-color: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    border-radius: 8px;
+    padding: 15px 20px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 250px;
+    max-width: 350px;
+    animation: slideIn 0.5s ease-in-out forwards, fadeOut 0.5s ease-in-out 4.5s forwards;
+}
+
+.alert-message::before {
+    content: '\f058'; /* Check-circle icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-right: 10px;
+    font-size: 18px;
 }

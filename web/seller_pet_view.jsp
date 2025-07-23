@@ -130,6 +130,13 @@
                                     </select>
                                 </div>
                                 <div class="select-group">
+                                    <select name="breedStatus" onchange="this.form.submit()">
+                                        <option value="">Trạng thái giống</option>
+                                        <option value="1" ${param.breedStatus == '1' ? 'selected' : ''}>Đang hiển thị</option>
+                                        <option value="0" ${param.breedStatus == '0' ? 'selected' : ''}>Đã ẩn</option>
+                                    </select>
+                                </div>
+                                <div class="select-group">
                                     <select name="species" onchange="this.form.submit()">
                                         <option value="">Tất cả loài</option>
                                         <c:forEach items="${speciesList}" var="s">
@@ -179,6 +186,7 @@
                                         <th>Giá</th>
                                         <th>Trạng Thái Bán</th>
                                         <th>Trạng Thái Đăng</th>
+                                        <th>Trạng Thái Giống</th>
                                         <th style="width: 15%;">Thao Tác</th>
                                     </tr>
                                 </thead>
@@ -209,6 +217,16 @@
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${pet.petStatus == 1}">
+                                                        <span class="status-badge status-active">Hiển thị</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="status-badge status-blocked">Đã ẩn</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${pet.breed.breedStatus == 1}">
                                                         <span class="status-badge status-active">Hiển thị</span>
                                                     </c:when>
                                                     <c:otherwise>

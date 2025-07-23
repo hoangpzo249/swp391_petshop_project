@@ -9,16 +9,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>PETFPT Shop</title>
         <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        <link href="css/head_about.css" rel="stylesheet" type="text/css"/>
+        <link href="css/main_product.css?v=33" rel="stylesheet" type="text/css"/>
+        <link href="css/head_about.css?v=2" rel="stylesheet" type="text/css"/>
         <script src="js/scroll_chat.js" type="text/javascript"></script>
         <link href="css/header_footer.css" rel="stylesheet" type="text/css"/>
-        <link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
         <link href="css/ai_chat.css" rel="stylesheet" type="text/css"/>
-        <link href="css/main_product.css?v=32" rel="stylesheet" type="text/css"/>
         <script src="js/readmore_product.js" type="text/javascript"></script>
 
 
@@ -76,7 +74,7 @@
                                             </a>
                                         </c:when>
                                         <c:when test="${sessionScope.userAccount.accRole eq 'Shipper'}">
-                                            <a href="profile" class="dropdown-item">
+                                            <a href="shipper_panel" class="dropdown-item">
                                                 <i class="fas fa-user"></i> 
                                                 <span>Quản lý Shipper</span>
                                             </a>
@@ -86,10 +84,15 @@
                                         <i class="fas fa-user"></i> 
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="orders?status=Pending" class="dropdown-item">
-                                        <i class="fas fa-shopping-bag"></i> 
-                                        <span>Đơn hàng đã mua</span>
-                                    </a>
+                                    <c:choose>
+                                        <c:when test="${sessionScope.userAccount.accRole eq 'Customer'}">
+                                            <a href="orders?status=Pending" class="dropdown-item">
+                                                <i class="fas fa-shopping-bag"></i> 
+                                                <span>Đơn hàng đã mua</span>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
                                     <a href="logout" class="dropdown-item logout">
                                         <i class="fas fa-sign-out-alt"></i> 
                                         <span>Đăng xuất</span>

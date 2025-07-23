@@ -496,3 +496,7 @@
         visibility: hidden;
     }
 }
+
+.alert-message.error {
+    margin-top: 200px; /* hoặc giá trị lớn hơn nếu bạn muốn nó thấp hơn nữa */
+}

@@ -69,6 +69,12 @@ public class Shipper_Panel_Servlet extends HttpServlet {
         HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("userAccount");
 
+        if (acc == null || !acc.getAccRole().equals("Shipper")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
+
         OrderDAO oDao = new OrderDAO();
 
         int pendingCount = oDao.countPendingShipper(acc.getAccId());
@@ -179,7 +185,7 @@ public class Shipper_Panel_Servlet extends HttpServlet {
             boolean checkPenndingShippingShipper = oDao.checkPenndingShippingShipper(acc.getAccId());
             if (checkPenndingShippingShipper) {
                 session.setAttribute("errorMessage", "Bạn cần hoàn thành hết đơn cần giao và đơn đang giao");
-                String url = "shipper_panel?action=status";
+                String url = "shipper_panel";
                 response.sendRedirect(url);
                 return;
             }
@@ -196,7 +202,7 @@ public class Shipper_Panel_Servlet extends HttpServlet {
 
             List<Order> orderList = oDao.getOrderShipperId(acc.getAccId());
             request.setAttribute("orderList", orderList);
-            String url = "shipper_panel?action=status";
+            String url = "shipper_panel";
             response.sendRedirect(url);
         } else if ("pickup-order".equals(action) && id != null) {
             int orderId = Integer.parseInt(id);

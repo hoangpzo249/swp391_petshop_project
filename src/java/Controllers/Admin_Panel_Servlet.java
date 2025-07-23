@@ -77,6 +77,14 @@ public class Admin_Panel_Servlet extends HttpServlet {
 
         AccountDAO accDao = new AccountDAO();
 
+        HttpSession session = request.getSession();
+        Account accAdmin = (Account) session.getAttribute("userAccount");
+        if (accAdmin == null || !accAdmin.getAccRole().equals("Admin")) {
+            session.setAttribute("errMess", "Bạn không có quyền vào trang này.");
+            response.sendRedirect("homepage");
+            return;
+        }
+
         int total = accDao.countAllAcc();
         request.setAttribute("totalAcc", total);
 
