@@ -91,49 +91,48 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const formatNumber = (numStr) => {
-        if (!numStr)
-            return '';
+        if (!numStr) return '';
         return numStr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     };
 
     const getRawDigits = (str) => {
         return str.replace(/\D/g, '');
-    }
-
+    };
 
     const initialPriceValue = priceHiddenInput.value;
-
     if (initialPriceValue) {
         const numericValue = parseFloat(initialPriceValue);
-
         const roundedValue = Math.round(numericValue);
-
         if (!isNaN(roundedValue)) {
             priceHiddenInput.value = roundedValue;
-
-            priceDisplayInput.value = formatNumber(roundedValue.toString()); // "640.000"
+            priceDisplayInput.value = formatNumber(roundedValue.toString());
         }
     }
 
     priceDisplayInput.addEventListener('input', function (e) {
-        const rawValue = getRawDigits(e.target.value);
+        const originalValue = e.target.value;
+        const originalCursor = e.target.selectionStart;
 
+        const digitsBeforeCursor = getRawDigits(originalValue.substring(0, originalCursor)).length;
+
+        const rawValue = getRawDigits(originalValue);
         priceHiddenInput.value = rawValue;
 
-        const originalCursor = e.target.selectionStart;
-        const originalLength = e.target.value.length;
+        const formattedValue = formatNumber(rawValue);
+        e.target.value = formattedValue;
 
-        e.target.value = formatNumber(rawValue);
-
-        const newLength = e.target.value.length;
-        const cursorOffset = newLength - originalLength;
-
-        // Ensure cursor doesn't jump unexpectedly
-        if (cursorOffset > 0 && originalCursor > 0 && (originalCursor - 1) % 3 === 0) {
-            e.target.setSelectionRange(originalCursor + cursorOffset, originalCursor + cursorOffset);
-        } else {
-            e.target.setSelectionRange(originalCursor, originalCursor);
+        let newCursorPos = 0;
+        let digitsCounted = 0;
+        for (const char of formattedValue) {
+            if (digitsCounted >= digitsBeforeCursor) {
+                break;
+            }
+            newCursorPos++;
+            if (/\d/.test(char)) {
+                digitsCounted++;
+            }
         }
-    });
 
+        e.target.setSelectionRange(newCursorPos, newCursorPos);
+    });
 });
