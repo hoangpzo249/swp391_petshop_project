@@ -76,7 +76,8 @@ public class AIChatServlet extends HttpServlet {
 
             if (chatHistory == null) {
                 chatHistory = new ArrayList<>();
-                String welcomeMessage = "Xin chào! Tôi là trợ lý ảo của PetFPT. Tôi có thể giúp gì cho bạn ngày hôm nay?";
+                String welcomeMessage = "Xin chào! Tôi là trợ lý ảo của PetFPT. Tôi có thể giúp gì cho bạn hôm nay?\n"
+                        + "Tôi có thể gợi ý những giống thú cưng phù hợp với bạn, dựa trên các giống hiện đang có trong cửa hàng.";
                 chatHistory.add(new Conversation(welcomeMessage, "ai"));
                 session.setAttribute("chatHistory", chatHistory);
             }
@@ -162,7 +163,7 @@ public class AIChatServlet extends HttpServlet {
                 + breeds + "<br><br>"
                 + "<b>Interaction Guidelines</b><br>"
                 + "1. <b>Adjust Response Length:</b> Be brief for simple questions (e.g., 'Do you have cats?'). Be detailed and thorough when providing pet care advice.<br>"
-                + "2. <b>Suggestions:</b> When asked for pet recommendations, suggest a random selection of 3 to 5 suitable breeds, ensuring each is a link.<br>"
+                + "2. <b>Suggestions:</b> When asked for pet recommendations, suggest a random selection of 3 to 5 suitable breeds or however many the user asks for, ensuring each is a link.<br>"
                 + "3. <b>Clarity:</b> Explain all topics simply, so a non-expert can easily understand.<br>"
                 + "4. <b>No Echoing:</b> Do not repeat the user's question back to them.<br><br>"
                 + "<b>Output Format Rules</b><br>"
