@@ -123,36 +123,35 @@
                                 <div class="form-group">
                                     <label for="value">Giá trị</label>
                                     <input type="text" id="value" name="value" class="form-control"
-                                           value="${formattedValue}" required>
+                                           value="<fmt:formatNumber value="${param.value != null ? param.value : discount.discountValue}" pattern="#" />" required>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="minAmount">Đơn hàng tối thiểu (₫)</label>
                                     <c:choose>
                                         <c:when test="${param.minAmount != null}">
                                             <input type="text" id="minAmount" name="minAmount" class="form-control"
-                                                   value="${param.minAmount}" />
+                                                   value="<fmt:formatNumber value="${param.minAmount}" pattern="#" />" />
                                         </c:when>
                                         <c:otherwise>
                                             <input type="text" id="minAmount" name="minAmount" class="form-control"
-                                                   value="<fmt:formatNumber value='${discount.minOrderAmount}' type='number' groupingUsed="true"  />" />
+                                                   value="<fmt:formatNumber value="${discount.minOrderAmount}" pattern="#" />" />
                                         </c:otherwise>
                                     </c:choose>
-
                                 </div>
+
                                 <div class="form-group">
                                     <label for="maxValue">Giảm tối đa (₫)</label>
                                     <c:choose>
                                         <c:when test="${param.maxValue != null}">
                                             <input type="text" id="maxValue" name="maxValue" class="form-control"
-                                                   value="${param.maxValue}" />
+                                                   value="<fmt:formatNumber value="${param.maxValue}" pattern="#" />" />
                                         </c:when>
                                         <c:otherwise>
                                             <input type="text" id="maxValue" name="maxValue" class="form-control"
-                                                   value="<fmt:formatNumber value='${discount.maxValue}' type='number' groupingUsed="true"  />" />
+                                                   value="<fmt:formatNumber value="${discount.maxValue}" pattern="#" />" />
                                         </c:otherwise>
                                     </c:choose>
-
-
                                 </div>
                                 <div class="form-group">
                                     <label for="maxUsage">Số lần dùng tối đa</label>
