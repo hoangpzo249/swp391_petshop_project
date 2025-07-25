@@ -435,7 +435,7 @@ public class PetDAO {
 
     public List<String> getAllOrigins() {
         List<String> list = new ArrayList<>();
-        String sql = "SELECT DISTINCT petOrigin FROM PetTB WHERE petOrigin IS NOT NULL";
+        String sql = "SELECT DISTINCT petOrigin FROM PetTB WHERE petOrigin IS NOT NULL AND petAvailability = 1 AND petStatus = 1  ";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(rs.getString("petOrigin"));
@@ -448,7 +448,7 @@ public class PetDAO {
 
     public List<String> getAllGenders() {
         List<String> list = new ArrayList<>();
-        String sql = "SELECT DISTINCT petGender FROM PetTB WHERE petGender IS NOT NULL";
+        String sql = "SELECT DISTINCT petGender FROM PetTB WHERE petGender IS NOT NULL AND petAvailability = 1 AND petStatus = 1";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(rs.getString("petGender"));
@@ -461,7 +461,7 @@ public class PetDAO {
 
     public List<String> getAllColors() {
         List<String> list = new ArrayList<>();
-        String sql = "SELECT DISTINCT petColor FROM PetTB WHERE petColor IS NOT NULL";
+        String sql = "SELECT DISTINCT petColor FROM PetTB WHERE petColor IS NOT NULL AND petAvailability = 1 AND petStatus = 1";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(rs.getString("petColor"));
@@ -474,7 +474,7 @@ public class PetDAO {
 
     public List<String> getAllVaccinationStatus() {
         List<String> list = new ArrayList<>();
-        String sql = "SELECT DISTINCT petVaccination FROM PetTB";
+        String sql = "SELECT DISTINCT petVaccination FROM PetTB WHERE petVaccination IS NOT NULL AND petAvailability = 1 AND petStatus = 1";
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int status = rs.getInt("petVaccination");

@@ -131,8 +131,8 @@
                 <ul class="menu">
                     <li><a href="homepage">Trang Chủ</a></li>
                     <li><a href="listshoppet">Thú Cưng</a></li>
-                    <li><a href="menu_about.jsp">Giới Thiệu</a></li>
-                    <li><a href="menu_contact.jsp">Liên Hệ</a></li>
+                    <li><a href="wip.jsp">Giới Thiệu</a></li>
+                    <li><a href="wip.jsp">Liên Hệ</a></li>
 
                 </ul>
             </nav>
@@ -320,7 +320,7 @@
             <div class="about-column">
                 <h3>PETFPT Shop</h3>
                 <ul>
-                    <li><a href="menu_about.jsp">Giới Thiệu</a></li>
+                    <li><a href="wip.jsp">Giới Thiệu</a></li>
                     <li><a href="footer_policy.jsp">Chính sách</a></li>
                     <li><a href="footer_paymentmethod.jsp">Phương Thức Thanh Toán</a></li>
                     <li><a href="footer_termofuse.jsp">Điều Khoản Sử Dụng</a></li>
