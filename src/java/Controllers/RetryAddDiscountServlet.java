@@ -277,7 +277,7 @@ public class RetryAddDiscountServlet extends HttpServlet {
         }
 
         if (hasError) {
-            response.sendRedirect("retryadddiscount");
+              request.getRequestDispatcher("update_failed_discount.jsp").forward(request, response);
             return;
         }
 
