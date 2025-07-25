@@ -9,6 +9,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,6 +22,7 @@
         <script src="js/add_discount_validate.js?v=2"></script>
         <script src="js/discount_fixed.js?v=4"></script>
         <script src="js/money.js?"></script>
+        <fmt:setLocale value="en" />
     </head>
     <body>
         <div class="seller-header">
@@ -112,18 +114,18 @@
                                 <c:choose>
                                     <c:when test="${discountType eq 'Fixed'}">
                                         <c:set var="formattedValue">
-                                            <fmt:formatNumber value="${discountValue}" type="number" groupingUsed="true"/>
+                                            <fmt:formatNumber value="${discountValue}" type="currency" groupingUsed="true"/>
                                         </c:set>
                                     </c:when>
                                     <c:otherwise>
                                         <c:set var="formattedValue" value="${discountValue}" />
                                     </c:otherwise>
-                                </c:choose>
+                                </c:choose>                              
 
                                 <div class="form-group">
                                     <label for="value">Giá trị</label>
                                     <input type="text" id="value" name="value" class="form-control"
-                                           value="<fmt:formatNumber value="${param.value != null ? param.value : discount.discountValue}" pattern="#" />" required>
+                                           value="${param.value != null ? param.value : discountValue}" required>
                                 </div>
 
                                 <div class="form-group">

@@ -63,6 +63,7 @@ public class UpdateDiscountServlet extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("id"));
             DiscountDAO dao = new DiscountDAO();
             Discount d = dao.getDiscountById(id);
+            System.out.println(d.getDiscountValue());
             if (d != null) {
                 request.setAttribute("discount", d);
                 request.getRequestDispatcher("update_discount.jsp").forward(request, response);
