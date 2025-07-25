@@ -148,7 +148,7 @@
                                     <table>
                                         <tr>
                                             <td class="label">Tổng tiền hàng:</td>
-                                            <td class="text-right"><fmt:formatNumber value="${invoice.totalAmount + invoice.order.discountAmountAtApply}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                            <td class="text-right"><fmt:formatNumber value="${invoice.totalAmount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
                                         </tr>
                                         <tr>
                                             <td class="label">Giảm giá:</td>
@@ -156,7 +156,7 @@
                                         </tr>
                                         <tr class="grand-total">
                                             <td class="label">TỔNG CỘNG:</td>
-                                            <td class="text-right"><fmt:formatNumber value="${invoice.totalAmount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
+                                            <td class="text-right"><fmt:formatNumber value="${invoice.totalAmount - invoice.order.discountAmountAtApply}" type="currency" currencySymbol="₫" maxFractionDigits="0"/></td>
                                         </tr>
                                     </table>
                                 </div>
