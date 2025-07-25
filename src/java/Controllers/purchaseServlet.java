@@ -71,32 +71,32 @@ public class purchaseServlet extends HttpServlet {
 
         if (!name.matches(nameRegex)) {
             session.setAttribute("errorMessage", "Tên người nhận không được chứa số, ký tự lạ hoặc để trống.");
-            resp.sendRedirect("checkout.jsp");
+            req.getRequestDispatcher("checkout.jsp").forward(req, resp);
             return;
         }
         if (phone.toLowerCase().contains("chưa cập nhật")) {
             session.setAttribute("errorMessage", "Vui lòng cập nhật lại số điện thoại.");
-            resp.sendRedirect("checkout.jsp");
+           req.getRequestDispatcher("checkout.jsp").forward(req, resp);
             return;
         }
         if (!phone.matches(phoneRegex)) {
             session.setAttribute("errorMessage", "Số điện thoại không hợp lệ. Phải có 10 chữ số (bắt đầu bằng 0) hoặc theo định dạng +84.");
-            resp.sendRedirect("checkout.jsp");
+            req.getRequestDispatcher("checkout.jsp").forward(req, resp);
             return;
         }
         if (!email.matches(emailRegex)) {
             session.setAttribute("errorMessage", "Email phải có dạng 'abc@domain.cde'. Trong đó 'cde' phải có ít nhất 2 ký tự.");
-            resp.sendRedirect("checkout.jsp");
+            req.getRequestDispatcher("checkout.jsp").forward(req, resp);
             return;
         }
         if (address.toLowerCase().contains("chưa cập nhật")) {
             session.setAttribute("errorMessage", "Vui lòng cập nhật lại địa chỉ.");
-            resp.sendRedirect("checkout.jsp");
+           req.getRequestDispatcher("checkout.jsp").forward(req, resp);
             return;
         }
         if (!address.matches(addressRegex)) {
             session.setAttribute("errorMessage", "Địa chỉ không hợp lệ. Phải có ít nhất 2 ký tự, không chứa ký tự lạ.");
-            resp.sendRedirect("checkout.jsp");
+            req.getRequestDispatcher("checkout.jsp").forward(req, resp);
             return;
         }
 
