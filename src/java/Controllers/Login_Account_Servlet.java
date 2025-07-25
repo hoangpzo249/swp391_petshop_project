@@ -154,11 +154,22 @@ public class Login_Account_Servlet extends HttpServlet {
 
                 Account acc = (Account) session.getAttribute("tempAcc");
                 String role = acc.getAccRole();
-                
+
                 session.setAttribute("userAccount", acc);
-                
-                session.setAttribute("loginSuccess", "Chào " + role + " !");
-                response.sendRedirect("homepage");
+
+                if ("Admin".equals(role)) {
+                    session.setAttribute("successMessage", "Chào Admin!");
+                    response.sendRedirect("admin-panel");
+                } else if ("Manager".equals(role)) {
+                    session.setAttribute("successMess", "Chào Manager!");
+                    response.sendRedirect("displayrevenuestatistic");
+                } else if ("Seller".equals(role)) {
+                    session.setAttribute("successMess", "Chào Seller!");
+                    response.sendRedirect("displaysalesstatistic");
+                } else if ("Shipper".equals(role)) {
+                    session.setAttribute("successMessage", "Chào Shipper!");
+                    response.sendRedirect("shipper_panel");
+                }
             } else {
                 request.setAttribute("errMessLoginOtp", "Mã OTP không hợp lệ");
                 request.setAttribute("sendOTP2FA", "true");

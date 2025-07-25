@@ -118,17 +118,17 @@ public class Login_Google_Servlet extends HttpServlet {
             String role = acc.getAccRole();
 
             if ("Admin".equals(role)) {
-                session.setAttribute("loginSuccess", "Chào Admin!");
-                response.sendRedirect("homepage");
+                session.setAttribute("successMessage", "Chào Admin!");
+                response.sendRedirect("admin-panel");
             } else if ("Manager".equals(role)) {
-                session.setAttribute("loginSuccess", "Chào Manager!");
-                response.sendRedirect("homepage");
+                session.setAttribute("successMess", "Chào Manager!");
+                response.sendRedirect("displayrevenuestatistic");
             } else if ("Seller".equals(role)) {
-                session.setAttribute("loginSuccess", "Chào Seller!");
-                response.sendRedirect("homepage");
+                session.setAttribute("successMess", "Chào Seller!");
+                response.sendRedirect("displaysalesstatistic");
             } else if ("Shipper".equals(role)) {
-                session.setAttribute("loginSuccess", "Chào Shipper!");
-                response.sendRedirect("homepage");
+                session.setAttribute("successMessage", "Chào Shipper!");
+                response.sendRedirect("shipper_panel");
             } else if ("Customer".equals(role)) {
                 session.setAttribute("loginSuccess", "Chào mừng " + fullName + "!");
                 response.sendRedirect("homepage");
