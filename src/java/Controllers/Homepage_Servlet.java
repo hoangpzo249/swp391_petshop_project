@@ -136,7 +136,7 @@ public class Homepage_Servlet extends HttpServlet {
             request.setAttribute("loginSuccess", "Đăng kí nhận thông tin thành công!");
         } catch (Exception e) {
         }
-        request.getRequestDispatcher("home_page.jsp").forward(request, response);
+        doGet(request, response);
     }
 
     /**
