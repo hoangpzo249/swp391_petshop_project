@@ -537,7 +537,7 @@ public class PetDAO {
                     sqlBuilder.append(" ORDER BY p.petName ASC");
             }
         } else {
-            sqlBuilder.append(" ORDER BY p.petId DESC");
+            sqlBuilder.append("ORDER BY p.petName ASC");
         }
 
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sqlBuilder.toString())) {
@@ -640,7 +640,7 @@ public class PetDAO {
                     sql += " ORDER BY p.petName ASC";
             }
         } else {
-            sql += " ORDER BY p.petId ASC";
+            sql += "ORDER BY p.petName ASC";
         }
 
         sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
