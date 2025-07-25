@@ -887,7 +887,7 @@ public class AccountDAO extends DBContext {
             ps.setInt(1, accId);
             rs=ps.executeQuery();
             while (rs.next()) {
-                fullname = rs.getString("accLname") + " " + rs.getString("accFname");
+                fullname = rs.getString("accFname") + " " + rs.getString("accLname");
             }
             return fullname;
         } catch (Exception ex) {

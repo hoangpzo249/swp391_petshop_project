@@ -144,8 +144,8 @@
                     <ul class="menu">
                         <li><a href="homepage">Trang Chủ</a></li>
                         <li><a href="listshoppet">Thú Cưng</a></li>
-                        <li><a href="">Giới Thiệu</a></li>
-                        <li><a href="">Liên Hệ</a></li>
+                        <li><a href="wip.jsp">Giới Thiệu</a></li>
+                        <li><a href="wip.jsp">Liên Hệ</a></li>
                     </ul>
                 </nav>
             </div>
@@ -557,19 +557,19 @@
             <div class="about-column">
                 <h3>Shop</h3>
                 <ul>
-                    <li><a href="">Dành Cho Chó</a></li>
-                    <li><a href="">Dành Cho Mèo</a></li>
-                    <li><a href="">Dành Cho Chuột</a></li>
+                    <li><a href="listshoppet?species=Chó&sort=popular">Dành Cho Chó</a></li>
+                    <li><a href="listshoppet?species=Mèo&sort=popular">Dành Cho Mèo</a></li>
+                    
                 </ul>
             </div>
 
             <div class="about-column">
                 <h3>PETFPT Shop</h3>
                 <ul>
-                    <li><a href="">Giới Thiệu</a></li>
-                    <li><a href="">Chính sách</a></li>
-                    <li><a href="">Phương Thức Thanh Toán</a></li>
-                    <li><a href="">Điều Khoản Sử Dụng</a></li>                    
+                    <li><a href="wip.jsp">Giới Thiệu</a></li>
+                    <li><a href="wip.jsp">Chính sách</a></li>
+                    <li><a href="wip.jsp">Phương Thức Thanh Toán</a></li>
+                    <li><a href="wip.jsp">Điều Khoản Sử Dụng</a></li>                    
                 </ul>
             </div>
 

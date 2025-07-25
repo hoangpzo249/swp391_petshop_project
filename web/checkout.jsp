@@ -134,8 +134,8 @@
                 <ul class="menu">
                     <li><a href="homepage">Trang Chủ</a></li>
                     <li><a href="listshoppet">Thú Cưng</a></li>
-                    <li><a href="menu_about.jsp">Giới Thiệu</a></li>
-                    <li><a href="menu_contact.jsp">Liên Hệ</a></li>
+                    <li><a href="wip.jsp">Giới Thiệu</a></li>
+                    <li><a href="wip.jsp">Liên Hệ</a></li>
 
 
                 </ul>
